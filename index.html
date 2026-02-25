@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kreativ Sound | Atmospheric Sound Packs for Creators</title>
   <meta name="description" content="Atmospheric sound packs and audio textures for filmmakers, designers, and creators. Crafted for focus, mood, and creative flow." />
-  <meta name="theme-color" content="#0f1526" />
+  <meta name="theme-color" content="#f8e9e9" />
   <meta name="robots" content="index,follow" />
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      var theme = stored === "light" || stored === "dark" ? stored : "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
   <link rel="canonical" href="https://kreativsound.com/" />
   <meta property="og:site_name" content="Kreativ Sound" />
   <meta property="og:type" content="website" />
@@ -116,6 +123,9 @@
   <main class="container" id="top">
 
     <header class="hero">
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">
+        Switch Theme
+      </button>
       <div class="logo-wrap">
         <img class="logo-mark" src="logo-128.svg" width="128" height="128" alt="Kreativ Sound logo" />
       </div>

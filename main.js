@@ -2,6 +2,8 @@ const products = window.KREATIV_PRODUCTS || [];
 
 document.getElementById("year").textContent = new Date().getFullYear();
 
+const themeToggle = document.getElementById("theme-toggle");
+const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const container = document.getElementById("catalog-groups");
 
 const preferredCategoryOrder = ["Presets", "Samples", "Free"];
@@ -10,6 +12,30 @@ const categories = [
   ...preferredCategoryOrder.filter((category) => discoveredCategories.includes(category)),
   ...discoveredCategories.filter((category) => !preferredCategoryOrder.includes(category))
 ];
+
+function getCurrentTheme() {
+  const activeTheme = document.documentElement.getAttribute("data-theme");
+  return activeTheme === "light" ? "light" : "dark";
+}
+
+function applyThemeUi(theme) {
+  if (!themeToggle || !themeColorMeta) {
+    return;
+  }
+  const isLight = theme === "light";
+  themeToggle.textContent = isLight ? "Dark Theme" : "Light Theme";
+  themeToggle.setAttribute("aria-pressed", String(isLight));
+  themeColorMeta.setAttribute("content", isLight ? "#f8e9e9" : "#0f1526");
+}
+
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const nextTheme = getCurrentTheme() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", nextTheme);
+    localStorage.setItem("theme", nextTheme);
+    applyThemeUi(nextTheme);
+  });
+}
 
 function renderCatalog() {
   container.innerHTML = "";
@@ -77,4 +103,5 @@ function renderCatalog() {
   });
 }
 
+applyThemeUi(getCurrentTheme());
 renderCatalog();

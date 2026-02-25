@@ -12,6 +12,20 @@
   --accent-bright: #d14c4c;
 }
 
+[data-theme="light"] {
+  --bg: #fdf5f5;
+  --bg-alt: #f5e7e7;
+  --text: #2a1416;
+  --muted: #66474a;
+  --soft: rgba(88, 60, 64, 0.78);
+  --card: rgba(255, 245, 245, 0.82);
+  --card-border: rgba(153, 0, 0, 0.28);
+  --card-border-hover: rgba(153, 0, 0, 0.55);
+  --accent: #990000;
+  --accent-strong: #7f0000;
+  --accent-bright: #b30000;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -27,6 +41,7 @@ body {
     radial-gradient(1100px 560px at 95% -20%, rgba(153, 0, 0, 0.28), transparent 58%),
     radial-gradient(900px 480px at -15% 110%, rgba(87, 20, 20, 0.36), transparent 62%),
     linear-gradient(160deg, var(--bg) 0%, var(--bg-alt) 100%);
+  transition: background 220ms ease, color 220ms ease;
 }
 
 .skip-link {
@@ -80,12 +95,40 @@ a:focus-visible,
 .hero {
   margin-bottom: 2.7rem;
   text-align: center;
+  position: relative;
 }
 
 .logo-wrap {
   display: flex;
   justify-content: center;
   margin-bottom: 1rem;
+}
+
+.theme-toggle {
+  position: absolute;
+  right: 0;
+  top: -2.35rem;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.42rem 0.8rem;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 170ms ease, border-color 170ms ease, transform 170ms ease;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-1px);
+  background: rgba(153, 0, 0, 0.2);
+  border-color: var(--card-border-hover);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 2px;
 }
 
 .logo-mark {
@@ -283,6 +326,15 @@ a:focus-visible,
 @media (max-width: 700px) {
   .container {
     padding: 4rem 1rem 2.4rem;
+  }
+
+  .hero {
+    padding-top: 0.8rem;
+  }
+
+  .theme-toggle {
+    top: -1.9rem;
+    right: 0.1rem;
   }
 
   .card {
