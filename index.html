@@ -18,13 +18,13 @@
   <meta property="og:site_name" content="Kreativ Sound" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Kreativ Sound" />
-  <meta property="og:description" content="Atmospheric sound packs and audio textures for creative work." />
+  <meta property="og:description" content="Atmospheric sound packs and audio textures for filmmakers, designers, and creators. Crafted for focus, mood, and creative flow." />
   <meta property="og:url" content="https://kreativsound.com/" />
   <meta property="og:image" content="https://kreativsound.com/og-image.svg" />
   <meta property="og:image:alt" content="Kreativ Sound atmospheric audio packs preview card" />
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:title" content="Kreativ Sound" />
-  <meta property="twitter:description" content="Atmospheric sound packs and audio textures for creative work." />
+  <meta property="twitter:description" content="Atmospheric sound packs and audio textures for filmmakers, designers, and creators. Crafted for focus, mood, and creative flow." />
   <meta property="twitter:image" content="https://kreativsound.com/og-image.svg" />
   <meta property="twitter:image:alt" content="Kreativ Sound atmospheric audio packs preview card" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -37,7 +37,19 @@
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "WebSite",
+          "@id": "https://kreativsound.com/#website",
+          "url": "https://kreativsound.com/",
+          "name": "Kreativ Sound",
+          "description": "Atmospheric sound packs and audio textures for filmmakers, designers, and creators. Crafted for focus, mood, and creative flow.",
+          "inLanguage": "en-US",
+          "publisher": {
+            "@id": "https://kreativsound.com/#organization"
+          }
+        },
+        {
           "@type": "Organization",
+          "@id": "https://kreativsound.com/#organization",
           "name": "Kreativ Sound",
           "url": "https://kreativsound.com/",
           "logo": "https://kreativsound.com/logo-128.svg",
@@ -45,72 +57,6 @@
             "https://kreativ.gumroad.com",
             "https://www.patreon.com/kreativsound",
             "https://madebykreativ.com"
-          ]
-        },
-        {
-          "@type": "ItemList",
-          "name": "Kreativ Sound Product Catalog",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "url": "https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "url": "https://kreativ.gumroad.com/l/monolush-fabfilter-one-presets?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 3,
-              "url": "https://kreativ.gumroad.com/l/dirty-model?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 4,
-              "url": "https://kreativ.gumroad.com/l/zephy-animoog-z-presets?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 5,
-              "url": "https://kreativ.gumroad.com/l/sfxs-sound-effects-library?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 6,
-              "url": "https://kreativ.gumroad.com/l/noize-oscillators?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 7,
-              "url": "https://kreativ.gumroad.com/l/enigma?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 8,
-              "url": "https://kreativ.gumroad.com/l/bleeps-sharp-percussion-drum-samples?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 9,
-              "url": "https://kreativ.gumroad.com/l/space-inspired-atmospheres-textures?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 10,
-              "url": "https://kreativ.gumroad.com/l/tectonic-underground-textures?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 11,
-              "url": "https://kreativ.gumroad.com/l/horror-cinematic-scary-texture?layout=profile"
-            },
-            {
-              "@type": "ListItem",
-              "position": 12,
-              "url": "https://kreativ.gumroad.com/l/abyss-dark-ambient-presets-for-pro-53?layout=profile"
-            }
           ]
         }
       ]
@@ -147,6 +93,30 @@
     <section class="catalog card" aria-labelledby="catalog-title">
       <h2 id="catalog-title">Browse Products</h2>
       <p class="catalog-intro">Grouped by format: Presets, Samples, and Free.</p>
+      <article class="featured-product" aria-label="Featured product">
+        <img
+          class="featured-thumb"
+          src="assets/thumbs/bioforms.jpg"
+          width="96"
+          height="96"
+          alt="BIOFORMS product artwork"
+          loading="eager"
+          decoding="async"
+        />
+        <div class="featured-content">
+          <p class="featured-label">Featured</p>
+          <h3>BIOFORMS - Evolving Presets for Synplant 2</h3>
+          <p>32+ evolving patches for atmospheric sound design and ambient movement.</p>
+        </div>
+        <a
+          class="button primary featured-cta"
+          href="https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Get BIOFORMS
+        </a>
+      </article>
       <div id="catalog-groups"></div>
       <noscript>
         <div class="noscript-fallback">
