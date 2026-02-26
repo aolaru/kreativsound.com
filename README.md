@@ -46,3 +46,12 @@ git push
 ```
 
 If GitHub Pages (or another deployment target) is connected to `main`, pushes publish updates automatically.
+
+## Pre-Release Checks
+
+- Run the release checklist: `docs/release-checklist.md`
+- Run Lighthouse routine:
+
+```bash
+bash scripts/lighthouse-check.sh
+```

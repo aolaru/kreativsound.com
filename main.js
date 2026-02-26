@@ -5,6 +5,8 @@ document.getElementById("year").textContent = new Date().getFullYear();
 const themeToggle = document.getElementById("theme-toggle");
 const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const container = document.getElementById("catalog-groups");
+const emailForm = document.getElementById("email-form");
+const emailInput = document.getElementById("email-input");
 
 const preferredCategoryOrder = ["Presets", "Samples", "Free"];
 const discoveredCategories = Array.from(new Set(products.map((product) => product.category)));
@@ -34,6 +36,23 @@ if (themeToggle) {
     document.documentElement.setAttribute("data-theme", nextTheme);
     localStorage.setItem("theme", nextTheme);
     applyThemeUi(nextTheme);
+  });
+}
+
+if (emailForm && emailInput) {
+  emailForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!emailInput.checkValidity()) {
+      emailInput.reportValidity();
+      return;
+    }
+    const email = emailInput.value.trim();
+    const subject = encodeURIComponent("Kreativ Sound release updates");
+    const body = encodeURIComponent(
+      "Please add this email to Kreativ Sound updates:\n\n" + email + "\n\nSent from kreativsound.com"
+    );
+    window.location.href = "mailto:andrei.olaru@gmail.com?subject=" + subject + "&body=" + body;
+    emailForm.reset();
   });
 }
 
