@@ -83,6 +83,41 @@ a:focus-visible,
   padding: 4.5rem 1.25rem 3rem;
 }
 
+.site-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  display: inline-block;
+  min-height: 42px;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  background: var(--card);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  text-align: center;
+}
+
+.nav-link:hover {
+  text-decoration: none;
+  border-color: var(--card-border-hover);
+  background: rgba(153, 0, 0, 0.14);
+}
+
+.nav-link.active {
+  border-color: var(--accent-bright);
+  color: var(--accent-strong);
+}
+
 .card {
   background: var(--card);
   border: 1px solid var(--card-border);
@@ -420,6 +455,33 @@ a:focus-visible,
   text-align: center;
 }
 
+.page-main {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: clamp(1.7rem, 5vw, 2.3rem);
+  line-height: 1.15;
+  margin-bottom: 0.45rem;
+}
+
+.page-lead {
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.stack {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.contact-list {
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+
 .footer {
   margin-top: 1.45rem;
   color: var(--soft);
@@ -471,6 +533,11 @@ a:focus-visible,
   .email-form .button {
     width: 100%;
     text-align: center;
+  }
+
+  .site-nav {
+    justify-content: flex-start;
+    gap: 0.5rem;
   }
 
   .product-grid {

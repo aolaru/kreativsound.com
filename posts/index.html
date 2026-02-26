@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Posts (Draft) | Kreativ Sound</title>
+  <meta name="description" content="Draft posts prepared for the future Kreativ Sound journal launch." />
+  <meta name="theme-color" content="#f8e9e9" />
+  <meta name="robots" content="noindex,nofollow" />
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      var theme = stored === "light" || stored === "dark" ? stored : "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <link rel="canonical" href="https://kreativsound.com/posts/" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <main class="container">
+    <nav class="site-nav" aria-label="Primary">
+      <a class="nav-link" href="/">Home</a>
+      <a class="nav-link" href="/about.html">About</a>
+      <a class="nav-link" href="/contact.html">Contact</a>
+    </nav>
+
+    <section class="card page-main">
+      <h1 class="page-title">Posts (Draft)</h1>
+      <p class="page-lead">Prepared for future launch. These entries are intentionally not indexed yet.</p>
+      <ul class="contact-list">
+        <li><a href="/posts/crafting-ambient-textures.html">Crafting Ambient Textures: A Practical Workflow</a></li>
+        <li><a href="/posts/preset-pack-production-notes.html">Preset Pack Production Notes: From Sketch to Release</a></li>
+        <li><a href="/posts/scoring-with-minimal-sound-design.html">Scoring with Minimal Sound Design Layers</a></li>
+        <li><a href="/posts/building-a-repeatable-sound-brand.html">Building a Repeatable Sound Brand for Content</a></li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> KREATIV · Sound and audio resources</p>
+    </footer>
+  </main>
+
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
