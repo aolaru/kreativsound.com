@@ -7,6 +7,7 @@ const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const container = document.getElementById("catalog-groups");
 const emailForm = document.getElementById("email-form");
 const emailInput = document.getElementById("email-input");
+const emailStatus = document.getElementById("email-status");
 
 const preferredCategoryOrder = ["Presets", "Samples", "Free"];
 const discoveredCategories = Array.from(new Set(products.map((product) => product.category)));
@@ -24,10 +25,10 @@ function applyThemeUi(theme) {
   if (!themeToggle || !themeColorMeta) {
     return;
   }
-  const isLight = theme === "light";
-  themeToggle.textContent = isLight ? "Dark Theme" : "Light Theme";
-  themeToggle.setAttribute("aria-pressed", String(isLight));
-  themeColorMeta.setAttribute("content", isLight ? "#f8e9e9" : "#0f1526");
+  const isDark = theme === "dark";
+  themeToggle.textContent = isDark ? "Light Theme" : "Dark Theme";
+  themeToggle.setAttribute("aria-pressed", String(isDark));
+  themeColorMeta.setAttribute("content", isDark ? "#0f1526" : "#f8e9e9");
 }
 
 if (themeToggle) {
@@ -40,19 +41,50 @@ if (themeToggle) {
 }
 
 if (emailForm && emailInput) {
-  emailForm.addEventListener("submit", (event) => {
+  emailForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!emailInput.checkValidity()) {
       emailInput.reportValidity();
       return;
     }
-    const email = emailInput.value.trim();
-    const subject = encodeURIComponent("Kreativ Sound release updates");
-    const body = encodeURIComponent(
-      "Please add this email to Kreativ Sound updates:\n\n" + email + "\n\nSent from kreativsound.com"
-    );
-    window.location.href = "mailto:andrei.olaru@gmail.com?subject=" + subject + "&body=" + body;
-    emailForm.reset();
+
+    const formData = new FormData(emailForm);
+    const submitButton = emailForm.querySelector('button[type="submit"]');
+
+    if (emailStatus) {
+      emailStatus.textContent = "Submitting...";
+    }
+
+    if (submitButton) {
+      submitButton.disabled = true;
+    }
+
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/andrei.olaru@gmail.com", {
+        method: "POST",
+        headers: {
+          Accept: "application/json"
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error("Subscription request failed");
+      }
+
+      emailForm.reset();
+      if (emailStatus) {
+        emailStatus.textContent = "Thanks. You're on the list for new releases.";
+      }
+    } catch (error) {
+      if (emailStatus) {
+        emailStatus.textContent = "Email signup failed here. Please contact andrei.olaru@gmail.com directly.";
+      }
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+      }
+    }
   });
 }
 

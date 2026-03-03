@@ -10,7 +10,13 @@ Run this before pushing a release commit.
 - Confirm product cards are readable and not cramped.
 - Test theme switcher and email capture on mobile.
 
-## 2) Lighthouse quick check
+## 2) Product asset pass
+
+- Generate new pack thumbnails with `bash scripts/generate-thumbnail.sh <source> assets/thumbs/<name>.jpg`.
+- Confirm new product cards use the local thumbnail, not a temporary source file.
+- Remove or ignore any intermediate images before commit.
+
+## 3) Lighthouse quick check
 
 From project root:
 
@@ -29,7 +35,7 @@ Suggested thresholds:
 - Best Practices: >= 95
 - SEO: >= 95
 
-## 3) Final ship steps
+## 4) Final ship steps
 
 - Update `changelog.md`.
 - `git add . && git commit -m "..."`

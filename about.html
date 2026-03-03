@@ -24,9 +24,9 @@
 <body>
   <main class="container">
     <nav class="site-nav" aria-label="Primary">
-      <a class="nav-link" href="/">Home</a>
-      <a class="nav-link active" href="/about.html">About</a>
-      <a class="nav-link" href="/contact.html">Contact</a>
+      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link active" href="about.html">About</a>
+      <a class="nav-link" href="contact.html">Contact</a>
       <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Switch Theme</button>
     </nav>
 
@@ -58,9 +58,9 @@
         metaTheme.setAttribute("content", theme === "dark" ? "#0f1526" : "#f8e9e9");
       }
       if (toggle) {
-        var isLight = theme === "light";
-        toggle.textContent = isLight ? "Dark Theme" : "Light Theme";
-        toggle.setAttribute("aria-pressed", String(isLight));
+        var isDark = theme === "dark";
+        toggle.textContent = isDark ? "Light Theme" : "Dark Theme";
+        toggle.setAttribute("aria-pressed", String(isDark));
       }
     }
     syncThemeUi(currentTheme());

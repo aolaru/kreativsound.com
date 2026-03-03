@@ -68,9 +68,9 @@
 
   <main class="container" id="top">
     <nav class="site-nav" aria-label="Primary">
-      <a class="nav-link active" href="/">Home</a>
-      <a class="nav-link" href="/about.html">About</a>
-      <a class="nav-link" href="/contact.html">Contact</a>
+      <a class="nav-link active" href="index.html">Home</a>
+      <a class="nav-link" href="about.html">About</a>
+      <a class="nav-link" href="contact.html">Contact</a>
       <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false">
         Switch Theme
       </button>
@@ -148,12 +148,17 @@
     <section class="email-capture card" aria-labelledby="email-capture-title">
       <h2 id="email-capture-title">Get New Releases by Email</h2>
       <p class="email-intro">Get occasional updates when new packs and freebies are released.</p>
-      <form class="email-form" id="email-form" novalidate>
+      <form class="email-form" id="email-form" action="https://formsubmit.co/andrei.olaru@gmail.com" method="post" novalidate>
         <label class="sr-only" for="email-input">Email address</label>
         <input id="email-input" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required />
+        <input type="hidden" name="_subject" value="Kreativ Sound release updates" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_template" value="table" />
+        <input class="sr-only" type="text" name="_honey" tabindex="-1" autocomplete="off" />
         <button class="button primary" type="submit">Notify Me</button>
       </form>
       <p class="email-note">By subscribing you agree to receive product updates. Unsubscribe anytime.</p>
+      <p class="email-status" id="email-status" aria-live="polite"></p>
     </section>
 
     <section class="about">

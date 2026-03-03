@@ -31,6 +31,12 @@ Optimized local thumbnails are stored in:
 
 Using local files keeps page loads faster and avoids external image latency.
 
+Generate a new square thumbnail from a source image with:
+
+```bash
+bash scripts/generate-thumbnail.sh path/to/source-image.png assets/thumbs/product-name.jpg
+```
+
 ## Deploy / Publish
 
 This repository is connected to:
@@ -55,3 +61,7 @@ If GitHub Pages (or another deployment target) is connected to `main`, pushes pu
 ```bash
 bash scripts/lighthouse-check.sh
 ```
+
+## Email Signup
+
+The homepage signup form submits to FormSubmit and posts entries to `andrei.olaru@gmail.com`.
