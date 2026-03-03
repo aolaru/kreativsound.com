@@ -130,7 +130,6 @@ a:focus-visible,
 .hero {
   margin-bottom: 2.7rem;
   text-align: center;
-  position: relative;
 }
 
 .logo-wrap {
@@ -140,31 +139,11 @@ a:focus-visible,
 }
 
 .theme-toggle {
-  position: absolute;
-  right: 0;
-  top: -2.35rem;
-  min-height: 44px;
-  border: 1px solid var(--card-border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 999px;
-  padding: 0.42rem 0.8rem;
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 170ms ease, border-color 170ms ease, transform 170ms ease;
+  min-height: 42px;
 }
 
 .theme-toggle:hover {
-  transform: translateY(-1px);
-  background: rgba(153, 0, 0, 0.2);
-  border-color: var(--card-border-hover);
-}
-
-.theme-toggle:focus-visible {
-  outline: 2px solid var(--accent-bright);
-  outline-offset: 2px;
+  transform: none;
 }
 
 .logo-mark {
@@ -491,15 +470,6 @@ a:focus-visible,
 @media (max-width: 700px) {
   .container {
     padding: 3.4rem 1rem 2.4rem;
-  }
-
-  .hero {
-    padding-top: 0.8rem;
-  }
-
-  .theme-toggle {
-    top: -1.9rem;
-    right: 0.1rem;
   }
 
   .card {
