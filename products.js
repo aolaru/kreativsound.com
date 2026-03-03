@@ -39,7 +39,7 @@ window.KREATIV_PRODUCTS = [
     title: "NEOLITH - Presets for Softube Models",
     category: "Presets",
     url: "https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile",
-    thumbnail: "logo-128.svg",
+    thumbnail: "assets/thumbs/neolith.jpg",
     format: "Presets",
     count: "Collection",
     useCase: "Analog-forward textures and cinematic synth tone shaping"
