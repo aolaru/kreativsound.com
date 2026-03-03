@@ -36,6 +36,15 @@ window.KREATIV_PRODUCTS = [
     useCase: "Airy motion-driven melodic layers"
   },
   {
+    title: "NEOLITH - Presets for Softube Models",
+    category: "Presets",
+    url: "https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile",
+    thumbnail: "logo-128.svg",
+    format: "Presets",
+    count: "Collection",
+    useCase: "Analog-forward textures and cinematic synth tone shaping"
+  },
+  {
     title: "SFXS 2 - Creative Sound Effects Collection",
     category: "Samples",
     url: "https://kreativ.gumroad.com/l/sfxs-sound-effects-library?layout=profile",
