@@ -20,14 +20,38 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <script defer data-domain="kreativsound.com" src="https://plausible.io/js/script.js"></script>
+  <script defer src="analytics.js"></script>
 </head>
 <body>
   <main class="container">
     <nav class="site-nav" aria-label="Primary">
-      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="index.html" aria-label="Home">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3l9 8h-3v10h-5v-6h-2v6H6V11H3z"></path>
+        </svg>
+        <span class="sr-only">Home</span>
+      </a>
+      <a class="nav-link" href="news.html">News</a>
       <a class="nav-link active" href="about.html">About</a>
       <a class="nav-link" href="contact.html">Contact</a>
-      <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Switch Theme</button>
+      <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
+        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v3"></path>
+          <path d="M12 19v3"></path>
+          <path d="M4.93 4.93l2.12 2.12"></path>
+          <path d="M16.95 16.95l2.12 2.12"></path>
+          <path d="M2 12h3"></path>
+          <path d="M19 12h3"></path>
+          <path d="M4.93 19.07l2.12-2.12"></path>
+          <path d="M16.95 7.05l2.12-2.12"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 13a9 9 0 1 1-10-10 7 7 0 0 0 10 10z"></path>
+        </svg>
+        <span class="sr-only">Toggle theme</span>
+      </button>
     </nav>
 
     <section class="card page-main">
@@ -41,7 +65,18 @@
     </section>
 
     <footer class="footer">
-      <p>© <span id="year"></span> KREATIV · Sound and audio resources</p>
+      <p class="footer-links">
+        <a href="https://kreativfont.com" target="_blank" rel="noopener noreferrer">Kreativ Font</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://kreativsound.com" target="_blank" rel="noopener noreferrer">Kreativ Sound</a>
+        <span aria-hidden="true">·</span>
+        <a href="https://kreativwp.com" target="_blank" rel="noopener noreferrer">Kreativ WP</a>
+      </p>
+      <p class="footer-meta">
+        © <span id="year">2026</span>
+        <a href="https://madebykreativ.com" target="_blank" rel="noopener noreferrer">Made by KREATIV</a>
+        · Independent creative tools and assets by Andrei Olaru
+      </p>
     </footer>
   </main>
 
@@ -59,7 +94,8 @@
       }
       if (toggle) {
         var isDark = theme === "dark";
-        toggle.textContent = isDark ? "Light Theme" : "Dark Theme";
+        toggle.dataset.icon = isDark ? "sun" : "moon";
+        toggle.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
         toggle.setAttribute("aria-pressed", String(isDark));
       }
     }
@@ -70,6 +106,9 @@
         document.documentElement.setAttribute("data-theme", nextTheme);
         localStorage.setItem("theme", nextTheme);
         syncThemeUi(nextTheme);
+        if (typeof window.kreativTrack === "function") {
+          window.kreativTrack("theme_toggle", { theme: nextTheme, page: "about" });
+        }
       });
     }
   </script>

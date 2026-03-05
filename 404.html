@@ -9,6 +9,8 @@
   <link rel="canonical" href="https://kreativsound.com/404.html" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="style.css" />
+  <script defer data-domain="kreativsound.com" src="https://plausible.io/js/script.js"></script>
+  <script defer src="analytics.js"></script>
 </head>
 <body>
   <main class="container">
@@ -20,5 +22,10 @@
       </p>
     </section>
   </main>
+  <script>
+    if (typeof window.kreativTrack === "function") {
+      window.kreativTrack("404_view", { path: window.location.pathname || "/404.html" });
+    }
+  </script>
 </body>
 </html>

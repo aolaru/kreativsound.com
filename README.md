@@ -62,6 +62,32 @@ If GitHub Pages (or another deployment target) is connected to `main`, pushes pu
 bash scripts/lighthouse-check.sh
 ```
 
+- Run full release gate (thumbnails + Lighthouse + thresholds):
+
+```bash
+bash scripts/release-gate.sh
+```
+
 ## Email Signup
 
 The homepage signup form submits to FormSubmit and posts entries to `andrei.olaru@gmail.com`.
+
+## Analytics
+
+The site uses Plausible Analytics (`analytics.js` + hosted Plausible script).
+
+Key tracked events:
+
+- `featured_product_click`
+- `product_card_click`
+- `hero_explore_click`
+- `hero_patreon_click`
+- `email_signup_success`
+- `email_signup_failure`
+- `theme_toggle`
+- `404_view`
+- `outbound_click`
+
+## Monitoring
+
+See `docs/monitoring.md` for uptime and analytics monitoring setup.

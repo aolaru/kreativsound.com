@@ -35,7 +35,12 @@ Suggested thresholds:
 - Best Practices: >= 95
 - SEO: >= 95
 
-## 4) Final ship steps
+## 4) Monitoring check
+
+- Confirm analytics events are arriving (`featured_product_click`, `email_signup_success`, `404_view`).
+- Confirm uptime monitor is green for `https://kreativsound.com/`.
+
+## 5) Final ship steps
 
 - Update `changelog.md`.
 - `git add . && git commit -m "..."`

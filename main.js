@@ -26,7 +26,8 @@ function applyThemeUi(theme) {
     return;
   }
   const isDark = theme === "dark";
-  themeToggle.textContent = isDark ? "Light Theme" : "Dark Theme";
+  themeToggle.dataset.icon = isDark ? "sun" : "moon";
+  themeToggle.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
   themeToggle.setAttribute("aria-pressed", String(isDark));
   themeColorMeta.setAttribute("content", isDark ? "#0f1526" : "#f8e9e9");
 }
@@ -37,6 +38,9 @@ if (themeToggle) {
     document.documentElement.setAttribute("data-theme", nextTheme);
     localStorage.setItem("theme", nextTheme);
     applyThemeUi(nextTheme);
+    if (typeof window.kreativTrack === "function") {
+      window.kreativTrack("theme_toggle", { theme: nextTheme, page: "home" });
+    }
   });
 }
 
@@ -73,10 +77,16 @@ if (emailForm && emailInput) {
       }
 
       emailForm.reset();
+      if (typeof window.kreativTrack === "function") {
+        window.kreativTrack("email_signup_success", { source: "homepage_form" });
+      }
       if (emailStatus) {
         emailStatus.textContent = "Thanks. You're on the list for new releases.";
       }
     } catch (error) {
+      if (typeof window.kreativTrack === "function") {
+        window.kreativTrack("email_signup_failure", { source: "homepage_form" });
+      }
       if (emailStatus) {
         emailStatus.textContent = "Email signup failed here. Please contact andrei.olaru@gmail.com directly.";
       }
@@ -112,6 +122,7 @@ function renderCatalog() {
 
       const link = document.createElement("a");
       link.className = "product-card";
+      link.dataset.track = "product_card_click";
       link.href = item.url;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
