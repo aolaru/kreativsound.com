@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>News (Draft) | Kreativ Sound</title>
-  <meta name="description" content="Draft posts prepared for the future Kreativ Sound journal launch." />
+  <title>News | Kreativ Sound</title>
+  <meta name="description" content="Latest sound releases and important updates from Kreativ Sound." />
   <meta name="theme-color" content="#f8e9e9" />
-  <meta name="robots" content="noindex,nofollow" />
+  <meta name="robots" content="index,follow" />
   <script>
     (function () {
       var stored = localStorage.getItem("theme");
@@ -35,17 +35,66 @@
       <a class="nav-link active" href="news.html">News</a>
       <a class="nav-link" href="about.html">About</a>
       <a class="nav-link" href="contact.html">Contact</a>
+      <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
+        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v3"></path>
+          <path d="M12 19v3"></path>
+          <path d="M4.93 4.93l2.12 2.12"></path>
+          <path d="M16.95 16.95l2.12 2.12"></path>
+          <path d="M2 12h3"></path>
+          <path d="M19 12h3"></path>
+          <path d="M4.93 19.07l2.12-2.12"></path>
+          <path d="M16.95 7.05l2.12-2.12"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 13a9 9 0 1 1-10-10 7 7 0 0 0 10 10z"></path>
+        </svg>
+        <span class="sr-only">Toggle theme</span>
+      </button>
     </nav>
 
     <section class="card page-main">
-      <h1 class="page-title">News (Draft)</h1>
-      <p class="page-lead">Prepared for future launch. These entries are intentionally not indexed yet.</p>
-      <ul class="contact-list">
-        <li><a href="posts/crafting-ambient-textures.html">Crafting Ambient Textures: A Practical Workflow</a></li>
-        <li><a href="posts/preset-pack-production-notes.html">Preset Pack Production Notes: From Sketch to Release</a></li>
-        <li><a href="posts/scoring-with-minimal-sound-design.html">Scoring with Minimal Sound Design Layers</a></li>
-        <li><a href="posts/building-a-repeatable-sound-brand.html">Building a Repeatable Sound Brand for Content</a></li>
-      </ul>
+      <h1 class="page-title">News</h1>
+      <p class="page-lead">Latest sound releases and important site updates.</p>
+      <div class="stack news-stack">
+        <article class="news-block">
+          <h2>Latest Sound Releases</h2>
+          <ul class="news-list">
+            <li>
+              <time datetime="2026-03-03">March 3, 2026</time>
+              <span>NEOLITH for Softube Models released.</span>
+              <a href="https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile" target="_blank" rel="noopener noreferrer">View product</a>
+            </li>
+            <li>
+              <time datetime="2026-02-26">February 26, 2026</time>
+              <span>BIOFORMS for Synplant 2 highlighted as a core release in the catalog update.</span>
+              <a href="https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile" target="_blank" rel="noopener noreferrer">View product</a>
+            </li>
+            <li>
+              <time datetime="2026-02-25">February 25, 2026</time>
+              <span>Catalog refreshed with updated local thumbnails for faster browsing.</span>
+            </li>
+          </ul>
+        </article>
+        <article class="news-block">
+          <h2>Important Site News</h2>
+          <ul class="news-list">
+            <li>
+              <time datetime="2026-03-06">March 6, 2026</time>
+              <span>News page launched in primary navigation with release timeline and updates.</span>
+            </li>
+            <li>
+              <time datetime="2026-03-06">March 6, 2026</time>
+              <span>Footer updated with Kreativ network links and Made by KREATIV attribution.</span>
+            </li>
+            <li>
+              <time datetime="2026-03-05">March 5, 2026</time>
+              <span>Analytics and release quality workflow added (event tracking, monitoring guide, release gate scripts).</span>
+            </li>
+          </ul>
+        </article>
+      </div>
     </section>
 
     <footer class="footer">
@@ -64,6 +113,37 @@
     </footer>
   </main>
 
-  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    var toggle = document.getElementById("theme-toggle");
+    var metaTheme = document.querySelector('meta[name="theme-color"]');
+    function currentTheme() {
+      return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    }
+    function syncThemeUi(theme) {
+      if (metaTheme) {
+        metaTheme.setAttribute("content", theme === "dark" ? "#0f1526" : "#f8e9e9");
+      }
+      if (toggle) {
+        var isDark = theme === "dark";
+        toggle.dataset.icon = isDark ? "sun" : "moon";
+        toggle.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
+        toggle.setAttribute("aria-pressed", String(isDark));
+      }
+    }
+    syncThemeUi(currentTheme());
+    if (toggle) {
+      toggle.addEventListener("click", function () {
+        var nextTheme = currentTheme() === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", nextTheme);
+        localStorage.setItem("theme", nextTheme);
+        syncThemeUi(nextTheme);
+        if (typeof window.kreativTrack === "function") {
+          window.kreativTrack("theme_toggle", { theme: nextTheme, page: "news" });
+        }
+      });
+    }
+  </script>
 </body>
 </html>

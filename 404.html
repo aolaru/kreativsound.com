@@ -23,9 +23,11 @@
     </section>
   </main>
   <script>
-    if (typeof window.kreativTrack === "function") {
-      window.kreativTrack("404_view", { path: window.location.pathname || "/404.html" });
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof window.kreativTrack === "function") {
+        window.kreativTrack("404_view", { path: window.location.pathname || "/404.html" });
+      }
+    });
   </script>
 </body>
 </html>

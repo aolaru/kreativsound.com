@@ -34,11 +34,11 @@ Track these events in analytics:
 - `product_card_click`
 - `hero_explore_click`
 - `hero_patreon_click`
-- `email_signup_success`
-- `email_signup_failure`
+- `theme_toggle`
+- `outbound_click`
 
 Review weekly and prioritize:
 
 - Highest-click products
-- Email signup success rate
+- Product click-through trends
 - Broken funnel pages with high exits

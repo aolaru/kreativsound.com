@@ -502,6 +502,34 @@ a:focus-visible,
   gap: 0.9rem;
 }
 
+.news-stack {
+  gap: 1rem;
+}
+
+.news-block h2 {
+  font-size: 1rem;
+  margin-bottom: 0.45rem;
+}
+
+.news-list {
+  list-style: none;
+  display: grid;
+  gap: 0.58rem;
+}
+
+.news-list li {
+  display: grid;
+  gap: 0.2rem;
+  color: var(--muted);
+}
+
+.news-list time {
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
 .contact-list {
   list-style: none;
   display: grid;

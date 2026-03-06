@@ -68,10 +68,6 @@ bash scripts/lighthouse-check.sh
 bash scripts/release-gate.sh
 ```
 
-## Email Signup
-
-The homepage signup form submits to FormSubmit and posts entries to `andrei.olaru@gmail.com`.
-
 ## Analytics
 
 The site uses Plausible Analytics (`analytics.js` + hosted Plausible script).
@@ -82,8 +78,6 @@ Key tracked events:
 - `product_card_click`
 - `hero_explore_click`
 - `hero_patreon_click`
-- `email_signup_success`
-- `email_signup_failure`
 - `theme_toggle`
 - `404_view`
 - `outbound_click`

@@ -5,9 +5,6 @@ document.getElementById("year").textContent = new Date().getFullYear();
 const themeToggle = document.getElementById("theme-toggle");
 const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const container = document.getElementById("catalog-groups");
-const emailForm = document.getElementById("email-form");
-const emailInput = document.getElementById("email-input");
-const emailStatus = document.getElementById("email-status");
 
 const preferredCategoryOrder = ["Presets", "Samples", "Free"];
 const discoveredCategories = Array.from(new Set(products.map((product) => product.category)));
@@ -40,60 +37,6 @@ if (themeToggle) {
     applyThemeUi(nextTheme);
     if (typeof window.kreativTrack === "function") {
       window.kreativTrack("theme_toggle", { theme: nextTheme, page: "home" });
-    }
-  });
-}
-
-if (emailForm && emailInput) {
-  emailForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    if (!emailInput.checkValidity()) {
-      emailInput.reportValidity();
-      return;
-    }
-
-    const formData = new FormData(emailForm);
-    const submitButton = emailForm.querySelector('button[type="submit"]');
-
-    if (emailStatus) {
-      emailStatus.textContent = "Submitting...";
-    }
-
-    if (submitButton) {
-      submitButton.disabled = true;
-    }
-
-    try {
-      const response = await fetch("https://formsubmit.co/ajax/andrei.olaru@gmail.com", {
-        method: "POST",
-        headers: {
-          Accept: "application/json"
-        },
-        body: formData
-      });
-
-      if (!response.ok) {
-        throw new Error("Subscription request failed");
-      }
-
-      emailForm.reset();
-      if (typeof window.kreativTrack === "function") {
-        window.kreativTrack("email_signup_success", { source: "homepage_form" });
-      }
-      if (emailStatus) {
-        emailStatus.textContent = "Thanks. You're on the list for new releases.";
-      }
-    } catch (error) {
-      if (typeof window.kreativTrack === "function") {
-        window.kreativTrack("email_signup_failure", { source: "homepage_form" });
-      }
-      if (emailStatus) {
-        emailStatus.textContent = "Email signup failed here. Please contact andrei.olaru@gmail.com directly.";
-      }
-    } finally {
-      if (submitButton) {
-        submitButton.disabled = false;
-      }
     }
   });
 }
