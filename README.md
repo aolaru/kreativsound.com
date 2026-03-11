@@ -68,6 +68,8 @@ bash scripts/lighthouse-check.sh
 bash scripts/release-gate.sh
 ```
 
+- CI runs the same release gate on pushes and pull requests to `main` via `.github/workflows/release-gate.yml`.
+
 ## Analytics
 
 The site uses Plausible Analytics (`analytics.js` + hosted Plausible script).

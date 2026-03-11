@@ -29,6 +29,7 @@ sleep 2
 
 npx -y lighthouse "${URL}" \
   --quiet \
+  --no-enable-error-reporting \
   --chrome-flags="--headless=new" \
   --only-categories=performance,accessibility,best-practices,seo \
   --output=json \
