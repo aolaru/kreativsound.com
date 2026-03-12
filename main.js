@@ -35,9 +35,6 @@ if (themeToggle) {
     document.documentElement.setAttribute("data-theme", nextTheme);
     localStorage.setItem("theme", nextTheme);
     applyThemeUi(nextTheme);
-    if (typeof window.kreativTrack === "function") {
-      window.kreativTrack("theme_toggle", { theme: nextTheme, page: "home" });
-    }
   });
 }
 

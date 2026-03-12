@@ -37,7 +37,7 @@ Suggested thresholds:
 
 ## 4) Monitoring check
 
-- Confirm analytics events are arriving (`featured_product_click`, `theme_toggle`, `404_view`).
+- Confirm Cloudflare Web Analytics is receiving page traffic after deploy.
 - Confirm uptime monitor is green for `https://kreativsound.com/`.
 
 ## 5) Final ship steps

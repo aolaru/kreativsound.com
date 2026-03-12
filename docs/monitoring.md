@@ -19,26 +19,19 @@ Suggested check config:
 
 ## 404 Tracking
 
-The site sends a `404_view` analytics event on the 404 page.
+Use Cloudflare Web Analytics for page-level traffic monitoring.
 
-Use your analytics dashboard to monitor:
+For 404 review, monitor:
 
-- 404 count by URL path
+- Requests to `/404.html`
 - Referrer sources causing broken links
 
 ## Conversion Monitoring
 
-Track these events in analytics:
-
-- `featured_product_click`
-- `product_card_click`
-- `hero_explore_click`
-- `hero_patreon_click`
-- `theme_toggle`
-- `outbound_click`
+Cloudflare Web Analytics does not provide the same custom event model as Plausible.
 
 Review weekly and prioritize:
 
-- Highest-click products
-- Product click-through trends
+- Top-traffic pages
+- Traffic trends by referrer
 - Broken funnel pages with high exits

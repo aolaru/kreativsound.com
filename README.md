@@ -72,17 +72,9 @@ bash scripts/release-gate.sh
 
 ## Analytics
 
-The site uses Plausible Analytics (`analytics.js` + hosted Plausible script).
+The site uses Cloudflare Web Analytics via the Cloudflare beacon script.
 
-Key tracked events:
-
-- `featured_product_click`
-- `product_card_click`
-- `hero_explore_click`
-- `hero_patreon_click`
-- `theme_toggle`
-- `404_view`
-- `outbound_click`
+This provides traffic analytics at the page/site level through the Cloudflare dashboard.
 
 ## Monitoring
 

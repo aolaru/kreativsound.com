@@ -20,8 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../style.css" />
-  <script defer data-domain="kreativsound.com" src="https://plausible.io/js/script.js"></script>
-  <script defer src="../analytics.js"></script>
+  <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
 </head>
 <body>
   <main class="container">
@@ -108,9 +107,6 @@
         document.documentElement.setAttribute("data-theme", nextTheme);
         localStorage.setItem("theme", nextTheme);
         syncThemeUi(nextTheme);
-        if (typeof window.kreativTrack === "function") {
-          window.kreativTrack("theme_toggle", { theme: nextTheme, page: "neolith_release" });
-        }
       });
     }
   </script>
