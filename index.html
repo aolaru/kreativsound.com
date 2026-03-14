@@ -68,39 +68,47 @@
     }
   </script>
 </head>
-<body>
+<body class="home-page">
   <a class="skip-link" href="#catalog-title">Skip to product catalog</a>
 
   <main class="container" id="top">
-    <nav class="site-nav" aria-label="Primary">
-      <a class="nav-link active" href="/" aria-label="Home">
-        <i class="nav-icon fa-solid fa-house" aria-hidden="true"></i>
-        <span class="sr-only">Home</span>
-      </a>
-      <a class="nav-link" href="/news/">News</a>
-      <a class="nav-link" href="/learn/">Learn</a>
-      <a class="nav-link" href="/about/">About</a>
-      <a class="nav-link" href="/contact/">Contact</a>
-      <button class="nav-link share-button" id="share-button" type="button" aria-label="Share this page">
-        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
-        <span class="sr-only">Share this page</span>
-      </button>
-      <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
-        <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
-        <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>
-        <span class="sr-only">Toggle theme</span>
-      </button>
+    <nav class="site-nav site-nav-split" aria-label="Primary">
+      <div class="nav-group nav-group-main">
+        <a class="nav-link active" href="/" aria-label="Home">
+          <i class="nav-icon fa-solid fa-house" aria-hidden="true"></i>
+          <span class="sr-only">Home</span>
+        </a>
+        <a class="nav-link" href="/news/">News</a>
+        <a class="nav-link" href="/learn/">Learn</a>
+        <a class="nav-link" href="/about/">About</a>
+        <a class="nav-link" href="/contact/">Contact</a>
+      </div>
+      <div class="nav-group nav-group-utility">
+        <button class="nav-link share-button" id="share-button" type="button" aria-label="Share this page">
+          <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+          <span class="sr-only">Share this page</span>
+        </button>
+        <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
+          <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
+          <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>
+          <span class="sr-only">Toggle theme</span>
+        </button>
+      </div>
     </nav>
 
     <header class="hero">
-      <div class="logo-wrap">
-        <img class="logo-mark" src="logo-128.svg" width="128" height="128" alt="Kreativ Sound logo" />
+      <div class="hero-brand">
+        <div class="hero-mark-wrap">
+          <img class="logo-mark hero-logo" src="logo-128.svg" width="128" height="128" alt="Kreativ Sound logo" />
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">Ambient and cinematic audio</p>
+          <h1>Kreativ Sound</h1>
+          <p class="tagline">
+            Atmospheric sound packs and audio textures crafted for focus, mood, and creative flow.
+          </p>
+        </div>
       </div>
-      <p class="eyebrow">Ambient and cinematic audio</p>
-      <h1>Kreativ Sound</h1>
-      <p class="tagline">
-        Atmospheric sound packs and audio textures crafted for focus, mood, and creative flow.
-      </p>
       <div class="hero-actions">
         <a class="button primary" data-track="hero_explore_click" href="https://kreativ.gumroad.com" target="_blank" rel="noopener noreferrer">
           <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
