@@ -6,22 +6,22 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://kreativsound.com/about.html</loc>
+    <loc>https://kreativsound.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kreativsound.com/contact.html</loc>
+    <loc>https://kreativsound.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://kreativsound.com/news.html</loc>
+    <loc>https://kreativsound.com/news</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://kreativsound.com/learn.html</loc>
+    <loc>https://kreativsound.com/learn</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

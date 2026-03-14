@@ -223,7 +223,10 @@ a:focus-visible,
 }
 
 .button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   min-height: 46px;
   padding: 0.64rem 1.08rem;
   border-radius: 999px;
@@ -538,6 +541,12 @@ a:focus-visible,
   color: var(--muted);
 }
 
+.news-list a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+}
+
 .news-list time {
   font-size: 0.74rem;
   letter-spacing: 0.04em;
@@ -549,6 +558,19 @@ a:focus-visible,
   list-style: none;
   display: grid;
   gap: 0.55rem;
+}
+
+.contact-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.contact-list .fa-solid,
+.contact-list .fa-brands {
+  width: 1rem;
+  color: var(--accent-strong);
+  text-align: center;
 }
 
 .footer {

@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BIOFORMS Catalog Update (February 26, 2026) | Kreativ Sound</title>
-  <meta name="description" content="BIOFORMS homepage and catalog update details from February 26, 2026." />
+  <title>News | Kreativ Sound</title>
+  <meta name="description" content="Latest sound releases and important updates from Kreativ Sound." />
   <meta name="theme-color" content="#f8e9e9" />
   <meta name="robots" content="index,follow" />
-  <script>(function(){var s=localStorage.getItem("theme");var t=s==="light"||s==="dark"?s:"light";document.documentElement.setAttribute("data-theme",t);})();</script>
-  <link rel="canonical" href="https://kreativsound.com/posts/bioforms-update-2026-02-26.html" />
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      var theme = stored === "light" || stored === "dark" ? stored : "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <link rel="canonical" href="https://kreativsound.com/news" />
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -21,7 +27,9 @@
   <main class="container">
     <nav class="site-nav" aria-label="Primary">
       <a class="nav-link" href="/" aria-label="Home">
-        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 8h-3v10h-5v-6h-2v6H6V11H3z"></path></svg>
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3l9 8h-3v10h-5v-6h-2v6H6V11H3z"></path>
+        </svg>
         <span class="sr-only">Home</span>
       </a>
       <a class="nav-link active" href="/news">News</a>
@@ -46,15 +54,53 @@
         <span class="sr-only">Toggle theme</span>
       </button>
     </nav>
-    <article class="card page-main">
-      <h1 class="page-title">BIOFORMS Catalog Update</h1>
-      <p class="page-lead article-meta">Published February 26, 2026</p>
-      <div class="stack">
-        <p>BIOFORMS was promoted in the homepage presentation and featured placement to improve discoverability for Synplant 2 users.</p>
-        <p>This update aligns copy, visuals, and CTA placement around one clear entry point for new visitors.</p>
-        <p><a href="https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile" target="_blank" rel="noopener noreferrer">View BIOFORMS on Gumroad</a></p>
+
+    <section class="card page-main">
+      <h1 class="page-title">News</h1>
+      <p class="page-lead">Latest sound releases and important site updates.</p>
+      <div class="stack news-stack">
+        <article class="news-block">
+          <h2>Latest Sound Releases</h2>
+          <ul class="news-list">
+            <li>
+              <time datetime="2026-03-03">March 3, 2026</time>
+              <span>NEOLITH for Softube Models released with a focused analog-forward preset set for cinematic scoring.</span>
+              <a href="../posts/neolith-release-2026-03-03.html">Read release note <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </li>
+            <li>
+              <time datetime="2026-02-26">February 26, 2026</time>
+              <span>BIOFORMS for Synplant 2 was elevated as a core release with improved homepage placement.</span>
+              <a href="../posts/bioforms-update-2026-02-26.html">Read update <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </li>
+            <li>
+              <time datetime="2026-02-25">February 25, 2026</time>
+              <span>Catalog thumbnail pipeline was refreshed for faster loads and cleaner media management.</span>
+              <a href="../posts/catalog-media-refresh-2026-02-25.html">Read update <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </li>
+          </ul>
+        </article>
+        <article class="news-block">
+          <h2>Important Site News</h2>
+          <ul class="news-list">
+            <li>
+              <time datetime="2026-03-06">March 6, 2026</time>
+              <span>News page launched in primary navigation with release timeline and updates.</span>
+              <a href="../posts/news-launch-2026-03-06.html">Read update <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </li>
+            <li>
+              <time datetime="2026-03-06">March 6, 2026</time>
+              <span>Footer updated with Kreativ network links and Made by KREATIV attribution.</span>
+              <a href="../posts/footer-network-update-2026-03-06.html">Read update <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </li>
+            <li>
+              <time datetime="2026-03-05">March 5, 2026</time>
+              <span>Analytics and release quality workflow added (event tracking, monitoring guide, release gate scripts).</span>
+              <a href="../posts/analytics-rollout-2026-03-05.html">Read update <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </li>
+          </ul>
+        </article>
       </div>
-    </article>
+    </section>
 
     <footer class="footer">
       <p class="footer-links">
@@ -67,7 +113,7 @@
         <a href="https://kreativtools.com" target="_blank" rel="noopener noreferrer">Kreativ Tools</a>
       </p>
       <p class="footer-meta">
-        © <span id="year"></span>
+        © <span id="year">2026</span>
         <a href="https://madebykreativ.com" target="_blank" rel="noopener noreferrer">Made by KREATIV</a>
         · Independent creative tools and assets by Andrei Olaru
       </p>
@@ -76,6 +122,7 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
+
     var toggle = document.getElementById("theme-toggle");
     var metaTheme = document.querySelector('meta[name="theme-color"]');
     function currentTheme() {
