@@ -497,6 +497,21 @@ a:focus-visible,
   margin-bottom: 1rem;
 }
 
+.article-figure {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.article-image {
+  width: 128px;
+  height: 128px;
+  border-radius: 14px;
+  object-fit: cover;
+  background: #000;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+}
+
 .stack {
   display: grid;
   gap: 0.9rem;
