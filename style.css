@@ -143,19 +143,25 @@ a:focus-visible,
 }
 
 .nav-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 42px;
-  padding: 0.5rem 0.9rem;
-  border-radius: 999px;
-  border: 1px solid var(--card-border);
+  padding: 0.35rem 0.15rem;
+  border-radius: 0;
+  border: 0;
   color: var(--text);
-  background: var(--card);
+  background: transparent;
   font: inherit;
-  font-size: 0.84rem;
+  font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.4;
   cursor: pointer;
   text-align: center;
+  text-decoration: none;
+  box-shadow: none;
+  border-bottom: 2px solid transparent;
+  transition: color 170ms ease, opacity 170ms ease, border-color 170ms ease;
 }
 
 .nav-icon {
@@ -169,13 +175,13 @@ a:focus-visible,
 
 .nav-link:hover {
   text-decoration: none;
-  border-color: var(--card-border-hover);
-  background: rgba(153, 0, 0, 0.14);
+  color: var(--accent-strong);
+  opacity: 0.9;
 }
 
 .nav-link.active {
-  border-color: var(--accent-bright);
   color: var(--accent-strong);
+  border-bottom: 2px solid var(--accent-bright);
 }
 
 .card {
@@ -204,7 +210,7 @@ a:focus-visible,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.42rem;
+  padding: 0.3rem;
 }
 
 .theme-toggle:hover {
@@ -217,7 +223,7 @@ a:focus-visible,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.42rem;
+  padding: 0.3rem;
 }
 
 .share-button:hover {
