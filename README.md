@@ -11,9 +11,21 @@ Official static website for [kreativsound.com](https://kreativsound.com).
 
 ## Local Preview
 
-Open `index.html` directly in your browser.
+Serve the site from the project root with a local HTTP server.
 
-This project is configured to work from `file://` (no build step required).
+Example:
+
+```bash
+python3 -m http.server 4173
+```
+
+Then open:
+
+```text
+http://127.0.0.1:4173/
+```
+
+`file://` preview is no longer reliable because the site uses root-relative links and trailing-slash routes such as `/news/` and `/learn/`.
 
 ## Editing Product Cards
 
