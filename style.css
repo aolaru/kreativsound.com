@@ -198,6 +198,45 @@ a:focus-visible,
   text-align: center;
 }
 
+.home-page .site-nav-home {
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(153, 0, 0, 0.12);
+}
+
+.home-page .hero {
+  margin-top: 0.35rem;
+  margin-bottom: 1.55rem;
+}
+
+.home-page .hero .eyebrow {
+  margin-top: 0.2rem;
+}
+
+.home-page .hero-actions .button.secondary {
+  color: var(--accent-strong);
+  border-color: rgba(153, 0, 0, 0.28);
+  background: rgba(153, 0, 0, 0.12);
+}
+
+.home-page .hero-actions .button.secondary:hover {
+  border-color: rgba(153, 0, 0, 0.4);
+  background: rgba(153, 0, 0, 0.18);
+}
+
+.home-page .catalog {
+  padding-top: 1.08rem;
+}
+
+.home-page .catalog h2 {
+  margin-top: 0.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.home-page .catalog-intro {
+  margin-bottom: 0.95rem;
+}
+
 .logo-wrap {
   display: flex;
   justify-content: center;
