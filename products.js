@@ -105,7 +105,12 @@ window.KREATIV_PRODUCTS = [
     thumbnail: "assets/thumbs/horror-2.jpg",
     format: "WAV samples",
     count: "Collection",
-    useCase: "Horror stingers and uneasy drones"
+    useCase: "Horror stingers and uneasy drones",
+    demo: {
+      label: "Listen to demo",
+      src: "assets/audio/horror-2-demo-01.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "ABYSS - Free Dark Ambient Presets for PRO-53",

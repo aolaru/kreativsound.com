@@ -574,6 +574,11 @@ a:focus-visible,
   list-style: none;
 }
 
+.product-card-stack {
+  display: grid;
+  gap: 0.45rem;
+}
+
 .product-card {
   display: flex;
   flex-direction: column;
@@ -626,6 +631,25 @@ a:focus-visible,
 
 .product-use {
   color: var(--soft);
+}
+
+.product-demo {
+  display: grid;
+  gap: 0.28rem;
+  padding: 0 0.15rem;
+}
+
+.product-demo-label {
+  font-size: 0.72rem;
+  line-height: 1.2;
+  color: var(--accent-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.product-demo-player {
+  width: 100%;
+  height: 32px;
 }
 
 .noscript-fallback {

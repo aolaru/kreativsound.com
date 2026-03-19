@@ -59,6 +59,8 @@ function renderCatalog() {
 
     categoryItems.forEach((item) => {
       const listItem = document.createElement("li");
+      const stack = document.createElement("div");
+      stack.className = "product-card-stack";
 
       const link = document.createElement("a");
       link.className = "product-card";
@@ -95,7 +97,34 @@ function renderCatalog() {
       link.appendChild(meta);
       link.appendChild(useCase);
 
-      listItem.appendChild(link);
+      stack.appendChild(link);
+
+      if (item.demo && item.demo.src) {
+        const demo = document.createElement("div");
+        demo.className = "product-demo";
+
+        const demoLabel = document.createElement("span");
+        demoLabel.className = "product-demo-label";
+        demoLabel.textContent = item.demo.label || "Demo";
+
+        const audio = document.createElement("audio");
+        audio.className = "product-demo-player";
+        audio.controls = true;
+        audio.preload = "none";
+
+        const source = document.createElement("source");
+        source.src = item.demo.src;
+        if (item.demo.type) {
+          source.type = item.demo.type;
+        }
+
+        audio.appendChild(source);
+        demo.appendChild(demoLabel);
+        demo.appendChild(audio);
+        stack.appendChild(demo);
+      }
+
+      listItem.appendChild(stack);
       grid.appendChild(listItem);
       visualIndex += 1;
     });
