@@ -569,7 +569,7 @@ a:focus-visible,
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 0.95rem;
   list-style: none;
 }
