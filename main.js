@@ -61,6 +61,9 @@ function renderCatalog() {
       const listItem = document.createElement("li");
       const stack = document.createElement("div");
       stack.className = "product-card-stack";
+      if (item.demo && item.demo.src) {
+        stack.classList.add("product-card-shell");
+      }
 
       const link = document.createElement("a");
       link.className = "product-card";
@@ -111,14 +114,12 @@ function renderCatalog() {
         audio.className = "product-demo-player";
         audio.controls = true;
         audio.preload = "none";
-
-        const source = document.createElement("source");
-        source.src = item.demo.src;
+        audio.src = item.demo.src;
         if (item.demo.type) {
-          source.type = item.demo.type;
+          audio.setAttribute("type", item.demo.type);
         }
+        audio.load();
 
-        audio.appendChild(source);
         demo.appendChild(demoLabel);
         demo.appendChild(audio);
         stack.appendChild(demo);
