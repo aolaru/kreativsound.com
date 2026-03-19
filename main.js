@@ -7,6 +7,11 @@ const themeColorMeta = document.querySelector('meta[name="theme-color"]');
 const container = document.getElementById("catalog-groups");
 
 const preferredCategoryOrder = ["Presets", "Samples", "Free"];
+const categoryLabels = {
+  Presets: "Preset Packs",
+  Samples: "Sample Packs",
+  Free: "Free Downloads"
+};
 const discoveredCategories = Array.from(new Set(products.map((product) => product.category)));
 const categories = [
   ...preferredCategoryOrder.filter((category) => discoveredCategories.includes(category)),
@@ -51,7 +56,7 @@ function renderCatalog() {
     section.className = "catalog-group";
 
     const heading = document.createElement("h3");
-    heading.textContent = category;
+    heading.textContent = categoryLabels[category] || category;
     section.appendChild(heading);
 
     const grid = document.createElement("ul");

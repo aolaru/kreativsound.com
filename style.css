@@ -565,6 +565,7 @@ a:focus-visible,
   text-transform: uppercase;
   color: #d1b0b0;
   margin-bottom: 0.55rem;
+  text-align: center;
 }
 
 .product-grid {
