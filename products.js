@@ -45,6 +45,15 @@ window.KREATIV_PRODUCTS = [
     useCase: "Analog-forward textures and cinematic synth tone shaping"
   },
   {
+    title: "VELVET RUINS - Presets for Vital",
+    category: "Presets",
+    url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
+    thumbnail: "logo-128.svg",
+    format: "Presets",
+    count: "Collection",
+    useCase: "Worn-down cinematic synth textures and dark melodic atmosphere"
+  },
+  {
     title: "SFXS 2 - Creative Sound Effects Collection",
     category: "Samples",
     url: "https://kreativ.gumroad.com/l/sfxs-sound-effects-library?layout=profile",
