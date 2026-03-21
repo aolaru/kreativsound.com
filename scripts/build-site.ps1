@@ -210,6 +210,24 @@ $posts = @(
 '@
   }
   @{
+    Slug = "velvet-ruins-release-2026-03-21.html"
+    Section = "news"
+    ListSection = "Latest Sound Releases"
+    ListLabel = "Read release note"
+    Title = "VELVET RUINS Release Notes"
+    MetaTitle = "VELVET RUINS Release Notes (March 21, 2026) | Kreativ Sound"
+    Description = "Release notes for VELVET RUINS presets for Vital, published March 21, 2026."
+    Published = "2026-03-21"
+    DisplayDate = "March 21, 2026"
+    ListingSummary = "VELVET RUINS for Vital is now featured with a dark, worn-down preset collection built for cinematic melody and atmosphere."
+    BodyHtml = @'
+      <p>VELVET RUINS is now featured on the homepage as a highlighted Vital release focused on worn-down cinematic textures, dark melodic motion, and restrained tension.</p>
+      <p>The pack is designed for producers who want atmosphere with character: less polished shine, more dust, movement, and emotional weight.</p>
+      <p>Use it for slow-burn intros, haunted harmonic beds, and melodic layers that feel aged without losing clarity.</p>
+      <p><a href="https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile" target="_blank" rel="noopener noreferrer">View VELVET RUINS on Gumroad</a></p>
+'@
+  }
+  @{
     Slug = "neolith-release-2026-03-03.html"
     Section = "news"
     ListSection = "Latest Sound Releases"
@@ -683,7 +701,11 @@ $sitemapEntries = @(
   @{ Url = "$baseUrl/news/"; LastMod = "2026-03-16"; ChangeFreq = "weekly"; Priority = "0.8" }
   @{ Url = "$baseUrl/learn/"; LastMod = "2026-03-16"; ChangeFreq = "weekly"; Priority = "0.8" }
 ) + ($posts | Where-Object { $_.Section -ne "draft" } | ForEach-Object {
-  $lastMod = if ($_.Published -eq "2026-03-16") { "2026-03-16" } else { "2026-03-14" }
+  $lastMod = switch ($_.Published) {
+    "2026-03-21" { "2026-03-21" }
+    "2026-03-16" { "2026-03-16" }
+    default { "2026-03-14" }
+  }
   @{ Url = "$baseUrl/posts/$($_.Slug)"; LastMod = $lastMod; ChangeFreq = "monthly"; Priority = "0.7" }
 })
 
