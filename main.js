@@ -6,7 +6,12 @@ const preferredCategoryOrder = ["Presets", "Samples", "Free"];
 const categoryLabels = {
   Presets: "Preset Packs",
   Samples: "Sample Packs",
-  Free: "Free Downloads"
+  Free: "Free Sound"
+};
+const categoryIds = {
+  Presets: "catalog-presets",
+  Samples: "catalog-samples",
+  Free: "catalog-free"
 };
 const discoveredCategories = Array.from(new Set(products.map((product) => product.category)));
 const categories = [
@@ -25,6 +30,7 @@ function renderCatalog() {
 
     const section = document.createElement("section");
     section.className = "catalog-group";
+    section.id = categoryIds[category] || `catalog-${category.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 
     const heading = document.createElement("h3");
     heading.textContent = categoryLabels[category] || category;
