@@ -48,7 +48,7 @@ window.KREATIV_PRODUCTS = [
     title: "VELVET RUINS - Presets for Vital",
     category: "Presets",
     url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
-    thumbnail: "logo-128.svg",
+    thumbnail: "assets/thumbs/velvet-ruins.jpg",
     format: "Presets",
     count: "Collection",
     useCase: "Worn-down cinematic synth textures and dark melodic atmosphere"
