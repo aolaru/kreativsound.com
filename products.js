@@ -45,7 +45,7 @@ window.KREATIV_PRODUCTS = [
     useCase: "Analog-forward textures and cinematic synth tone shaping"
   },
   {
-    title: "VELVET RUINS - Presets for Vital",
+    title: "VELVET RUINS - Presets for Vital spectral synth",
     category: "Presets",
     url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
     thumbnail: "assets/thumbs/velvet-ruins.jpg",
