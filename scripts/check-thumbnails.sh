@@ -8,7 +8,7 @@ STATUS=0
 
 get_dimensions() {
   local image="$1"
-  if command -v sips >/dev/null 2>&1; then
+  if [ "$(uname -s)" = "Darwin" ] && command -v sips >/dev/null 2>&1; then
     local width height
     width="$(sips -g pixelWidth "${image}" | awk '/pixelWidth/ {print $2}')"
     height="$(sips -g pixelHeight "${image}" | awk '/pixelHeight/ {print $2}')"
@@ -19,13 +19,21 @@ get_dimensions() {
     identify -format "%w %h" "${image}"
     return 0
   fi
+  if command -v magick >/dev/null 2>&1; then
+    magick identify -format "%w %h" "${image}"
+    return 0
+  fi
   echo "Missing image dimension tool: install sips (macOS) or identify (ImageMagick)." >&2
   return 1
 }
 
 for image in "${THUMB_DIR}"/*.jpg; do
   [ -e "${image}" ] || continue
-  read -r width height < <(get_dimensions "${image}")
+  if ! dimensions="$(get_dimensions "${image}")"; then
+    echo "Unable to inspect thumbnail: ${image}" >&2
+    exit 1
+  fi
+  read -r width height <<< "${dimensions}"
   size="$(wc -c < "${image}" | tr -d ' ')"
 
   if [ "${width}" -lt "${MIN_EDGE}" ] || [ "${height}" -lt "${MIN_EDGE}" ]; then

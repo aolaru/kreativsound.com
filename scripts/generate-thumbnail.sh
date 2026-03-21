@@ -8,7 +8,7 @@ fi
 
 SOURCE_IMAGE="$1"
 OUTPUT_IMAGE="$2"
-SIZE="${3:-128}"
+SIZE="${3:-256}"
 TMP_DIR="$(mktemp -d)"
 SQUARE_IMAGE="${TMP_DIR}/square.png"
 
@@ -28,7 +28,7 @@ if [ ! -f "${SOURCE_IMAGE}" ]; then
   exit 1
 fi
 
-sips -c 1024 1024 "${SOURCE_IMAGE}" --out "${SQUARE_IMAGE}" >/dev/null
-sips -Z "${SIZE}" -s format jpeg "${SQUARE_IMAGE}" --out "${OUTPUT_IMAGE}" >/dev/null
+sips -c 1400 1400 "${SOURCE_IMAGE}" --out "${SQUARE_IMAGE}" >/dev/null
+sips -Z "${SIZE}" -s format jpeg -s formatOptions 86 "${SQUARE_IMAGE}" --out "${OUTPUT_IMAGE}" >/dev/null
 
 echo "Created thumbnail: ${OUTPUT_IMAGE}"
