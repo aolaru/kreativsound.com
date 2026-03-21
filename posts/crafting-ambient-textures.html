@@ -52,79 +52,52 @@
       <h1 class="page-title">Crafting Ambient Textures</h1>
       <p class="page-lead article-meta">Published March 16, 2026</p>
       <div class="stack article-stack">
-        <figure class="article-figure">
-          <img
-            class="article-image"
-            src="../assets/thumbs/space-2.jpg"
-            width="128"
-            height="128"
-            alt="SPACE 2 artwork"
-            loading="eager"
-            decoding="async"
-          />
-        </figure>
-        <p>Ambient textures work better when each layer has one job. Keep the stack simple.</p>
+      <figure class="article-figure">
+        <img
+          class="article-image"
+          src="../assets/thumbs/space-2.jpg"
+          width="128"
+          height="128"
+          alt="SPACE 2 artwork"
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
+      <p>Ambient textures work better when each layer has one job. Keep the stack simple.</p>
 
-        <h2>1. Start with one stable bed</h2>
-        <p>Pick one tonal layer and let it hold the space. If the first sound already feels wide and deep, stop there before adding more.</p>
+      <h2>1. Start with one stable bed</h2>
+      <p>Pick one tonal layer and let it hold the space. If the first sound already feels wide and deep, stop there before adding more.</p>
 
-        <h2>2. Add movement slowly</h2>
-        <p>Bring in a second layer for drift, not for size. Slow modulation, light filtering, and gentle stereo change usually do enough.</p>
+      <h2>2. Add movement slowly</h2>
+      <p>Bring in a second layer for drift, not for size. Slow modulation, light filtering, and gentle stereo change usually do enough.</p>
 
-        <h2>3. Use detail at the edges</h2>
-        <p>Noise, texture, and small transients should sit around the main bed, not fight it. Keep these layers lower than you think.</p>
+      <h2>3. Use detail at the edges</h2>
+      <p>Noise, texture, and small transients should sit around the main bed, not fight it. Keep these layers lower than you think.</p>
 
-        <p>The goal is not complexity. The goal is a texture that holds mood and leaves room for the rest of the scene.</p>
-        <p><a href="https://kreativ.gumroad.com" target="_blank" rel="noopener noreferrer">Explore sound packs on Gumroad</a></p>
+      <p>The goal is not complexity. The goal is a texture that holds mood and leaves room for the rest of the scene.</p>
+      <p><a href="https://kreativ.gumroad.com" target="_blank" rel="noopener noreferrer">Explore sound packs on Gumroad</a></p>
       </div>
     </article>
 
     <footer class="footer">
       <p class="footer-links">
         <a href="https://kreativfont.com" target="_blank" rel="noopener noreferrer">Kreativ Font</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativsound.com" target="_blank" rel="noopener noreferrer">Kreativ Sound</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativwp.com" target="_blank" rel="noopener noreferrer">Kreativ WP</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativtools.com" target="_blank" rel="noopener noreferrer">Kreativ Tools</a>
       </p>
       <p class="footer-meta">
-        © <span id="year"></span>
+        &copy; <span id="year"></span>
         <a href="https://madebykreativ.com" target="_blank" rel="noopener noreferrer">Made by KREATIV</a>
-        · Independent creative tools and assets by Andrei Olaru
+        &middot; Independent creative tools and assets by Andrei Olaru
       </p>
     </footer>
   </main>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-    var toggle = document.getElementById("theme-toggle");
-    var metaTheme = document.querySelector('meta[name="theme-color"]');
-    function currentTheme() {
-      return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-    }
-    function syncThemeUi(theme) {
-      if (metaTheme) {
-        metaTheme.setAttribute("content", theme === "dark" ? "#0f1526" : "#f8e9e9");
-      }
-      if (toggle) {
-        var isDark = theme === "dark";
-        toggle.dataset.icon = isDark ? "sun" : "moon";
-        toggle.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
-        toggle.setAttribute("aria-pressed", String(isDark));
-      }
-    }
-    syncThemeUi(currentTheme());
-    if (toggle) {
-      toggle.addEventListener("click", function () {
-        var nextTheme = currentTheme() === "dark" ? "light" : "dark";
-        document.documentElement.setAttribute("data-theme", nextTheme);
-        localStorage.setItem("theme", nextTheme);
-        syncThemeUi(nextTheme);
-      });
-    }
-  </script>
+  <script src="../site.js"></script>
   <script src="../share.js"></script>
 </body>
 </html>

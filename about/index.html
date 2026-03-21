@@ -61,50 +61,22 @@
     <footer class="footer">
       <p class="footer-links">
         <a href="https://kreativfont.com" target="_blank" rel="noopener noreferrer">Kreativ Font</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativsound.com" target="_blank" rel="noopener noreferrer">Kreativ Sound</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativwp.com" target="_blank" rel="noopener noreferrer">Kreativ WP</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativtools.com" target="_blank" rel="noopener noreferrer">Kreativ Tools</a>
       </p>
       <p class="footer-meta">
-        © <span id="year">2026</span>
+        &copy; <span id="year"></span>
         <a href="https://madebykreativ.com" target="_blank" rel="noopener noreferrer">Made by KREATIV</a>
-        · Independent creative tools and assets by Andrei Olaru
+        &middot; Independent creative tools and assets by Andrei Olaru
       </p>
     </footer>
   </main>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    var toggle = document.getElementById("theme-toggle");
-    var metaTheme = document.querySelector('meta[name="theme-color"]');
-    function currentTheme() {
-      return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-    }
-    function syncThemeUi(theme) {
-      if (metaTheme) {
-        metaTheme.setAttribute("content", theme === "dark" ? "#0f1526" : "#f8e9e9");
-      }
-      if (toggle) {
-        var isDark = theme === "dark";
-        toggle.dataset.icon = isDark ? "sun" : "moon";
-        toggle.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
-        toggle.setAttribute("aria-pressed", String(isDark));
-      }
-    }
-    syncThemeUi(currentTheme());
-    if (toggle) {
-      toggle.addEventListener("click", function () {
-        var nextTheme = currentTheme() === "dark" ? "light" : "dark";
-        document.documentElement.setAttribute("data-theme", nextTheme);
-        localStorage.setItem("theme", nextTheme);
-        syncThemeUi(nextTheme);
-      });
-    }
-  </script>
+  <script src="../site.js"></script>
   <script src="../share.js"></script>
 </body>
 </html>

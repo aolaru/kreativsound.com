@@ -7,7 +7,13 @@
   <meta name="description" content="Analytics and release workflow rollout update from March 5, 2026." />
   <meta name="theme-color" content="#f8e9e9" />
   <meta name="robots" content="index,follow" />
-  <script>(function(){var s=localStorage.getItem("theme");var t=s==="light"||s==="dark"?s:"light";document.documentElement.setAttribute("data-theme",t);})();</script>
+  <script>
+    (function () {
+      var stored = localStorage.getItem("theme");
+      var theme = stored === "light" || stored === "dark" ? stored : "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
   <link rel="canonical" href="https://kreativsound.com/posts/analytics-rollout-2026-03-05.html" />
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png" />
@@ -41,62 +47,36 @@
         <span class="sr-only">Toggle theme</span>
       </button>
     </nav>
+
     <article class="card page-main">
       <h1 class="page-title">Analytics and Release Workflow Rollout</h1>
       <p class="page-lead article-meta">Published March 5, 2026</p>
-      <div class="stack">
-        <p>Plausible event tracking was introduced for product clicks, outbound traffic, theme toggles, and 404 views.</p>
-        <p>The release process was formalized with a release-gate script that runs thumbnail checks, Lighthouse audits, and score threshold validation.</p>
-        <p>Monitoring guidance was added to keep uptime and analytics quality visible after each deployment.</p>
+      <div class="stack article-stack">
+      <p>Plausible event tracking was introduced for product clicks, outbound traffic, theme toggles, and 404 views.</p>
+      <p>The release process was formalized with a release-gate script that runs thumbnail checks, Lighthouse audits, and score threshold validation.</p>
+      <p>Monitoring guidance was added to keep uptime and analytics quality visible after each deployment.</p>
       </div>
     </article>
 
     <footer class="footer">
       <p class="footer-links">
         <a href="https://kreativfont.com" target="_blank" rel="noopener noreferrer">Kreativ Font</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativsound.com" target="_blank" rel="noopener noreferrer">Kreativ Sound</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativwp.com" target="_blank" rel="noopener noreferrer">Kreativ WP</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativtools.com" target="_blank" rel="noopener noreferrer">Kreativ Tools</a>
       </p>
       <p class="footer-meta">
-        © <span id="year"></span>
+        &copy; <span id="year"></span>
         <a href="https://madebykreativ.com" target="_blank" rel="noopener noreferrer">Made by KREATIV</a>
-        · Independent creative tools and assets by Andrei Olaru
+        &middot; Independent creative tools and assets by Andrei Olaru
       </p>
     </footer>
   </main>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-    var toggle = document.getElementById("theme-toggle");
-    var metaTheme = document.querySelector('meta[name="theme-color"]');
-    function currentTheme() {
-      return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-    }
-    function syncThemeUi(theme) {
-      if (metaTheme) {
-        metaTheme.setAttribute("content", theme === "dark" ? "#0f1526" : "#f8e9e9");
-      }
-      if (toggle) {
-        var isDark = theme === "dark";
-        toggle.dataset.icon = isDark ? "sun" : "moon";
-        toggle.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
-        toggle.setAttribute("aria-pressed", String(isDark));
-      }
-    }
-    syncThemeUi(currentTheme());
-    if (toggle) {
-      toggle.addEventListener("click", function () {
-        var nextTheme = currentTheme() === "dark" ? "light" : "dark";
-        document.documentElement.setAttribute("data-theme", nextTheme);
-        localStorage.setItem("theme", nextTheme);
-        syncThemeUi(nextTheme);
-      });
-    }
-  </script>
+  <script src="../site.js"></script>
   <script src="../share.js"></script>
 </body>
 </html>

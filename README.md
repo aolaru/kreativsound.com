@@ -27,6 +27,18 @@ http://127.0.0.1:4173/
 
 `file://` preview is no longer reliable because the site uses root-relative links and trailing-slash routes such as `/news/` and `/learn/`.
 
+## Build Generated Pages
+
+Shared secondary pages, post pages, redirects, and `sitemap.xml` are generated from:
+
+- `scripts/build-site.ps1`
+
+Regenerate them with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/build-site.ps1
+```
+
 ## Editing Product Cards
 
 Product data is maintained in:
@@ -34,6 +46,18 @@ Product data is maintained in:
 - `products.js`
 
 Each product includes title, category, URL, thumbnail path, and metadata shown on the card.
+
+## Editing News, Learn, and Posts
+
+Post metadata and page copy for generated sections are maintained in:
+
+- `scripts/build-site.ps1`
+
+After editing that file, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/build-site.ps1
+```
 
 ## Thumbnails
 

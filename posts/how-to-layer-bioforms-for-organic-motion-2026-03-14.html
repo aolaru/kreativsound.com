@@ -52,79 +52,52 @@
       <h1 class="page-title">How to Layer BIOFORMS for Organic Motion</h1>
       <p class="page-lead article-meta">Published March 14, 2026</p>
       <div class="stack article-stack">
-        <figure class="article-figure">
-          <img
-            class="article-image"
-            src="../assets/thumbs/bioforms.jpg"
-            width="128"
-            height="128"
-            alt="BIOFORMS artwork"
-            loading="eager"
-            decoding="async"
-          />
-        </figure>
-        <p>BIOFORMS works best when one layer moves and one layer stays still.</p>
+      <figure class="article-figure">
+        <img
+          class="article-image"
+          src="../assets/thumbs/bioforms.jpg"
+          width="128"
+          height="128"
+          alt="BIOFORMS artwork"
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
+      <p>BIOFORMS works best when one layer moves and one layer stays still.</p>
 
-        <h2>1. Start with one stable base</h2>
-        <p>Pick a preset that holds the tone. Keep it simple. This is the part that keeps the sound grounded.</p>
+      <h2>1. Start with one stable base</h2>
+      <p>Pick a preset that holds the tone. Keep it simple. This is the part that keeps the sound grounded.</p>
 
-        <h2>2. Add one moving layer</h2>
-        <p>Bring in a second preset with more motion or texture. Keep it lower in the mix. You want movement, not clutter.</p>
+      <h2>2. Add one moving layer</h2>
+      <p>Bring in a second preset with more motion or texture. Keep it lower in the mix. You want movement, not clutter.</p>
 
-        <h2>3. Leave space around it</h2>
-        <p>BIOFORMS already has detail. Do not stack too much on top. A small amount of space makes the motion feel more alive.</p>
+      <h2>3. Leave space around it</h2>
+      <p>BIOFORMS already has detail. Do not stack too much on top. A small amount of space makes the motion feel more alive.</p>
 
-        <p>The main idea is simple: one layer for tone, one layer for motion.</p>
-        <p><a href="https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile" target="_blank" rel="noopener noreferrer">Get BIOFORMS on Gumroad</a></p>
+      <p>The main idea is simple: one layer for tone, one layer for motion.</p>
+      <p><a href="https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile" target="_blank" rel="noopener noreferrer">Get BIOFORMS on Gumroad</a></p>
       </div>
     </article>
 
     <footer class="footer">
       <p class="footer-links">
         <a href="https://kreativfont.com" target="_blank" rel="noopener noreferrer">Kreativ Font</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativsound.com" target="_blank" rel="noopener noreferrer">Kreativ Sound</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativwp.com" target="_blank" rel="noopener noreferrer">Kreativ WP</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativtools.com" target="_blank" rel="noopener noreferrer">Kreativ Tools</a>
       </p>
       <p class="footer-meta">
-        © <span id="year"></span>
+        &copy; <span id="year"></span>
         <a href="https://madebykreativ.com" target="_blank" rel="noopener noreferrer">Made by KREATIV</a>
-        · Independent creative tools and assets by Andrei Olaru
+        &middot; Independent creative tools and assets by Andrei Olaru
       </p>
     </footer>
   </main>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-    var toggle = document.getElementById("theme-toggle");
-    var metaTheme = document.querySelector('meta[name="theme-color"]');
-    function currentTheme() {
-      return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-    }
-    function syncThemeUi(theme) {
-      if (metaTheme) {
-        metaTheme.setAttribute("content", theme === "dark" ? "#0f1526" : "#f8e9e9");
-      }
-      if (toggle) {
-        var isDark = theme === "dark";
-        toggle.dataset.icon = isDark ? "sun" : "moon";
-        toggle.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
-        toggle.setAttribute("aria-pressed", String(isDark));
-      }
-    }
-    syncThemeUi(currentTheme());
-    if (toggle) {
-      toggle.addEventListener("click", function () {
-        var nextTheme = currentTheme() === "dark" ? "light" : "dark";
-        document.documentElement.setAttribute("data-theme", nextTheme);
-        localStorage.setItem("theme", nextTheme);
-        syncThemeUi(nextTheme);
-      });
-    }
-  </script>
+  <script src="../site.js"></script>
   <script src="../share.js"></script>
 </body>
 </html>

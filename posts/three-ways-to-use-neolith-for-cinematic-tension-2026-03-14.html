@@ -52,79 +52,52 @@
       <h1 class="page-title">3 Ways to Use NEOLITH for Cinematic Tension</h1>
       <p class="page-lead article-meta">Published March 14, 2026</p>
       <div class="stack article-stack">
-        <figure class="article-figure">
-          <img
-            class="article-image"
-            src="../assets/thumbs/neolith.jpg"
-            width="128"
-            height="128"
-            alt="NEOLITH artwork"
-            loading="eager"
-            decoding="async"
-          />
-        </figure>
-        <p>NEOLITH works best as a tension layer. Keep it simple and let one sound do the job.</p>
+      <figure class="article-figure">
+        <img
+          class="article-image"
+          src="../assets/thumbs/neolith.jpg"
+          width="128"
+          height="128"
+          alt="NEOLITH artwork"
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
+      <p>NEOLITH works best as a tension layer. Keep it simple and let one sound do the job.</p>
 
-        <h2>1. Build a low-moving bed under sparse dialogue</h2>
-        <p>Pick a restrained preset and keep it low in the mix. Add slow movement, but do not overdo it. This keeps the scene uneasy without getting in the way.</p>
+      <h2>1. Build a low-moving bed under sparse dialogue</h2>
+      <p>Pick a restrained preset and keep it low in the mix. Add slow movement, but do not overdo it. This keeps the scene uneasy without getting in the way.</p>
 
-        <h2>2. Tighten the harmonic space before the reveal</h2>
-        <p>Use it before the hit, not only on the hit. Narrow the stereo image or darken the tone right before the reveal. That small move makes the next moment land harder.</p>
+      <h2>2. Tighten the harmonic space before the reveal</h2>
+      <p>Use it before the hit, not only on the hit. Narrow the stereo image or darken the tone right before the reveal. That small move makes the next moment land harder.</p>
 
-        <h2>3. Pair it with something unstable and organic</h2>
-        <p>Layer it with noise, tape, or field recordings. Let NEOLITH hold the tone and let the rough layer add tension around it. This works well for dark ambient, suspense, and slow builds.</p>
+      <h2>3. Pair it with something unstable and organic</h2>
+      <p>Layer it with noise, tape, or field recordings. Let NEOLITH hold the tone and let the rough layer add tension around it. This works well for dark ambient, suspense, and slow builds.</p>
 
-        <p>The idea is simple: use NEOLITH to hold pressure, not to fill everything. A single focused layer usually works better than stacking too much.</p>
-        <p><a href="https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile" target="_blank" rel="noopener noreferrer">Get NEOLITH on Gumroad</a></p>
+      <p>The idea is simple: use NEOLITH to hold pressure, not to fill everything. A single focused layer usually works better than stacking too much.</p>
+      <p><a href="https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile" target="_blank" rel="noopener noreferrer">Get NEOLITH on Gumroad</a></p>
       </div>
     </article>
 
     <footer class="footer">
       <p class="footer-links">
         <a href="https://kreativfont.com" target="_blank" rel="noopener noreferrer">Kreativ Font</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativsound.com" target="_blank" rel="noopener noreferrer">Kreativ Sound</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativwp.com" target="_blank" rel="noopener noreferrer">Kreativ WP</a>
-        <span aria-hidden="true">·</span>
+        <span aria-hidden="true">&middot;</span>
         <a href="https://kreativtools.com" target="_blank" rel="noopener noreferrer">Kreativ Tools</a>
       </p>
       <p class="footer-meta">
-        © <span id="year"></span>
+        &copy; <span id="year"></span>
         <a href="https://madebykreativ.com" target="_blank" rel="noopener noreferrer">Made by KREATIV</a>
-        · Independent creative tools and assets by Andrei Olaru
+        &middot; Independent creative tools and assets by Andrei Olaru
       </p>
     </footer>
   </main>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-    var toggle = document.getElementById("theme-toggle");
-    var metaTheme = document.querySelector('meta[name="theme-color"]');
-    function currentTheme() {
-      return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-    }
-    function syncThemeUi(theme) {
-      if (metaTheme) {
-        metaTheme.setAttribute("content", theme === "dark" ? "#0f1526" : "#f8e9e9");
-      }
-      if (toggle) {
-        var isDark = theme === "dark";
-        toggle.dataset.icon = isDark ? "sun" : "moon";
-        toggle.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
-        toggle.setAttribute("aria-pressed", String(isDark));
-      }
-    }
-    syncThemeUi(currentTheme());
-    if (toggle) {
-      toggle.addEventListener("click", function () {
-        var nextTheme = currentTheme() === "dark" ? "light" : "dark";
-        document.documentElement.setAttribute("data-theme", nextTheme);
-        localStorage.setItem("theme", nextTheme);
-        syncThemeUi(nextTheme);
-      });
-    }
-  </script>
+  <script src="../site.js"></script>
   <script src="../share.js"></script>
 </body>
 </html>
