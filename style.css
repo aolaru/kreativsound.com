@@ -220,6 +220,12 @@ a:focus-visible,
   border-bottom: 1px solid rgba(153, 0, 0, 0.14);
 }
 
+.top-level-page .site-nav-home {
+  margin-bottom: 0.95rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(153, 0, 0, 0.12);
+}
+
 .home-page .hero {
   margin-top: 0.35rem;
   margin-bottom: 1.55rem;
@@ -255,6 +261,10 @@ a:focus-visible,
 
 .home-page .catalog-intro {
   margin-bottom: 0.65rem;
+}
+
+.top-level-page .page-main {
+  margin-top: 0.25rem;
 }
 
 .logo-wrap {

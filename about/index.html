@@ -26,26 +26,33 @@
   <link rel="stylesheet" href="../style.css" />
   <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
 </head>
-<body>
+<body class="top-level-page">
   <main class="container">
-    <nav class="site-nav" aria-label="Primary">
-      <a class="nav-link" href="/" aria-label="Home">
-        <i class="nav-icon fa-solid fa-house" aria-hidden="true"></i>
-        <span class="sr-only">Home</span>
+    <nav class="site-nav site-nav-split site-nav-home" aria-label="Primary">
+      <div class="nav-group nav-group-main">
+        <a class="nav-link" href="/" aria-label="Home">
+          <i class="nav-icon fa-solid fa-house" aria-hidden="true"></i>
+          <span class="sr-only">Home</span>
+        </a>
+        <a class="nav-link" href="/news/">News</a>
+        <a class="nav-link" href="/learn/">Learn</a>
+        <a class="nav-link active" href="/about/">About</a>
+        <a class="nav-link" href="/contact/">Contact</a>
+      </div>
+      <a class="nav-brand" href="/" aria-label="Kreativ Sound home">
+        <img class="nav-brand-mark" src="../logo-128.svg" width="128" height="128" alt="Kreativ Sound logo" />
       </a>
-      <a class="nav-link" href="/news/">News</a>
-      <a class="nav-link" href="/learn/">Learn</a>
-      <a class="nav-link active" href="/about/">About</a>
-      <a class="nav-link" href="/contact/">Contact</a>
-      <button class="nav-link share-button" id="share-button" type="button" aria-label="Share this page">
-        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
-        <span class="sr-only">Share this page</span>
-      </button>
-      <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
-        <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
-        <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>
-        <span class="sr-only">Toggle theme</span>
-      </button>
+      <div class="nav-group nav-group-utility">
+        <button class="nav-link share-button" id="share-button" type="button" aria-label="Share this page">
+          <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+          <span class="sr-only">Share this page</span>
+        </button>
+        <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
+          <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
+          <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>
+          <span class="sr-only">Toggle theme</span>
+        </button>
+      </div>
     </nav>
 
     <section class="card page-main">
