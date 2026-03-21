@@ -1,12 +1,13 @@
 const products = window.KREATIV_PRODUCTS || [];
 
 const container = document.getElementById("catalog-groups");
+const catalogAnchorLinks = document.getElementById("catalog-anchor-links");
 
 const preferredCategoryOrder = ["Presets", "Samples", "Free"];
 const categoryLabels = {
   Presets: "Preset Packs",
   Samples: "Sample Packs",
-  Free: "Free Sound"
+  Free: "Free Sounds"
 };
 const categoryIds = {
   Presets: "catalog-presets",
@@ -21,6 +22,7 @@ const categories = [
 
 function renderCatalog() {
   container.innerHTML = "";
+  let renderedSections = 0;
   let visualIndex = 0;
   categories.forEach((category) => {
     const categoryItems = products.filter((product) => product.category === category);
@@ -77,10 +79,15 @@ function renderCatalog() {
       useCase.className = "product-use";
       useCase.textContent = item.useCase;
 
+      const cta = document.createElement("span");
+      cta.className = "product-cta";
+      cta.textContent = item.category === "Free" ? "Get Free Sounds" : "Buy Now";
+
       link.appendChild(img);
       link.appendChild(title);
       link.appendChild(meta);
       link.appendChild(useCase);
+      link.appendChild(cta);
 
       stack.appendChild(link);
 
@@ -114,7 +121,12 @@ function renderCatalog() {
 
     section.appendChild(grid);
     container.appendChild(section);
+    renderedSections += 1;
   });
+
+  if (catalogAnchorLinks) {
+    catalogAnchorLinks.hidden = renderedSections === 0;
+  }
 }
 
 renderCatalog();
