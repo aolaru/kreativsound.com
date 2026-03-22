@@ -3,16 +3,18 @@ const products = window.KREATIV_PRODUCTS || [];
 const container = document.getElementById("catalog-groups");
 const catalogAnchorLinks = document.getElementById("catalog-anchor-links");
 
-const preferredCategoryOrder = ["Presets", "Samples", "Free"];
+const preferredCategoryOrder = ["Presets", "Samples", "Free", "Legacy"];
 const categoryLabels = {
   Presets: "Preset Packs",
   Samples: "Sample Packs",
-  Free: "Free Sounds"
+  Free: "Free Sounds",
+  Legacy: "Legacy Archive"
 };
 const categoryIds = {
   Presets: "catalog-presets",
   Samples: "catalog-samples",
-  Free: "catalog-free"
+  Free: "catalog-free",
+  Legacy: "catalog-legacy"
 };
 const discoveredCategories = Array.from(new Set(products.map((product) => product.category)));
 const categories = [
@@ -94,7 +96,13 @@ function renderCatalog() {
 
       const cta = document.createElement("span");
       cta.className = "product-cta";
-      cta.textContent = item.category === "Free" ? "Get Free Sounds" : "Buy Now";
+      if (item.category === "Free") {
+        cta.textContent = "Get Free Sounds";
+      } else if (item.category === "Legacy") {
+        cta.textContent = "Open Archive";
+      } else {
+        cta.textContent = "Buy Now";
+      }
 
       link.appendChild(img);
       link.appendChild(title);

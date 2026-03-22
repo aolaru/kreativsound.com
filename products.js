@@ -127,12 +127,30 @@ window.KREATIV_PRODUCTS = [
     }
   },
   {
-    title: "ABYSS - Free Dark Ambient Presets for PRO-53",
+    title: "VELVET RUINS Lite - Free presets for Vital",
     category: "Free",
+    url: "assets/downloads/velvet-ruins-lite.zip",
+    thumbnail: "assets/thumbs/velvet-ruins-lite.jpg",
+    format: "Presets",
+    count: "20 presets",
+    useCase: "Free dark experimental Vital presets"
+  },
+  {
+    title: "ABYSS - Free Dark Ambient Presets for PRO-53",
+    category: "Legacy",
     url: "https://kreativ.gumroad.com/l/abyss-dark-ambient-presets-for-pro-53?layout=profile",
     thumbnail: "assets/thumbs/abyss.jpg",
     format: "Presets",
     count: "215 sounds",
     useCase: "Free atmospheric toolkit for dark ambient work"
+  },
+  {
+    title: "DAFT Plasticz Presets",
+    category: "Legacy",
+    url: "https://kreativ.gumroad.com/l/daft-free-plasticz-presets?layout=profile",
+    thumbnail: "assets/thumbs/daft-plasticz.jpg",
+    format: "Presets",
+    count: "Archive",
+    useCase: "Legacy plastic and synthetic preset textures"
   }
 ];
