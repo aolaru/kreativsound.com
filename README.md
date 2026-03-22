@@ -104,6 +104,12 @@ bash scripts/lighthouse-check.sh
 bash scripts/release-gate.sh
 ```
 
+- Refresh sitemap freshness metadata explicitly when needed:
+
+```bash
+python3 scripts/update-sitemap-lastmod.py
+```
+
 - CI runs the same release gate on pushes and pull requests to `main` via `.github/workflows/release-gate.yml`.
 
 ## Analytics

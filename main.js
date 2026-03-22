@@ -71,6 +71,19 @@ function renderCatalog() {
       title.className = "product-title";
       title.textContent = item.title;
 
+      if (item.badge) {
+        const badge = document.createElement("span");
+        badge.className = "product-badge";
+        badge.textContent = item.badge;
+        if (item.badge.toLowerCase() === "new") {
+          badge.classList.add("is-new");
+        }
+        if (item.badge.toLowerCase() === "updated") {
+          badge.classList.add("is-updated");
+        }
+        link.appendChild(badge);
+      }
+
       const meta = document.createElement("span");
       meta.className = "product-meta";
       meta.textContent = item.format + " | " + item.count;
@@ -90,6 +103,14 @@ function renderCatalog() {
       link.appendChild(cta);
 
       stack.appendChild(link);
+
+      if (item.detailsUrl) {
+        const detailsLink = document.createElement("a");
+        detailsLink.className = "product-detail-link";
+        detailsLink.href = item.detailsUrl;
+        detailsLink.textContent = "Details";
+        stack.appendChild(detailsLink);
+      }
 
       if (item.demo && item.demo.src) {
         const demo = document.createElement("div");
