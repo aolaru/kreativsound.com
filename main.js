@@ -47,11 +47,11 @@ function renderCatalog() {
       const listItem = document.createElement("li");
       const stack = document.createElement("div");
       stack.className = "product-card-stack";
-      if (item.demo && item.demo.src) {
+      const hasActionRow = Boolean(item.detailsUrl || item.extraAction);
+      if ((item.demo && item.demo.src) || hasActionRow) {
         stack.classList.add("product-card-shell");
       }
 
-      const hasActionRow = Boolean(item.detailsUrl || item.extraAction);
       const card = document.createElement(hasActionRow ? "div" : "a");
       card.className = "product-card";
 

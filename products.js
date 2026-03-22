@@ -56,7 +56,6 @@ window.KREATIV_PRODUCTS = [
       label: "Lite Free",
       url: "assets/downloads/velvet-ruins-lite.zip"
     },
-    badge: "New",
     thumbnail: "assets/thumbs/velvet-ruins.jpg",
     format: "Presets",
     count: "Collection",
