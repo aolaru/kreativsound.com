@@ -51,13 +51,19 @@ function renderCatalog() {
         stack.classList.add("product-card-shell");
       }
 
-      const link = document.createElement("a");
-      link.className = "product-card";
-      link.dataset.track = "product_card_click";
-      link.href = item.url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.setAttribute("aria-label", item.title);
+      const hasActionRow = Boolean(item.detailsUrl || item.extraAction);
+      const card = document.createElement(hasActionRow ? "div" : "a");
+      card.className = "product-card";
+
+      if (hasActionRow) {
+        card.classList.add("product-card-static");
+      } else {
+        card.dataset.track = "product_card_click";
+        card.href = item.url;
+        card.target = "_blank";
+        card.rel = "noopener noreferrer";
+        card.setAttribute("aria-label", item.title);
+      }
 
       const img = document.createElement("img");
       img.className = "product-thumb";
@@ -83,7 +89,7 @@ function renderCatalog() {
         if (item.badge.toLowerCase() === "updated") {
           badge.classList.add("is-updated");
         }
-        link.appendChild(badge);
+        card.appendChild(badge);
       }
 
       const meta = document.createElement("span");
@@ -104,20 +110,46 @@ function renderCatalog() {
         cta.textContent = "Buy Now";
       }
 
-      link.appendChild(img);
-      link.appendChild(title);
-      link.appendChild(meta);
-      link.appendChild(useCase);
-      link.appendChild(cta);
+      card.appendChild(img);
+      card.appendChild(title);
+      card.appendChild(meta);
+      card.appendChild(useCase);
+      if (!hasActionRow) {
+        card.appendChild(cta);
+      }
 
-      stack.appendChild(link);
+      stack.appendChild(card);
 
-      if (item.detailsUrl) {
-        const detailsLink = document.createElement("a");
-        detailsLink.className = "product-detail-link";
-        detailsLink.href = item.detailsUrl;
-        detailsLink.textContent = "Details";
-        stack.appendChild(detailsLink);
+      if (hasActionRow) {
+        const actions = document.createElement("div");
+        actions.className = "product-action-row";
+
+        if (item.detailsUrl) {
+          const detailsLink = document.createElement("a");
+          detailsLink.className = "product-action-link";
+          detailsLink.href = item.detailsUrl;
+          detailsLink.textContent = "Details";
+          actions.appendChild(detailsLink);
+        }
+
+        const buyLink = document.createElement("a");
+        buyLink.className = "product-action-link is-primary";
+        buyLink.dataset.track = "product_card_click";
+        buyLink.href = item.url;
+        buyLink.target = "_blank";
+        buyLink.rel = "noopener noreferrer";
+        buyLink.textContent = item.category === "Free" ? "Get Free Sounds" : item.category === "Legacy" ? "Open Archive" : "Buy Now";
+        actions.appendChild(buyLink);
+
+        if (item.extraAction && item.extraAction.url) {
+          const extraLink = document.createElement("a");
+          extraLink.className = "product-action-link";
+          extraLink.href = item.extraAction.url;
+          extraLink.textContent = item.extraAction.label || "More";
+          actions.appendChild(extraLink);
+        }
+
+        stack.appendChild(actions);
       }
 
       if (item.demo && item.demo.src) {

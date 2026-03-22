@@ -52,6 +52,10 @@ window.KREATIV_PRODUCTS = [
     category: "Presets",
     url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
     detailsUrl: "/products/velvet-ruins/",
+    extraAction: {
+      label: "Lite Free",
+      url: "assets/downloads/velvet-ruins-lite.zip"
+    },
     badge: "New",
     thumbnail: "assets/thumbs/velvet-ruins.jpg",
     format: "Presets",
