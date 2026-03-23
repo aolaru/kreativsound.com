@@ -99,6 +99,19 @@ bash scripts/lighthouse-check.sh
 ```
 
 - Run full release gate (thumbnails + Lighthouse + thresholds):
+ - Run product asset validation:
+
+```bash
+python3 scripts/check-product-assets.py
+```
+
+- Run rendered smoke checks:
+
+```bash
+python3 scripts/smoke-site.py
+```
+
+- Run full release gate (sitemap + assets + thumbnails + smoke + Lighthouse + thresholds):
 
 ```bash
 bash scripts/release-gate.sh
