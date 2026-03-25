@@ -154,14 +154,14 @@ function renderCatalog() {
 
       if (item.demo && item.demo.src) {
         const demo = document.createElement("div");
-        demo.className = "product-demo";
+        demo.className = "product-card-demo";
 
         const demoLabel = document.createElement("span");
-        demoLabel.className = "product-demo-label";
+        demoLabel.className = "product-card-demo-label";
         demoLabel.textContent = item.demo.label || "Demo";
 
         const audio = document.createElement("audio");
-        audio.className = "product-demo-player";
+        audio.className = "product-card-demo-player";
         audio.controls = true;
         audio.preload = "none";
         audio.src = item.demo.src;
