@@ -662,28 +662,6 @@ a:focus-visible,
   gap: 0.35rem;
 }
 
-.product-card-shell {
-  height: 100%;
-  padding: 0.7rem;
-  border-radius: 16px;
-  border: 1px solid rgba(228, 171, 171, 0.22);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, transparent 30%),
-    rgba(153, 0, 0, 0.1);
-  box-shadow: 0 16px 34px rgba(88, 29, 29, 0.08);
-  transition: transform 170ms ease, border-color 170ms ease, background 170ms ease, box-shadow 170ms ease;
-}
-
-.product-card-shell:hover,
-.product-card-shell:focus-within {
-  transform: translateY(-3px);
-  border-color: var(--card-border-hover);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, transparent 28%),
-    rgba(153, 0, 0, 0.16);
-  box-shadow: 0 20px 40px rgba(88, 29, 29, 0.14);
-}
-
 .product-card {
   display: flex;
   flex-direction: column;
@@ -700,20 +678,9 @@ a:focus-visible,
   transition: transform 170ms ease, border-color 170ms ease, background 170ms ease, box-shadow 170ms ease;
 }
 
-.product-card-shell .product-card {
-  padding: 0;
-  border: 0;
-  background: transparent;
-}
-
 .product-card-static {
   cursor: default;
-}
-
-.product-card-shell .product-card:hover {
-  transform: none;
-  border-color: transparent;
-  background: transparent;
+  justify-content: flex-start;
 }
 
 .product-card:hover {
@@ -829,24 +796,20 @@ a:focus-visible,
 }
 
 .product-card:hover .product-cta,
-.product-card:focus-visible .product-cta,
-.product-card-shell:hover .product-cta,
-.product-card-shell:focus-within .product-cta {
+.product-card:focus-visible .product-cta {
   border-color: var(--card-border-hover);
   background: rgba(153, 0, 0, 0.16);
   transform: translateY(-1px);
   box-shadow: 0 14px 28px rgba(153, 0, 0, 0.1);
 }
 
-.product-card-shell:hover .product-detail-link,
-.product-card-shell:focus-within .product-detail-link {
-  color: #7b0000;
-}
-
 .product-action-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.42rem;
+  justify-content: center;
+  margin-top: auto;
+  padding-top: 0.4rem;
 }
 
 .product-action-link {

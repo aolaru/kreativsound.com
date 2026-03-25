@@ -48,9 +48,6 @@ function renderCatalog() {
       const stack = document.createElement("div");
       stack.className = "product-card-stack";
       const hasActionRow = Boolean(item.detailsUrl || item.extraAction);
-      if ((item.demo && item.demo.src) || hasActionRow) {
-        stack.classList.add("product-card-shell");
-      }
 
       const card = document.createElement(hasActionRow ? "div" : "a");
       card.className = "product-card";
@@ -143,8 +140,6 @@ function renderCatalog() {
         card.appendChild(cta);
       }
 
-      stack.appendChild(card);
-
       if (hasActionRow) {
         const actions = document.createElement("div");
         actions.className = "product-action-row";
@@ -174,7 +169,7 @@ function renderCatalog() {
           actions.appendChild(extraLink);
         }
 
-        stack.appendChild(actions);
+        card.appendChild(actions);
       }
 
       if (item.demo && item.demo.src && hasActionRow) {
@@ -200,8 +195,10 @@ function renderCatalog() {
 
         demo.appendChild(demoLabel);
         demo.appendChild(audio);
-        stack.appendChild(demo);
+        card.appendChild(demo);
       }
+
+      stack.appendChild(card);
 
       listItem.appendChild(stack);
       grid.appendChild(listItem);
