@@ -125,11 +125,14 @@ function renderCatalog() {
         const audio = document.createElement("audio");
         audio.className = "product-card-demo-player";
         audio.controls = true;
-        audio.preload = "none";
-        audio.src = item.demo.src;
+        audio.preload = "metadata";
+
+        const source = document.createElement("source");
+        source.src = item.demo.src;
         if (item.demo.type) {
-          audio.setAttribute("type", item.demo.type);
+          source.type = item.demo.type;
         }
+        audio.appendChild(source);
         audio.load();
 
         demo.appendChild(demoLabel);
@@ -185,11 +188,14 @@ function renderCatalog() {
         const audio = document.createElement("audio");
         audio.className = "product-card-demo-player";
         audio.controls = true;
-        audio.preload = "none";
-        audio.src = item.demo.src;
+        audio.preload = "metadata";
+
+        const source = document.createElement("source");
+        source.src = item.demo.src;
         if (item.demo.type) {
-          audio.setAttribute("type", item.demo.type);
+          source.type = item.demo.type;
         }
+        audio.appendChild(source);
         audio.load();
 
         demo.appendChild(demoLabel);
