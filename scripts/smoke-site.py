@@ -82,9 +82,9 @@ def main() -> int:
             "/learn/": ["Sounds", "Latest Guides"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
-            "/products/velvet-ruins/": ["Buy on Gumroad", "VELVET RUINS"],
-            "/products/neolith/": ["Buy on Gumroad", "NEOLITH"],
-            "/products/bioforms/": ["Buy on Gumroad", "BIOFORMS"],
+            "/products/velvet-ruins/": ["Buy on Gumroad", "VELVET RUINS", "Demo", "Audio slot ready"],
+            "/products/neolith/": ["Buy on Gumroad", "NEOLITH", "Demo", "Audio slot ready"],
+            "/products/bioforms/": ["Buy on Gumroad", "BIOFORMS", "Demo", "Audio slot ready"],
         }
 
         for route, needles in pages.items():

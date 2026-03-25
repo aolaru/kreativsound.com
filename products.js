@@ -68,7 +68,12 @@ window.KREATIV_PRODUCTS = [
     thumbnail: "assets/thumbs/sfxs-2.jpg",
     format: "WAV samples",
     count: "Collection",
-    useCase: "Design accents and cinematic transitions"
+    useCase: "Design accents and cinematic transitions",
+    demo: {
+      label: "Listen to demo",
+      src: "assets/audio/sfxs-2-demo-01.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "NOIZE 2 - Experimental Noise Textures and FX",
@@ -77,7 +82,12 @@ window.KREATIV_PRODUCTS = [
     thumbnail: "assets/thumbs/noize-2.jpg",
     format: "WAV samples",
     count: "Collection",
-    useCase: "Abstract noise layers and glitches"
+    useCase: "Abstract noise layers and glitches",
+    demo: {
+      label: "Listen to demo",
+      src: "assets/audio/noize-2-demo-01.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "ENIGMA 2 - Cinematic Mysterious Atmospheres",
