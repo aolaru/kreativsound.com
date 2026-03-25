@@ -114,6 +114,28 @@ function renderCatalog() {
       card.appendChild(title);
       card.appendChild(meta);
       card.appendChild(useCase);
+      if (item.demo && item.demo.src && !hasActionRow) {
+        const demo = document.createElement("div");
+        demo.className = "product-card-demo";
+
+        const demoLabel = document.createElement("span");
+        demoLabel.className = "product-card-demo-label";
+        demoLabel.textContent = item.demo.label || "Demo";
+
+        const audio = document.createElement("audio");
+        audio.className = "product-card-demo-player";
+        audio.controls = true;
+        audio.preload = "none";
+        audio.src = item.demo.src;
+        if (item.demo.type) {
+          audio.setAttribute("type", item.demo.type);
+        }
+        audio.load();
+
+        demo.appendChild(demoLabel);
+        demo.appendChild(audio);
+        card.appendChild(demo);
+      }
       if (!hasActionRow) {
         card.appendChild(cta);
       }
@@ -152,7 +174,7 @@ function renderCatalog() {
         stack.appendChild(actions);
       }
 
-      if (item.demo && item.demo.src) {
+      if (item.demo && item.demo.src && hasActionRow) {
         const demo = document.createElement("div");
         demo.className = "product-card-demo";
 
