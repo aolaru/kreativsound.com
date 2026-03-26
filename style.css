@@ -843,6 +843,8 @@ a:focus-visible,
   display: grid;
   gap: 0.28rem;
   padding-top: 0.1rem;
+  width: 100%;
+  justify-items: center;
 }
 
 .product-card-demo-label {
@@ -854,8 +856,9 @@ a:focus-visible,
 }
 
 .product-card-demo-player {
-  width: min(100%, 240px);
-  min-width: 220px;
+  display: block;
+  width: min(100%, 248px);
+  min-width: 228px;
   height: 32px;
   margin: 0 auto;
 }

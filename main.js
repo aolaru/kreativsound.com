@@ -47,12 +47,14 @@ function renderCatalog() {
       const listItem = document.createElement("li");
       const stack = document.createElement("div");
       stack.className = "product-card-stack";
+      const hasDemo = Boolean(item.demo && item.demo.src);
       const hasActionRow = Boolean(item.detailsUrl || item.extraAction);
+      const usesStaticCard = hasActionRow || hasDemo;
 
-      const card = document.createElement(hasActionRow ? "div" : "a");
+      const card = document.createElement(usesStaticCard ? "div" : "a");
       card.className = "product-card";
 
-      if (hasActionRow) {
+      if (usesStaticCard) {
         card.classList.add("product-card-static");
       } else {
         card.dataset.track = "product_card_click";
@@ -111,7 +113,7 @@ function renderCatalog() {
       card.appendChild(title);
       card.appendChild(meta);
       card.appendChild(useCase);
-      if (item.demo && item.demo.src && !hasActionRow) {
+      if (hasDemo) {
         const demo = document.createElement("div");
         demo.className = "product-card-demo";
 
@@ -136,11 +138,11 @@ function renderCatalog() {
         demo.appendChild(audio);
         card.appendChild(demo);
       }
-      if (!hasActionRow) {
+      if (!usesStaticCard) {
         card.appendChild(cta);
       }
 
-      if (hasActionRow) {
+      if (usesStaticCard) {
         const actions = document.createElement("div");
         actions.className = "product-action-row";
 
@@ -169,33 +171,18 @@ function renderCatalog() {
           actions.appendChild(extraLink);
         }
 
-        card.appendChild(actions);
-      }
-
-      if (item.demo && item.demo.src && hasActionRow) {
-        const demo = document.createElement("div");
-        demo.className = "product-card-demo";
-
-        const demoLabel = document.createElement("span");
-        demoLabel.className = "product-card-demo-label";
-        demoLabel.textContent = item.demo.label || "Demo";
-
-        const audio = document.createElement("audio");
-        audio.className = "product-card-demo-player";
-        audio.controls = true;
-        audio.preload = "metadata";
-
-        const source = document.createElement("source");
-        source.src = item.demo.src;
-        if (item.demo.type) {
-          source.type = item.demo.type;
+        if (!hasActionRow) {
+          const buyLink = document.createElement("a");
+          buyLink.className = "product-action-link is-primary";
+          buyLink.dataset.track = "product_card_click";
+          buyLink.href = item.url;
+          buyLink.target = "_blank";
+          buyLink.rel = "noopener noreferrer";
+          buyLink.textContent = item.category === "Free" ? "Get Free Sounds" : item.category === "Legacy" ? "Open Archive" : "Buy Now";
+          actions.appendChild(buyLink);
         }
-        audio.appendChild(source);
-        audio.load();
 
-        demo.appendChild(demoLabel);
-        demo.appendChild(audio);
-        card.appendChild(demo);
+        card.appendChild(actions);
       }
 
       stack.appendChild(card);
