@@ -854,8 +854,10 @@ a:focus-visible,
 }
 
 .product-card-demo-player {
-  width: 100%;
+  width: min(100%, 240px);
+  min-width: 220px;
   height: 32px;
+  margin: 0 auto;
 }
 
 .noscript-fallback {
