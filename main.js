@@ -154,15 +154,6 @@ function renderCatalog() {
           actions.appendChild(detailsLink);
         }
 
-        const buyLink = document.createElement("a");
-        buyLink.className = "product-action-link is-primary";
-        buyLink.dataset.track = "product_card_click";
-        buyLink.href = item.url;
-        buyLink.target = "_blank";
-        buyLink.rel = "noopener noreferrer";
-        buyLink.textContent = item.category === "Free" ? "Get Free Sounds" : item.category === "Legacy" ? "Open Archive" : "Buy Now";
-        actions.appendChild(buyLink);
-
         if (item.extraAction && item.extraAction.url) {
           const extraLink = document.createElement("a");
           extraLink.className = "product-action-link";
@@ -171,16 +162,14 @@ function renderCatalog() {
           actions.appendChild(extraLink);
         }
 
-        if (!hasActionRow) {
-          const buyLink = document.createElement("a");
-          buyLink.className = "product-action-link is-primary";
-          buyLink.dataset.track = "product_card_click";
-          buyLink.href = item.url;
-          buyLink.target = "_blank";
-          buyLink.rel = "noopener noreferrer";
-          buyLink.textContent = item.category === "Free" ? "Get Free Sounds" : item.category === "Legacy" ? "Open Archive" : "Buy Now";
-          actions.appendChild(buyLink);
-        }
+        const buyLink = document.createElement("a");
+        buyLink.className = "product-action-link is-primary";
+        buyLink.dataset.track = "product_card_click";
+        buyLink.href = item.url;
+        buyLink.target = "_blank";
+        buyLink.rel = "noopener noreferrer";
+        buyLink.textContent = item.category === "Free" ? "Get Free Sounds" : item.category === "Legacy" ? "Open Archive" : "Buy Now";
+        actions.appendChild(buyLink);
 
         card.appendChild(actions);
       }
