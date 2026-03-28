@@ -80,6 +80,7 @@ def main() -> int:
             "/": ["Sounds", "News", "Learn", "About", "Contact"],
             "/news/": ["Sounds", "Latest Sound Releases"],
             "/learn/": ["Sounds", "Latest Guides"],
+            "/music/": ["Music", "Olaru", "Rethyn", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
             "/products/velvet-ruins/": ["Buy on Gumroad", "VELVET RUINS", "Demo", "Audio slot ready"],
