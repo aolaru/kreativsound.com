@@ -111,7 +111,7 @@ a:focus-visible,
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 0.25rem 0;
+  padding: 0.25rem 1.4rem 0;
 }
 
 .nav-group {
@@ -1382,6 +1382,7 @@ a:focus-visible,
 
 .footer {
   margin-top: 1.45rem;
+  padding-inline: 1.4rem;
   color: var(--soft);
   font-size: 0.82rem;
   text-align: center;
@@ -1411,6 +1412,10 @@ a:focus-visible,
 
   .card {
     padding: 1.1rem;
+  }
+
+  .footer {
+    padding-inline: 1.1rem;
   }
 
   .featured-product {
@@ -1453,6 +1458,7 @@ a:focus-visible,
   }
 
   .site-nav-home {
+    padding-inline: 1.1rem;
     grid-template-columns: 1fr;
   }
 
