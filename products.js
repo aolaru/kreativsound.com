@@ -26,7 +26,12 @@ window.KREATIV_PRODUCTS = [
     thumbnail: "assets/thumbs/dirty-model.jpg",
     format: "Presets",
     count: "64 patches",
-    useCase: "Driven basses and analog grit"
+    useCase: "Driven basses and analog grit",
+    demo: {
+      label: "Listen to demo",
+      src: "assets/audio/dirty-model-d-demo-01.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "ZEPHYR - Presets for Moog Animoog Z",
@@ -96,7 +101,12 @@ window.KREATIV_PRODUCTS = [
     thumbnail: "assets/thumbs/enigma-2.jpg",
     format: "WAV samples",
     count: "Collection",
-    useCase: "Dark tension beds for film scenes"
+    useCase: "Dark tension beds for film scenes",
+    demo: {
+      label: "Listen to demo",
+      src: "assets/audio/enigma-2-demo-01.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "BLEEPS 2 - Experimental Percussion Sounds",
@@ -114,7 +124,12 @@ window.KREATIV_PRODUCTS = [
     thumbnail: "assets/thumbs/space-2.jpg",
     format: "WAV samples",
     count: "Collection",
-    useCase: "Sci-fi ambience and distant environments"
+    useCase: "Sci-fi ambience and distant environments",
+    demo: {
+      label: "Listen to demo",
+      src: "assets/audio/space-2-demo-01.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "TECTONIC 2 - Dark Subs and Underground Textures",
@@ -123,7 +138,12 @@ window.KREATIV_PRODUCTS = [
     thumbnail: "assets/thumbs/tectonic-2.jpg",
     format: "WAV samples",
     count: "Collection",
-    useCase: "Low-end pressure and subterranean atmospheres"
+    useCase: "Low-end pressure and subterranean atmospheres",
+    demo: {
+      label: "Listen to demo",
+      src: "assets/audio/tectonic-2-demo-01.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "HORROR 2 - Cinematic Scary Texture",
