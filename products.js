@@ -167,7 +167,7 @@ window.KREATIV_PRODUCTS = [
   {
     title: "VELVET RUINS Lite - Free presets for Vital",
     category: "Free",
-    url: "assets/downloads/velvet-ruins-lite.zip",
+    url: "https://kreativ.gumroad.com/l/velvet-ruins-demo-presets-for-vital?layout=profile",
     badge: "New",
     thumbnail: "assets/thumbs/velvet-ruins-lite.jpg",
     format: "Presets",
