@@ -39,7 +39,12 @@ window.KREATIV_PRODUCTS = [
     thumbnail: "assets/thumbs/zephyr.jpg",
     format: "Presets",
     count: "96 patches",
-    useCase: "Airy motion-driven melodic layers"
+    useCase: "Airy motion-driven melodic layers",
+    demo: {
+      label: "Listen to demo",
+      src: "assets/audio/zephyr-demo-01.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "NEOLITH - Presets for Softube Models",
