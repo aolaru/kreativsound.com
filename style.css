@@ -861,6 +861,28 @@ a:focus-visible,
   min-width: 228px;
   height: 32px;
   margin: 0 auto;
+  accent-color: var(--accent-bright);
+  color-scheme: light;
+  border-radius: 999px;
+}
+
+.product-card-demo-player::-webkit-media-controls-panel,
+.product-demo audio::-webkit-media-controls-panel {
+  background: rgba(209, 76, 76, 0.16);
+}
+
+.product-card-demo-player::-webkit-media-controls-play-button,
+.product-card-demo-player::-webkit-media-controls-mute-button,
+.product-demo audio::-webkit-media-controls-play-button,
+.product-demo audio::-webkit-media-controls-mute-button {
+  border-radius: 999px;
+}
+
+.product-card-demo-player::-webkit-media-controls-current-time-display,
+.product-card-demo-player::-webkit-media-controls-time-remaining-display,
+.product-demo audio::-webkit-media-controls-current-time-display,
+.product-demo audio::-webkit-media-controls-time-remaining-display {
+  color: var(--text);
 }
 
 .noscript-fallback {
