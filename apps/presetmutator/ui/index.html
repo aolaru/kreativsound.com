@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PresetMutator</title>
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <meta name="theme-color" content="#f8e9e9" />
+    <script>
+      (function () {
+        var stored = localStorage.getItem("theme");
+        var theme = stored === "light" || stored === "dark" ? stored : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="shell-container">
+      <nav class="site-nav site-nav-split site-nav-home" aria-label="Primary">
+        <div class="nav-group nav-group-main">
+          <a class="nav-link" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer">Sounds</a>
+          <a class="nav-link" href="https://kreativsound.com/music/" target="_blank" rel="noopener noreferrer">Music</a>
+          <a class="nav-link" href="https://kreativsound.com/learn/" target="_blank" rel="noopener noreferrer">Learn</a>
+        </div>
+        <a class="nav-brand" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer" aria-label="Kreativ Sound home">
+          <img class="nav-brand-mark" src="./favicon.svg" width="128" height="128" alt="Kreativ Sound logo" />
+        </a>
+        <div class="nav-group nav-group-utility">
+          <a class="nav-link" href="https://kreativsound.com/news/" target="_blank" rel="noopener noreferrer">News</a>
+          <a class="nav-link" href="https://kreativsound.com/about/" target="_blank" rel="noopener noreferrer">About</a>
+          <a class="nav-link" href="https://kreativsound.com/contact/" target="_blank" rel="noopener noreferrer">Contact</a>
+          <button class="nav-link share-button" id="share-button" type="button" aria-label="Share this page">
+            <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+            <span class="sr-only">Share this page</span>
+          </button>
+          <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
+            <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
+            <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>
+            <span class="sr-only">Toggle theme</span>
+          </button>
+        </div>
+      </nav>
+
+      <div class="app-shell">
+      <aside class="left-rail">
+        <div class="brand">
+          <p class="eyebrow">Kreativ Sound Lab</p>
+          <h1>PresetMutator</h1>
+          <p class="lede">Calibrate Vital generations with a visual workflow instead of command-line passes.</p>
+        </div>
+        <div class="synth-card">
+          <span class="synth-chip active">Vital</span>
+          <span class="synth-chip">Serum</span>
+          <span class="synth-chip">Pigments</span>
+        </div>
+        <div class="status-panel">
+          <p class="panel-label">Engine status</p>
+          <p class="status-line"><span class="dot ok"></span> Vital parser ready</p>
+          <p class="status-line"><span class="dot ok"></span> Safe semantic mutator ready</p>
+          <p class="status-line"><span class="dot muted"></span> UI calibration pass in progress</p>
+        </div>
+      </aside>
+
+      <main class="main-stage">
+        <section class="hero-card">
+          <div>
+            <p class="eyebrow">Vital Calibration</p>
+            <h2>Choose a seed, shape the mutation, generate variants.</h2>
+          </div>
+          <button id="refresh-button" class="ghost-button">Refresh Library</button>
+        </section>
+
+        <section class="content-grid">
+          <section class="seed-column card">
+            <div class="section-head">
+              <div>
+                <p class="panel-label">Seed Library</p>
+                <h3>Bundled Vital Presets</h3>
+              </div>
+              <span id="seed-count" class="count-pill">0 seeds</span>
+            </div>
+            <div id="seed-list" class="seed-list"></div>
+          </section>
+
+          <section class="controls-column">
+            <section class="card control-card">
+              <div class="section-head">
+                <div>
+                  <p class="panel-label">Generation Controls</p>
+                  <h3>Calibration Surface</h3>
+                </div>
+              </div>
+
+              <label class="field">
+                <span>Selected seed</span>
+                <input id="selected-seed" type="text" readonly />
+              </label>
+
+              <label class="field">
+                <span>Mutation amount</span>
+                <div class="slider-row">
+                  <input id="amount-range" type="range" min="0.02" max="0.35" step="0.01" value="0.12" />
+                  <strong id="amount-value">0.12</strong>
+                </div>
+              </label>
+
+              <label class="field">
+                <span>Max parameters</span>
+                <div class="slider-row">
+                  <input id="max-parameters-range" type="range" min="4" max="24" step="1" value="12" />
+                  <strong id="max-parameters-value">12</strong>
+                </div>
+              </label>
+
+              <label class="field">
+                <span>Random seed</span>
+                <input id="random-seed" type="number" value="7" min="0" step="1" />
+              </label>
+
+              <div class="button-row">
+                <button id="generate-button" class="primary-button">Generate Variant</button>
+              </div>
+            </section>
+
+            <section class="card result-card">
+              <div class="section-head">
+                <div>
+                  <p class="panel-label">Latest Result</p>
+                  <h3>Generated Variant</h3>
+                </div>
+              </div>
+              <div id="result-empty" class="empty-state">No variant generated yet.</div>
+              <div id="result-panel" class="result-panel hidden">
+                <div class="result-meta">
+                  <p id="result-file" class="result-file"></p>
+                  <p id="result-path" class="result-path"></p>
+                </div>
+                <div class="result-summary-grid">
+                  <div>
+                    <span class="mini-label">Sample</span>
+                    <strong id="result-sample">-</strong>
+                  </div>
+                  <div>
+                    <span class="mini-label">Modulations</span>
+                    <strong id="result-modulations">-</strong>
+                  </div>
+                  <div>
+                    <span class="mini-label">Wavetables</span>
+                    <strong id="result-wavetables">-</strong>
+                  </div>
+                </div>
+                <div>
+                  <p class="mini-label">Changed parameters</p>
+                  <div id="changed-parameters" class="chip-list"></div>
+                </div>
+              </div>
+            </section>
+          </section>
+        </section>
+      </main>
+      </div>
+    </div>
+
+    <template id="seed-item-template">
+      <button class="seed-item">
+        <div class="seed-item-head">
+          <strong class="seed-item-name"></strong>
+          <span class="seed-item-style"></span>
+        </div>
+        <p class="seed-item-comments"></p>
+        <div class="seed-item-footer">
+          <span class="seed-item-author"></span>
+          <span class="seed-item-sample"></span>
+        </div>
+      </button>
+    </template>
+
+    <script type="module" src="./app.js"></script>
+    <script src="./chrome.js"></script>
+  </body>
+</html>
