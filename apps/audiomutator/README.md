@@ -55,7 +55,7 @@ The UI in `ui/` supports:
 - browser-side feature analysis
 - normalized sound profile extraction
 - generation of multiple `Vital` preset variants
-- download of real `.vital` files built from curated seed presets
+- download of real `.vital` files built from bundled seed presets
 
 Everything now runs in the browser, including preset export.
 

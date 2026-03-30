@@ -69,9 +69,9 @@ function updateStatus(message) {
   elements.status.textContent = message;
 }
 
-function sanitizeStub(value) {
-  const stub = value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-  return stub || "audiomutator-vital";
+function sanitizeFileName(value) {
+  const cleaned = value.replace(/[<>:"/\\|?*\u0000-\u001f]/g, "").trim();
+  return cleaned || "AudioMutator Vital";
 }
 
 function updateControlLabels() {
@@ -532,7 +532,7 @@ function noteName(frequency) {
 
 function seedUrlForFamily(family) {
   const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
-  return new URL(`../../presetmutator/assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, window.location.href);
+  return new URL(`../assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, window.location.href);
 }
 
 async function loadSeedPreset(family) {
@@ -592,7 +592,7 @@ function applyParameterMapToPreset(data, preset) {
 async function buildVitalPresetBlob(preset) {
   const seed = await loadSeedPreset(preset.familyKey);
   const rendered = applyParameterMapToPreset(seed, preset);
-  const fileName = `${sanitizeStub(preset.name)}.vital`;
+  const fileName = `${sanitizeFileName(preset.name)}.vital`;
   const body = JSON.stringify(rendered);
   return {
     fileName,
