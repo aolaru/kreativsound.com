@@ -27,6 +27,36 @@ http://127.0.0.1:4173/
 
 `file://` preview is no longer reliable because the site uses root-relative links and trailing-slash routes such as `/news/` and `/learn/`.
 
+## PresetMutator Local Webapp
+
+`PresetMutator` now lives inside this repo under:
+
+- `apps/presetmutator`
+
+Start it from the repo root with:
+
+```bash
+bash run-presetmutator.sh
+```
+
+Stable local URL:
+
+```text
+http://127.0.0.1:4185/
+```
+
+Notes:
+
+- this avoids the main site preview port (`4173`)
+- it is local-only by default (`127.0.0.1`)
+- it is not linked anywhere on the public website
+
+You can override the bind settings if needed:
+
+```bash
+PRESETMUTATOR_HOST=127.0.0.1 PRESETMUTATOR_PORT=4185 bash run-presetmutator.sh
+```
+
 ## Build Generated Pages
 
 Shared secondary pages, post pages, redirects, and `sitemap.xml` are generated from:
@@ -122,8 +152,6 @@ bash scripts/release-gate.sh
 ```bash
 python3 scripts/update-sitemap-lastmod.py
 ```
-
-- CI runs the same release gate on pushes and pull requests to `main` via `.github/workflows/release-gate.yml`.
 
 ## Analytics
 

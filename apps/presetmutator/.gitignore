@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.DS_Store
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+
+data/output/*
+!data/output/.gitkeep
