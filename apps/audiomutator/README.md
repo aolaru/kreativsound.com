@@ -57,7 +57,7 @@ The UI in `ui/` supports:
 - generation of multiple `Vital` preset variants
 - download of real `.vital` files built from curated seed presets
 
-The browser still performs the audio analysis, but preset export now happens through a tiny local Python server.
+Everything now runs in the browser, including preset export.
 
 ## What The Prototype Actually Does
 
@@ -94,14 +94,14 @@ If the generated directions feel musically believable, the next layer should be:
 
 ## Run
 
-From `apps/audiomutator`:
+From the repo root:
 
 ```bash
-python3 server.py
+python3 -m http.server 4174
 ```
 
 Then open:
 
 ```text
-http://127.0.0.1:4174
+http://127.0.0.1:4174/apps/audiomutator/ui/
 ```

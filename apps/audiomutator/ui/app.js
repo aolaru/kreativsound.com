@@ -6,6 +6,7 @@ const state = {
   profile: null,
   presets: [],
   sourceName: "",
+  seedCache: new Map(),
 };
 
 const elements = {
@@ -29,6 +30,13 @@ const elements = {
   analysisMetrics: document.querySelector("#analysis-metrics"),
   profileMetrics: document.querySelector("#profile-metrics"),
   presetList: document.querySelector("#preset-list"),
+};
+
+const SEED_BY_FAMILY = {
+  pad: "KS Frozen Hollow.vital",
+  pluck: "KS Dread Lantern.vital",
+  bass: "KS Iron Wake.vital",
+  texture: "KS Shadow Archive.vital",
 };
 
 function createAudioContext() {
@@ -59,6 +67,11 @@ function formatHz(value) {
 
 function updateStatus(message) {
   elements.status.textContent = message;
+}
+
+function sanitizeStub(value) {
+  const stub = value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return stub || "audiomutator-vital";
 }
 
 function updateControlLabels() {
@@ -517,6 +530,76 @@ function noteName(frequency) {
   return `${note}${octave}`;
 }
 
+function seedUrlForFamily(family) {
+  const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
+  return new URL(`../../presetmutator/assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, window.location.href);
+}
+
+async function loadSeedPreset(family) {
+  const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
+  if (state.seedCache.has(seedName)) {
+    return structuredClone(state.seedCache.get(seedName));
+  }
+
+  const response = await fetch(seedUrlForFamily(family));
+  if (!response.ok) {
+    throw new Error(`Could not load Vital seed preset: ${seedName}`);
+  }
+
+  const preset = await response.json();
+  state.seedCache.set(seedName, preset);
+  return structuredClone(preset);
+}
+
+function applyParameterMapToPreset(data, preset) {
+  const rendered = structuredClone(data);
+  const settings = rendered.settings;
+
+  for (const [key, value] of Object.entries(preset.parameterMap)) {
+    if (key.startsWith("_")) {
+      continue;
+    }
+    if (typeof value === "boolean") {
+      settings[key] = value ? 1.0 : 0.0;
+      continue;
+    }
+    if (typeof value === "number") {
+      settings[key] = value;
+    }
+  }
+
+  settings.osc_1_on = 1.0;
+  settings.osc_2_on = 1.0;
+  settings.filter_1_on = 1.0;
+  settings.chorus_on = settings.chorus_dry_wet > 0.01 ? 1.0 : 0.0;
+  settings.reverb_on = settings.reverb_dry_wet > 0.01 ? 1.0 : 0.0;
+  settings.distortion_on = settings.distortion_mix > 0.01 ? 1.0 : 0.0;
+  settings.osc_1_unison_voices = Math.round(clamp(settings.osc_1_unison_voices, 1, 8));
+  settings.osc_2_unison_voices = Math.round(clamp(settings.osc_2_unison_voices, 1, 8));
+  settings.preset_name = preset.name;
+
+  rendered.author = "AudioMutator";
+  rendered.comments = preset.summary;
+  rendered.preset_style = preset.familyKey.charAt(0).toUpperCase() + preset.familyKey.slice(1);
+  rendered.macro1 = "Tone";
+  rendered.macro2 = "Motion";
+  rendered.macro3 = "Space";
+  rendered.macro4 = "Drive";
+
+  return rendered;
+}
+
+async function buildVitalPresetBlob(preset) {
+  const seed = await loadSeedPreset(preset.familyKey);
+  const rendered = applyParameterMapToPreset(seed, preset);
+  const fileName = `${sanitizeStub(preset.name)}.vital`;
+  const body = JSON.stringify(rendered);
+  return {
+    fileName,
+    blob: new Blob([body], { type: "application/json;charset=utf-8" }),
+  };
+}
+
 function renderMetricGrid(target, items) {
   target.innerHTML = "";
   for (const [label, value] of items) {
@@ -566,28 +649,8 @@ function renderPresets(presets) {
 
 async function downloadPreset(preset) {
   try {
-    updateStatus(`Rendering ${preset.name} as a real Vital preset...`);
-    const response = await fetch("/api/vital/export", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: preset.name,
-        summary: preset.summary,
-        family_key: preset.familyKey,
-        source_name: state.sourceName,
-        parameter_map: preset.parameterMap,
-      }),
-    });
-
-    if (!response.ok) {
-      const payload = await response.json();
-      throw new Error(payload.error || "Preset export failed.");
-    }
-
-    const blob = await response.blob();
-    const contentDisposition = response.headers.get("Content-Disposition") || "";
-    const match = contentDisposition.match(/filename="([^"]+)"/);
-    const fileName = match ? match[1] : `${preset.name}.vital`;
+    updateStatus(`Rendering ${preset.name} in the browser...`);
+    const { fileName, blob } = await buildVitalPresetBlob(preset);
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
