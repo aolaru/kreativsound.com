@@ -34,7 +34,7 @@ def _json_response(handler: SimpleHTTPRequestHandler, status: int, payload: dict
 
 def _sanitize_stub(value: str) -> str:
     stub = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
-    return stub or "audiomutator-vital"
+    return stub or "audio-alchemy-vital"
 
 
 def _clamp(value: float, low: float, high: float) -> float:

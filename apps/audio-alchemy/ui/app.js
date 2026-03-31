@@ -73,7 +73,7 @@ function updateStatus(message) {
 
 function sanitizeFileName(value) {
   const cleaned = value.replace(/[<>:"/\\|?*\u0000-\u001f]/g, "").trim();
-  return cleaned || "AudioMutator Vital";
+  return cleaned || "Audio Alchemy Vital";
 }
 
 function updateControlLabels() {
@@ -580,7 +580,7 @@ function applyParameterMapToPreset(data, preset) {
   settings.osc_2_unison_voices = Math.round(clamp(settings.osc_2_unison_voices, 1, 8));
   settings.preset_name = preset.name;
 
-  rendered.author = "AudioMutator";
+  rendered.author = "Audio Alchemy";
   rendered.comments = preset.summary;
   rendered.preset_style = preset.familyKey.charAt(0).toUpperCase() + preset.familyKey.slice(1);
   rendered.macro1 = "Tone";

@@ -1,4 +1,4 @@
-# AUDIOMUTATOR
+# AUDIO ALCHEMY
 
 Browser-first prototype for generating downloadable `Vital` presets from uploaded audio.
 
@@ -103,5 +103,5 @@ python3 -m http.server 4174
 Then open:
 
 ```text
-http://127.0.0.1:4174/apps/audiomutator/ui/
+http://127.0.0.1:4174/apps/audio-alchemy/ui/
 ```
