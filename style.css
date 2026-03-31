@@ -112,6 +112,9 @@ a:focus-visible,
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   padding: 0.25rem 1.4rem 0;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid rgba(153, 0, 0, 0.14);
 }
 
 .nav-group {
@@ -214,19 +217,6 @@ a:focus-visible,
   margin: 0 auto;
 }
 
-.home-page .site-nav-home {
-  margin-bottom: 1.2rem;
-  padding-bottom: 0.9rem;
-  border-bottom: 1px solid rgba(153, 0, 0, 0.14);
-}
-
-.top-level-page .site-nav-home {
-  margin-bottom: 0.72rem;
-  padding-top: 0.1rem;
-  padding-bottom: 0.45rem;
-  border-bottom: 1px solid rgba(153, 0, 0, 0.12);
-}
-
 .home-page .hero {
   margin-top: 0.35rem;
   margin-bottom: 1.55rem;
@@ -266,27 +256,6 @@ a:focus-visible,
 
 .top-level-page .page-main {
   margin-top: 0;
-}
-
-.top-level-page .nav-brand-mark {
-  width: 72px;
-  height: 72px;
-  border-radius: 20px;
-}
-
-.top-level-page .nav-group {
-  gap: 0.58rem;
-}
-
-.top-level-page .nav-link {
-  min-height: 38px;
-  font-size: 0.88rem;
-}
-
-.product-page .nav-brand-mark {
-  width: 72px;
-  height: 72px;
-  border-radius: 20px;
 }
 
 .logo-wrap {
