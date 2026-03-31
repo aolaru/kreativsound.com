@@ -141,6 +141,12 @@ python3 scripts/check-product-assets.py
 python3 scripts/smoke-site.py
 ```
 
+- Run Audio Alchemy smoke checks:
+
+```bash
+python3 scripts/smoke-audio-alchemy.py
+```
+
 - Run full release gate (sitemap + assets + thumbnails + smoke + Lighthouse + thresholds):
 
 ```bash

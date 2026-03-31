@@ -30,6 +30,7 @@ const elements = {
   profileMetrics: document.querySelector("#profile-metrics"),
   presetList: document.querySelector("#preset-list"),
   presetsPanel: document.querySelector("#presets-panel"),
+  selfTestNote: document.querySelector("#self-test-note"),
 };
 
 const SEED_BY_FAMILY = {
@@ -40,6 +41,7 @@ const SEED_BY_FAMILY = {
 };
 
 const FREE_VARIANT_LIMIT = 3;
+const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
 
 function createAudioContext() {
   if (!state.audioContext) {
@@ -69,6 +71,26 @@ function formatHz(value) {
 
 function updateStatus(message) {
   elements.status.textContent = message;
+}
+
+function createSyntheticBuffer() {
+  const context = createAudioContext();
+  const sampleRate = 44100;
+  const durationSeconds = 2.4;
+  const frameCount = Math.floor(sampleRate * durationSeconds);
+  const buffer = context.createBuffer(1, frameCount, sampleRate);
+  const channel = buffer.getChannelData(0);
+
+  for (let i = 0; i < frameCount; i += 1) {
+    const t = i / sampleRate;
+    const envelope = Math.exp(-t * 1.9);
+    const body = Math.sin(2 * Math.PI * 220 * t) * 0.55;
+    const air = Math.sin(2 * Math.PI * 660 * t) * 0.18;
+    const movement = Math.sin(2 * Math.PI * 0.6 * t) * 0.12;
+    channel[i] = (body + air + movement) * envelope;
+  }
+
+  return buffer;
 }
 
 function sanitizeFileName(value) {
@@ -706,6 +728,28 @@ async function handleFileChange(event) {
   }
 }
 
+function loadSyntheticSource() {
+  state.originalBuffer = createSyntheticBuffer();
+  state.analysis = null;
+  state.profile = null;
+  state.presets = [];
+  state.sourceName = "self-test-source";
+
+  elements.fileName.textContent = "self-test-source.wav";
+  elements.fileDuration.textContent = `${state.originalBuffer.duration.toFixed(1)}s`;
+  elements.fileSampleRate.textContent = `${state.originalBuffer.sampleRate} Hz`;
+  elements.fileChannels.textContent = String(state.originalBuffer.numberOfChannels);
+  elements.selfTestNote.hidden = false;
+
+  drawWaveform(state.originalBuffer);
+  renderMetricGrid(elements.analysisMetrics, []);
+  renderMetricGrid(elements.profileMetrics, []);
+  renderPresets([]);
+  setReady(true);
+  updateStatus("Self-test source loaded. Generating presets...");
+  generatePresets();
+}
+
 function generatePresets() {
   if (!state.originalBuffer) {
     return;
@@ -763,3 +807,7 @@ for (const control of [elements.brightnessBias, elements.movementBias]) {
 
 updateControlLabels();
 setReady(false);
+
+if (SELF_TEST_ENABLED) {
+  loadSyntheticSource();
+}
