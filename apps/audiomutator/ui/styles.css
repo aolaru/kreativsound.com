@@ -150,6 +150,34 @@ output {
   font-size: 0.9rem;
 }
 
+.plan-strip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.plan-strip p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.plan-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(153, 0, 0, 0.14);
+  border: 1px solid rgba(153, 0, 0, 0.24);
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 .panel {
   background: var(--panel);
   border: 1px solid var(--panel-border);
@@ -165,6 +193,7 @@ output {
 }
 
 .upload-panel,
+.trust-panel,
 .waveform-panel,
 .controls-panel,
 .insight-panel,
@@ -174,6 +203,7 @@ output {
 }
 
 .upload-panel,
+.trust-panel,
 .waveform-panel,
 .analysis-grid,
 .presets-panel {
@@ -220,7 +250,8 @@ h2 {
 
 .meta-grid,
 .control-grid,
-.metric-grid {
+.metric-grid,
+.trust-grid {
   display: grid;
   gap: 14px;
 }
@@ -229,14 +260,24 @@ h2 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.trust-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .meta-grid > div,
 .control,
 .metric,
+.trust-item,
 .preset-card {
   padding: 16px;
   border-radius: 18px;
   background: rgba(255, 245, 245, 0.03);
   border: 1px solid rgba(153, 0, 0, 0.12);
+}
+
+.trust-item p {
+  margin: 0;
+  color: var(--muted);
 }
 
 .meta-label,
@@ -281,6 +322,17 @@ h2 {
 
 .control output {
   color: var(--accent-strong);
+}
+
+.fixed-value {
+  color: var(--accent-strong);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.control-note {
+  color: var(--soft);
+  font-size: 0.84rem;
 }
 
 select,
@@ -343,6 +395,12 @@ button:disabled {
   background: rgba(153, 0, 0, 0.1);
   border: 1px solid rgba(153, 0, 0, 0.18);
   color: #f0cccc;
+}
+
+.upgrade-hint {
+  margin: 14px 0 0;
+  color: var(--soft);
+  font-size: 0.92rem;
 }
 
 .insights {
@@ -453,7 +511,8 @@ button:disabled {
   .analysis-grid,
   .meta-grid,
   .control-grid,
-  .metric-grid {
+  .metric-grid,
+  .trust-grid {
     grid-template-columns: 1fr;
   }
 

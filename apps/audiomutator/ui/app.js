@@ -20,10 +20,8 @@ const elements = {
   inputMode: document.querySelector("#input-mode"),
   brightnessBias: document.querySelector("#brightness-bias"),
   movementBias: document.querySelector("#movement-bias"),
-  variantCount: document.querySelector("#variant-count"),
   brightnessBiasValue: document.querySelector("#brightness-bias-value"),
   movementBiasValue: document.querySelector("#movement-bias-value"),
-  variantCountValue: document.querySelector("#variant-count-value"),
   playOriginal: document.querySelector("#play-original"),
   stopPlayback: document.querySelector("#stop-playback"),
   analyzeGenerate: document.querySelector("#analyze-generate"),
@@ -38,6 +36,8 @@ const SEED_BY_FAMILY = {
   bass: "KS Iron Wake.vital",
   texture: "KS Shadow Archive.vital",
 };
+
+const FREE_VARIANT_LIMIT = 3;
 
 function createAudioContext() {
   if (!state.audioContext) {
@@ -77,7 +77,6 @@ function sanitizeFileName(value) {
 function updateControlLabels() {
   elements.brightnessBiasValue.textContent = `${elements.brightnessBias.value}%`;
   elements.movementBiasValue.textContent = `${elements.movementBias.value}%`;
-  elements.variantCountValue.textContent = elements.variantCount.value;
 }
 
 function setReady(enabled) {
@@ -704,7 +703,7 @@ function generatePresets() {
   updateStatus("Analyzing source and mapping it to Vital parameters...");
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
-  const count = Number(elements.variantCount.value);
+  const count = FREE_VARIANT_LIMIT;
   state.presets = Array.from({ length: count }, (_, index) => mapProfileToVital(state.profile, index));
 
   renderMetricGrid(elements.analysisMetrics, [
@@ -730,7 +729,7 @@ function generatePresets() {
   ]);
 
   renderPresets(state.presets);
-  updateStatus(`Generated ${state.presets.length} Vital variant concepts from the uploaded sound.`);
+  updateStatus(`Generated ${state.presets.length} Vital variants from the uploaded sound. Free demo is limited to ${FREE_VARIANT_LIMIT}.`);
 }
 
 elements.fileInput.addEventListener("change", handleFileChange);
