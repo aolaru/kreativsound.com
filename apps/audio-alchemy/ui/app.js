@@ -41,6 +41,7 @@ const SEED_BY_FAMILY = {
 };
 
 const FREE_VARIANT_LIMIT = 3;
+const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
 
 function createAudioContext() {
@@ -67,6 +68,13 @@ function formatHz(value) {
     return `${(value / 1000).toFixed(2)} kHz`;
   }
   return `${Math.round(value)} Hz`;
+}
+
+function formatFileSize(bytes) {
+  if (bytes >= 1024 * 1024) {
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  }
+  return `${Math.round(bytes / 1024)} KB`;
 }
 
 function updateStatus(message) {
@@ -702,6 +710,27 @@ async function handleFileChange(event) {
   }
 
   try {
+    if (file.size > MAX_UPLOAD_BYTES) {
+      event.target.value = "";
+      setReady(false);
+      state.originalBuffer = null;
+      state.analysis = null;
+      state.profile = null;
+      state.presets = [];
+      state.sourceName = "";
+      elements.fileName.textContent = "No file loaded";
+      elements.fileDuration.textContent = "0.0s";
+      elements.fileSampleRate.textContent = "-";
+      elements.fileChannels.textContent = "-";
+      renderMetricGrid(elements.analysisMetrics, []);
+      renderMetricGrid(elements.profileMetrics, []);
+      renderPresets([]);
+      elements.waveform.getContext("2d").clearRect(0, 0, elements.waveform.width, elements.waveform.height);
+      elements.waveformEmptyNote.hidden = false;
+      updateStatus(`File too large. Keep uploads under ${formatFileSize(MAX_UPLOAD_BYTES)}.`);
+      return;
+    }
+
     updateStatus("Decoding audio locally...");
     const context = createAudioContext();
     const arrayBuffer = await file.arrayBuffer();
