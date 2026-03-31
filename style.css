@@ -221,8 +221,9 @@ a:focus-visible,
 }
 
 .top-level-page .site-nav-home {
-  margin-bottom: 0.95rem;
-  padding-bottom: 0.65rem;
+  margin-bottom: 0.72rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.45rem;
   border-bottom: 1px solid rgba(153, 0, 0, 0.12);
 }
 
@@ -264,7 +265,22 @@ a:focus-visible,
 }
 
 .top-level-page .page-main {
-  margin-top: 0.25rem;
+  margin-top: 0;
+}
+
+.top-level-page .nav-brand-mark {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+}
+
+.top-level-page .nav-group {
+  gap: 0.58rem;
+}
+
+.top-level-page .nav-link {
+  min-height: 38px;
+  font-size: 0.88rem;
 }
 
 .product-page .nav-brand-mark {

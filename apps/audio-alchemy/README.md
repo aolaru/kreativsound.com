@@ -90,7 +90,7 @@ If the generated directions feel musically believable, the next layer should be:
 1. define a real internal `sound profile` schema
 2. stabilize the mapping rules for `Vital`
 3. improve preset naming, macro assignment, and seed selection logic
-4. reuse the same profile for future synth adapters such as `Serum` and `Pigments`
+4. reuse the same profile for future synth adapters as more synths are added
 
 ## Run
 
