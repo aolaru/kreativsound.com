@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Audio Alchemy | Audio to Vital</title>
+    <title>Audio Alchemy | Sound to Synth Presets</title>
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,19 +36,20 @@
       </nav>
 
       <section class="hero">
-        <p class="eyebrow">Audio Alchemy / Vital Prototype</p>
-        <h1>Upload a sound. Generate Vital presets inspired by it.</h1>
+        <p class="eyebrow">Audio Alchemy / Multi-Synth Concept</p>
+        <h1>Upload a sound. Generate synth presets inspired by it.</h1>
         <p class="lede">
-          This first pass analyzes short audio locally in the browser and turns it into multiple Vital-style preset concepts.
+          This first pass analyzes short audio locally in the browser and turns it into multiple synth preset concepts, starting with Vital.
         </p>
         <div class="hero-note">
           <span>Dark, cinematic, product-led styling aligned with the main Kreativ Sound site.</span>
         </div>
         <div class="plan-strip">
           <span class="plan-badge">FREE</span>
-          <p>Generate up to 3 Vital variants from one source audio file.</p>
+          <p>Generate up to 3 preset variants from one source audio file. Vital is supported now.</p>
         </div>
         <p class="hero-trustline">FREE. Local processing. No AI.</p>
+        <p class="hero-license">Use these presets royalty-free in your own productions.</p>
       </section>
 
       <section class="panel trust-panel">
@@ -82,7 +83,7 @@
             <input id="file-input" type="file" accept="audio/*" />
           </label>
         </div>
-        <p class="upload-callout">Start here. Choose one short source sound and generate 3 free Vital variants.</p>
+        <p class="upload-callout">Start here. Choose one short source sound and generate 3 free preset variants. Vital is live now, with more synths planned.</p>
 
         <div class="meta-grid">
           <div>
@@ -109,7 +110,7 @@
           <h2>Waveform</h2>
           <p class="muted">Source reference only. Processing stays local.</p>
         </div>
-        <canvas id="waveform" width="1200" height="260"></canvas>
+        <canvas id="waveform" width="1200" height="180"></canvas>
         <p class="waveform-empty-note" id="waveform-empty-note">Load a file to preview its waveform.</p>
       </section>
 
@@ -154,10 +155,10 @@
           <div class="actions">
             <button id="play-original" type="button" disabled>Play Source</button>
             <button id="stop-playback" type="button" disabled>Stop</button>
-            <button id="analyze-generate" type="button" disabled>Analyze & Generate Vital Variants</button>
+            <button id="analyze-generate" type="button" disabled>Analyze & Generate Presets</button>
           </div>
 
-          <div class="status" id="status">Load a short audio file to build a Vital sound profile.</div>
+          <div class="status" id="status">Load a short audio file to build a synth preset profile. Vital is currently supported.</div>
           <p class="upgrade-hint">Pro will add more variants, more synths, batch mode, and saved projects.</p>
         </section>
 
@@ -170,7 +171,7 @@
             <li>Target short sounds, not full arrangements.</li>
             <li>Generate presets inspired by the source, not exact reconstruction.</li>
             <li>Use mode hints because the same spectrum can imply different synth behavior.</li>
-            <li>Start with Vital only, then generalize the profile later.</li>
+            <li>Vital is supported first, with Serum and Pigments planned next.</li>
           </ul>
         </section>
       </section>
@@ -187,7 +188,7 @@
         <section class="panel analysis-panel">
           <div class="section-head">
             <h2>Sound Profile</h2>
-            <p class="muted">Normalized features that drive Vital mapping.</p>
+            <p class="muted">Normalized features that drive the current synth mapping.</p>
           </div>
           <div class="metric-grid" id="profile-metrics"></div>
         </section>
@@ -195,8 +196,8 @@
 
       <section class="panel presets-panel" id="presets-panel">
         <div class="section-head">
-          <h2>Generated Vital Variants</h2>
-          <p class="muted">Preview the mapping, then download a real `.vital` file built from a curated seed.</p>
+          <h2>Generated Preset Variants</h2>
+          <p class="muted">Preview the mapping, then download a real `.vital` file built from a curated seed. Vital is the current export target.</p>
         </div>
         <div class="preset-list" id="preset-list">
           <p class="empty-state">No presets generated yet.</p>

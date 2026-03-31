@@ -1,6 +1,6 @@
 # AUDIO ALCHEMY
 
-Browser-first prototype for generating downloadable `Vital` presets from uploaded audio.
+Browser-first prototype for generating downloadable synth presets from uploaded audio, starting with `Vital`.
 
 ## Product Direction
 
@@ -10,7 +10,7 @@ The v1 question is narrower:
 
 - can a user upload a short audio file
 - can the browser extract a usable sound profile
-- can that profile drive believable `Vital` preset directions
+- can that profile drive believable synth preset directions
 - can we generate multiple preset variants from one source
 
 ## Supported Input for V1
@@ -54,8 +54,8 @@ The UI in `ui/` supports:
   - drone / texture
 - browser-side feature analysis
 - normalized sound profile extraction
-- generation of multiple `Vital` preset variants
-- download of real `.vital` files built from bundled seed presets
+- generation of multiple preset variants
+- download of real `.vital` files built from bundled seed presets for the first synth adapter
 
 Everything now runs in the browser, including preset export.
 
@@ -72,7 +72,7 @@ It analyzes the uploaded audio and estimates:
 - stereo width
 - pitch center
 
-Those values are mapped into first-pass `Vital` style parameters such as:
+Those values are mapped into first-pass synth parameters such as:
 
 - oscillator mode
 - unison voices
@@ -90,7 +90,7 @@ If the generated directions feel musically believable, the next layer should be:
 1. define a real internal `sound profile` schema
 2. stabilize the mapping rules for `Vital`
 3. improve preset naming, macro assignment, and seed selection logic
-4. reuse the same profile for future synth adapters
+4. reuse the same profile for future synth adapters such as `Serum` and `Pigments`
 
 ## Run
 

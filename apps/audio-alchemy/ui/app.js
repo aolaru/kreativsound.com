@@ -511,6 +511,11 @@ function buildVariantName(family, index) {
   return lexicon[family][index % lexicon[family].length];
 }
 
+function variantRole(index, preset) {
+  const roles = ["Closest", preset.parameterMap.filter_1_cutoff < 50 ? "Darker" : "More Motion", "Brighter"];
+  return roles[index] || "Variant";
+}
+
 function familyLabel(family) {
   const labels = {
     pad: "Pad / Atmosphere",
@@ -627,13 +632,15 @@ function renderPresets(presets) {
   for (const preset of presets) {
     const card = document.createElement("article");
     card.className = "preset-card";
+    const role = variantRole(presets.indexOf(preset), preset);
     const paramRows = preset.parameters
-      .slice(0, 10)
+      .slice(0, 6)
       .map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`)
       .join("");
     card.innerHTML = `
       <div class="preset-head">
         <div>
+          <p class="preset-role">${role}</p>
           <p class="preset-family">${preset.family}</p>
           <h3 class="preset-name">${preset.name}</h3>
         </div>
@@ -691,7 +698,6 @@ async function handleFileChange(event) {
     renderMetricGrid(elements.analysisMetrics, []);
     renderMetricGrid(elements.profileMetrics, []);
     renderPresets([]);
-    elements.waveformEmptyNote.hidden = false;
     setReady(true);
 
     updateStatus("File loaded. Analyze it to generate Vital variants.");

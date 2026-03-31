@@ -107,8 +107,8 @@ output {
 }
 
 .hero {
-  margin-bottom: 1.9rem;
-  padding: 0.35rem 0 0;
+  margin-bottom: 1.25rem;
+  padding: 0.1rem 0 0;
   text-align: center;
 }
 
@@ -124,14 +124,14 @@ output {
 .hero h1 {
   margin: 0 auto;
   max-width: 10ch;
-  font-size: clamp(2.8rem, 7vw, 5.2rem);
-  line-height: 0.94;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  line-height: 0.92;
 }
 
 .lede {
   max-width: 42rem;
-  margin: 18px auto 0;
-  font-size: 1.08rem;
+  margin: 14px auto 0;
+  font-size: 0.98rem;
   color: var(--muted);
 }
 
@@ -165,12 +165,18 @@ output {
 }
 
 .hero-trustline {
-  margin: 0.9rem 0 0;
+  margin: 0.8rem 0 0;
   color: var(--accent-strong);
   font-size: 0.88rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+.hero-license {
+  margin: 0.45rem 0 0;
+  color: var(--soft);
+  font-size: 0.9rem;
 }
 
 .plan-badge {
@@ -314,7 +320,7 @@ h2 {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
     #170b0d;
-  min-height: 140px;
+  min-height: 100px;
 }
 
 .waveform-panel {
@@ -445,7 +451,15 @@ button:disabled {
 }
 
 .analysis-panel {
-  opacity: 0.88;
+  opacity: 0.72;
+}
+
+.analysis-panel .metric {
+  background: rgba(255, 245, 245, 0.02);
+}
+
+.analysis-panel .metric-value {
+  font-size: 1rem;
 }
 
 .metric-grid {
@@ -482,6 +496,21 @@ button:disabled {
   gap: 14px;
 }
 
+.preset-role {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(209, 76, 76, 0.12);
+  border: 1px solid rgba(209, 76, 76, 0.2);
+  color: var(--accent-strong);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 .preset-actions {
   display: flex;
   gap: 10px;
@@ -513,7 +542,7 @@ button:disabled {
 
 .param-list {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .param-row {
