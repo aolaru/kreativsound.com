@@ -16,6 +16,7 @@ const elements = {
   fileSampleRate: document.querySelector("#file-sample-rate"),
   fileChannels: document.querySelector("#file-channels"),
   waveform: document.querySelector("#waveform"),
+  waveformEmptyNote: document.querySelector("#waveform-empty-note"),
   status: document.querySelector("#status"),
   inputMode: document.querySelector("#input-mode"),
   brightnessBias: document.querySelector("#brightness-bias"),
@@ -28,6 +29,7 @@ const elements = {
   analysisMetrics: document.querySelector("#analysis-metrics"),
   profileMetrics: document.querySelector("#profile-metrics"),
   presetList: document.querySelector("#preset-list"),
+  presetsPanel: document.querySelector("#presets-panel"),
 };
 
 const SEED_BY_FAMILY = {
@@ -160,6 +162,7 @@ function drawWaveform(buffer) {
   }
 
   context.stroke();
+  elements.waveformEmptyNote.hidden = true;
 }
 
 function analyzeAudio(buffer) {
@@ -614,6 +617,7 @@ function renderMetricGrid(target, items) {
 
 function renderPresets(presets) {
   elements.presetList.innerHTML = "";
+  elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
 
   if (!presets.length) {
     elements.presetList.innerHTML = `<p class="empty-state">No presets generated yet.</p>`;
@@ -687,6 +691,7 @@ async function handleFileChange(event) {
     renderMetricGrid(elements.analysisMetrics, []);
     renderMetricGrid(elements.profileMetrics, []);
     renderPresets([]);
+    elements.waveformEmptyNote.hidden = false;
     setReady(true);
 
     updateStatus("File loaded. Analyze it to generate Vital variants.");
@@ -746,7 +751,7 @@ elements.stopPlayback.addEventListener("click", () => {
 });
 elements.analyzeGenerate.addEventListener("click", generatePresets);
 
-for (const control of [elements.brightnessBias, elements.movementBias, elements.variantCount]) {
+for (const control of [elements.brightnessBias, elements.movementBias]) {
   control.addEventListener("input", updateControlLabels);
 }
 

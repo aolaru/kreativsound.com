@@ -164,6 +164,15 @@ output {
   color: var(--muted);
 }
 
+.hero-trustline {
+  margin: 0.9rem 0 0;
+  color: var(--accent-strong);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .plan-badge {
   display: inline-flex;
   align-items: center;
@@ -233,15 +242,22 @@ h2 {
   align-items: center;
   justify-content: center;
   width: fit-content;
-  padding: 14px 18px;
+  padding: 16px 22px;
   border-radius: 999px;
   background: linear-gradient(180deg, rgba(176, 38, 38, 0.95) 0%, rgba(123, 7, 7, 0.98) 100%);
   border: 1px solid rgba(239, 177, 177, 0.2);
-  box-shadow: 0 18px 32px rgba(73, 8, 10, 0.24);
+  box-shadow: 0 24px 40px rgba(73, 8, 10, 0.3);
   color: #fff4f4;
   font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.upload-callout {
+  margin: 0 0 16px;
+  color: var(--accent-strong);
+  font-weight: 500;
 }
 
 .upload input {
@@ -298,6 +314,17 @@ h2 {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
     #170b0d;
+  min-height: 140px;
+}
+
+.waveform-panel {
+  min-height: 0;
+}
+
+.waveform-empty-note {
+  margin: 10px 0 0;
+  color: var(--soft);
+  font-size: 0.9rem;
 }
 
 .workspace {
@@ -417,6 +444,10 @@ button:disabled {
   gap: 20px;
 }
 
+.analysis-panel {
+  opacity: 0.88;
+}
+
 .metric-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -431,6 +462,19 @@ button:disabled {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
+}
+
+.presets-panel {
+  border-color: rgba(219, 127, 127, 0.44);
+  box-shadow: 0 28px 60px rgba(47, 8, 10, 0.28);
+}
+
+.presets-panel.has-results {
+  border-color: rgba(239, 177, 177, 0.56);
+  box-shadow: 0 34px 72px rgba(72, 10, 14, 0.34);
+  background:
+    linear-gradient(180deg, rgba(209, 76, 76, 0.07), transparent 26%),
+    var(--panel-strong);
 }
 
 .preset-card {

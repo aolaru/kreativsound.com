@@ -47,6 +47,7 @@
           <span class="plan-badge">FREE</span>
           <p>Generate up to 3 Vital variants from one source audio file.</p>
         </div>
+        <p class="hero-trustline">FREE. Local processing. No AI.</p>
       </section>
 
       <section class="panel trust-panel">
@@ -80,6 +81,7 @@
             <input id="file-input" type="file" accept="audio/*" />
           </label>
         </div>
+        <p class="upload-callout">Start here. Choose one short source sound and generate 3 free Vital variants.</p>
 
         <div class="meta-grid">
           <div>
@@ -107,6 +109,7 @@
           <p class="muted">Source reference only. Processing stays local.</p>
         </div>
         <canvas id="waveform" width="1200" height="260"></canvas>
+        <p class="waveform-empty-note" id="waveform-empty-note">Load a file to preview its waveform.</p>
       </section>
 
       <section class="workspace">
@@ -159,8 +162,8 @@
 
         <section class="panel insight-panel">
           <div class="section-head">
-            <h2>Support Rules</h2>
-            <p class="muted">The product promise should stay narrow for the first generation.</p>
+            <h2>Best Results</h2>
+            <p class="muted">A few constraints make the output much more believable.</p>
           </div>
           <ul class="insights">
             <li>Target short sounds, not full arrangements.</li>
@@ -172,7 +175,7 @@
       </section>
 
       <section class="analysis-grid">
-        <section class="panel">
+        <section class="panel analysis-panel">
           <div class="section-head">
             <h2>Audio Analysis</h2>
             <p class="muted">Raw descriptors extracted in-browser.</p>
@@ -180,7 +183,7 @@
           <div class="metric-grid" id="analysis-metrics"></div>
         </section>
 
-        <section class="panel">
+        <section class="panel analysis-panel">
           <div class="section-head">
             <h2>Sound Profile</h2>
             <p class="muted">Normalized features that drive Vital mapping.</p>
@@ -189,7 +192,7 @@
         </section>
       </section>
 
-      <section class="panel presets-panel">
+      <section class="panel presets-panel" id="presets-panel">
         <div class="section-head">
           <h2>Generated Vital Variants</h2>
           <p class="muted">Preview the mapping, then download a real `.vital` file built from a curated seed.</p>
