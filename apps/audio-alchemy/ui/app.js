@@ -16,6 +16,7 @@ const elements = {
   fileSampleRate: document.querySelector("#file-sample-rate"),
   fileChannels: document.querySelector("#file-channels"),
   waveform: document.querySelector("#waveform"),
+  waveformPanel: document.querySelector("#waveform-drop-zone"),
   waveformEmptyNote: document.querySelector("#waveform-empty-note"),
   status: document.querySelector("#status"),
   inputMode: document.querySelector("#input-mode"),
@@ -79,6 +80,24 @@ function formatFileSize(bytes) {
 
 function updateStatus(message) {
   elements.status.textContent = message;
+}
+
+function resetLoadedState() {
+  setReady(false);
+  state.originalBuffer = null;
+  state.analysis = null;
+  state.profile = null;
+  state.presets = [];
+  state.sourceName = "";
+  elements.fileName.textContent = "No file loaded";
+  elements.fileDuration.textContent = "0.0s";
+  elements.fileSampleRate.textContent = "-";
+  elements.fileChannels.textContent = "-";
+  renderMetricGrid(elements.analysisMetrics, []);
+  renderMetricGrid(elements.profileMetrics, []);
+  renderPresets([]);
+  elements.waveform.getContext("2d").clearRect(0, 0, elements.waveform.width, elements.waveform.height);
+  elements.waveformEmptyNote.hidden = false;
 }
 
 function createSyntheticBuffer() {
@@ -712,24 +731,20 @@ async function handleFileChange(event) {
     return;
   }
 
+  await loadAudioFile(file, true);
+}
+
+async function loadAudioFile(file, resetInput = false) {
+  if (!file) {
+    return;
+  }
+
   try {
     if (file.size > MAX_UPLOAD_BYTES) {
-      event.target.value = "";
-      setReady(false);
-      state.originalBuffer = null;
-      state.analysis = null;
-      state.profile = null;
-      state.presets = [];
-      state.sourceName = "";
-      elements.fileName.textContent = "No file loaded";
-      elements.fileDuration.textContent = "0.0s";
-      elements.fileSampleRate.textContent = "-";
-      elements.fileChannels.textContent = "-";
-      renderMetricGrid(elements.analysisMetrics, []);
-      renderMetricGrid(elements.profileMetrics, []);
-      renderPresets([]);
-      elements.waveform.getContext("2d").clearRect(0, 0, elements.waveform.width, elements.waveform.height);
-      elements.waveformEmptyNote.hidden = false;
+      if (resetInput) {
+        elements.fileInput.value = "";
+      }
+      resetLoadedState();
       updateStatus(`File too large. Keep uploads under ${formatFileSize(MAX_UPLOAD_BYTES)}.`);
       return;
     }
@@ -758,6 +773,35 @@ async function handleFileChange(event) {
   } catch (error) {
     updateStatus(error.message || "Failed to decode audio.");
   }
+}
+
+function setDropZoneActive(active) {
+  elements.waveformPanel.classList.toggle("is-drop-active", active);
+}
+
+function handleDropZoneDrag(event) {
+  event.preventDefault();
+  if (event.dataTransfer) {
+    event.dataTransfer.dropEffect = "copy";
+  }
+  setDropZoneActive(true);
+}
+
+function handleDropZoneLeave(event) {
+  if (!elements.waveformPanel.contains(event.relatedTarget)) {
+    setDropZoneActive(false);
+  }
+}
+
+async function handleDropZoneDrop(event) {
+  event.preventDefault();
+  setDropZoneActive(false);
+  const [file] = event.dataTransfer?.files || [];
+  if (!file) {
+    return;
+  }
+  elements.fileInput.value = "";
+  await loadAudioFile(file, false);
 }
 
 function loadSyntheticSource() {
@@ -820,6 +864,10 @@ function generatePresets() {
 }
 
 elements.fileInput.addEventListener("change", handleFileChange);
+elements.waveformPanel.addEventListener("dragenter", handleDropZoneDrag);
+elements.waveformPanel.addEventListener("dragover", handleDropZoneDrag);
+elements.waveformPanel.addEventListener("dragleave", handleDropZoneLeave);
+elements.waveformPanel.addEventListener("drop", handleDropZoneDrop);
 elements.playOriginal.addEventListener("click", () => {
   if (!state.originalBuffer) {
     return;

@@ -201,6 +201,10 @@ output {
   margin-bottom: 20px;
 }
 
+.trust-panel {
+  padding: 18px 20px;
+}
+
 .upload-panel {
   background:
     linear-gradient(180deg, rgba(179, 0, 0, 0.035) 0%, transparent 38%),
@@ -214,6 +218,10 @@ output {
   align-items: end;
   gap: 16px;
   margin-bottom: 16px;
+}
+
+.trust-panel .section-head {
+  margin-bottom: 12px;
 }
 
 h2 {
@@ -283,13 +291,13 @@ h2 {
 .trust-item p {
   margin: 0;
   color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.45;
+  font-size: 0.84rem;
+  line-height: 1.35;
 }
 
 .trust-item {
-  padding: 14px 16px;
-  border-radius: 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
 }
 
 .meta-label,
@@ -303,8 +311,16 @@ h2 {
 }
 
 .trust-item .meta-label {
-  margin-bottom: 6px;
-  font-size: 0.76rem;
+  margin-bottom: 5px;
+  font-size: 0.72rem;
+}
+
+.trust-panel h2 {
+  font-size: 1.06rem;
+}
+
+.trust-panel .muted {
+  font-size: 0.82rem;
 }
 
 #waveform {
@@ -320,12 +336,25 @@ h2 {
 
 .waveform-panel {
   min-height: 0;
+  position: relative;
 }
 
 .waveform-empty-note {
   margin: 10px 0 0;
   color: var(--soft);
   font-size: 0.9rem;
+}
+
+.drop-zone {
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.drop-zone.is-drop-active {
+  border-color: rgba(176, 38, 38, 0.42);
+  box-shadow: 0 24px 48px rgba(109, 50, 50, 0.16);
+  background:
+    linear-gradient(180deg, rgba(179, 0, 0, 0.04) 0%, transparent 40%),
+    var(--panel-strong);
 }
 
 .workspace {
