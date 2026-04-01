@@ -678,7 +678,10 @@ function renderPresets(presets) {
       <p class="preset-summary">${preset.summary}</p>
       <div class="param-list">${paramRows}</div>
       <div class="preset-actions">
-        <button class="download-button" type="button">Download .vital</button>
+        <button class="download-button" type="button">
+          <span class="download-badge" aria-hidden="true">VITAL</span>
+          <span>Download Preset</span>
+        </button>
       </div>
     `;
     const button = card.querySelector(".download-button");
