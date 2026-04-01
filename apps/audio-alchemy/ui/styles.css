@@ -372,6 +372,10 @@ h2 {
   padding: 16px;
 }
 
+.waveform-panel.has-waveform .waveform-drop-cta {
+  display: none;
+}
+
 .waveform-empty-note {
   margin: 0;
   color: var(--soft);

@@ -108,6 +108,7 @@ function resetLoadedState() {
   renderMetricGrid(elements.profileMetrics, []);
   renderPresets([]);
   elements.waveform.getContext("2d").clearRect(0, 0, elements.waveform.width, elements.waveform.height);
+  elements.waveformPanel.classList.remove("has-waveform");
   elements.waveformDropCta.hidden = false;
   elements.waveformEmptyNote.hidden = false;
   showUploadMessage("");
@@ -231,6 +232,7 @@ function drawWaveform(buffer) {
   }
 
   context.stroke();
+  elements.waveformPanel.classList.add("has-waveform");
   elements.waveformDropCta.hidden = true;
   elements.waveformEmptyNote.hidden = true;
 }
