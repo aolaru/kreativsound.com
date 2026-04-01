@@ -337,12 +337,35 @@ h2 {
 .waveform-panel {
   min-height: 0;
   position: relative;
+  margin-bottom: 16px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px dashed rgba(153, 0, 0, 0.2);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent),
+    rgba(255, 245, 245, 0.42);
+}
+
+.waveform-drop-inner {
+  position: relative;
+}
+
+.waveform-drop-cta {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 10px;
+  text-align: center;
+  padding: 16px;
 }
 
 .waveform-empty-note {
-  margin: 10px 0 0;
+  margin: 0;
   color: var(--soft);
   font-size: 0.9rem;
+  max-width: 28rem;
 }
 
 .drop-zone {
@@ -355,6 +378,11 @@ h2 {
   background:
     linear-gradient(180deg, rgba(179, 0, 0, 0.04) 0%, transparent 40%),
     var(--panel-strong);
+}
+
+.waveform-panel:not(.is-drop-active) .upload {
+  position: relative;
+  z-index: 1;
 }
 
 .workspace {
@@ -621,6 +649,18 @@ button:disabled {
   color: var(--soft);
   font-size: 0.92rem;
   text-align: center;
+}
+
+.app-footer p {
+  margin: 0;
+}
+
+.app-version {
+  margin-top: 0.3rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(88, 60, 64, 0.72);
 }
 
 @media (max-width: 960px) {

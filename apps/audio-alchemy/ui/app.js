@@ -17,6 +17,7 @@ const elements = {
   fileChannels: document.querySelector("#file-channels"),
   waveform: document.querySelector("#waveform"),
   waveformPanel: document.querySelector("#waveform-drop-zone"),
+  waveformDropCta: document.querySelector("#waveform-drop-cta"),
   waveformEmptyNote: document.querySelector("#waveform-empty-note"),
   status: document.querySelector("#status"),
   inputMode: document.querySelector("#input-mode"),
@@ -97,6 +98,7 @@ function resetLoadedState() {
   renderMetricGrid(elements.profileMetrics, []);
   renderPresets([]);
   elements.waveform.getContext("2d").clearRect(0, 0, elements.waveform.width, elements.waveform.height);
+  elements.waveformDropCta.hidden = false;
   elements.waveformEmptyNote.hidden = false;
 }
 
@@ -211,6 +213,7 @@ function drawWaveform(buffer) {
   }
 
   context.stroke();
+  elements.waveformDropCta.hidden = true;
   elements.waveformEmptyNote.hidden = true;
 }
 

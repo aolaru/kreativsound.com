@@ -32,8 +32,8 @@
       </nav>
 
       <section class="hero">
-        <h1>Turn sound into synth presets.</h1>
-        <p class="lede">Upload a short audio sample and generate 3 free preset variants, starting with Vital.</p>
+        <h1>Turn any audio into a playable Vital preset</h1>
+        <p class="lede">Upload a sound and generate 3 free preset variations instantly.</p>
       </section>
 
       <section class="panel upload-panel">
@@ -42,12 +42,25 @@
             <h2>Input Audio</h2>
             <p class="muted">Short single-source samples work best: pads, plucks, basses, drones, textures. Max 25 MB.</p>
           </div>
-          <label class="upload">
-            <span>Choose audio file</span>
-            <input id="file-input" type="file" accept="audio/*" />
-          </label>
         </div>
-        <p class="upload-callout">Start here. Choose one short source sound under 25 MB and generate 3 free preset variants.</p>
+        <p class="upload-callout">Start here. Choose one short source sound under 25 MB or drag and drop it into the waveform area.</p>
+
+        <section class="waveform-panel drop-zone" id="waveform-drop-zone">
+          <div class="section-head">
+            <h2>Waveform</h2>
+            <p class="muted">Drag and drop audio here or choose a file below.</p>
+          </div>
+          <div class="waveform-drop-inner">
+            <canvas id="waveform" width="1200" height="150"></canvas>
+            <div class="waveform-drop-cta" id="waveform-drop-cta">
+              <label class="upload">
+                <span>Choose audio file</span>
+                <input id="file-input" type="file" accept="audio/*" />
+              </label>
+              <p class="waveform-empty-note" id="waveform-empty-note">Drop an audio file here to preview its waveform.</p>
+            </div>
+          </div>
+        </section>
 
         <div class="meta-grid">
           <div>
@@ -67,15 +80,6 @@
             <strong id="file-channels">-</strong>
           </div>
         </div>
-      </section>
-
-      <section class="panel waveform-panel drop-zone" id="waveform-drop-zone">
-        <div class="section-head">
-          <h2>Waveform</h2>
-          <p class="muted">Source reference only. Drag and drop audio here or use the upload button.</p>
-        </div>
-        <canvas id="waveform" width="1200" height="150"></canvas>
-        <p class="waveform-empty-note" id="waveform-empty-note">Drag and drop an audio file here to preview its waveform.</p>
       </section>
 
       <section class="panel trust-panel">
@@ -196,6 +200,7 @@
 
       <footer class="app-footer">
         <p>Kreativ Sound experimental tool surface for audio-driven preset generation.</p>
+        <p class="app-version">Audio Alchemy v0.1 beta</p>
       </footer>
     </main>
 
