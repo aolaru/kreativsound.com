@@ -141,15 +141,15 @@ output {
 }
 
 .hero {
-  margin-bottom: 0.95rem;
+  margin-bottom: 0.7rem;
   padding: 0.05rem 0 0;
   text-align: center;
 }
 
 .eyebrow {
-  margin: 0 0 0.45rem;
+  margin: 0 0 0.3rem;
   color: var(--accent-strong);
-  font-size: 0.76rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -158,39 +158,15 @@ output {
 .hero h1 {
   margin: 0 auto;
   max-width: 13ch;
-  font-size: clamp(2.45rem, 5.8vw, 4.35rem);
-  line-height: 0.94;
+  font-size: clamp(2.05rem, 4.8vw, 3.7rem);
+  line-height: 0.96;
 }
 
 .lede {
-  max-width: 34rem;
-  margin: 10px auto 0;
-  font-size: 0.94rem;
-  color: var(--muted);
-}
-
-.plan-strip {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.85rem;
-  margin-top: 0.8rem;
-  flex-wrap: wrap;
-}
-
-.plan-strip p {
-  margin: 0;
-  color: var(--muted);
+  max-width: 31rem;
+  margin: 8px auto 0;
   font-size: 0.88rem;
-}
-
-.plan-badge {
-  display: inline-block;
-  color: var(--accent-strong);
-  font-size: 0.82rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  color: var(--muted);
 }
 
 .panel {
@@ -223,6 +199,13 @@ output {
 .analysis-grid,
 .presets-panel {
   margin-bottom: 20px;
+}
+
+.upload-panel {
+  background:
+    linear-gradient(180deg, rgba(179, 0, 0, 0.035) 0%, transparent 38%),
+    var(--panel-strong);
+  border-color: rgba(153, 0, 0, 0.22);
 }
 
 .section-head {
@@ -283,7 +266,7 @@ h2 {
 }
 
 .trust-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .meta-grid > div,
@@ -300,6 +283,13 @@ h2 {
 .trust-item p {
   margin: 0;
   color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.trust-item {
+  padding: 14px 16px;
+  border-radius: 16px;
 }
 
 .meta-label,
@@ -310,6 +300,11 @@ h2 {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+.trust-item .meta-label {
+  margin-bottom: 6px;
+  font-size: 0.76rem;
 }
 
 #waveform {
