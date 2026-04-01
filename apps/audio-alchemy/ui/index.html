@@ -16,7 +16,7 @@
     <main class="shell">
       <nav class="site-nav site-nav-split site-nav-home" aria-label="Primary">
         <div class="nav-group nav-group-main">
-          <a class="nav-link active" href="https://kreativsound.com/tools/" target="_blank" rel="noopener noreferrer">Tools</a>
+          <a class="nav-link" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer">Back to Kreativ Sound</a>
         </div>
         <a class="nav-brand nav-brand-wordmark" href="https://kreativsound.com/apps/audio-alchemy/ui/" aria-label="Audio Alchemy home">
           <span class="nav-brand-badge" aria-hidden="true">
@@ -44,6 +44,7 @@
           </div>
         </div>
         <p class="upload-callout">Start here. Choose one short source sound under 25 MB or drag and drop it into the waveform area.</p>
+        <p class="upload-message" id="upload-message" hidden></p>
 
         <section class="waveform-panel drop-zone" id="waveform-drop-zone">
           <div class="section-head">
@@ -148,7 +149,7 @@
           <div class="actions">
             <button id="play-original" type="button" disabled>Play Source</button>
             <button id="stop-playback" type="button" disabled>Stop</button>
-            <button id="analyze-generate" type="button" disabled>Analyze & Generate Presets</button>
+            <button id="analyze-generate" type="button" disabled>Generate Presets</button>
           </div>
 
           <div class="status" id="status">Load a short audio file to build a synth preset profile. Vital is currently supported.</div>
@@ -157,14 +158,13 @@
 
         <section class="panel insight-panel">
           <div class="section-head">
-            <h2>Best Results</h2>
-            <p class="muted">A few constraints make the output much more believable.</p>
+            <h2>Tips for better results</h2>
+            <p class="muted">Use cleaner source material for stronger preset matches.</p>
           </div>
           <ul class="insights">
-            <li>Target short sounds, not full arrangements.</li>
-            <li>Generate presets inspired by the source, not exact reconstruction.</li>
-            <li>Use mode hints because the same spectrum can imply different synth behavior.</li>
-            <li>Vital is supported first, with more synths planned in the future.</li>
+            <li>Use short, simple sounds.</li>
+            <li>Avoid full tracks.</li>
+            <li>Pads, textures, and drones work best.</li>
           </ul>
         </section>
       </section>

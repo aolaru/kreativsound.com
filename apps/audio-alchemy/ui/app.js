@@ -19,6 +19,7 @@ const elements = {
   waveformPanel: document.querySelector("#waveform-drop-zone"),
   waveformDropCta: document.querySelector("#waveform-drop-cta"),
   waveformEmptyNote: document.querySelector("#waveform-empty-note"),
+  uploadMessage: document.querySelector("#upload-message"),
   status: document.querySelector("#status"),
   inputMode: document.querySelector("#input-mode"),
   brightnessBias: document.querySelector("#brightness-bias"),
@@ -83,6 +84,11 @@ function updateStatus(message) {
   elements.status.textContent = message;
 }
 
+function showUploadMessage(message) {
+  elements.uploadMessage.textContent = message;
+  elements.uploadMessage.hidden = !message;
+}
+
 function resetLoadedState() {
   setReady(false);
   state.originalBuffer = null;
@@ -100,6 +106,7 @@ function resetLoadedState() {
   elements.waveform.getContext("2d").clearRect(0, 0, elements.waveform.width, elements.waveform.height);
   elements.waveformDropCta.hidden = false;
   elements.waveformEmptyNote.hidden = false;
+  showUploadMessage("");
 }
 
 function createSyntheticBuffer() {
@@ -748,10 +755,13 @@ async function loadAudioFile(file, resetInput = false) {
         elements.fileInput.value = "";
       }
       resetLoadedState();
-      updateStatus(`File too large. Keep uploads under ${formatFileSize(MAX_UPLOAD_BYTES)}.`);
+      const message = `File too large. Please use an audio file smaller than ${formatFileSize(MAX_UPLOAD_BYTES)}.`;
+      showUploadMessage(message);
+      updateStatus(message);
       return;
     }
 
+    showUploadMessage("");
     updateStatus("Decoding audio locally...");
     const context = createAudioContext();
     const arrayBuffer = await file.arrayBuffer();

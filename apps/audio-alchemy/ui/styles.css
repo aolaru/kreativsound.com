@@ -257,6 +257,17 @@ h2 {
   font-weight: 500;
 }
 
+.upload-message {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(176, 38, 38, 0.08);
+  border: 1px solid rgba(176, 38, 38, 0.18);
+  color: var(--accent-strong);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
 .upload input {
   display: none;
 }
