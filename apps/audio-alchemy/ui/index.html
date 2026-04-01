@@ -149,7 +149,10 @@
           <div class="actions">
             <button id="play-original" type="button" disabled>Play Source</button>
             <button id="stop-playback" type="button" disabled>Stop</button>
-            <button id="analyze-generate" type="button" disabled>Generate Presets</button>
+            <button id="analyze-generate" type="button" disabled>
+              <span class="button-spinner" aria-hidden="true"></span>
+              <span class="button-label">Generate Presets</span>
+            </button>
           </div>
 
           <div class="status" id="status">Load a short audio file to build a synth preset profile. Vital is currently supported.</div>
@@ -194,7 +197,7 @@
         </div>
         <p class="self-test-note" id="self-test-note" hidden>Self-test mode generated synthetic demo presets.</p>
         <div class="preset-list" id="preset-list">
-          <p class="empty-state">Choose a source audio file, then click <strong>Analyze & Generate Presets</strong> to create 3 free starter presets.</p>
+          <p class="empty-state">Choose a source audio file, then click <strong>Generate Presets</strong> to create 3 free starter presets.</p>
         </div>
       </section>
 

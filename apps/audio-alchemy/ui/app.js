@@ -5,6 +5,7 @@ const state = {
   analysis: null,
   profile: null,
   presets: [],
+  isGenerating: false,
   sourceName: "",
   seedCache: new Map(),
 };
@@ -29,6 +30,7 @@ const elements = {
   playOriginal: document.querySelector("#play-original"),
   stopPlayback: document.querySelector("#stop-playback"),
   analyzeGenerate: document.querySelector("#analyze-generate"),
+  analyzeGenerateLabel: document.querySelector("#analyze-generate .button-label"),
   analysisMetrics: document.querySelector("#analysis-metrics"),
   profileMetrics: document.querySelector("#profile-metrics"),
   presetList: document.querySelector("#preset-list"),
@@ -46,6 +48,7 @@ const SEED_BY_FAMILY = {
 const FREE_VARIANT_LIMIT = 3;
 const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
+const GENERATE_DELAY_MS = 500;
 
 function createAudioContext() {
   if (!state.audioContext) {
@@ -142,7 +145,14 @@ function updateControlLabels() {
 function setReady(enabled) {
   elements.playOriginal.disabled = !enabled;
   elements.stopPlayback.disabled = !enabled;
-  elements.analyzeGenerate.disabled = !enabled;
+  elements.analyzeGenerate.disabled = !enabled || state.isGenerating;
+}
+
+function setGenerateLoadingState(isLoading) {
+  state.isGenerating = isLoading;
+  elements.analyzeGenerate.classList.toggle("is-loading", isLoading);
+  elements.analyzeGenerateLabel.textContent = isLoading ? "Analyzing audio..." : "Generate Presets";
+  setReady(Boolean(state.originalBuffer));
 }
 
 function stopPlayback() {
@@ -876,6 +886,25 @@ function generatePresets() {
   updateStatus(`Generated ${state.presets.length} Vital variants from the uploaded sound. Free demo is limited to ${FREE_VARIANT_LIMIT}.`);
 }
 
+async function handleGeneratePresets() {
+  if (!state.originalBuffer || state.isGenerating) {
+    return;
+  }
+
+  setGenerateLoadingState(true);
+  updateStatus("Analyzing audio locally...");
+
+  await new Promise((resolve) => {
+    window.setTimeout(resolve, GENERATE_DELAY_MS);
+  });
+
+  try {
+    generatePresets();
+  } finally {
+    setGenerateLoadingState(false);
+  }
+}
+
 elements.fileInput.addEventListener("change", handleFileChange);
 elements.waveformPanel.addEventListener("dragenter", handleDropZoneDrag);
 elements.waveformPanel.addEventListener("dragover", handleDropZoneDrag);
@@ -892,7 +921,7 @@ elements.stopPlayback.addEventListener("click", () => {
   stopPlayback();
   updateStatus("Playback stopped.");
 });
-elements.analyzeGenerate.addEventListener("click", generatePresets);
+elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
 
 for (const control of [elements.brightnessBias, elements.movementBias]) {
   control.addEventListener("input", updateControlLabels);

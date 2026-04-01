@@ -484,6 +484,34 @@ button:disabled {
   font-weight: 700;
 }
 
+#analyze-generate {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  transition: opacity 140ms ease, transform 120ms ease, background 120ms ease, border-color 120ms ease;
+}
+
+.button-spinner {
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 2px solid rgba(255, 244, 244, 0.28);
+  border-top-color: #fff4f4;
+  border-radius: 999px;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+
+#analyze-generate.is-loading .button-spinner {
+  opacity: 1;
+  transform: scale(1);
+  animation: audio-alchemy-spin 1s linear infinite;
+}
+
+#analyze-generate.is-loading .button-label {
+  opacity: 0.96;
+}
+
 .download-button {
   display: inline-flex;
   align-items: center;
@@ -513,6 +541,12 @@ button:disabled {
   background: rgba(153, 0, 0, 0.1);
   border: 1px solid rgba(153, 0, 0, 0.18);
   color: #6a2020;
+}
+
+@keyframes audio-alchemy-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .upgrade-hint {
