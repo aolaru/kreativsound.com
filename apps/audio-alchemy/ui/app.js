@@ -35,6 +35,9 @@ const elements = {
   profileMetrics: document.querySelector("#profile-metrics"),
   presetList: document.querySelector("#preset-list"),
   presetsPanel: document.querySelector("#presets-panel"),
+  emailCaptureForm: document.querySelector("#email-capture-form"),
+  emailCaptureInput: document.querySelector("#email-capture-input"),
+  emailCaptureNote: document.querySelector("#email-capture-note"),
   selfTestNote: document.querySelector("#self-test-note"),
 };
 
@@ -980,6 +983,14 @@ async function handleGeneratePresets() {
   }
 }
 
+function handleEmailCaptureSubmit() {
+  elements.emailCaptureNote.textContent = "Submitting...";
+  window.setTimeout(() => {
+    elements.emailCaptureNote.textContent = "Thanks. Check your inbox to confirm your subscription.";
+    elements.emailCaptureForm.reset();
+  }, 400);
+}
+
 elements.fileInput.addEventListener("change", handleFileChange);
 elements.waveformPanel.addEventListener("dragenter", handleDropZoneDrag);
 elements.waveformPanel.addEventListener("dragover", handleDropZoneDrag);
@@ -997,6 +1008,7 @@ elements.stopPlayback.addEventListener("click", () => {
   updateStatus("Playback stopped.");
 });
 elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
+elements.emailCaptureForm.addEventListener("submit", handleEmailCaptureSubmit);
 
 for (const control of [elements.brightnessBias, elements.movementBias]) {
   control.addEventListener("input", updateControlLabels);

@@ -203,9 +203,31 @@
         </div>
       </section>
 
+      <section class="panel email-capture-panel" aria-labelledby="email-capture-title">
+        <div class="email-capture-copy">
+          <h2 id="email-capture-title">Get more free generations</h2>
+          <p>Join the Audio Alchemy list for future free drops, product updates, and new synth support announcements.</p>
+        </div>
+        <form
+          class="email-capture-form"
+          id="email-capture-form"
+          action="https://buttondown.com/api/emails/embed-subscribe/kreativ"
+          method="post"
+          target="buttondown-form-target"
+        >
+          <label class="sr-only" for="email-capture-input">Email address</label>
+          <input id="email-capture-input" name="email" type="email" placeholder="Enter your email" autocomplete="email" required />
+          <input type="hidden" name="embed" value="1" />
+          <input type="hidden" name="tag" value="audio-alchemy" />
+          <button type="submit">Get updates</button>
+        </form>
+        <p class="email-capture-note" id="email-capture-note">No spam. Occasional updates when Audio Alchemy improves.</p>
+        <iframe class="email-capture-target" name="buttondown-form-target" title="Buttondown subscription target"></iframe>
+      </section>
+
       <footer class="app-footer">
         <p>Kreativ Sound experimental tool surface for audio-driven preset generation.</p>
-        <p class="app-version">Audio Alchemy v0.1 beta</p>
+        <p class="app-version">Audio Alchemy v0.2 beta</p>
       </footer>
     </main>
 
