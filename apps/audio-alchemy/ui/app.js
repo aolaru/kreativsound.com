@@ -46,9 +46,10 @@ const SEED_BY_FAMILY = {
 };
 
 const FREE_VARIANT_LIMIT = 3;
-const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
 const GENERATE_DELAY_MS = 500;
+const SUPPORTED_AUDIO_EXTENSIONS = [".wav", ".mp3", ".aiff", ".aif", ".m4a", ".aac", ".ogg", ".flac"];
 
 function createAudioContext() {
   if (!state.audioContext) {
@@ -760,6 +761,21 @@ async function loadAudioFile(file, resetInput = false) {
   }
 
   try {
+    const lowerName = file.name.toLowerCase();
+    const isAudioFile =
+      file.type.startsWith("audio/") ||
+      SUPPORTED_AUDIO_EXTENSIONS.some((extension) => lowerName.endsWith(extension));
+    if (!isAudioFile) {
+      if (resetInput) {
+        elements.fileInput.value = "";
+      }
+      resetLoadedState();
+      const message = "Unsupported file type. Please use a supported audio file under 10 MB.";
+      showUploadMessage(message);
+      updateStatus(message);
+      return;
+    }
+
     if (file.size > MAX_UPLOAD_BYTES) {
       if (resetInput) {
         elements.fileInput.value = "";
@@ -794,7 +810,10 @@ async function loadAudioFile(file, resetInput = false) {
 
     updateStatus("File loaded. Analyze it to generate Vital variants.");
   } catch (error) {
-    updateStatus(error.message || "Failed to decode audio.");
+    resetLoadedState();
+    const message = "Unsupported or unreadable audio file. Please use a supported audio file under 10 MB.";
+    showUploadMessage(message);
+    updateStatus(message);
   }
 }
 
