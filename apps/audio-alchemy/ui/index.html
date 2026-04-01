@@ -30,9 +30,7 @@
             <strong>Audio Alchemy</strong>
           </span>
         </a>
-        <div class="nav-group nav-group-utility">
-          <a class="nav-link" href="https://kreativsound.com/about/" target="_blank" rel="noopener noreferrer">About</a>
-        </div>
+        <div class="nav-group nav-group-utility"></div>
       </nav>
 
       <section class="hero">
@@ -45,6 +43,8 @@
           <div>
             <h2>Input Audio</h2>
             <p class="muted">Use a short audio sample under 10 MB. Pads, plucks, basses, drones, and textures work best.</p>
+            <p class="input-note">Supported formats: WAV, MP3, AIFF, M4A, OGG, FLAC.</p>
+            <p class="input-note">Full songs, long loops, and dense mixes usually give weaker results.</p>
           </div>
         </div>
         <p class="upload-message" id="upload-message" hidden></p>
@@ -119,7 +119,7 @@
 
           <div class="control-grid">
             <label class="control">
-              <span>Input Mode</span>
+              <span>Sound Type</span>
               <select id="input-mode">
                 <option value="auto">Auto Detect</option>
                 <option value="pad">Pad / Atmosphere</option>
@@ -130,13 +130,13 @@
             </label>
 
             <label class="control">
-              <span>Brightness Bias</span>
+              <span>Darker / Brighter</span>
               <output id="brightness-bias-value">0%</output>
               <input id="brightness-bias" type="range" min="-100" max="100" step="1" value="0" />
             </label>
 
             <label class="control">
-              <span>Movement Bias</span>
+              <span>Steadier / More Motion</span>
               <output id="movement-bias-value">0%</output>
               <input id="movement-bias" type="range" min="-100" max="100" step="1" value="0" />
             </label>
