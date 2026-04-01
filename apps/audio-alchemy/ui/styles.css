@@ -696,14 +696,16 @@ button:disabled {
 
 .email-capture-panel {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.9fr);
-  gap: 18px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.95fr);
+  gap: 14px 18px;
+  align-items: start;
   margin-bottom: 20px;
+  padding-top: 18px;
+  padding-bottom: 18px;
 }
 
 .email-capture-copy h2 {
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.3rem;
 }
 
 .email-capture-copy p {
@@ -716,6 +718,7 @@ button:disabled {
   display: flex;
   gap: 10px;
   align-items: center;
+  align-self: center;
 }
 
 .email-capture-form input {
@@ -729,7 +732,7 @@ button:disabled {
 }
 
 .email-capture-note {
-  grid-column: 1 / -1;
+  grid-column: 2;
   margin: -4px 0 0;
   color: var(--soft);
   font-size: 0.84rem;
@@ -794,6 +797,11 @@ button:disabled {
   .email-capture-form {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .email-capture-note {
+    grid-column: 1;
+    margin-top: -2px;
   }
 
   .section-head {

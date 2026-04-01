@@ -986,7 +986,7 @@ async function handleGeneratePresets() {
 function handleEmailCaptureSubmit() {
   elements.emailCaptureNote.textContent = "Submitting...";
   window.setTimeout(() => {
-    elements.emailCaptureNote.textContent = "Thanks. Check your inbox to confirm your subscription.";
+    elements.emailCaptureNote.textContent = "Check your inbox to confirm.";
     elements.emailCaptureForm.reset();
   }, 400);
 }
