@@ -51,6 +51,14 @@ const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_
 const GENERATE_DELAY_MS = 500;
 const SUPPORTED_AUDIO_EXTENSIONS = [".wav", ".mp3", ".aiff", ".aif", ".m4a", ".aac", ".ogg", ".flac"];
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {
+      // Installability should fail quietly rather than affecting the app UI.
+    });
+  });
+}
+
 function createAudioContext() {
   if (!state.audioContext) {
     state.audioContext = new AudioContext();

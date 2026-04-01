@@ -1,0 +1,19 @@
+{
+  "id": "/apps/audio-alchemy/ui/",
+  "name": "Audio Alchemy",
+  "short_name": "Audio Alchemy",
+  "description": "Turn any audio into a playable Vital preset.",
+  "start_url": "/apps/audio-alchemy/ui/",
+  "scope": "/apps/audio-alchemy/ui/",
+  "display": "standalone",
+  "background_color": "#fdf5f5",
+  "theme_color": "#fdf5f5",
+  "icons": [
+    {
+      "src": "./audio-alchemy-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
