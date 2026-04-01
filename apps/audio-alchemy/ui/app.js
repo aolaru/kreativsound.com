@@ -508,7 +508,18 @@ function mapProfileToVital(profile, index) {
   const cutoffNormalized = clamp((filterCutoff - 120) / (14000 - 120));
 
   const register = profile.pitchHz > 0 ? noteName(profile.pitchHz) : "Unknown";
-  const name = buildVariantName(family, index);
+  const name = buildVariantName({
+    family,
+    index,
+    brightness,
+    body,
+    movement,
+    noise,
+    width,
+    attack,
+    sustain,
+    pitchHz: profile.pitchHz,
+  });
   const summary = `${familyLabel(family)} leaning ${brightness > 0.58 ? "bright" : "dark"}, ${movement > 0.44 ? "moving" : "steady"}, centered around ${register}.`;
 
   return {
@@ -581,14 +592,49 @@ function chooseOscillator(family, brightness, noise) {
   return brightness > 0.6 ? "Smooth Harmonics / Wide WT" : "Basic Shapes / Triangle";
 }
 
-function buildVariantName(family, index) {
-  const lexicon = {
-    pad: ["Lumen Veil", "Glass Haze", "Soft Meridian", "Night Bloom", "Cold Archive", "Halo Drift", "Pale Tension", "Mist Chamber"],
-    pluck: ["Quartz Flicker", "Needle Bloom", "Tight Ember", "Silver Click", "Velvet Strike", "Lacquer Tone", "Wire Petal", "Prism Key"],
-    bass: ["Low Furnace", "Iron Pulse", "Sub Vault", "Black Coil", "Stone Current", "Pressure Bloom", "Deep Axis", "Ash Engine"],
-    texture: ["Dust Choir", "Static Canopy", "Ghost Fabric", "Granite Air", "Hiss Bloom", "Ruin Current", "Thin Horizon", "Signal Moss"],
+function buildVariantName(profile) {
+  const adjectivePools = {
+    pad: {
+      dark: ["Velvet", "Nocturne", "Shadow", "Ash", "Dusk"],
+      bright: ["Lumen", "Glass", "Silver", "Halo", "Prism"],
+      neutral: ["Soft", "Quiet", "Pale", "Still", "Cold"],
+    },
+    pluck: {
+      dark: ["Ember", "Smoked", "Copper", "Rust", "Cinder"],
+      bright: ["Quartz", "Bright", "Crystal", "Neon", "Lucent"],
+      neutral: ["Tight", "Clean", "Fine", "Wire", "Sharp"],
+    },
+    bass: {
+      dark: ["Black", "Coal", "Deep", "Iron", "Stone"],
+      bright: ["Chrome", "Steel", "Volt", "Signal", "Acid"],
+      neutral: ["Low", "Sub", "Core", "Heavy", "Dense"],
+    },
+    texture: {
+      dark: ["Dust", "Ghost", "Ruin", "Static", "Ash"],
+      bright: ["Mist", "Signal", "Frost", "Glint", "Solar"],
+      neutral: ["Thin", "Granite", "Hollow", "Drift", "Shiver"],
+    },
   };
-  return lexicon[family][index % lexicon[family].length];
+
+  const nounPools = {
+    pad: ["Veil", "Bloom", "Meridian", "Archive", "Drift", "Canopy", "Haze", "Chamber"],
+    pluck: ["Click", "Strike", "Tone", "Needle", "Petal", "Spark", "Key", "Pulse"],
+    bass: ["Engine", "Vault", "Furnace", "Axis", "Pressure", "Coil", "Current", "Pulse"],
+    texture: ["Fabric", "Horizon", "Moss", "Choir", "Canopy", "Bloom", "Field", "Static"],
+  };
+
+  const brightnessKey = profile.brightness > 0.58 ? "bright" : profile.brightness < 0.4 ? "dark" : "neutral";
+  const adjectiveSource = adjectivePools[profile.family][brightnessKey];
+  const nounSource = nounPools[profile.family];
+  const moodOffset = profile.movement > 0.45 ? 2 : 0;
+  const toneOffset = profile.noise > 0.38 ? 3 : profile.body > 0.62 ? 1 : 0;
+  const registerOffset = profile.pitchHz > 0 ? Math.abs(Math.round(profile.pitchHz)) : 0;
+  const adjectiveIndex = (profile.index + moodOffset + toneOffset + registerOffset) % adjectiveSource.length;
+  const nounIndex = (profile.index * 2 + toneOffset + Math.round(profile.width * 10)) % nounSource.length;
+
+  const adjective = adjectiveSource[adjectiveIndex];
+  const noun = nounSource[nounIndex];
+  return `${adjective} ${noun}`;
 }
 
 function variantRole(index, preset) {
