@@ -184,19 +184,8 @@ output {
   font-size: 0.88rem;
 }
 
-.hero-license {
-  margin: 0.35rem 0 0;
-  color: var(--soft);
-  font-size: 0.84rem;
-}
-
 .plan-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.45rem 0.8rem;
-  border-radius: 999px;
-  background: rgba(153, 0, 0, 0.14);
-  border: 1px solid rgba(153, 0, 0, 0.24);
+  display: inline-block;
   color: var(--accent-strong);
   font-size: 0.82rem;
   font-weight: 700;
