@@ -352,13 +352,50 @@ function applyBitCrush(value, steps) {
   return Math.round(value * steps) / steps;
 }
 
+function smoothSample(value, previous, amount) {
+  return (previous * amount) + (value * (1 - amount));
+}
+
+function normalizeChannels(channels) {
+  let peak = 0;
+  for (const channel of channels) {
+    for (let i = 0; i < channel.length; i += 1) {
+      peak = Math.max(peak, Math.abs(channel[i]));
+    }
+  }
+
+  if (peak <= 0.98) {
+    return;
+  }
+
+  const scale = 0.98 / peak;
+  for (const channel of channels) {
+    for (let i = 0; i < channel.length; i += 1) {
+      channel[i] *= scale;
+    }
+  }
+}
+
 function renderVariantBuffer(sourceBuffer, role, controls) {
   const channels = createEmptyChannels(sourceBuffer.numberOfChannels, sourceBuffer.length);
-  const sliceMs = lerp(28, 220, controls.fracture * role.amount);
+  const sliceMs = role.key === "shard-drift"
+    ? lerp(44, 170, controls.fracture * role.amount)
+    : role.key === "glass-loop"
+      ? lerp(70, 260, controls.fracture * role.amount)
+      : lerp(18, 96, controls.fracture * role.amount);
   const sliceLength = Math.max(128, Math.floor((sliceMs / 1000) * sourceBuffer.sampleRate));
-  const delaySamples = Math.max(1, Math.floor(sourceBuffer.sampleRate * lerp(0.06, 0.28, Math.max(0, controls.space))));
-  const bitDepthSteps = Math.round(lerp(1024, 24, Math.max(0, controls.texture)));
-  const jitterDepth = Math.floor(sliceLength * lerp(0.04, 0.8, controls.fracture * role.amount));
+  const delaySamples = Math.max(1, Math.floor(sourceBuffer.sampleRate * lerp(0.05, 0.34, Math.max(0, controls.space))));
+  const bitDepthSteps = Math.round(lerp(1024, 18, Math.max(0, controls.texture)));
+  const jitterDepth = Math.floor(
+    sliceLength
+    * (
+      role.key === "shard-drift"
+        ? lerp(0.08, 0.65, controls.fracture * role.amount)
+        : role.key === "glass-loop"
+          ? lerp(0.02, 0.32, controls.fracture * role.amount)
+          : lerp(0.12, 0.95, controls.fracture * role.amount)
+    ),
+  );
   const rng = createRng(hashString(`${state.sourceName}:${role.key}:${elements.fractureRange.value}:${elements.spaceRange.value}:${elements.textureRange.value}`));
 
   for (let channel = 0; channel < sourceBuffer.numberOfChannels; channel += 1) {
@@ -371,51 +408,68 @@ function renderVariantBuffer(sourceBuffer, role, controls) {
       const sourceStart = clamp(start + jitter, 0, Math.max(0, source.length - remaining));
       const shouldReverse =
         role.key === "shard-drift"
-          ? rng() < lerp(0.08, 0.32, controls.fracture)
+          ? rng() < lerp(0.18, 0.62, controls.fracture)
           : role.key === "glass-loop"
-            ? rng() < lerp(0.16, 0.44, controls.fracture)
-            : rng() < lerp(0.1, 0.28, controls.fracture);
+            ? rng() < lerp(0.04, 0.18, controls.fracture)
+            : rng() < lerp(0.24, 0.76, controls.fracture);
 
       let outputStart = start;
       if (role.key === "glass-loop") {
-        outputStart = clamp(start + Math.floor((rng() * 2 - 1) * sliceLength * 0.25), 0, Math.max(0, output.length - remaining));
+        outputStart = clamp(start + Math.floor((rng() * 2 - 1) * sliceLength * 0.18), 0, Math.max(0, output.length - remaining));
+      }
+
+      if (role.key === "crushed-bloom") {
+        outputStart = clamp(start - Math.floor(sliceLength * lerp(0.08, 0.42, controls.fracture)), 0, Math.max(0, output.length - remaining));
       }
 
       copySliceWithFade(source, output, sourceStart, remaining, outputStart, shouldReverse);
 
-      if (role.key === "glass-loop" && rng() < 0.55) {
-        const repeatStart = clamp(outputStart + Math.floor(sliceLength * 0.35), 0, Math.max(0, output.length - remaining));
+      if (role.key === "glass-loop" && rng() < 0.82) {
+        const repeatStart = clamp(outputStart + Math.floor(sliceLength * lerp(0.22, 0.74, controls.fracture)), 0, Math.max(0, output.length - remaining));
         copySliceWithFade(source, output, sourceStart, remaining, repeatStart, false);
+      }
+
+      if (role.key === "shard-drift" && rng() < 0.38) {
+        const ghostStart = clamp(outputStart + Math.floor(sliceLength * lerp(0.12, 0.38, Math.max(0, controls.space))), 0, Math.max(0, output.length - remaining));
+        copySliceWithFade(source, output, sourceStart, remaining, ghostStart, true);
       }
     }
 
+    let previous = 0;
     for (let i = 0; i < output.length; i += 1) {
       let sample = output[i];
 
       if (role.key === "crushed-bloom") {
         sample = applyBitCrush(sample, bitDepthSteps);
         if (i > delaySamples) {
-          sample += output[i - delaySamples] * lerp(0.08, 0.35, controls.space * role.amount);
+          sample += output[i - delaySamples] * lerp(0.14, 0.44, Math.max(0, controls.space) * role.amount);
         }
+        sample = smoothSample(sample, previous, lerp(0.12, 0.36, controls.fracture));
       } else if (role.key === "glass-loop") {
         if (i > delaySamples) {
-          sample += output[i - delaySamples] * lerp(0.04, 0.22, Math.max(0, controls.space));
+          sample += output[i - delaySamples] * lerp(0.1, 0.28, Math.max(0, controls.space));
+        }
+        if (rng() < lerp(0.02, 0.14, controls.fracture) && i > sliceLength) {
+          sample += output[i - sliceLength] * lerp(0.08, 0.2, controls.fracture);
         }
       } else {
         if (i > delaySamples) {
-          sample += output[i - delaySamples] * lerp(0.02, 0.12, Math.max(0, controls.space));
+          sample += output[i - delaySamples] * lerp(0.06, 0.18, Math.max(0, controls.space));
         }
+        sample = smoothSample(sample, previous, lerp(0.02, 0.12, Math.max(0, controls.space)));
       }
 
       const grit = Math.max(0, controls.texture);
       if (grit > 0 && role.key !== "crushed-bloom") {
         sample = sample * (1 + grit * 0.25);
-        sample = Math.tanh(sample * (1 + grit * 1.6));
+        sample = Math.tanh(sample * (1 + grit * (role.key === "glass-loop" ? 1.0 : 1.8)));
       } else if (controls.texture < 0) {
+        sample = smoothSample(sample, previous, lerp(0.08, 0.32, Math.abs(controls.texture)));
         sample *= lerp(1, 0.8, Math.abs(controls.texture));
       }
 
       output[i] = clamp(sample);
+      previous = output[i];
     }
   }
 
@@ -430,6 +484,8 @@ function renderVariantBuffer(sourceBuffer, role, controls) {
       right[i] = clamp(mid - side);
     }
   }
+
+  normalizeChannels(channels);
 
   const context = createAudioContext();
   const buffer = context.createBuffer(sourceBuffer.numberOfChannels, sourceBuffer.length, sourceBuffer.sampleRate);
@@ -551,16 +607,13 @@ function renderVariants(variants) {
 }
 
 function buildVariantDescription(role, controls) {
-  const descriptors = [];
-  if (controls.fracture > 0.55) descriptors.push("heavier slice disruption");
-  else descriptors.push("lighter slice movement");
-
-  if (controls.texture > 0.2) descriptors.push("extra grit");
-  if (controls.texture < -0.2) descriptors.push("smoother edges");
-  if (controls.space > 0.2) descriptors.push("wider tail");
-  if (controls.space < -0.2) descriptors.push("drier image");
-
-  return `${role.label} with ${descriptors.join(", ")}.`;
+  if (role.key === "shard-drift") {
+    return `Offset reverse fragments with ${controls.space > 0.2 ? "wider tails" : "tighter image"} and ${controls.texture > 0.2 ? "more grit" : "controlled texture"}.`;
+  }
+  if (role.key === "glass-loop") {
+    return `Looped slice repeats with ${controls.space > 0.2 ? "stereo spread" : "centered rhythm"} and ${controls.fracture > 0.5 ? "stronger pattern breaks" : "lighter timing shifts"}.`;
+  }
+  return `Short crushed shards with ${controls.texture > 0.2 ? "heavier degradation" : "softened bloom"} and ${controls.space > 0.2 ? "echo bloom" : "dry punch"}.`;
 }
 
 async function generateVariants() {
@@ -577,7 +630,7 @@ async function generateVariants() {
     const { buffer, channels } = renderVariantBuffer(state.sourceBuffer, role, controls);
     const tags = [
       role.label,
-      controls.fracture > 0.55 ? "High fracture" : "Controlled fracture",
+      role.key === "shard-drift" ? "Reverse shards" : role.key === "glass-loop" ? "Loop slices" : "Crushed smear",
       controls.texture > 0.2 ? "Grit" : controls.texture < -0.2 ? "Smooth" : "Balanced",
       controls.space > 0.2 ? "Wide" : controls.space < -0.2 ? "Dry" : "Centered",
     ];
