@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wave Fracture | Audio to Audio Variations</title>
+    <meta name="theme-color" content="#fdf5f5" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <link rel="icon" type="image/svg+xml" href="./wave-fracture-mark.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="site-nav site-nav-split site-nav-home" aria-label="Primary">
+        <div class="nav-group nav-group-main">
+          <a class="nav-link" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer">Back to Kreativ Sound</a>
+        </div>
+        <a class="nav-brand nav-brand-wordmark" href="https://kreativsound.com/apps/wave-fracture/ui/" aria-label="Wave Fracture home">
+          <img class="nav-brand-mark-image" src="./wave-fracture-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
+          <span class="nav-brand-copy">
+            <strong>Wave Fracture</strong>
+          </span>
+        </a>
+        <div class="nav-group nav-group-utility">
+          <button class="nav-link share-button" id="share-button" type="button" aria-label="Share this page">
+            <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+            <span class="sr-only">Share this page</span>
+          </button>
+        </div>
+      </nav>
+
+      <section class="hero">
+        <h1>Break one sound into three fractured variations</h1>
+        <p class="lede">Upload a short audio file, reshape it locally, and export 3 playable audio mutations.</p>
+      </section>
+
+      <section class="panel upload-panel">
+        <div class="section-head">
+          <div>
+            <h2>Input Audio</h2>
+            <p class="muted">Use a short audio sample under 10 MB. One-shots, drones, impacts, and textures work best.</p>
+            <p class="input-note">Supported formats: WAV, MP3, AIFF, M4A, OGG, FLAC.</p>
+            <p class="input-note">Long songs and dense full mixes usually give weaker fracture results.</p>
+          </div>
+        </div>
+        <p class="upload-message" id="upload-message" hidden></p>
+
+        <section class="waveform-panel drop-zone" id="waveform-drop-zone">
+          <div class="section-head">
+            <h2>Waveform</h2>
+          </div>
+          <div class="waveform-drop-inner">
+            <canvas id="waveform" width="1200" height="150"></canvas>
+            <div class="waveform-drop-cta" id="waveform-drop-cta">
+              <label class="upload">
+                <span>Choose audio file</span>
+                <input id="file-input" type="file" accept="audio/*" />
+              </label>
+              <p class="waveform-empty-note" id="waveform-empty-note">Drop an audio file here to preview and fracture it.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="meta-grid">
+          <div>
+            <span class="meta-label">File</span>
+            <strong id="file-name">No file loaded</strong>
+          </div>
+          <div>
+            <span class="meta-label">Duration</span>
+            <strong id="file-duration">0.0s</strong>
+          </div>
+          <div>
+            <span class="meta-label">Sample rate</span>
+            <strong id="file-sample-rate">-</strong>
+          </div>
+          <div>
+            <span class="meta-label">Channels</span>
+            <strong id="file-channels">-</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel trust-panel">
+        <div class="section-head">
+          <h2>Privacy and Processing</h2>
+          <p class="muted">Everything stays local to your browser.</p>
+        </div>
+        <div class="trust-grid">
+          <div class="trust-item">
+            <span class="meta-label">Local Only</span>
+            <p>Your audio files stay in your browser.</p>
+          </div>
+          <div class="trust-item">
+            <span class="meta-label">No AI</span>
+            <p>No audio is sent to AI models.</p>
+          </div>
+          <div class="trust-item">
+            <span class="meta-label">No Account</span>
+            <p>No signup is needed for the free version.</p>
+          </div>
+          <div class="trust-item">
+            <span class="meta-label">Royalty-Free</span>
+            <p>Use generated audio in your own productions.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <section class="panel controls-panel">
+          <div class="section-head">
+            <h2>Fracture Controls</h2>
+            <p class="muted">Push timing, texture, and space into three fast audio directions.</p>
+          </div>
+
+          <div class="control-grid">
+            <label class="control">
+              <span>Fracture Amount</span>
+              <output id="fracture-value">45%</output>
+              <input id="fracture-range" type="range" min="0" max="100" step="1" value="45" />
+            </label>
+
+            <label class="control">
+              <span>Drier / Wider</span>
+              <output id="space-value">0%</output>
+              <input id="space-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+
+            <label class="control">
+              <span>Cleaner / Grittier</span>
+              <output id="texture-value">0%</output>
+              <input id="texture-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+
+            <label class="control">
+              <span>Playback Focus</span>
+              <strong class="fixed-value">3 variations</strong>
+              <small class="control-note">Free always generates 3 fracture passes from one source.</small>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button id="play-original" type="button" disabled>Play Source</button>
+            <button id="stop-playback" type="button" disabled>Stop</button>
+            <button id="generate-button" type="button" disabled>
+              <span class="button-spinner" aria-hidden="true"></span>
+              <span class="button-label">Generate Variations</span>
+            </button>
+          </div>
+
+          <div class="status" id="status">Load a short audio file to generate 3 fractured audio variations.</div>
+          <p class="upgrade-hint">Pro can later add more fracture modes, batch exports, and longer render controls.</p>
+        </section>
+
+        <section class="panel insight-panel">
+          <div class="section-head">
+            <h2>Tips for better results</h2>
+            <p class="muted">Wave Fracture works best when the source already has a strong gesture.</p>
+          </div>
+          <ul class="insights">
+            <li>Use short one-shots, drones, textures, and impacts.</li>
+            <li>Avoid full tracks and spoken dialogue.</li>
+            <li>Increase texture last, not first.</li>
+          </ul>
+        </section>
+      </section>
+
+      <section class="analysis-grid">
+        <section class="panel analysis-panel">
+          <div class="section-head">
+            <h2>Source Analysis</h2>
+            <p class="muted">Quick descriptors extracted from the uploaded source.</p>
+          </div>
+          <div class="metric-grid" id="analysis-metrics"></div>
+        </section>
+
+        <section class="panel analysis-panel">
+          <div class="section-head">
+            <h2>Fracture Profile</h2>
+            <p class="muted">How the current controls bias timing, grit, and width.</p>
+          </div>
+          <div class="metric-grid" id="profile-metrics"></div>
+        </section>
+      </section>
+
+      <section class="panel presets-panel" id="results-panel">
+        <div class="section-head">
+          <h2>Generated Audio Variants</h2>
+          <p class="muted">Preview each fractured pass, then export a real WAV built locally in the browser.</p>
+        </div>
+        <div class="preset-list" id="variant-list">
+          <p class="empty-state">Choose a source audio file, then click <strong>Generate Variations</strong> to create 3 fractured audio exports.</p>
+        </div>
+      </section>
+
+      <section class="panel email-capture-panel" aria-labelledby="email-capture-title">
+        <div class="email-capture-copy">
+          <h2 id="email-capture-title">Join the Wave Fracture list</h2>
+          <p>Get future drops, product updates, and new audio tool announcements from Kreativ Sound.</p>
+        </div>
+        <form
+          class="email-capture-form"
+          id="email-capture-form"
+          action="https://buttondown.com/api/emails/embed-subscribe/kreativ"
+          method="post"
+          target="buttondown-form-target"
+        >
+          <label class="sr-only" for="email-capture-input">Email address</label>
+          <input id="email-capture-input" name="email" type="email" placeholder="Enter your email" autocomplete="email" required />
+          <input type="hidden" name="embed" value="1" />
+          <input type="hidden" name="tag" value="wave-fracture" />
+          <button type="submit">Get updates</button>
+        </form>
+        <p class="email-capture-note" id="email-capture-note">No spam. Occasional updates when Wave Fracture improves.</p>
+        <iframe class="email-capture-target" name="buttondown-form-target" title="Buttondown subscription target"></iframe>
+      </section>
+
+      <footer class="app-footer">
+        <p>Kreativ Sound experimental tool surface for audio-driven fracture and resampling.</p>
+        <p class="app-version">Wave Fracture v0.1 beta</p>
+      </footer>
+    </main>
+
+    <script src="./app.js" type="module"></script>
+    <script src="/share.js"></script>
+  </body>
+</html>
