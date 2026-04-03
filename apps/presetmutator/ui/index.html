@@ -1,18 +1,11 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PresetMutator</title>
+    <title>Preset Mutator | Vital Preset Variations</title>
+    <meta name="theme-color" content="#fdf5f5" />
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
-    <meta name="theme-color" content="#f8e9e9" />
-    <script>
-      (function () {
-        var stored = localStorage.getItem("theme");
-        var theme = stored === "light" || stored === "dark" ? stored : "light";
-        document.documentElement.setAttribute("data-theme", theme);
-      })();
-    </script>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,167 +15,200 @@
     <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body>
-    <div class="shell-container">
+    <main class="shell">
       <nav class="site-nav site-nav-split site-nav-home" aria-label="Primary">
         <div class="nav-group nav-group-main">
-          <a class="nav-link" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer">Sounds</a>
-          <a class="nav-link" href="https://kreativsound.com/music/" target="_blank" rel="noopener noreferrer">Music</a>
-          <a class="nav-link" href="https://kreativsound.com/learn/" target="_blank" rel="noopener noreferrer">Learn</a>
+          <a class="nav-link" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer">Back to Kreativ Sound</a>
         </div>
-        <a class="nav-brand" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer" aria-label="Kreativ Sound home">
-          <img class="nav-brand-mark" src="./favicon.svg" width="128" height="128" alt="Kreativ Sound logo" />
+        <a class="nav-brand nav-brand-wordmark" href="https://kreativsound.com/apps/presetmutator/ui/" aria-label="Preset Mutator home">
+          <img class="nav-brand-mark-image" src="./favicon.svg" width="96" height="96" alt="" aria-hidden="true" />
+          <span class="nav-brand-copy">
+            <strong>Preset Mutator</strong>
+          </span>
         </a>
         <div class="nav-group nav-group-utility">
-          <a class="nav-link" href="https://kreativsound.com/news/" target="_blank" rel="noopener noreferrer">News</a>
-          <a class="nav-link" href="https://kreativsound.com/about/" target="_blank" rel="noopener noreferrer">About</a>
-          <a class="nav-link" href="https://kreativsound.com/contact/" target="_blank" rel="noopener noreferrer">Contact</a>
           <button class="nav-link share-button" id="share-button" type="button" aria-label="Share this page">
             <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
             <span class="sr-only">Share this page</span>
           </button>
-          <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
-            <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
-            <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>
-            <span class="sr-only">Toggle theme</span>
-          </button>
         </div>
       </nav>
 
-      <div class="app-shell">
-      <aside class="left-rail">
-        <div class="brand">
-          <p class="eyebrow">Kreativ Sound Lab</p>
-          <h1>PresetMutator</h1>
-          <p class="lede">Calibrate Vital generations with a visual workflow instead of command-line passes.</p>
-        </div>
-        <div class="synth-card">
-          <span class="synth-chip active">Vital</span>
-          <span class="synth-chip">Serum</span>
-          <span class="synth-chip">Pigments</span>
-        </div>
-        <div class="status-panel">
-          <p class="panel-label">Engine status</p>
-          <p class="status-line"><span class="dot ok"></span> Vital parser ready</p>
-          <p class="status-line"><span class="dot ok"></span> Safe semantic mutator ready</p>
-          <p class="status-line"><span class="dot muted"></span> UI calibration pass in progress</p>
-        </div>
-      </aside>
+      <section class="hero">
+        <h1>Turn one Vital preset into three new directions</h1>
+        <p class="lede">Load a Vital preset, shape the mutation, and export 3 playable variations.</p>
+      </section>
 
-      <main class="main-stage">
-        <section class="hero-card">
+      <section class="panel upload-panel">
+        <div class="section-head">
           <div>
-            <p class="eyebrow">Vital Calibration</p>
-            <h2>Choose a seed, shape the mutation, generate variants.</h2>
+            <h2>Input Preset</h2>
+            <p class="muted">Use one `.vital` preset file. The free version generates exactly 3 mutated variations.</p>
+            <p class="input-note">Vital only for now. More synths will be supported in the future.</p>
           </div>
-          <button id="refresh-button" class="ghost-button">Refresh Library</button>
-        </section>
+        </div>
+        <p class="upload-message" id="upload-message" hidden></p>
 
-        <section class="content-grid">
-          <section class="seed-column card">
-            <div class="section-head">
-              <div>
-                <p class="panel-label">Seed Library</p>
-                <h3>Bundled Vital Presets</h3>
-              </div>
-              <span id="seed-count" class="count-pill">0 seeds</span>
+        <section class="preset-drop-zone drop-zone" id="preset-drop-zone">
+          <div class="preset-drop-inner">
+            <div class="preset-drop-cta" id="preset-drop-cta">
+              <label class="upload">
+                <span>Choose .vital preset</span>
+                <input id="file-input" type="file" accept=".vital,application/json" />
+              </label>
+              <p class="drop-note">Drag and drop a `.vital` preset here.</p>
             </div>
-            <div id="seed-list" class="seed-list"></div>
-          </section>
-
-          <section class="controls-column">
-            <section class="card control-card">
-              <div class="section-head">
-                <div>
-                  <p class="panel-label">Generation Controls</p>
-                  <h3>Calibration Surface</h3>
-                </div>
+            <div class="preset-summary" id="preset-summary">
+              <div>
+                <span class="meta-label">Preset</span>
+                <strong id="preset-name">No preset loaded</strong>
               </div>
-
-              <label class="field">
-                <span>Selected seed</span>
-                <input id="selected-seed" type="text" readonly />
-              </label>
-
-              <label class="field">
-                <span>Mutation amount</span>
-                <div class="slider-row">
-                  <input id="amount-range" type="range" min="0.02" max="0.35" step="0.01" value="0.12" />
-                  <strong id="amount-value">0.12</strong>
-                </div>
-              </label>
-
-              <label class="field">
-                <span>Max parameters</span>
-                <div class="slider-row">
-                  <input id="max-parameters-range" type="range" min="4" max="24" step="1" value="12" />
-                  <strong id="max-parameters-value">12</strong>
-                </div>
-              </label>
-
-              <label class="field">
-                <span>Random seed</span>
-                <input id="random-seed" type="number" value="7" min="0" step="1" />
-              </label>
-
-              <div class="button-row">
-                <button id="generate-button" class="primary-button">Generate Variant</button>
+              <div>
+                <span class="meta-label">Author</span>
+                <strong id="preset-author">-</strong>
               </div>
-            </section>
-
-            <section class="card result-card">
-              <div class="section-head">
-                <div>
-                  <p class="panel-label">Latest Result</p>
-                  <h3>Generated Variant</h3>
-                </div>
+              <div>
+                <span class="meta-label">Sample</span>
+                <strong id="preset-sample">-</strong>
               </div>
-              <div id="result-empty" class="empty-state">No variant generated yet.</div>
-              <div id="result-panel" class="result-panel hidden">
-                <div class="result-meta">
-                  <p id="result-file" class="result-file"></p>
-                  <p id="result-path" class="result-path"></p>
-                </div>
-                <div class="result-summary-grid">
-                  <div>
-                    <span class="mini-label">Sample</span>
-                    <strong id="result-sample">-</strong>
-                  </div>
-                  <div>
-                    <span class="mini-label">Modulations</span>
-                    <strong id="result-modulations">-</strong>
-                  </div>
-                  <div>
-                    <span class="mini-label">Wavetables</span>
-                    <strong id="result-wavetables">-</strong>
-                  </div>
-                </div>
-                <div>
-                  <p class="mini-label">Changed parameters</p>
-                  <div id="changed-parameters" class="chip-list"></div>
-                </div>
+              <div>
+                <span class="meta-label">Modulations</span>
+                <strong id="preset-modulations">-</strong>
               </div>
-            </section>
-          </section>
+              <div>
+                <span class="meta-label">Wavetables</span>
+                <strong id="preset-wavetables">-</strong>
+              </div>
+              <div>
+                <span class="meta-label">File</span>
+                <strong id="preset-file">No file loaded</strong>
+              </div>
+            </div>
+          </div>
         </section>
-      </main>
-      </div>
-    </div>
+      </section>
 
-    <template id="seed-item-template">
-      <button class="seed-item">
-        <div class="seed-item-head">
-          <strong class="seed-item-name"></strong>
-          <span class="seed-item-style"></span>
+      <section class="panel trust-panel">
+        <div class="section-head">
+          <h2>Privacy and Processing</h2>
+          <p class="muted">Everything stays local to your browser.</p>
         </div>
-        <p class="seed-item-comments"></p>
-        <div class="seed-item-footer">
-          <span class="seed-item-author"></span>
-          <span class="seed-item-sample"></span>
+        <div class="trust-grid">
+          <div class="trust-item">
+            <span class="meta-label">Local Only</span>
+            <p>Your preset file stays in your browser.</p>
+          </div>
+          <div class="trust-item">
+            <span class="meta-label">No AI</span>
+            <p>No preset data is sent to AI models.</p>
+          </div>
+          <div class="trust-item">
+            <span class="meta-label">No Account</span>
+            <p>No signup is needed for the free version.</p>
+          </div>
+          <div class="trust-item">
+            <span class="meta-label">Royalty-Free</span>
+            <p>Use generated presets in your own productions.</p>
+          </div>
         </div>
-      </button>
-    </template>
+      </section>
 
-    <script type="module" src="./app.js"></script>
-    <script src="./chrome.js"></script>
+      <section class="workspace">
+        <section class="panel controls-panel">
+          <div class="section-head">
+            <h2>Mutation Controls</h2>
+            <p class="muted">Bias the direction without destroying the source preset’s identity.</p>
+          </div>
+
+          <div class="control-grid">
+            <label class="control">
+              <span>Mutation Amount</span>
+              <output id="amount-value">Medium</output>
+              <input id="amount-range" type="range" min="0" max="100" step="1" value="45" />
+            </label>
+
+            <label class="control">
+              <span>Darker / Brighter</span>
+              <output id="brightness-value">0%</output>
+              <input id="brightness-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+
+            <label class="control">
+              <span>Steadier / More Motion</span>
+              <output id="motion-value">0%</output>
+              <input id="motion-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+
+            <label class="control">
+              <span>Cleaner / Dirtier</span>
+              <output id="dirt-value">0%</output>
+              <input id="dirt-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+          </div>
+
+          <div class="actions">
+            <button id="generate-button" type="button" disabled>
+              <span class="button-spinner" aria-hidden="true"></span>
+              <span class="button-label">Generate Variations</span>
+            </button>
+          </div>
+
+          <div class="status" id="status">Load one Vital preset to generate 3 new directions.</div>
+          <p class="upgrade-hint">Pro will add larger preset sets, batch mutation, style modes, and more synth formats.</p>
+        </section>
+
+        <section class="panel insight-panel">
+          <div class="section-head">
+            <h2>Tips for better results</h2>
+            <p class="muted">Preset mutation works best when the source already has a clear identity.</p>
+          </div>
+          <ul class="insights">
+            <li>Start with a preset you already like.</li>
+            <li>Use small bias moves before pushing the amount wide.</li>
+            <li>Treat the three results as directions, not final answers.</li>
+          </ul>
+        </section>
+      </section>
+
+      <section class="analysis-grid">
+        <section class="panel analysis-panel">
+          <div class="section-head">
+            <h2>Source Snapshot</h2>
+            <p class="muted">High-level preset details read from the uploaded file.</p>
+          </div>
+          <div class="metric-grid" id="source-metrics">
+            <p class="empty-state">Load a preset to inspect its current Vital structure.</p>
+          </div>
+        </section>
+
+        <section class="panel analysis-panel">
+          <div class="section-head">
+            <h2>Mutation Strategy</h2>
+            <p class="muted">The controls bias which Vital zones get pushed harder.</p>
+          </div>
+          <div class="metric-grid" id="strategy-metrics">
+            <p class="empty-state">Controls will summarize here once a preset is loaded.</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel presets-panel" id="presets-panel">
+        <div class="section-head">
+          <h2>Generated Preset Variants</h2>
+          <p class="muted">Each export is a real `.vital` preset built from the uploaded source file.</p>
+        </div>
+        <div class="preset-list" id="preset-list">
+          <p class="empty-state">Choose one `.vital` preset, then click <strong>Generate Variations</strong> to create 3 playable mutations.</p>
+        </div>
+      </section>
+
+      <footer class="app-footer">
+        <p>Kreativ Sound experimental tool surface for preset-driven mutation.</p>
+        <p class="app-version">Preset Mutator v0.1 beta</p>
+      </footer>
+    </main>
+
+    <script src="./app.js" type="module"></script>
+    <script src="/share.js"></script>
   </body>
 </html>
