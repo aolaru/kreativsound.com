@@ -197,6 +197,16 @@ a:focus-visible,
   border-bottom: 2px solid var(--accent-bright);
 }
 
+.nav-link-home {
+  min-height: 36px;
+  padding: 0.25rem 0.1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.82;
+  gap: 0.35rem;
+}
+
 .card {
   background: var(--card);
   border: 1px solid var(--card-border);
