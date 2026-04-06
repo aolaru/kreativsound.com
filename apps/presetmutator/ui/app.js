@@ -55,6 +55,8 @@ const state = {
   isGenerating: false,
 };
 
+const FEEDBACK_STORAGE_KEY = "preset-mutator-feedback";
+
 const elements = {
   fileInput: document.querySelector("#file-input"),
   uploadMessage: document.querySelector("#upload-message"),
@@ -79,6 +81,9 @@ const elements = {
   sourceMetrics: document.querySelector("#source-metrics"),
   strategyMetrics: document.querySelector("#strategy-metrics"),
   presetList: document.querySelector("#preset-list"),
+  feedbackPanel: document.querySelector("#feedback-panel"),
+  feedbackButtons: [...document.querySelectorAll(".feedback-button")],
+  feedbackNote: document.querySelector("#feedback-note"),
 };
 
 function clamp(value, low, high) {
@@ -243,6 +248,54 @@ function renderStrategyMetrics() {
       `,
     )
     .join("");
+}
+
+function readFeedbackValue() {
+  return window.localStorage.getItem(FEEDBACK_STORAGE_KEY) || "";
+}
+
+function updateFeedbackUi(selectedValue = readFeedbackValue()) {
+  for (const button of elements.feedbackButtons) {
+    button.classList.toggle("is-selected", button.dataset.feedback === selectedValue);
+  }
+
+  const feedbackCopy = {
+    useful: "Marked useful. That helps identify mutation patterns worth expanding.",
+    somewhat: "Marked somewhat. That helps show where the mutation logic is close but not fully musical yet.",
+    not_really: "Marked not really. That helps flag mutation ranges that need tighter bounds.",
+  };
+
+  if (elements.feedbackNote) {
+    elements.feedbackNote.textContent =
+      feedbackCopy[selectedValue] || "Stored locally for now so you can keep track of what felt strongest.";
+  }
+}
+
+function handleFeedbackSelection(event) {
+  const value = event.currentTarget.dataset.feedback;
+  window.localStorage.setItem(FEEDBACK_STORAGE_KEY, value);
+  updateFeedbackUi(value);
+}
+
+function summarizeVariantFocus(variant) {
+  const changed = variant.changedParameters.join(" ");
+  const focus = [];
+
+  if (/(cutoff|resonance|transpose|tune|keytrack|pre_)/.test(changed)) {
+    focus.push("tone");
+  }
+  if (/(attack|decay|release|wave_frame|feedback|mod_depth|frame_spread)/.test(changed)) {
+    focus.push("motion");
+  }
+  if (/(distortion|drive)/.test(changed)) {
+    focus.push("grit");
+  }
+  if (/(stereo|spread|mix|reverb|delay|chorus|dry_wet|size)/.test(changed)) {
+    focus.push("space");
+  }
+
+  const summary = focus.length ? focus.join(", ") : "core voicing";
+  return `Focus: ${summary} with a ${variant.role.label.toLowerCase()} mutation spread.`;
 }
 
 function slugifyFilename(value) {
@@ -417,6 +470,8 @@ function downloadVariant(variant) {
 }
 
 function renderVariants() {
+  elements.feedbackPanel.hidden = state.generatedVariants.length === 0;
+
   if (!state.generatedVariants.length) {
     elements.presetList.innerHTML = `<p class="empty-state">Choose one <strong>.vital</strong> preset, then click <strong>Generate Variations</strong> to create 3 playable mutations.</p>`;
     return;
@@ -434,6 +489,7 @@ function renderVariants() {
           <p class="preset-subline">${variant.description}</p>
         </div>
       </div>
+      <p class="preset-quality">${summarizeVariantFocus(variant)}</p>
       <div class="preset-metrics">
         <div>
           <span class="metric-label">Changes</span>
@@ -462,6 +518,8 @@ function renderVariants() {
     card.querySelector(".download-button").addEventListener("click", () => downloadVariant(variant));
     elements.presetList.appendChild(card);
   }
+
+  updateFeedbackUi();
 }
 
 async function loadPreset(file) {
@@ -585,8 +643,12 @@ elements.dirtRange.addEventListener("input", () => {
   renderStrategyMetrics();
 });
 elements.generateButton.addEventListener("click", handleGenerate);
+for (const button of elements.feedbackButtons) {
+  button.addEventListener("click", handleFeedbackSelection);
+}
 
 updateControlLabels();
 updateSourceUi();
 renderVariants();
 bindDropZone();
+updateFeedbackUi();

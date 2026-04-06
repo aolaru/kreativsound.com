@@ -202,6 +202,19 @@
         </div>
       </section>
 
+      <section class="panel feedback-panel" id="feedback-panel" hidden aria-labelledby="feedback-title">
+        <div class="feedback-copy">
+          <h2 id="feedback-title">Was this useful?</h2>
+          <p>Quick feedback helps decide which mutation behaviors should be refined next.</p>
+        </div>
+        <div class="feedback-actions" role="group" aria-label="Preset usefulness feedback">
+          <button class="feedback-button" type="button" data-feedback="useful">Useful</button>
+          <button class="feedback-button" type="button" data-feedback="somewhat">Somewhat</button>
+          <button class="feedback-button" type="button" data-feedback="not_really">Not really</button>
+        </div>
+        <p class="feedback-note" id="feedback-note">Stored locally for now so you can keep track of what felt strongest.</p>
+      </section>
+
       <footer class="app-footer">
         <p>Kreativ Sound experimental tool surface for preset-driven mutation.</p>
         <p class="app-version">Preset Mutator v0.1 beta</p>

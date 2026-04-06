@@ -635,6 +635,75 @@ a:focus-visible,
   text-align: center;
 }
 
+.home-tools {
+  margin-top: 1rem;
+  padding: 1.2rem;
+}
+
+.home-tools-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+.home-tools-head h2 {
+  margin: 0 0 0.3rem;
+}
+
+.home-tools-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.home-tool-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1rem;
+  border: 1px solid rgba(228, 171, 171, 0.18);
+  border-radius: 16px;
+  background: rgba(153, 0, 0, 0.04);
+}
+
+.home-tool-card-featured {
+  background:
+    linear-gradient(180deg, rgba(153, 0, 0, 0.04), transparent 44%),
+    rgba(153, 0, 0, 0.04);
+}
+
+.home-tool-mark {
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+}
+
+.home-tool-copy {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.home-tool-copy h3,
+.home-tool-copy p {
+  margin: 0;
+}
+
+.home-tool-flow {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(153, 0, 0, 0.08);
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -1048,6 +1117,10 @@ a:focus-visible,
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.tools-hero {
+  max-width: 54rem;
+}
+
 .product-panel {
   padding: 1rem;
   border: 1px solid rgba(228, 171, 171, 0.18);
@@ -1063,11 +1136,39 @@ a:focus-visible,
   height: 100%;
 }
 
+.product-tool-card-featured {
+  padding: 1.2rem;
+  background:
+    linear-gradient(180deg, rgba(153, 0, 0, 0.04), transparent 44%),
+    rgba(153, 0, 0, 0.04);
+}
+
+.product-tool-grid-secondary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .product-tool-mark {
   width: 128px;
   height: 128px;
   object-fit: contain;
   flex: 0 0 auto;
+}
+
+.product-tool-flow {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(153, 0, 0, 0.08);
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.product-tool-supporting {
+  font-size: 0.92rem;
 }
 
 .product-tool-card .product-actions {
@@ -1458,6 +1559,15 @@ a:focus-visible,
     justify-items: center;
   }
 
+  .home-tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-tools-head {
+    align-items: start;
+    flex-direction: column;
+  }
+
   .featured-cta {
     width: 100%;
     text-align: center;
@@ -1519,6 +1629,7 @@ a:focus-visible,
   .product-specs,
   .product-panel-grid,
   .product-tool-grid,
+  .product-tool-grid-secondary,
   .learn-hero,
   .learn-grid,
   .learn-pillars,
