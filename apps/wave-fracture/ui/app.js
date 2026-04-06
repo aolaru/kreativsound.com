@@ -395,11 +395,12 @@ function normalizeChannels(channels) {
     }
   }
 
-  if (peak <= 0.98) {
+  if (peak === 0) {
     return;
   }
 
-  const scale = 0.98 / peak;
+  const targetPeak = peak > 0.95 ? 0.94 : peak < 0.48 ? 0.78 : peak < 0.7 ? 0.86 : peak;
+  const scale = targetPeak / peak;
   for (const channel of channels) {
     for (let i = 0; i < channel.length; i += 1) {
       channel[i] *= scale;
@@ -407,24 +408,66 @@ function normalizeChannels(channels) {
   }
 }
 
+function applyEdgeFade(channels, fadeSamples) {
+  if (fadeSamples <= 0) {
+    return;
+  }
+
+  for (const channel of channels) {
+    const maxFade = Math.min(fadeSamples, Math.floor(channel.length / 2));
+    for (let i = 0; i < maxFade; i += 1) {
+      const gain = i / maxFade;
+      const tailIndex = channel.length - 1 - i;
+      channel[i] *= gain;
+      channel[tailIndex] *= gain;
+    }
+  }
+}
+
+function sourceConsistencyFactor(analysis) {
+  if (!analysis) {
+    return 1;
+  }
+
+  const shortness = analysis.duration <= 6 ? 1 : analysis.duration <= 10 ? 0.88 : 0.74;
+  const densityPenalty = analysis.density > 0.52 ? 0.84 : analysis.density > 0.36 ? 0.92 : 1;
+  return clamp(shortness * densityPenalty, 0.68, 1);
+}
+
+function sourceFitMessage(analysis) {
+  if (!analysis) {
+    return "";
+  }
+  if (analysis.duration > 10) {
+    return "Longer sources can smear the fracture result. Short one-shots and textures usually land better.";
+  }
+  if (analysis.density > 0.52) {
+    return "Dense material detected. Expect rougher fractures than with simpler one-shots or drones.";
+  }
+  return "";
+}
+
 function renderVariantBuffer(sourceBuffer, role, controls) {
   const channels = createEmptyChannels(sourceBuffer.numberOfChannels, sourceBuffer.length);
+  const consistency = sourceConsistencyFactor(state.analysis);
+  const restrainedAmount = controls.fracture * role.amount * consistency;
   const sliceMs = role.key === "shard-drift"
-    ? lerp(44, 170, controls.fracture * role.amount)
+    ? lerp(44, 170, restrainedAmount)
     : role.key === "glass-loop"
-      ? lerp(70, 260, controls.fracture * role.amount)
-      : lerp(18, 96, controls.fracture * role.amount);
-  const sliceLength = Math.max(128, Math.floor((sliceMs / 1000) * sourceBuffer.sampleRate));
+      ? lerp(70, 240, restrainedAmount)
+      : lerp(18, 90, restrainedAmount);
+  const maximumSlice = Math.max(256, Math.floor(sourceBuffer.length * 0.16));
+  const sliceLength = clamp(Math.floor((sliceMs / 1000) * sourceBuffer.sampleRate), 128, maximumSlice);
   const delaySamples = Math.max(1, Math.floor(sourceBuffer.sampleRate * lerp(0.05, 0.34, Math.max(0, controls.space))));
   const bitDepthSteps = Math.round(lerp(1024, 18, Math.max(0, controls.texture)));
   const jitterDepth = Math.floor(
     sliceLength
     * (
       role.key === "shard-drift"
-        ? lerp(0.08, 0.65, controls.fracture * role.amount)
+        ? lerp(0.08, 0.52, restrainedAmount)
         : role.key === "glass-loop"
-          ? lerp(0.02, 0.32, controls.fracture * role.amount)
-          : lerp(0.12, 0.95, controls.fracture * role.amount)
+          ? lerp(0.02, 0.24, restrainedAmount)
+          : lerp(0.12, 0.66, restrainedAmount)
     ),
   );
   const rng = createRng(hashString(`${state.sourceName}:${role.key}:${elements.fractureRange.value}:${elements.spaceRange.value}:${elements.textureRange.value}`));
@@ -439,49 +482,56 @@ function renderVariantBuffer(sourceBuffer, role, controls) {
       const sourceStart = clamp(start + jitter, 0, Math.max(0, source.length - remaining));
       const shouldReverse =
         role.key === "shard-drift"
-          ? rng() < lerp(0.18, 0.62, controls.fracture)
+          ? rng() < lerp(0.16, 0.48, restrainedAmount)
           : role.key === "glass-loop"
-            ? rng() < lerp(0.04, 0.18, controls.fracture)
-            : rng() < lerp(0.24, 0.76, controls.fracture);
+            ? rng() < lerp(0.04, 0.16, restrainedAmount)
+            : rng() < lerp(0.2, 0.58, restrainedAmount);
 
       let outputStart = start;
       if (role.key === "glass-loop") {
-        outputStart = clamp(start + Math.floor((rng() * 2 - 1) * sliceLength * 0.18), 0, Math.max(0, output.length - remaining));
+        outputStart = clamp(start + Math.floor((rng() * 2 - 1) * sliceLength * 0.14), 0, Math.max(0, output.length - remaining));
       }
 
       if (role.key === "crushed-bloom") {
-        outputStart = clamp(start - Math.floor(sliceLength * lerp(0.08, 0.42, controls.fracture)), 0, Math.max(0, output.length - remaining));
+        outputStart = clamp(start - Math.floor(sliceLength * lerp(0.08, 0.34, restrainedAmount)), 0, Math.max(0, output.length - remaining));
       }
 
       copySliceWithFade(source, output, sourceStart, remaining, outputStart, shouldReverse);
 
-      if (role.key === "glass-loop" && rng() < 0.82) {
-        const repeatStart = clamp(outputStart + Math.floor(sliceLength * lerp(0.22, 0.74, controls.fracture)), 0, Math.max(0, output.length - remaining));
+      if (role.key === "glass-loop" && rng() < lerp(0.58, 0.8, consistency)) {
+        const repeatStart = clamp(outputStart + Math.floor(sliceLength * lerp(0.22, 0.62, restrainedAmount)), 0, Math.max(0, output.length - remaining));
         copySliceWithFade(source, output, sourceStart, remaining, repeatStart, false);
       }
 
-      if (role.key === "shard-drift" && rng() < 0.38) {
+      if (role.key === "shard-drift" && rng() < lerp(0.22, 0.34, consistency)) {
         const ghostStart = clamp(outputStart + Math.floor(sliceLength * lerp(0.12, 0.38, Math.max(0, controls.space))), 0, Math.max(0, output.length - remaining));
         copySliceWithFade(source, output, sourceStart, remaining, ghostStart, true);
       }
     }
 
     let previous = 0;
+    const dryBlend =
+      role.key === "shard-drift"
+        ? lerp(0.18, 0.3, consistency)
+        : role.key === "glass-loop"
+          ? lerp(0.26, 0.38, consistency)
+          : lerp(0.12, 0.2, consistency);
     for (let i = 0; i < output.length; i += 1) {
       let sample = output[i];
+      const dry = source[i] * dryBlend;
 
       if (role.key === "crushed-bloom") {
         sample = applyBitCrush(sample, bitDepthSteps);
         if (i > delaySamples) {
-          sample += output[i - delaySamples] * lerp(0.14, 0.44, Math.max(0, controls.space) * role.amount);
+          sample += output[i - delaySamples] * lerp(0.14, 0.34, Math.max(0, controls.space) * consistency);
         }
-        sample = smoothSample(sample, previous, lerp(0.12, 0.36, controls.fracture));
+        sample = smoothSample(sample, previous, lerp(0.12, 0.3, restrainedAmount));
       } else if (role.key === "glass-loop") {
         if (i > delaySamples) {
-          sample += output[i - delaySamples] * lerp(0.1, 0.28, Math.max(0, controls.space));
+          sample += output[i - delaySamples] * lerp(0.1, 0.24, Math.max(0, controls.space));
         }
-        if (rng() < lerp(0.02, 0.14, controls.fracture) && i > sliceLength) {
-          sample += output[i - sliceLength] * lerp(0.08, 0.2, controls.fracture);
+        if (rng() < lerp(0.02, 0.1, restrainedAmount) && i > sliceLength) {
+          sample += output[i - sliceLength] * lerp(0.08, 0.16, restrainedAmount);
         }
       } else {
         if (i > delaySamples) {
@@ -499,7 +549,7 @@ function renderVariantBuffer(sourceBuffer, role, controls) {
         sample *= lerp(1, 0.8, Math.abs(controls.texture));
       }
 
-      output[i] = clamp(sample);
+      output[i] = clamp(sample + dry);
       previous = output[i];
     }
   }
@@ -516,6 +566,7 @@ function renderVariantBuffer(sourceBuffer, role, controls) {
     }
   }
 
+  applyEdgeFade(channels, Math.floor(sourceBuffer.sampleRate * 0.01));
   normalizeChannels(channels);
 
   const context = createAudioContext();
@@ -657,7 +708,7 @@ async function generateVariants() {
   }
 
   setGenerateLoadingState(true);
-  updateStatus("Fracturing the source into 3 new audio directions...");
+  updateStatus("Fracturing the source into 3 guided audio directions...");
   await new Promise((resolve) => window.setTimeout(resolve, GENERATE_DELAY_MS));
 
   const controls = currentControls();
@@ -685,7 +736,12 @@ async function generateVariants() {
   });
 
   renderVariants(variants);
-  updateStatus("3 fractured audio variations generated. Preview or download the one that feels right.");
+  const sourceFit = sourceFitMessage(state.analysis);
+  updateStatus(
+    sourceFit
+      ? `3 fractured audio variations generated. ${sourceFit}`
+      : "3 fractured audio variations generated. Preview or download the one that feels right.",
+  );
   setGenerateLoadingState(false);
 }
 
@@ -719,7 +775,12 @@ async function loadAudioFile(file) {
     renderAnalysis();
     renderVariants([]);
     showUploadMessage("");
-    updateStatus("Source loaded. Adjust the controls, then generate 3 fractured variations.");
+    const sourceFit = sourceFitMessage(state.analysis);
+    updateStatus(
+      sourceFit
+        ? `Source loaded. ${sourceFit}`
+        : "Source loaded. Adjust the controls, then generate 3 fractured variations.",
+    );
     setReady(true);
   } catch (_error) {
     resetLoadedState();

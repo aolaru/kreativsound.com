@@ -2,7 +2,7 @@
   "id": "/apps/audio-alchemy/ui/",
   "name": "Audio Alchemy",
   "short_name": "Audio Alchemy",
-  "description": "Turn any audio into a playable Vital preset.",
+  "description": "Generate guided Vital preset variations from a source sound.",
   "start_url": "/apps/audio-alchemy/ui/",
   "scope": "/apps/audio-alchemy/ui/",
   "display": "standalone",

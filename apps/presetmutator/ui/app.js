@@ -84,6 +84,9 @@ const elements = {
   feedbackPanel: document.querySelector("#feedback-panel"),
   feedbackButtons: [...document.querySelectorAll(".feedback-button")],
   feedbackNote: document.querySelector("#feedback-note"),
+  emailCaptureForm: document.querySelector("#email-capture-form"),
+  emailCaptureInput: document.querySelector("#email-capture-input"),
+  emailCaptureNote: document.querySelector("#email-capture-note"),
 };
 
 function clamp(value, low, high) {
@@ -275,6 +278,19 @@ function handleFeedbackSelection(event) {
   const value = event.currentTarget.dataset.feedback;
   window.localStorage.setItem(FEEDBACK_STORAGE_KEY, value);
   updateFeedbackUi(value);
+}
+
+function handleEmailCaptureSubmit() {
+  if (!elements.emailCaptureNote) {
+    return;
+  }
+  elements.emailCaptureNote.textContent = "Submitting...";
+  window.setTimeout(() => {
+    elements.emailCaptureNote.textContent = "Check your inbox to confirm.";
+    if (elements.emailCaptureInput) {
+      elements.emailCaptureInput.value = "";
+    }
+  }, 400);
 }
 
 function summarizeVariantFocus(variant) {
@@ -645,6 +661,9 @@ elements.dirtRange.addEventListener("input", () => {
 elements.generateButton.addEventListener("click", handleGenerate);
 for (const button of elements.feedbackButtons) {
   button.addEventListener("click", handleFeedbackSelection);
+}
+if (elements.emailCaptureForm) {
+  elements.emailCaptureForm.addEventListener("submit", handleEmailCaptureSubmit);
 }
 
 updateControlLabels();

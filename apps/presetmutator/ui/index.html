@@ -215,6 +215,28 @@
         <p class="feedback-note" id="feedback-note">Stored locally for now so you can keep track of what felt strongest.</p>
       </section>
 
+      <section class="panel email-capture-panel" aria-labelledby="email-capture-title">
+        <div class="email-capture-copy">
+          <h2 id="email-capture-title">Join the Preset Mutator list</h2>
+          <p>Get future preset-tool updates, free drops, and new synth support announcements from Kreativ Sound.</p>
+        </div>
+        <form
+          class="email-capture-form"
+          id="email-capture-form"
+          action="https://buttondown.com/api/emails/embed-subscribe/kreativ"
+          method="post"
+          target="buttondown-form-target"
+        >
+          <label class="sr-only" for="email-capture-input">Email address</label>
+          <input id="email-capture-input" name="email" type="email" placeholder="Enter your email" autocomplete="email" required />
+          <input type="hidden" name="embed" value="1" />
+          <input type="hidden" name="tag" value="preset-mutator" />
+          <button type="submit">Get updates</button>
+        </form>
+        <p class="email-capture-note" id="email-capture-note">No spam. Occasional updates when Preset Mutator improves.</p>
+        <iframe class="email-capture-target" name="buttondown-form-target" title="Buttondown subscription target"></iframe>
+      </section>
+
       <footer class="app-footer">
         <p>Kreativ Sound experimental tool surface for preset-driven mutation.</p>
         <p class="app-version">Preset Mutator v0.1 beta</p>

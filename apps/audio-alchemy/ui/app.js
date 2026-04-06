@@ -928,7 +928,7 @@ async function loadAudioFile(file, resetInput = false) {
     renderPresets([]);
     setReady(true);
 
-    updateStatus("File loaded. Analyze it to generate Vital variants.");
+    updateStatus("File loaded. Generate 3 guided Vital variations from the source profile.");
   } catch (error) {
     resetLoadedState();
     const message = "Unsupported or unreadable audio file. Please use a supported audio file under 10 MB.";
@@ -1022,7 +1022,7 @@ function generatePresets() {
   ]);
 
   renderPresets(state.presets);
-  updateStatus(`Generated ${state.presets.length} Vital variants from the uploaded sound. Free demo is limited to ${FREE_VARIANT_LIMIT}.`);
+  updateStatus(`Generated ${state.presets.length} guided Vital variations from the uploaded sound. Free demo is limited to ${FREE_VARIANT_LIMIT}.`);
 }
 
 async function handleGeneratePresets() {
