@@ -258,6 +258,47 @@ a:focus-visible,
   margin-top: 0;
 }
 
+.home-front-page {
+  max-width: 980px;
+}
+
+.home-front-hero {
+  text-align: center;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.home-front-hero .page-lead {
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-front-hero .product-actions {
+  justify-content: center;
+}
+
+.home-front-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.home-front-grid-secondary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-front-panel {
+  height: 100%;
+}
+
+.home-front-panel h2 {
+  font-size: 1.08rem;
+  margin-bottom: 0.45rem;
+}
+
+.home-front-panel .product-actions {
+  margin-top: 1rem;
+}
+
 .logo-wrap {
   display: flex;
   justify-content: center;
@@ -1566,6 +1607,11 @@ a:focus-visible,
   .home-tools-head {
     align-items: start;
     flex-direction: column;
+  }
+
+  .home-front-grid,
+  .home-front-grid-secondary {
+    grid-template-columns: 1fr;
   }
 
   .featured-cta {

@@ -22,6 +22,16 @@ const categories = [
   ...discoveredCategories.filter((category) => !preferredCategoryOrder.includes(category))
 ];
 
+function resolveSiteUrl(value) {
+  if (!value) {
+    return value;
+  }
+  if (/^(?:[a-z]+:)?\/\//i.test(value) || value.startsWith("mailto:") || value.startsWith("/")) {
+    return value;
+  }
+  return `/${value.replace(/^\.?\//, "")}`;
+}
+
 function renderCatalog() {
   container.innerHTML = "";
   let renderedSections = 0;
@@ -58,7 +68,7 @@ function renderCatalog() {
         card.classList.add("product-card-static");
       } else {
         card.dataset.track = "product_card_click";
-        card.href = item.url;
+        card.href = resolveSiteUrl(item.url);
         card.target = "_blank";
         card.rel = "noopener noreferrer";
         card.setAttribute("aria-label", item.title);
@@ -66,7 +76,7 @@ function renderCatalog() {
 
       const img = document.createElement("img");
       img.className = "product-thumb";
-      img.src = item.thumbnail || "logo-128.svg";
+      img.src = resolveSiteUrl(item.thumbnail || "logo-128.svg");
       img.alt = item.title + " thumbnail";
       img.width = 128;
       img.height = 128;
@@ -127,7 +137,7 @@ function renderCatalog() {
         audio.preload = "metadata";
 
         const source = document.createElement("source");
-        source.src = item.demo.src;
+        source.src = resolveSiteUrl(item.demo.src);
         if (item.demo.type) {
           source.type = item.demo.type;
         }
@@ -149,7 +159,7 @@ function renderCatalog() {
         if (item.detailsUrl) {
           const detailsLink = document.createElement("a");
           detailsLink.className = "product-action-link";
-          detailsLink.href = item.detailsUrl;
+          detailsLink.href = resolveSiteUrl(item.detailsUrl);
           detailsLink.textContent = "Details";
           actions.appendChild(detailsLink);
         }
@@ -157,7 +167,7 @@ function renderCatalog() {
         if (item.extraAction && item.extraAction.url) {
           const extraLink = document.createElement("a");
           extraLink.className = "product-action-link";
-          extraLink.href = item.extraAction.url;
+          extraLink.href = resolveSiteUrl(item.extraAction.url);
           extraLink.textContent = item.extraAction.label || "More";
           actions.appendChild(extraLink);
         }
@@ -165,7 +175,7 @@ function renderCatalog() {
         const buyLink = document.createElement("a");
         buyLink.className = "product-action-link is-primary";
         buyLink.dataset.track = "product_card_click";
-        buyLink.href = item.url;
+        buyLink.href = resolveSiteUrl(item.url);
         buyLink.target = "_blank";
         buyLink.rel = "noopener noreferrer";
         buyLink.textContent = item.category === "Free" ? "Get Free Sounds" : item.category === "Legacy" ? "Open Archive" : "Buy Now";
