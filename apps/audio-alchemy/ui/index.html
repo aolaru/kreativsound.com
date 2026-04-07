@@ -208,14 +208,14 @@
         </div>
       </section>
 
-      <section class="panel paid-feature-panel" aria-labelledby="paid-feature-title">
+      <section class="panel paid-feature-panel" id="paid-feature-panel" aria-labelledby="paid-feature-title">
         <div class="paid-feature-copy">
           <p class="paid-feature-kicker">Paid feature</p>
           <h2 id="paid-feature-title">Generate a 64-preset Vital pack from your source audio</h2>
           <p>Turn one source sound into a much larger preset pack shaped around its tone, envelope, and motion profile.</p>
           <p class="paid-feature-note">Each pack is generated from your uploaded sound for your session, giving musicians a more personal starting point than a generic preset bank.</p>
         </div>
-        <div class="paid-feature-actions">
+        <div class="paid-feature-actions" id="paid-feature-actions">
           <a class="button primary" href="https://kreativ.gumroad.com/" target="_blank" rel="noopener noreferrer">
             <i class="fa-solid fa-lock" aria-hidden="true"></i>
             Buy Audio Alchemy Pro
@@ -230,7 +230,11 @@
           <label class="sr-only" for="paid-feature-key">Audio Alchemy Pro key</label>
           <input id="paid-feature-key" type="text" placeholder="Enter your Audio Alchemy Pro key" autocomplete="off" />
           <button class="button secondary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Unlock Pro</button>
-          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">License verification will be enabled when Gumroad Pro checkout is connected.</p>
+          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Use a Gumroad key later. For now, a local preview key can unlock this panel on your browser.</p>
+        </div>
+        <div class="paid-feature-preview" id="paid-feature-preview" hidden>
+          <p class="paid-feature-preview-badge">Pro preview unlocked</p>
+          <p class="paid-feature-preview-note">This browser can now preview the upcoming Audio Alchemy Pro access state for 64-pack generation.</p>
         </div>
       </section>
 

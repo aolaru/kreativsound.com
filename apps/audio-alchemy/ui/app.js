@@ -6,6 +6,7 @@ const state = {
   profile: null,
   presets: [],
   isGenerating: false,
+  proPreviewUnlocked: false,
   sourceName: "",
   seedCache: new Map(),
 };
@@ -35,11 +36,14 @@ const elements = {
   profileMetrics: document.querySelector("#profile-metrics"),
   presetList: document.querySelector("#preset-list"),
   presetsPanel: document.querySelector("#presets-panel"),
+  paidFeaturePanel: document.querySelector("#paid-feature-panel"),
+  paidFeatureActions: document.querySelector("#paid-feature-actions"),
   paidFeatureToggle: document.querySelector("#paid-feature-toggle"),
   paidFeatureUnlock: document.querySelector("#paid-feature-unlock"),
   paidFeatureKey: document.querySelector("#paid-feature-key"),
   paidFeatureUnlockButton: document.querySelector("#paid-feature-unlock-button"),
   paidFeatureUnlockNote: document.querySelector("#paid-feature-unlock-note"),
+  paidFeaturePreview: document.querySelector("#paid-feature-preview"),
   emailCaptureForm: document.querySelector("#email-capture-form"),
   emailCaptureInput: document.querySelector("#email-capture-input"),
   emailCaptureNote: document.querySelector("#email-capture-note"),
@@ -57,6 +61,8 @@ const FREE_VARIANT_LIMIT = 3;
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
 const GENERATE_DELAY_MS = 500;
+const PRO_PREVIEW_STORAGE_KEY = "audio-alchemy-pro-preview-unlocked";
+const PRO_PREVIEW_KEY = "AA-PRO-PREVIEW-64";
 const SUPPORTED_AUDIO_EXTENSIONS = [".wav", ".mp3", ".aiff", ".aif", ".m4a", ".aac", ".ogg", ".flac"];
 
 if ("serviceWorker" in navigator) {
@@ -1022,7 +1028,19 @@ function handleEmailCaptureSubmit() {
   }, 400);
 }
 
+function renderPaidFeatureState() {
+  const unlocked = state.proPreviewUnlocked;
+  elements.paidFeaturePanel.classList.toggle("is-unlocked", unlocked);
+  elements.paidFeatureActions.hidden = unlocked;
+  elements.paidFeatureUnlock.hidden = true;
+  elements.paidFeaturePreview.hidden = !unlocked;
+  elements.paidFeatureToggle.setAttribute("aria-expanded", "false");
+}
+
 function togglePaidFeatureUnlock() {
+  if (state.proPreviewUnlocked) {
+    return;
+  }
   const isOpen = !elements.paidFeatureUnlock.hidden;
   elements.paidFeatureUnlock.hidden = isOpen;
   elements.paidFeatureToggle.setAttribute("aria-expanded", String(!isOpen));
@@ -1034,10 +1052,18 @@ function togglePaidFeatureUnlock() {
 function handlePaidFeatureUnlock() {
   const key = elements.paidFeatureKey.value.trim();
   if (!key) {
-    elements.paidFeatureUnlockNote.textContent = "Enter a Pro key to continue once Gumroad checkout is connected.";
+    elements.paidFeatureUnlockNote.textContent = "Enter a preview key to unlock this browser.";
     return;
   }
-  elements.paidFeatureUnlockNote.textContent = "License verification will be enabled when Gumroad Pro checkout is connected.";
+  if (key !== PRO_PREVIEW_KEY) {
+    elements.paidFeatureUnlockNote.textContent = "Invalid preview key. Check the key and try again.";
+    return;
+  }
+
+  state.proPreviewUnlocked = true;
+  window.localStorage.setItem(PRO_PREVIEW_STORAGE_KEY, "1");
+  renderPaidFeatureState();
+  updateStatus("Audio Alchemy Pro preview unlocked in this browser.");
 }
 
 elements.fileInput.addEventListener("change", handleFileChange);
@@ -1066,6 +1092,8 @@ for (const control of [elements.brightnessBias, elements.movementBias]) {
 }
 
 updateControlLabels();
+state.proPreviewUnlocked = window.localStorage.getItem(PRO_PREVIEW_STORAGE_KEY) === "1";
+renderPaidFeatureState();
 setReady(false);
 if (SELF_TEST_ENABLED) {
   loadSyntheticSource();
