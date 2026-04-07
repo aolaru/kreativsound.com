@@ -958,6 +958,13 @@ a:focus-visible,
   background: rgba(153, 0, 0, 0.12);
 }
 
+.product-action-link.is-muted {
+  color: var(--soft);
+  background: rgba(153, 0, 0, 0.04);
+  border-color: rgba(153, 0, 0, 0.08);
+  cursor: default;
+}
+
 .product-card-demo {
   display: grid;
   gap: 0.28rem;

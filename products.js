@@ -184,6 +184,15 @@ window.KREATIV_PRODUCTS = [
     useCase: "Free atmospheric toolkit for dark ambient work"
   },
   {
+    title: "The Black Angel - ReFill",
+    category: "Legacy",
+    badge: "Archive",
+    thumbnail: "logo-128.svg",
+    format: "Reason ReFill",
+    count: "101 NNXT + 102 REX2",
+    useCase: "First release archive built around Prophet V material for classic Reason workflows"
+  },
+  {
     title: "DAFT Plasticz Presets",
     category: "Legacy",
     url: "https://kreativ.gumroad.com/l/daft-free-plasticz-presets?layout=profile",

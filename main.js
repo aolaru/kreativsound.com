@@ -57,9 +57,10 @@ function renderCatalog() {
       const listItem = document.createElement("li");
       const stack = document.createElement("div");
       stack.className = "product-card-stack";
+      const hasPrimaryAction = Boolean(item.url);
       const hasDemo = Boolean(item.demo && item.demo.src);
       const hasActionRow = Boolean(item.detailsUrl || item.extraAction);
-      const usesStaticCard = hasActionRow || hasDemo;
+      const usesStaticCard = hasActionRow || hasDemo || !hasPrimaryAction;
 
       const card = document.createElement(usesStaticCard ? "div" : "a");
       card.className = "product-card";
@@ -148,7 +149,7 @@ function renderCatalog() {
         demo.appendChild(audio);
         card.appendChild(demo);
       }
-      if (!usesStaticCard) {
+      if (!usesStaticCard && hasPrimaryAction) {
         card.appendChild(cta);
       }
 
@@ -172,14 +173,21 @@ function renderCatalog() {
           actions.appendChild(extraLink);
         }
 
-        const buyLink = document.createElement("a");
-        buyLink.className = "product-action-link is-primary";
-        buyLink.dataset.track = "product_card_click";
-        buyLink.href = resolveSiteUrl(item.url);
-        buyLink.target = "_blank";
-        buyLink.rel = "noopener noreferrer";
-        buyLink.textContent = item.category === "Free" ? "Get Free Sounds" : item.category === "Legacy" ? "Open Archive" : "Buy Now";
-        actions.appendChild(buyLink);
+        if (hasPrimaryAction) {
+          const buyLink = document.createElement("a");
+          buyLink.className = "product-action-link is-primary";
+          buyLink.dataset.track = "product_card_click";
+          buyLink.href = resolveSiteUrl(item.url);
+          buyLink.target = "_blank";
+          buyLink.rel = "noopener noreferrer";
+          buyLink.textContent = item.category === "Free" ? "Get Free Sounds" : item.category === "Legacy" ? "Open Archive" : "Buy Now";
+          actions.appendChild(buyLink);
+        } else {
+          const archiveLabel = document.createElement("span");
+          archiveLabel.className = "product-action-link is-muted";
+          archiveLabel.textContent = "Archive only";
+          actions.appendChild(archiveLabel);
+        }
 
         card.appendChild(actions);
       }
