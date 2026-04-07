@@ -187,7 +187,7 @@ window.KREATIV_PRODUCTS = [
     title: "The Black Angel - ReFill",
     category: "Legacy",
     badge: "Archive",
-    thumbnail: "logo-128.svg",
+    thumbnail: "assets/thumbs/the-black-angel.jpg",
     format: "Reason ReFill",
     count: "101 NNXT + 102 REX2",
     useCase: "First release archive built around Prophet V material for classic Reason workflows"
