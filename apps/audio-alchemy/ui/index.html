@@ -208,6 +208,32 @@
         </div>
       </section>
 
+      <section class="panel paid-feature-panel" aria-labelledby="paid-feature-title">
+        <div class="paid-feature-copy">
+          <p class="paid-feature-kicker">Paid feature</p>
+          <h2 id="paid-feature-title">Generate a 64-preset Vital pack from your source audio</h2>
+          <p>Turn one source sound into a much larger preset pack shaped around its tone, envelope, and motion profile.</p>
+          <p class="paid-feature-note">Each pack is generated from your uploaded sound for your session, giving musicians a more personal starting point than a generic preset bank.</p>
+        </div>
+        <div class="paid-feature-actions">
+          <a class="button primary" href="https://kreativ.gumroad.com/" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            Buy Audio Alchemy Pro
+          </a>
+          <button class="button secondary paid-feature-toggle" id="paid-feature-toggle" type="button" aria-expanded="false" aria-controls="paid-feature-unlock">
+            <i class="fa-solid fa-key" aria-hidden="true"></i>
+            Enter Pro key
+          </button>
+          <p class="paid-feature-meta">Includes 64 generated Vital presets with wider variation spread and pack-style export.</p>
+        </div>
+        <div class="paid-feature-unlock" id="paid-feature-unlock" hidden>
+          <label class="sr-only" for="paid-feature-key">Audio Alchemy Pro key</label>
+          <input id="paid-feature-key" type="text" placeholder="Enter your Audio Alchemy Pro key" autocomplete="off" />
+          <button class="button secondary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Unlock Pro</button>
+          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">License verification will be enabled when Gumroad Pro checkout is connected.</p>
+        </div>
+      </section>
+
       <section class="panel email-capture-panel" aria-labelledby="email-capture-title">
         <div class="email-capture-copy">
           <h2 id="email-capture-title">Join the Audio Alchemy list</h2>

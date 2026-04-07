@@ -35,6 +35,11 @@ const elements = {
   profileMetrics: document.querySelector("#profile-metrics"),
   presetList: document.querySelector("#preset-list"),
   presetsPanel: document.querySelector("#presets-panel"),
+  paidFeatureToggle: document.querySelector("#paid-feature-toggle"),
+  paidFeatureUnlock: document.querySelector("#paid-feature-unlock"),
+  paidFeatureKey: document.querySelector("#paid-feature-key"),
+  paidFeatureUnlockButton: document.querySelector("#paid-feature-unlock-button"),
+  paidFeatureUnlockNote: document.querySelector("#paid-feature-unlock-note"),
   emailCaptureForm: document.querySelector("#email-capture-form"),
   emailCaptureInput: document.querySelector("#email-capture-input"),
   emailCaptureNote: document.querySelector("#email-capture-note"),
@@ -1017,6 +1022,24 @@ function handleEmailCaptureSubmit() {
   }, 400);
 }
 
+function togglePaidFeatureUnlock() {
+  const isOpen = !elements.paidFeatureUnlock.hidden;
+  elements.paidFeatureUnlock.hidden = isOpen;
+  elements.paidFeatureToggle.setAttribute("aria-expanded", String(!isOpen));
+  if (!isOpen) {
+    elements.paidFeatureKey.focus();
+  }
+}
+
+function handlePaidFeatureUnlock() {
+  const key = elements.paidFeatureKey.value.trim();
+  if (!key) {
+    elements.paidFeatureUnlockNote.textContent = "Enter a Pro key to continue once Gumroad checkout is connected.";
+    return;
+  }
+  elements.paidFeatureUnlockNote.textContent = "License verification will be enabled when Gumroad Pro checkout is connected.";
+}
+
 elements.fileInput.addEventListener("change", handleFileChange);
 elements.waveformPanel.addEventListener("dragenter", handleDropZoneDrag);
 elements.waveformPanel.addEventListener("dragover", handleDropZoneDrag);
@@ -1034,6 +1057,8 @@ elements.stopPlayback.addEventListener("click", () => {
   updateStatus("Playback stopped.");
 });
 elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
+elements.paidFeatureToggle.addEventListener("click", togglePaidFeatureUnlock);
+elements.paidFeatureUnlockButton.addEventListener("click", handlePaidFeatureUnlock);
 elements.emailCaptureForm.addEventListener("submit", handleEmailCaptureSubmit);
 
 for (const control of [elements.brightnessBias, elements.movementBias]) {

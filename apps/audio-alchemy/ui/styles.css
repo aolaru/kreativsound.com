@@ -768,6 +768,95 @@ button:disabled {
   line-height: 1.5;
 }
 
+.paid-feature-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: 18px 22px;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 24px;
+  background:
+    linear-gradient(180deg, rgba(179, 0, 0, 0.05) 0%, transparent 42%),
+    var(--panel-strong);
+  border-color: rgba(153, 0, 0, 0.24);
+}
+
+.paid-feature-kicker {
+  margin: 0 0 0.45rem;
+  color: var(--accent-strong);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.paid-feature-copy h2 {
+  margin-bottom: 0.45rem;
+}
+
+.paid-feature-copy p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.paid-feature-note {
+  margin-top: 0.6rem !important;
+  color: var(--soft) !important;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.paid-feature-actions {
+  display: grid;
+  gap: 0.7rem;
+  justify-items: start;
+}
+
+.paid-feature-toggle {
+  min-width: 0;
+}
+
+.paid-feature-meta {
+  margin: 0;
+  color: var(--soft);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.paid-feature-unlock {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 245, 245, 0.52);
+  border: 1px solid rgba(153, 0, 0, 0.12);
+}
+
+.paid-feature-unlock input {
+  min-width: 0;
+  padding: 13px 14px;
+  border: 1px solid rgba(153, 0, 0, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 250, 250, 0.92);
+  color: var(--text);
+  font: inherit;
+}
+
+.paid-feature-unlock-button {
+  white-space: nowrap;
+}
+
+.paid-feature-unlock-note {
+  grid-column: 1 / -1;
+  margin: -2px 0 0;
+  color: var(--soft);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
 .email-capture-panel {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(340px, 0.95fr);
@@ -845,10 +934,13 @@ button:disabled {
     justify-items: center;
   }
 
+  .paid-feature-panel,
   .email-capture-panel {
     grid-template-columns: 1fr;
   }
 
+  .paid-feature-unlock,
+  .paid-feature-actions,
   .email-capture-form {
     justify-content: flex-start;
   }
@@ -871,6 +963,7 @@ button:disabled {
 
   .workspace,
   .analysis-grid,
+  .paid-feature-panel,
   .email-capture-panel,
   .meta-grid,
   .control-grid,
@@ -882,6 +975,10 @@ button:disabled {
   .email-capture-form {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .paid-feature-unlock {
+    grid-template-columns: 1fr;
   }
 
   .email-capture-note {
