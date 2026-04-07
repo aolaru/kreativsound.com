@@ -35,9 +35,6 @@ const elements = {
   profileMetrics: document.querySelector("#profile-metrics"),
   presetList: document.querySelector("#preset-list"),
   presetsPanel: document.querySelector("#presets-panel"),
-  feedbackPanel: document.querySelector("#feedback-panel"),
-  feedbackButtons: [...document.querySelectorAll(".feedback-button")],
-  feedbackNote: document.querySelector("#feedback-note"),
   emailCaptureForm: document.querySelector("#email-capture-form"),
   emailCaptureInput: document.querySelector("#email-capture-input"),
   emailCaptureNote: document.querySelector("#email-capture-note"),
@@ -56,7 +53,6 @@ const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
 const GENERATE_DELAY_MS = 500;
 const SUPPORTED_AUDIO_EXTENSIONS = [".wav", ".mp3", ".aiff", ".aif", ".m4a", ".aac", ".ogg", ".flac"];
-const FEEDBACK_STORAGE_KEY = "audio-alchemy-feedback";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -649,33 +645,6 @@ function variantRole(index, preset) {
   return roles[index] || "Variant";
 }
 
-function readFeedbackValue() {
-  return window.localStorage.getItem(FEEDBACK_STORAGE_KEY) || "";
-}
-
-function updateFeedbackUi(selectedValue = readFeedbackValue()) {
-  for (const button of elements.feedbackButtons) {
-    button.classList.toggle("is-selected", button.dataset.feedback === selectedValue);
-  }
-
-  const feedbackCopy = {
-    useful: "Marked useful. That helps highlight which preset directions are worth deepening.",
-    somewhat: "Marked somewhat. That helps show the generation is close but not fully there yet.",
-    not_really: "Marked not really. That helps flag weak result types for the next quality pass.",
-  };
-
-  if (elements.feedbackNote) {
-    elements.feedbackNote.textContent =
-      feedbackCopy[selectedValue] || "Local-only for now. This just helps you keep track of what felt useful.";
-  }
-}
-
-function handleFeedbackSelection(event) {
-  const value = event.currentTarget.dataset.feedback;
-  window.localStorage.setItem(FEEDBACK_STORAGE_KEY, value);
-  updateFeedbackUi(value);
-}
-
 function buildPresetReason(preset, role) {
   const reasons = [];
 
@@ -809,8 +778,6 @@ function renderMetricGrid(target, items) {
 function renderPresets(presets) {
   elements.presetList.innerHTML = "";
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
-  elements.feedbackPanel.hidden = presets.length === 0;
-
   if (!presets.length) {
     elements.presetList.innerHTML = `<p class="empty-state">No presets generated yet.</p>`;
     return;
@@ -846,8 +813,6 @@ function renderPresets(presets) {
     button.addEventListener("click", () => downloadPreset(preset));
     elements.presetList.appendChild(card);
   }
-
-  updateFeedbackUi();
 }
 
 async function downloadPreset(preset) {
@@ -1070,9 +1035,6 @@ elements.stopPlayback.addEventListener("click", () => {
 });
 elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
 elements.emailCaptureForm.addEventListener("submit", handleEmailCaptureSubmit);
-for (const button of elements.feedbackButtons) {
-  button.addEventListener("click", handleFeedbackSelection);
-}
 
 for (const control of [elements.brightnessBias, elements.movementBias]) {
   control.addEventListener("input", updateControlLabels);
@@ -1080,8 +1042,6 @@ for (const control of [elements.brightnessBias, elements.movementBias]) {
 
 updateControlLabels();
 setReady(false);
-updateFeedbackUi();
-
 if (SELF_TEST_ENABLED) {
   loadSyntheticSource();
 }

@@ -1,6 +1,5 @@
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const GENERATE_DELAY_MS = 520;
-const FEEDBACK_STORAGE_KEY = "wave-fracture-feedback";
 const VARIANT_ROLES = [
   { key: "shard-drift", label: "Shard Drift", tag: "Closest", amount: 0.85 },
   { key: "glass-loop", label: "Glass Loop", tag: "Bolder", amount: 1.05 },
@@ -42,9 +41,6 @@ const elements = {
   analysisMetrics: document.querySelector("#analysis-metrics"),
   profileMetrics: document.querySelector("#profile-metrics"),
   variantList: document.querySelector("#variant-list"),
-  feedbackPanel: document.querySelector("#feedback-panel"),
-  feedbackButtons: [...document.querySelectorAll(".feedback-button")],
-  feedbackNote: document.querySelector("#feedback-note"),
 };
 
 function createAudioContext() {
@@ -88,33 +84,6 @@ function setGenerateLoadingState(isLoading) {
   elements.generateButton.classList.toggle("is-loading", isLoading);
   elements.generateButtonLabel.textContent = isLoading ? "Fracturing audio..." : "Generate Variations";
   setReady(Boolean(state.sourceBuffer));
-}
-
-function readFeedbackValue() {
-  return window.localStorage.getItem(FEEDBACK_STORAGE_KEY) || "";
-}
-
-function updateFeedbackUi(selectedValue = readFeedbackValue()) {
-  for (const button of elements.feedbackButtons) {
-    button.classList.toggle("is-selected", button.dataset.feedback === selectedValue);
-  }
-
-  const feedbackCopy = {
-    useful: "Marked useful. That helps show which fracture modes deserve more depth.",
-    somewhat: "Marked somewhat. That helps show where the processing is close but needs cleaner voicing.",
-    not_really: "Marked not really. That helps flag fracture passes that need tighter render behavior.",
-  };
-
-  if (elements.feedbackNote) {
-    elements.feedbackNote.textContent =
-      feedbackCopy[selectedValue] || "Stored locally for now so you can judge which fracture directions actually land.";
-  }
-}
-
-function handleFeedbackSelection(event) {
-  const value = event.currentTarget.dataset.feedback;
-  window.localStorage.setItem(FEEDBACK_STORAGE_KEY, value);
-  updateFeedbackUi(value);
 }
 
 function stopPlayback() {
@@ -627,7 +596,6 @@ function renderVariants(variants) {
   state.variants = variants;
   const panel = document.querySelector("#results-panel");
   panel.classList.toggle("has-results", variants.length > 0);
-  elements.feedbackPanel.hidden = variants.length === 0;
   if (!variants.length) {
     elements.variantList.innerHTML = `<p class="empty-state">Choose a source audio file, then click <strong>Generate Variations</strong> to create 3 fractured audio exports.</p>`;
     return;
@@ -685,8 +653,6 @@ function renderVariants(variants) {
     });
     elements.variantList.appendChild(card);
   }
-
-  updateFeedbackUi();
 }
 
 function buildVariantDescription(role, controls) {
@@ -839,11 +805,7 @@ elements.playOriginal.addEventListener("click", () => {
 });
 elements.stopPlayback.addEventListener("click", stopPlayback);
 elements.generateButton.addEventListener("click", generateVariants);
-for (const button of elements.feedbackButtons) {
-  button.addEventListener("click", handleFeedbackSelection);
-}
 
 updateControlLabels();
 resetLoadedState();
 bindDropZone();
-updateFeedbackUi();
