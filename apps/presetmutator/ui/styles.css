@@ -636,58 +636,6 @@ button.is-loading .button-spinner {
   font-size: 0.84rem;
 }
 
-.email-capture-panel {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.95fr);
-  gap: 14px 18px;
-  align-items: start;
-  margin-bottom: 20px;
-  padding: 24px;
-}
-
-.email-capture-copy h2 {
-  margin-bottom: 0.3rem;
-}
-
-.email-capture-copy p {
-  margin: 0;
-  color: var(--muted);
-  max-width: 42rem;
-}
-
-.email-capture-form {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  align-self: center;
-}
-
-.email-capture-form input {
-  flex: 1 1 auto;
-  min-width: 0;
-  padding: 13px 14px;
-  border: 1px solid rgba(153, 0, 0, 0.18);
-  border-radius: 999px;
-  background: rgba(255, 250, 250, 0.92);
-  color: var(--text);
-}
-
-.email-capture-note {
-  grid-column: 2;
-  margin: -4px 0 0;
-  color: var(--soft);
-  font-size: 0.84rem;
-}
-
-.email-capture-target {
-  position: absolute;
-  width: 0;
-  height: 0;
-  border: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-
 .preset-quality {
   margin: -0.15rem 0 0.85rem;
   color: var(--soft);
@@ -750,22 +698,11 @@ button.is-loading .button-spinner {
     justify-content: center;
   }
 
-  .feedback-panel,
-  .email-capture-panel {
+  .feedback-panel {
     grid-template-columns: 1fr;
   }
 
-  .feedback-actions,
-  .email-capture-form {
+  .feedback-actions {
     justify-content: flex-start;
-  }
-
-  .email-capture-note {
-    grid-column: auto;
-  }
-
-  .email-capture-form {
-    flex-direction: column;
-    align-items: stretch;
   }
 }

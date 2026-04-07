@@ -45,9 +45,6 @@ const elements = {
   feedbackPanel: document.querySelector("#feedback-panel"),
   feedbackButtons: [...document.querySelectorAll(".feedback-button")],
   feedbackNote: document.querySelector("#feedback-note"),
-  emailCaptureForm: document.querySelector("#email-capture-form"),
-  emailCaptureInput: document.querySelector("#email-capture-input"),
-  emailCaptureNote: document.querySelector("#email-capture-note"),
 };
 
 function createAudioContext() {
@@ -816,14 +813,6 @@ function bindDropZone() {
   });
 }
 
-function handleEmailCaptureSubmit() {
-  elements.emailCaptureNote.textContent = "Submitting...";
-  window.setTimeout(() => {
-    elements.emailCaptureNote.textContent = "Check your inbox to confirm.";
-    elements.emailCaptureInput.value = "";
-  }, 400);
-}
-
 elements.fileInput.addEventListener("change", (event) => {
   const [file] = event.target.files || [];
   if (file) {
@@ -850,7 +839,6 @@ elements.playOriginal.addEventListener("click", () => {
 });
 elements.stopPlayback.addEventListener("click", stopPlayback);
 elements.generateButton.addEventListener("click", generateVariants);
-elements.emailCaptureForm.addEventListener("submit", handleEmailCaptureSubmit);
 for (const button of elements.feedbackButtons) {
   button.addEventListener("click", handleFeedbackSelection);
 }
