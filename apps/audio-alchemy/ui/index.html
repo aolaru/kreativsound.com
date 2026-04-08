@@ -127,57 +127,65 @@
             <p class="muted">Guide how the source gets interpreted. The result stays inspired by the upload, not matched one-to-one.</p>
           </div>
 
-          <div class="control-grid">
-            <label class="control">
-              <span class="control-label">Sound Type
-                <button class="info-tooltip" type="button" aria-label="Explain Sound Type" data-tooltip="Chooses how the source should be interpreted before mapping. Auto Detect lets Audio Alchemy decide between pad, pluck, bass, or texture.">
-                  <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                </button>
-              </span>
-              <select id="input-mode">
-                <option value="auto">Auto Detect</option>
-                <option value="pad">Pad / Atmosphere</option>
-                <option value="pluck">Pluck / Keys</option>
-                <option value="bass">Bass</option>
-                <option value="texture">Drone / Texture</option>
-              </select>
-            </label>
+          <section class="control-section control-section-free" aria-labelledby="free-control-title">
+            <div class="control-section-head">
+              <p class="control-section-kicker">Free</p>
+              <h3 id="free-control-title">Starter controls</h3>
+            </div>
 
-            <label class="control">
-              <span class="control-label">Darker / Brighter
-                <button class="info-tooltip" type="button" aria-label="Explain Darker / Brighter" data-tooltip="Biases the generated tone toward lower or higher filter cutoff, upper harmonics, and overall brightness.">
-                  <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                </button>
-              </span>
-              <output id="brightness-bias-value">0%</output>
-              <input id="brightness-bias" type="range" min="-100" max="100" step="1" value="0" />
-            </label>
+            <div class="control-grid">
+              <label class="control">
+                <span class="control-label">Sound Type
+                  <button class="info-tooltip" type="button" aria-label="Explain Sound Type" data-tooltip="Chooses how the source should be interpreted before mapping. Auto Detect lets Audio Alchemy decide between pad, pluck, bass, or texture.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <select id="input-mode">
+                  <option value="auto">Auto Detect</option>
+                  <option value="pad">Pad / Atmosphere</option>
+                  <option value="pluck">Pluck / Keys</option>
+                  <option value="bass">Bass</option>
+                  <option value="texture">Drone / Texture</option>
+                </select>
+              </label>
 
-            <label class="control">
-              <span class="control-label">Steadier / More Motion
-                <button class="info-tooltip" type="button" aria-label="Explain Steadier / More Motion" data-tooltip="Biases modulation and movement. Higher values push the presets toward more animation, motion, and modulation depth.">
-                  <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                </button>
-              </span>
-              <output id="movement-bias-value">0%</output>
-              <input id="movement-bias" type="range" min="-100" max="100" step="1" value="0" />
-            </label>
+              <label class="control">
+                <span class="control-label">Darker / Brighter
+                  <button class="info-tooltip" type="button" aria-label="Explain Darker / Brighter" data-tooltip="Biases the generated tone toward lower or higher filter cutoff, upper harmonics, and overall brightness.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="brightness-bias-value">0%</output>
+                <input id="brightness-bias" type="range" min="-100" max="100" step="1" value="0" />
+              </label>
 
-            <label class="control">
-              <span class="control-label">Variant Count
-                <button class="info-tooltip" type="button" aria-label="Explain Variant Count" data-tooltip="The free version always generates 3 guided presets. Pro unlocks a larger 32-preset pack built from the same source.">
-                  <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                </button>
-              </span>
-              <strong class="fixed-value">3 presets</strong>
-              <small class="control-note">Free demo always generates 3 variants. Pro will unlock larger sets.</small>
-            </label>
-          </div>
+              <label class="control">
+                <span class="control-label">Steadier / More Motion
+                  <button class="info-tooltip" type="button" aria-label="Explain Steadier / More Motion" data-tooltip="Biases modulation and movement. Higher values push the presets toward more animation, motion, and modulation depth.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="movement-bias-value">0%</output>
+                <input id="movement-bias" type="range" min="-100" max="100" step="1" value="0" />
+              </label>
 
-          <div class="pro-control-panel" id="pro-control-panel" aria-labelledby="pro-control-title">
-            <div class="section-head section-head-tight">
+              <label class="control">
+                <span class="control-label">Variant Count
+                  <button class="info-tooltip" type="button" aria-label="Explain Variant Count" data-tooltip="The free version always generates 3 guided presets. Pro unlocks a larger 32-preset pack built from the same source.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <strong class="fixed-value">3 presets</strong>
+                <small class="control-note">Free demo always generates 3 variants. Pro will unlock larger sets.</small>
+              </label>
+            </div>
+          </section>
+
+          <section class="pro-control-panel control-section control-section-pro" id="pro-control-panel" aria-labelledby="pro-control-title">
+            <div class="control-section-head">
+              <p class="control-section-kicker">Pro</p>
               <div>
-                <h3 id="pro-control-title">Pro pack shaping</h3>
+                <h3 id="pro-control-title">32-pack shaping</h3>
                 <p class="muted">These extra controls only affect the 32-preset Pro pack.</p>
               </div>
             </div>
@@ -253,7 +261,7 @@
                 <input id="drive-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
               </label>
             </div>
-          </div>
+          </section>
 
           <div class="actions">
             <button id="analyze-generate" type="button" disabled>

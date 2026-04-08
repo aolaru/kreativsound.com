@@ -484,10 +484,50 @@ h2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.control-section {
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.control-section + .control-section {
+  margin-top: 18px;
+}
+
+.control-section-free {
+  background: rgba(255, 248, 248, 0.64);
+  border: 1px solid rgba(153, 0, 0, 0.1);
+}
+
+.control-section-pro {
+  background:
+    linear-gradient(180deg, rgba(179, 0, 0, 0.04) 0%, transparent 44%),
+    rgba(255, 244, 244, 0.78);
+  border: 1px solid rgba(153, 0, 0, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+
+.control-section-head {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.control-section-head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.control-section-kicker {
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 .pro-control-panel {
   margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid rgba(153, 0, 0, 0.12);
 }
 
 .section-head-tight {
