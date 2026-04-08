@@ -468,6 +468,13 @@ h2 {
   z-index: 1;
 }
 
+.waveform-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 14px 0 18px;
+}
+
 .workspace {
   display: block;
   margin-bottom: 20px;
