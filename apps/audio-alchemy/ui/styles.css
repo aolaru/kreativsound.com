@@ -236,7 +236,6 @@ output {
 .trust-panel,
 .waveform-panel,
 .controls-panel,
-.insight-panel,
 .analysis-grid > .panel,
 .presets-panel {
   padding: 24px;
@@ -470,9 +469,7 @@ h2 {
 }
 
 .workspace {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(320px, 0.8fr);
-  gap: 20px;
+  display: block;
   margin-bottom: 20px;
 }
 
@@ -703,14 +700,6 @@ button:disabled {
   margin: 14px 0 0;
   color: var(--soft);
   font-size: 0.92rem;
-}
-
-.insights {
-  margin: 0;
-  padding-left: 18px;
-  display: grid;
-  gap: 12px;
-  color: #e0cfcf;
 }
 
 .analysis-grid {
