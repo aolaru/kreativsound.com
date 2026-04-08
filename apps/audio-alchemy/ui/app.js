@@ -9,6 +9,7 @@ const state = {
   proPreviewUnlocked: false,
   sourceName: "",
   seedCache: new Map(),
+  lastGenerationMode: "free",
 };
 
 const elements = {
@@ -44,6 +45,8 @@ const elements = {
   paidFeatureUnlockButton: document.querySelector("#paid-feature-unlock-button"),
   paidFeatureUnlockNote: document.querySelector("#paid-feature-unlock-note"),
   paidFeaturePreview: document.querySelector("#paid-feature-preview"),
+  generatePack: document.querySelector("#generate-pack"),
+  downloadPack: document.querySelector("#download-pack"),
   emailCaptureForm: document.querySelector("#email-capture-form"),
   emailCaptureInput: document.querySelector("#email-capture-input"),
   emailCaptureNote: document.querySelector("#email-capture-note"),
@@ -58,11 +61,12 @@ const SEED_BY_FAMILY = {
 };
 
 const FREE_VARIANT_LIMIT = 3;
+const PRO_PACK_COUNT = 32;
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
 const GENERATE_DELAY_MS = 500;
 const PRO_PREVIEW_STORAGE_KEY = "audio-alchemy-pro-preview-unlocked";
-const PRO_PREVIEW_KEY = "AA-PRO-PREVIEW-64";
+const PRO_PREVIEW_KEY = "AA-PRO-PREVIEW-32";
 const SUPPORTED_AUDIO_EXTENSIONS = [".wav", ".mp3", ".aiff", ".aif", ".m4a", ".aac", ".ogg", ".flac"];
 
 if ("serviceWorker" in navigator) {
@@ -121,6 +125,7 @@ function resetLoadedState() {
   state.analysis = null;
   state.profile = null;
   state.presets = [];
+  state.lastGenerationMode = "free";
   state.sourceName = "";
   elements.fileName.textContent = "No file loaded";
   elements.fileDuration.textContent = "0.0s";
@@ -170,12 +175,24 @@ function setReady(enabled) {
   elements.playOriginal.disabled = !enabled;
   elements.stopPlayback.disabled = !enabled;
   elements.analyzeGenerate.disabled = !enabled || state.isGenerating;
+  if (elements.generatePack) {
+    elements.generatePack.disabled = !enabled || state.isGenerating || !state.proPreviewUnlocked;
+  }
+  if (elements.downloadPack) {
+    elements.downloadPack.disabled = state.isGenerating || state.lastGenerationMode !== "pro" || state.presets.length !== PRO_PACK_COUNT;
+  }
 }
 
 function setGenerateLoadingState(isLoading) {
   state.isGenerating = isLoading;
   elements.analyzeGenerate.classList.toggle("is-loading", isLoading);
   elements.analyzeGenerateLabel.textContent = isLoading ? "Analyzing audio..." : "Generate Presets";
+  if (elements.generatePack) {
+    elements.generatePack.disabled = !state.originalBuffer || isLoading || !state.proPreviewUnlocked;
+  }
+  if (elements.downloadPack) {
+    elements.downloadPack.disabled = isLoading || state.lastGenerationMode !== "pro" || state.presets.length !== PRO_PACK_COUNT;
+  }
   setReady(Boolean(state.originalBuffer));
 }
 
@@ -484,15 +501,17 @@ function vary(base, amount, index, shift = 0) {
   return clamp(base + (seed * 2 - 1) * amount);
 }
 
-function mapProfileToVital(profile, index) {
+function mapProfileToVital(profile, index, options = {}) {
+  const amountScale = options.amountScale ?? 1;
+  const roleLabel = options.roleLabel ?? null;
   const family = profile.family;
-  const brightness = vary(profile.brightness, 0.08, index, 1);
-  const body = vary(profile.body, 0.08, index, 2);
-  const attack = vary(profile.attack, 0.1, index, 3);
-  const sustain = vary(profile.sustain, 0.08, index, 4);
-  const movement = vary(profile.movement, 0.12, index, 5);
-  const noise = vary(profile.noise, 0.08, index, 6);
-  const width = vary(profile.width, 0.1, index, 7);
+  const brightness = vary(profile.brightness, 0.08 * amountScale, index, 1);
+  const body = vary(profile.body, 0.08 * amountScale, index, 2);
+  const attack = vary(profile.attack, 0.1 * amountScale, index, 3);
+  const sustain = vary(profile.sustain, 0.08 * amountScale, index, 4);
+  const movement = vary(profile.movement, 0.12 * amountScale, index, 5);
+  const noise = vary(profile.noise, 0.08 * amountScale, index, 6);
+  const width = vary(profile.width, 0.1 * amountScale, index, 7);
 
   const oscMode = chooseOscillator(family, brightness, noise);
   const voices = family === "bass" ? Math.round(lerp(1, 3, width)) : Math.round(lerp(2, 8, width));
@@ -538,6 +557,7 @@ function mapProfileToVital(profile, index) {
 
   return {
     name,
+    roleLabel,
     family: familyLabel(family),
     familyKey: family,
     summary,
@@ -591,6 +611,50 @@ function mapProfileToVital(profile, index) {
       ["Noise Level", `${Math.round(noiseLevel * 100)}%`],
     ],
   };
+}
+
+function shapeProfile(baseProfile, recipe, index) {
+  return {
+    ...baseProfile,
+    family: recipe.family || baseProfile.family,
+    brightness: vary(clamp(baseProfile.brightness + (recipe.brightness ?? 0)), recipe.spread ?? 0.07, index, 21),
+    body: vary(clamp(baseProfile.body + (recipe.body ?? 0)), recipe.spread ?? 0.06, index, 22),
+    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0)), recipe.spread ?? 0.08, index, 23),
+    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0)), recipe.spread ?? 0.07, index, 24),
+    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0)), recipe.spread ?? 0.09, index, 25),
+    noise: vary(clamp(baseProfile.noise + (recipe.noise ?? 0)), recipe.spread ?? 0.07, index, 26),
+    width: vary(clamp(baseProfile.width + (recipe.width ?? 0)), recipe.spread ?? 0.08, index, 27),
+  };
+}
+
+function buildProPack(profile) {
+  const recipes = [
+    { role: "Closest", brightness: -0.02, movement: -0.02, spread: 0.04, amountScale: 0.85 },
+    { role: "Closest", brightness: 0.03, width: 0.04, spread: 0.04, amountScale: 0.85 },
+    { role: "Darker", brightness: -0.16, body: 0.08, spread: 0.05, amountScale: 1.0 },
+    { role: "Darker", brightness: -0.12, sustain: 0.06, noise: 0.03, spread: 0.05, amountScale: 1.0 },
+    { role: "Brighter", brightness: 0.16, body: -0.04, spread: 0.05, amountScale: 1.0 },
+    { role: "Brighter", brightness: 0.12, width: 0.08, movement: 0.04, spread: 0.05, amountScale: 1.0 },
+    { role: "Steadier", movement: -0.18, sustain: 0.05, spread: 0.05, amountScale: 0.95 },
+    { role: "Steadier", movement: -0.12, width: -0.06, body: 0.05, spread: 0.05, amountScale: 0.95 },
+    { role: "More Motion", movement: 0.2, width: 0.08, spread: 0.06, amountScale: 1.05 },
+    { role: "More Motion", movement: 0.16, brightness: 0.05, noise: 0.04, spread: 0.06, amountScale: 1.05 },
+    { role: "Wider", width: 0.18, sustain: 0.04, spread: 0.05, amountScale: 1.0 },
+    { role: "Wider", width: 0.14, movement: 0.06, brightness: 0.04, spread: 0.05, amountScale: 1.0 },
+    { role: "Tighter", width: -0.14, body: 0.08, spread: 0.05, amountScale: 0.95 },
+    { role: "Tighter", width: -0.1, movement: -0.06, attack: 0.05, spread: 0.05, amountScale: 0.95 },
+    { role: "Textured", noise: 0.18, movement: 0.08, spread: 0.06, amountScale: 1.05 },
+    { role: "Textured", noise: 0.14, brightness: -0.04, width: 0.04, spread: 0.06, amountScale: 1.05 },
+  ];
+
+  return Array.from({ length: PRO_PACK_COUNT }, (_, index) => {
+    const recipe = recipes[index % recipes.length];
+    const shaped = shapeProfile(profile, recipe, index);
+    return mapProfileToVital(shaped, index, {
+      amountScale: recipe.amountScale ?? 1,
+      roleLabel: recipe.role,
+    });
+  });
 }
 
 function chooseOscillator(family, brightness, noise) {
@@ -652,6 +716,9 @@ function buildVariantName(profile) {
 }
 
 function variantRole(index, preset) {
+  if (preset.roleLabel) {
+    return preset.roleLabel;
+  }
   const roles = ["Closest", preset.parameterMap.filter_1_cutoff < 50 ? "Darker" : "More Motion", "Brighter"];
   return roles[index] || "Variant";
 }
@@ -789,6 +856,7 @@ function renderMetricGrid(target, items) {
 function renderPresets(presets) {
   elements.presetList.innerHTML = "";
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
+  elements.presetsPanel.classList.toggle("is-pack", presets.length > FREE_VARIANT_LIMIT);
   if (!presets.length) {
     elements.presetList.innerHTML = `<p class="empty-state">No presets generated yet.</p>`;
     return;
@@ -798,8 +866,9 @@ function renderPresets(presets) {
     const card = document.createElement("article");
     card.className = "preset-card";
     const role = variantRole(presets.indexOf(preset), preset);
+    const maxRows = presets.length > FREE_VARIANT_LIMIT ? 4 : 6;
     const paramRows = preset.parameters
-      .slice(0, 6)
+      .slice(0, maxRows)
       .map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`)
       .join("");
     card.innerHTML = `
@@ -839,6 +908,40 @@ async function downloadPreset(preset) {
     updateStatus(`Downloaded ${fileName}.`);
   } catch (error) {
     updateStatus(error.message || "Could not download preset.");
+  }
+}
+
+async function downloadPresetPack() {
+  if (state.presets.length !== PRO_PACK_COUNT || state.lastGenerationMode !== "pro") {
+    return;
+  }
+
+  if (!window.JSZip) {
+    updateStatus("ZIP export is not available right now.");
+    return;
+  }
+
+  try {
+    updateStatus("Building 32-preset ZIP in the browser...");
+    const zip = new window.JSZip();
+    const folderName = sanitizeFileName(state.sourceName || "audio-alchemy-pack");
+    const folder = zip.folder(folderName);
+
+    for (const preset of state.presets) {
+      const { fileName, blob } = await buildVitalPresetBlob(preset);
+      folder.file(fileName, blob);
+    }
+
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    const url = URL.createObjectURL(zipBlob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${folderName}-32-pack.zip`;
+    link.click();
+    URL.revokeObjectURL(url);
+    updateStatus("Downloaded Audio Alchemy 32-pack ZIP.");
+  } catch (error) {
+    updateStatus(error.message || "Could not build the 32-pack ZIP.");
   }
 }
 
@@ -891,6 +994,7 @@ async function loadAudioFile(file, resetInput = false) {
     state.analysis = null;
     state.profile = null;
     state.presets = [];
+    state.lastGenerationMode = "free";
     state.sourceName = file.name.replace(/\.[^.]+$/, "");
 
     elements.fileName.textContent = file.name;
@@ -947,6 +1051,7 @@ function loadSyntheticSource() {
   state.analysis = null;
   state.profile = null;
   state.presets = [];
+  state.lastGenerationMode = "free";
   state.sourceName = "self-test-source";
 
   elements.fileName.textContent = "self-test-source.wav";
@@ -973,6 +1078,7 @@ function generatePresets() {
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
   const count = FREE_VARIANT_LIMIT;
+  state.lastGenerationMode = "free";
   state.presets = Array.from({ length: count }, (_, index) => mapProfileToVital(state.profile, index));
 
   renderMetricGrid(elements.analysisMetrics, [
@@ -999,6 +1105,45 @@ function generatePresets() {
 
   renderPresets(state.presets);
   updateStatus(`Generated ${state.presets.length} guided Vital variations from the uploaded sound. Free demo is limited to ${FREE_VARIANT_LIMIT}.`);
+  setReady(Boolean(state.originalBuffer));
+}
+
+function generatePresetPack() {
+  if (!state.originalBuffer || !state.proPreviewUnlocked) {
+    return;
+  }
+
+  updateStatus("Building a 32-preset Vital pack from the uploaded source...");
+  state.analysis = analyzeAudio(state.originalBuffer);
+  state.profile = buildProfile(state.analysis);
+  state.lastGenerationMode = "pro";
+  state.presets = buildProPack(state.profile);
+
+  renderMetricGrid(elements.analysisMetrics, [
+    ["Pitch Center", state.analysis.pitchHz ? `${Math.round(state.analysis.pitchHz)} Hz` : "Unclear"],
+    ["Spectral Centroid", formatHz(state.analysis.centroidHz)],
+    ["RMS", state.analysis.rms.toFixed(3)],
+    ["Peak", state.analysis.peak.toFixed(3)],
+    ["Zero Cross Rate", state.analysis.zeroCrossRate.toFixed(3)],
+    ["Onset Position", formatPercent(state.analysis.onsetRatio)],
+    ["Sustain Ratio", formatPercent(state.analysis.sustainRatio)],
+    ["Stereo Width", formatPercent(state.analysis.stereoWidth)],
+  ]);
+
+  renderMetricGrid(elements.profileMetrics, [
+    ["Detected Family", familyLabel(state.profile.family)],
+    ["Brightness", formatPercent(state.profile.brightness)],
+    ["Body", formatPercent(state.profile.body)],
+    ["Attack", formatPercent(state.profile.attack)],
+    ["Sustain", formatPercent(state.profile.sustain)],
+    ["Movement", formatPercent(state.profile.movement)],
+    ["Noise", formatPercent(state.profile.noise)],
+    ["Width", formatPercent(state.profile.width)],
+  ]);
+
+  renderPresets(state.presets);
+  updateStatus("Generated a 32-preset Vital pack with a wider variation spread from the uploaded source.");
+  setReady(Boolean(state.originalBuffer));
 }
 
 async function handleGeneratePresets() {
@@ -1015,6 +1160,25 @@ async function handleGeneratePresets() {
 
   try {
     generatePresets();
+  } finally {
+    setGenerateLoadingState(false);
+  }
+}
+
+async function handleGeneratePresetPack() {
+  if (!state.originalBuffer || state.isGenerating || !state.proPreviewUnlocked) {
+    return;
+  }
+
+  setGenerateLoadingState(true);
+  updateStatus("Expanding the source into a wider 32-preset pack...");
+
+  await new Promise((resolve) => {
+    window.setTimeout(resolve, GENERATE_DELAY_MS);
+  });
+
+  try {
+    generatePresetPack();
   } finally {
     setGenerateLoadingState(false);
   }
@@ -1064,6 +1228,7 @@ function handlePaidFeatureUnlock() {
   window.localStorage.setItem(PRO_PREVIEW_STORAGE_KEY, "1");
   renderPaidFeatureState();
   updateStatus("Audio Alchemy Pro preview unlocked in this browser.");
+  setReady(Boolean(state.originalBuffer));
 }
 
 elements.fileInput.addEventListener("change", handleFileChange);
@@ -1085,6 +1250,8 @@ elements.stopPlayback.addEventListener("click", () => {
 elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
 elements.paidFeatureToggle.addEventListener("click", togglePaidFeatureUnlock);
 elements.paidFeatureUnlockButton.addEventListener("click", handlePaidFeatureUnlock);
+elements.generatePack?.addEventListener("click", handleGeneratePresetPack);
+elements.downloadPack?.addEventListener("click", downloadPresetPack);
 elements.emailCaptureForm.addEventListener("submit", handleEmailCaptureSubmit);
 
 for (const control of [elements.brightnessBias, elements.movementBias]) {

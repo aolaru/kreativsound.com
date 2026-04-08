@@ -670,6 +670,11 @@ button:disabled {
   gap: 16px;
 }
 
+.presets-panel.is-pack .preset-list {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
 .self-test-note {
   margin: 0 0 14px;
   color: var(--soft);
@@ -692,6 +697,10 @@ button:disabled {
 .preset-card {
   display: grid;
   gap: 14px;
+}
+
+.presets-panel.is-pack .preset-card {
+  gap: 11px;
 }
 
 .preset-role {
@@ -726,6 +735,10 @@ button:disabled {
   font-size: 1.1rem;
 }
 
+.presets-panel.is-pack .preset-name {
+  font-size: 1rem;
+}
+
 .preset-family {
   color: var(--accent-strong);
   font-size: 0.9rem;
@@ -738,9 +751,18 @@ button:disabled {
   color: var(--muted);
 }
 
+.presets-panel.is-pack .preset-summary,
+.presets-panel.is-pack .preset-quality {
+  font-size: 0.92rem;
+}
+
 .param-list {
   display: grid;
   gap: 8px;
+}
+
+.presets-panel.is-pack .param-list {
+  gap: 6px;
 }
 
 .param-row {
@@ -750,6 +772,11 @@ button:disabled {
   font-size: 0.95rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 8px;
+}
+
+.presets-panel.is-pack .param-row {
+  font-size: 0.88rem;
+  padding-bottom: 6px;
 }
 
 .param-row span:last-child {
@@ -886,6 +913,13 @@ button:disabled {
   margin: 0;
   color: var(--soft);
   line-height: 1.5;
+}
+
+.paid-feature-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
 }
 
 .email-capture-panel {
