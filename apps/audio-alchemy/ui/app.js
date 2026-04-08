@@ -220,7 +220,7 @@ function setReady(enabled) {
 function setGenerateLoadingState(isLoading) {
   state.isGenerating = isLoading;
   elements.analyzeGenerate.classList.toggle("is-loading", isLoading);
-  elements.analyzeGenerateLabel.textContent = isLoading ? "Analyzing audio..." : "Generate Presets";
+  elements.analyzeGenerateLabel.textContent = isLoading ? "Analyzing audio..." : "Generate 3 Free Presets";
   if (elements.generatePack) {
     elements.generatePack.disabled = !state.originalBuffer || isLoading || !state.proPreviewUnlocked;
   }

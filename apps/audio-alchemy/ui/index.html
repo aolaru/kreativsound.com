@@ -16,6 +16,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="./styles.css" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRTJS1KZD9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-QRTJS1KZD9");
+    </script>
     <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body>
@@ -266,7 +273,7 @@
           <div class="actions">
             <button id="analyze-generate" type="button" disabled>
               <span class="button-spinner" aria-hidden="true"></span>
-              <span class="button-label">Generate Presets</span>
+              <span class="button-label">Generate 3 Free Presets</span>
             </button>
           </div>
 
@@ -301,7 +308,7 @@
         </div>
         <p class="self-test-note" id="self-test-note" hidden>Self-test mode generated synthetic demo presets.</p>
         <div class="preset-list" id="preset-list">
-          <p class="empty-state">Choose a source audio file, then click <strong>Generate Presets</strong> to create 3 guided Vital starting points.</p>
+          <p class="empty-state">Choose a source audio file, then click <strong>Generate 3 Free Presets</strong> to create 3 guided Vital starting points.</p>
         </div>
       </section>
 
@@ -335,7 +342,7 @@
           <div class="paid-feature-preview-actions">
             <button class="button primary" id="generate-pack" type="button" disabled>
               <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-              Generate 32-Preset Pack
+              Generate 32 Pro Presets
             </button>
             <button class="button secondary" id="download-pack" type="button" disabled>
               <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
