@@ -124,7 +124,11 @@
 
           <div class="control-grid">
             <label class="control">
-              <span>Sound Type</span>
+              <span class="control-label">Sound Type
+                <button class="info-tooltip" type="button" aria-label="Explain Sound Type" data-tooltip="Chooses how the source should be interpreted before mapping. Auto Detect lets Audio Alchemy decide between pad, pluck, bass, or texture.">
+                  <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                </button>
+              </span>
               <select id="input-mode">
                 <option value="auto">Auto Detect</option>
                 <option value="pad">Pad / Atmosphere</option>
@@ -135,22 +139,115 @@
             </label>
 
             <label class="control">
-              <span>Darker / Brighter</span>
+              <span class="control-label">Darker / Brighter
+                <button class="info-tooltip" type="button" aria-label="Explain Darker / Brighter" data-tooltip="Biases the generated tone toward lower or higher filter cutoff, upper harmonics, and overall brightness.">
+                  <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                </button>
+              </span>
               <output id="brightness-bias-value">0%</output>
               <input id="brightness-bias" type="range" min="-100" max="100" step="1" value="0" />
             </label>
 
             <label class="control">
-              <span>Steadier / More Motion</span>
+              <span class="control-label">Steadier / More Motion
+                <button class="info-tooltip" type="button" aria-label="Explain Steadier / More Motion" data-tooltip="Biases modulation and movement. Higher values push the presets toward more animation, motion, and modulation depth.">
+                  <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                </button>
+              </span>
               <output id="movement-bias-value">0%</output>
               <input id="movement-bias" type="range" min="-100" max="100" step="1" value="0" />
             </label>
 
             <label class="control">
-              <span>Variant Count</span>
+              <span class="control-label">Variant Count
+                <button class="info-tooltip" type="button" aria-label="Explain Variant Count" data-tooltip="The free version always generates 3 guided presets. Pro unlocks a larger 32-preset pack built from the same source.">
+                  <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                </button>
+              </span>
               <strong class="fixed-value">3 presets</strong>
               <small class="control-note">Free demo always generates 3 variants. Pro will unlock larger sets.</small>
             </label>
+          </div>
+
+          <div class="pro-control-panel" id="pro-control-panel" aria-labelledby="pro-control-title">
+            <div class="section-head section-head-tight">
+              <div>
+                <h3 id="pro-control-title">Pro pack shaping</h3>
+                <p class="muted">These extra controls only affect the 32-preset Pro pack.</p>
+              </div>
+            </div>
+
+            <div class="control-grid pro-control-grid">
+              <label class="control">
+                <span class="control-label">Cleaner / Dirtier
+                  <button class="info-tooltip" type="button" aria-label="Explain Cleaner / Dirtier" data-tooltip="Adjusts grit and roughness in the Pro pack. It pushes noise level and distortion for cleaner or dirtier results.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="dirt-bias-value">0%</output>
+                <input id="dirt-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
+              </label>
+
+              <label class="control">
+                <span class="control-label">Narrower / Wider
+                  <button class="info-tooltip" type="button" aria-label="Explain Narrower / Wider" data-tooltip="Changes how wide the Pro pack feels by biasing stereo spread, unison width, and spaciousness.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="width-bias-value">0%</output>
+                <input id="width-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
+              </label>
+
+              <label class="control">
+                <span class="control-label">Shorter / Longer
+                  <button class="info-tooltip" type="button" aria-label="Explain Shorter / Longer" data-tooltip="Biases envelope timing in the Pro pack. Shorter tightens attacks and releases, while longer adds bloom and tail.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="length-bias-value">0%</output>
+                <input id="length-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
+              </label>
+
+              <label class="control">
+                <span class="control-label">Safer / Wilder
+                  <button class="info-tooltip" type="button" aria-label="Explain Safer / Wilder" data-tooltip="Controls how far the 32-pack can drift from the source profile. Wilder increases spread and exploratory variation.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="wild-bias-value">0%</output>
+                <input id="wild-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
+              </label>
+
+              <label class="control">
+                <span class="control-label">Drier / Wetter
+                  <button class="info-tooltip" type="button" aria-label="Explain Drier / Wetter" data-tooltip="Biases the Pro pack toward less or more overall FX mix, especially reverb, chorus, and a touch of delay.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="wet-bias-value">0%</output>
+                <input id="wet-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
+              </label>
+
+              <label class="control">
+                <span class="control-label">Tighter / More Washed
+                  <button class="info-tooltip" type="button" aria-label="Explain Tighter / More Washed" data-tooltip="Biases the tail shape of the Pro pack. Higher values create larger, longer ambient washes and softer spatial tails.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="wash-bias-value">0%</output>
+                <input id="wash-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
+              </label>
+
+              <label class="control">
+                <span class="control-label">Smoother / More Driven
+                  <button class="info-tooltip" type="button" aria-label="Explain Smoother / More Driven" data-tooltip="Biases the Pro pack toward softer, smoother tone or more saturation, edge, and driven filter behavior.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="drive-bias-value">0%</output>
+                <input id="drive-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
+              </label>
+            </div>
           </div>
 
           <div class="actions">
@@ -246,28 +343,6 @@
             </button>
           </div>
         </div>
-      </section>
-
-      <section class="panel email-capture-panel" aria-labelledby="email-capture-title">
-        <div class="email-capture-copy">
-          <h2 id="email-capture-title">Join the Audio Alchemy list</h2>
-          <p>Join the Audio Alchemy list for future free drops, product updates, and new synth support announcements.</p>
-        </div>
-        <form
-          class="email-capture-form"
-          id="email-capture-form"
-          action="https://buttondown.com/api/emails/embed-subscribe/kreativ"
-          method="post"
-          target="buttondown-form-target"
-        >
-          <label class="sr-only" for="email-capture-input">Email address</label>
-          <input id="email-capture-input" name="email" type="email" placeholder="Enter your email" autocomplete="email" required />
-          <input type="hidden" name="embed" value="1" />
-          <input type="hidden" name="tag" value="audio-alchemy" />
-          <button type="submit">Get updates</button>
-        </form>
-        <p class="email-capture-note" id="email-capture-note">No spam. Occasional updates when Audio Alchemy improves.</p>
-        <iframe class="email-capture-target" name="buttondown-form-target" title="Buttondown subscription target"></iframe>
       </section>
 
       <footer class="app-footer">

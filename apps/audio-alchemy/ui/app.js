@@ -29,6 +29,21 @@ const elements = {
   movementBias: document.querySelector("#movement-bias"),
   brightnessBiasValue: document.querySelector("#brightness-bias-value"),
   movementBiasValue: document.querySelector("#movement-bias-value"),
+  proControlPanel: document.querySelector("#pro-control-panel"),
+  dirtBias: document.querySelector("#dirt-bias"),
+  widthBias: document.querySelector("#width-bias"),
+  lengthBias: document.querySelector("#length-bias"),
+  wildBias: document.querySelector("#wild-bias"),
+  wetBias: document.querySelector("#wet-bias"),
+  washBias: document.querySelector("#wash-bias"),
+  driveBias: document.querySelector("#drive-bias"),
+  dirtBiasValue: document.querySelector("#dirt-bias-value"),
+  widthBiasValue: document.querySelector("#width-bias-value"),
+  lengthBiasValue: document.querySelector("#length-bias-value"),
+  wildBiasValue: document.querySelector("#wild-bias-value"),
+  wetBiasValue: document.querySelector("#wet-bias-value"),
+  washBiasValue: document.querySelector("#wash-bias-value"),
+  driveBiasValue: document.querySelector("#drive-bias-value"),
   playOriginal: document.querySelector("#play-original"),
   stopPlayback: document.querySelector("#stop-playback"),
   analyzeGenerate: document.querySelector("#analyze-generate"),
@@ -47,9 +62,6 @@ const elements = {
   paidFeaturePreview: document.querySelector("#paid-feature-preview"),
   generatePack: document.querySelector("#generate-pack"),
   downloadPack: document.querySelector("#download-pack"),
-  emailCaptureForm: document.querySelector("#email-capture-form"),
-  emailCaptureInput: document.querySelector("#email-capture-input"),
-  emailCaptureNote: document.querySelector("#email-capture-note"),
   selfTestNote: document.querySelector("#self-test-note"),
 };
 
@@ -169,6 +181,28 @@ function sanitizeFileName(value) {
 function updateControlLabels() {
   elements.brightnessBiasValue.textContent = `${elements.brightnessBias.value}%`;
   elements.movementBiasValue.textContent = `${elements.movementBias.value}%`;
+  elements.dirtBiasValue.textContent = `${elements.dirtBias.value}%`;
+  elements.widthBiasValue.textContent = `${elements.widthBias.value}%`;
+  elements.lengthBiasValue.textContent = `${elements.lengthBias.value}%`;
+  elements.wildBiasValue.textContent = `${elements.wildBias.value}%`;
+  elements.wetBiasValue.textContent = `${elements.wetBias.value}%`;
+  elements.washBiasValue.textContent = `${elements.washBias.value}%`;
+  elements.driveBiasValue.textContent = `${elements.driveBias.value}%`;
+}
+
+function setProControlsEnabled(enabled) {
+  elements.proControlPanel.classList.toggle("is-locked", !enabled);
+  for (const control of [
+    elements.dirtBias,
+    elements.widthBias,
+    elements.lengthBias,
+    elements.wildBias,
+    elements.wetBias,
+    elements.washBias,
+    elements.driveBias,
+  ]) {
+    control.disabled = !enabled;
+  }
 }
 
 function setReady(enabled) {
@@ -534,9 +568,10 @@ function mapProfileToVital(profile, index, options = {}) {
     : lerp(0.6, 6.5, sustain);
   const lfoRate = family === "texture" ? lerp(0.05, 1.8, movement) : lerp(0.08, 6.2, movement);
   const lfoDepth = lerp(0.04, 0.68, movement);
-  const chorusMix = family === "bass" ? lerp(0.02, 0.18, width) : lerp(0.1, 0.58, width);
-  const reverbMix = family === "pluck" ? lerp(0.08, 0.28, sustain) : lerp(0.12, 0.62, sustain);
-  const distortion = lerp(0.0, 0.56, noise * 0.65 + brightness * 0.35);
+  const chorusMix = clamp((family === "bass" ? lerp(0.02, 0.18, width) : lerp(0.1, 0.58, width)) + (profile.wetness ?? 0) * 0.16);
+  const reverbMix = clamp((family === "pluck" ? lerp(0.08, 0.28, sustain) : lerp(0.12, 0.62, sustain)) + (profile.wetness ?? 0) * 0.22 + (profile.wash ?? 0) * 0.18);
+  const delayMix = clamp(0.02 + Math.max(0, (profile.wetness ?? 0)) * 0.12 + Math.max(0, (profile.wash ?? 0)) * 0.08);
+  const distortion = clamp(lerp(0.0, 0.56, noise * 0.65 + brightness * 0.35) + (profile.drive ?? 0) * 0.16);
   const noiseLevel = lerp(0.0, 0.34, noise);
   const cutoffNormalized = clamp((filterCutoff - 120) / (14000 - 120));
 
@@ -583,12 +618,15 @@ function mapProfileToVital(profile, index, options = {}) {
       chorus_mod_depth: clamp(0.12 + width * 0.6, 0, 1),
       chorus_feedback: clamp(0.08 + movement * 0.4, 0, 0.95),
       reverb_dry_wet: reverbMix,
-      reverb_size: clamp(0.3 + sustain * 0.6, 0, 1),
-      reverb_decay_time: clamp(0.22 + sustain * 0.72, 0, 1),
+      reverb_size: clamp(0.3 + sustain * 0.6 + (profile.wash ?? 0) * 0.16, 0, 1),
+      reverb_decay_time: clamp(0.22 + sustain * 0.72 + (profile.wash ?? 0) * 0.2, 0, 1),
+      delay_dry_wet: delayMix,
+      delay_feedback: clamp(0.16 + movement * 0.28 + Math.max(0, (profile.wash ?? 0)) * 0.16, 0, 0.95),
+      delay_filter_cutoff: clamp(36 + brightness * 44 + (profile.drive ?? 0) * 6, 0, 127),
       distortion_mix: distortion,
-      distortion_drive: lerp(0.1, 4.0, distortion),
-      filter_fx_cutoff: lerp(26, 86, brightness),
-      filter_fx_resonance: clamp(0.08 + noise * 0.26, 0, 1),
+      distortion_drive: lerp(0.1, 4.0, clamp(distortion + Math.max(0, (profile.drive ?? 0)) * 0.18)),
+      filter_fx_cutoff: lerp(26, 86, brightness) - (profile.drive ?? 0) * 8,
+      filter_fx_resonance: clamp(0.08 + noise * 0.26 + Math.max(0, (profile.drive ?? 0)) * 0.12, 0, 1),
       sample_on: 0,
       noise_on: noiseLevel > 0.03 ? 1 : 0,
       noise_level: noiseLevel,
@@ -607,6 +645,7 @@ function mapProfileToVital(profile, index, options = {}) {
       ["LFO Depth", `${Math.round(lfoDepth * 100)}%`],
       ["Chorus Mix", `${Math.round(chorusMix * 100)}%`],
       ["Reverb Mix", `${Math.round(reverbMix * 100)}%`],
+      ["Delay Mix", `${Math.round(delayMix * 100)}%`],
       ["Distortion", `${Math.round(distortion * 100)}%`],
       ["Noise Level", `${Math.round(noiseLevel * 100)}%`],
     ],
@@ -614,16 +653,28 @@ function mapProfileToVital(profile, index, options = {}) {
 }
 
 function shapeProfile(baseProfile, recipe, index) {
+  const dirtBias = Number(elements.dirtBias.value) / 100;
+  const widthBias = Number(elements.widthBias.value) / 100;
+  const lengthBias = Number(elements.lengthBias.value) / 100;
+  const wildBias = Number(elements.wildBias.value) / 100;
+  const wetBias = Number(elements.wetBias.value) / 100;
+  const washBias = Number(elements.washBias.value) / 100;
+  const driveBias = Number(elements.driveBias.value) / 100;
+  const spreadBoost = Math.max(0, wildBias) * 0.06;
+
   return {
     ...baseProfile,
     family: recipe.family || baseProfile.family,
-    brightness: vary(clamp(baseProfile.brightness + (recipe.brightness ?? 0)), recipe.spread ?? 0.07, index, 21),
-    body: vary(clamp(baseProfile.body + (recipe.body ?? 0)), recipe.spread ?? 0.06, index, 22),
-    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0)), recipe.spread ?? 0.08, index, 23),
-    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0)), recipe.spread ?? 0.07, index, 24),
-    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0)), recipe.spread ?? 0.09, index, 25),
-    noise: vary(clamp(baseProfile.noise + (recipe.noise ?? 0)), recipe.spread ?? 0.07, index, 26),
-    width: vary(clamp(baseProfile.width + (recipe.width ?? 0)), recipe.spread ?? 0.08, index, 27),
+    brightness: vary(clamp(baseProfile.brightness + (recipe.brightness ?? 0)), (recipe.spread ?? 0.07) + spreadBoost, index, 21),
+    body: vary(clamp(baseProfile.body + (recipe.body ?? 0)), (recipe.spread ?? 0.06) + spreadBoost, index, 22),
+    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0) - lengthBias * 0.12), (recipe.spread ?? 0.08) + spreadBoost, index, 23),
+    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0) + lengthBias * 0.14), (recipe.spread ?? 0.07) + spreadBoost, index, 24),
+    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0) + wildBias * 0.08), (recipe.spread ?? 0.09) + spreadBoost, index, 25),
+    noise: vary(clamp(baseProfile.noise + (recipe.noise ?? 0) + dirtBias * 0.18), (recipe.spread ?? 0.07) + spreadBoost, index, 26),
+    width: vary(clamp(baseProfile.width + (recipe.width ?? 0) + widthBias * 0.18), (recipe.spread ?? 0.08) + spreadBoost, index, 27),
+    wetness: vary(clamp((baseProfile.wetness ?? 0.18) + wetBias * 0.22 + (recipe.wetness ?? 0)), (recipe.spread ?? 0.05) + spreadBoost, index, 28),
+    wash: vary(clamp((baseProfile.wash ?? 0.12) + washBias * 0.22 + (recipe.wash ?? 0)), (recipe.spread ?? 0.05) + spreadBoost, index, 29),
+    drive: vary(clamp((baseProfile.drive ?? 0.08) + driveBias * 0.22 + (recipe.drive ?? 0)), (recipe.spread ?? 0.05) + spreadBoost, index, 30),
   };
 }
 
@@ -632,26 +683,26 @@ function buildProPack(profile) {
     { role: "Closest", brightness: -0.02, movement: -0.02, spread: 0.04, amountScale: 0.85 },
     { role: "Closest", brightness: 0.03, width: 0.04, spread: 0.04, amountScale: 0.85 },
     { role: "Darker", brightness: -0.16, body: 0.08, spread: 0.05, amountScale: 1.0 },
-    { role: "Darker", brightness: -0.12, sustain: 0.06, noise: 0.03, spread: 0.05, amountScale: 1.0 },
-    { role: "Brighter", brightness: 0.16, body: -0.04, spread: 0.05, amountScale: 1.0 },
-    { role: "Brighter", brightness: 0.12, width: 0.08, movement: 0.04, spread: 0.05, amountScale: 1.0 },
-    { role: "Steadier", movement: -0.18, sustain: 0.05, spread: 0.05, amountScale: 0.95 },
-    { role: "Steadier", movement: -0.12, width: -0.06, body: 0.05, spread: 0.05, amountScale: 0.95 },
-    { role: "More Motion", movement: 0.2, width: 0.08, spread: 0.06, amountScale: 1.05 },
-    { role: "More Motion", movement: 0.16, brightness: 0.05, noise: 0.04, spread: 0.06, amountScale: 1.05 },
-    { role: "Wider", width: 0.18, sustain: 0.04, spread: 0.05, amountScale: 1.0 },
-    { role: "Wider", width: 0.14, movement: 0.06, brightness: 0.04, spread: 0.05, amountScale: 1.0 },
-    { role: "Tighter", width: -0.14, body: 0.08, spread: 0.05, amountScale: 0.95 },
-    { role: "Tighter", width: -0.1, movement: -0.06, attack: 0.05, spread: 0.05, amountScale: 0.95 },
-    { role: "Textured", noise: 0.18, movement: 0.08, spread: 0.06, amountScale: 1.05 },
-    { role: "Textured", noise: 0.14, brightness: -0.04, width: 0.04, spread: 0.06, amountScale: 1.05 },
+    { role: "Darker", brightness: -0.12, sustain: 0.06, noise: 0.03, drive: 0.03, spread: 0.05, amountScale: 1.0 },
+    { role: "Brighter", brightness: 0.16, body: -0.04, wetness: 0.04, spread: 0.05, amountScale: 1.0 },
+    { role: "Brighter", brightness: 0.12, width: 0.08, movement: 0.04, wetness: 0.06, spread: 0.05, amountScale: 1.0 },
+    { role: "Steadier", movement: -0.18, sustain: 0.05, wash: -0.05, spread: 0.05, amountScale: 0.95 },
+    { role: "Steadier", movement: -0.12, width: -0.06, body: 0.05, wetness: -0.04, spread: 0.05, amountScale: 0.95 },
+    { role: "More Motion", movement: 0.2, width: 0.08, wetness: 0.03, spread: 0.06, amountScale: 1.05 },
+    { role: "More Motion", movement: 0.16, brightness: 0.05, noise: 0.04, drive: 0.04, spread: 0.06, amountScale: 1.05 },
+    { role: "Wider", width: 0.18, sustain: 0.04, wetness: 0.04, spread: 0.05, amountScale: 1.0 },
+    { role: "Wider", width: 0.14, movement: 0.06, brightness: 0.04, wash: 0.05, spread: 0.05, amountScale: 1.0 },
+    { role: "Tighter", width: -0.14, body: 0.08, wetness: -0.06, wash: -0.05, spread: 0.05, amountScale: 0.95 },
+    { role: "Tighter", width: -0.1, movement: -0.06, attack: 0.05, drive: 0.03, spread: 0.05, amountScale: 0.95 },
+    { role: "Textured", noise: 0.18, movement: 0.08, wash: 0.05, spread: 0.06, amountScale: 1.05 },
+    { role: "Textured", noise: 0.14, brightness: -0.04, width: 0.04, drive: 0.05, spread: 0.06, amountScale: 1.05 },
   ];
 
   return Array.from({ length: PRO_PACK_COUNT }, (_, index) => {
     const recipe = recipes[index % recipes.length];
     const shaped = shapeProfile(profile, recipe, index);
     return mapProfileToVital(shaped, index, {
-      amountScale: recipe.amountScale ?? 1,
+      amountScale: Math.max(0.82, (recipe.amountScale ?? 1) + Number(elements.wildBias.value) / 100 * 0.28),
       roleLabel: recipe.role,
     });
   });
@@ -1184,14 +1235,6 @@ async function handleGeneratePresetPack() {
   }
 }
 
-function handleEmailCaptureSubmit() {
-  elements.emailCaptureNote.textContent = "Submitting...";
-  window.setTimeout(() => {
-    elements.emailCaptureNote.textContent = "Check your inbox to confirm.";
-    elements.emailCaptureForm.reset();
-  }, 400);
-}
-
 function renderPaidFeatureState() {
   const unlocked = state.proPreviewUnlocked;
   elements.paidFeaturePanel.classList.toggle("is-unlocked", unlocked);
@@ -1199,6 +1242,7 @@ function renderPaidFeatureState() {
   elements.paidFeatureUnlock.hidden = true;
   elements.paidFeaturePreview.hidden = !unlocked;
   elements.paidFeatureToggle.setAttribute("aria-expanded", "false");
+  setProControlsEnabled(unlocked);
 }
 
 function togglePaidFeatureUnlock() {
@@ -1250,11 +1294,20 @@ elements.stopPlayback.addEventListener("click", () => {
 elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
 elements.paidFeatureToggle.addEventListener("click", togglePaidFeatureUnlock);
 elements.paidFeatureUnlockButton.addEventListener("click", handlePaidFeatureUnlock);
-elements.generatePack?.addEventListener("click", handleGeneratePresetPack);
-elements.downloadPack?.addEventListener("click", downloadPresetPack);
-elements.emailCaptureForm.addEventListener("submit", handleEmailCaptureSubmit);
+  elements.generatePack?.addEventListener("click", handleGeneratePresetPack);
+  elements.downloadPack?.addEventListener("click", downloadPresetPack);
 
-for (const control of [elements.brightnessBias, elements.movementBias]) {
+for (const control of [
+  elements.brightnessBias,
+  elements.movementBias,
+  elements.dirtBias,
+  elements.widthBias,
+  elements.lengthBias,
+  elements.wildBias,
+  elements.wetBias,
+  elements.washBias,
+  elements.driveBias,
+]) {
   control.addEventListener("input", updateControlLabels);
 }
 
