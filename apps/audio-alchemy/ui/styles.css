@@ -411,6 +411,7 @@ h2 {
     linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent),
     #f2dfdf;
   min-height: 84px;
+  cursor: pointer;
 }
 
 .waveform-panel {
@@ -471,8 +472,16 @@ h2 {
 .waveform-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 12px;
   margin: 14px 0 18px;
+}
+
+.playback-time {
+  margin: 0;
+  color: var(--soft);
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .workspace {

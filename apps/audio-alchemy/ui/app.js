@@ -2,6 +2,10 @@ const state = {
   audioContext: null,
   originalBuffer: null,
   currentSource: null,
+  isPlaying: false,
+  playbackStartedAt: 0,
+  playbackOffset: 0,
+  playbackAnimationFrame: 0,
   analysis: null,
   profile: null,
   presets: [],
@@ -44,8 +48,8 @@ const elements = {
   wetBiasValue: document.querySelector("#wet-bias-value"),
   washBiasValue: document.querySelector("#wash-bias-value"),
   driveBiasValue: document.querySelector("#drive-bias-value"),
-  playOriginal: document.querySelector("#play-original"),
-  stopPlayback: document.querySelector("#stop-playback"),
+  playToggle: document.querySelector("#play-toggle"),
+  playbackTime: document.querySelector("#playback-time"),
   analyzeGenerate: document.querySelector("#analyze-generate"),
   analyzeGenerateLabel: document.querySelector("#analyze-generate .button-label"),
   analysisMetrics: document.querySelector("#analysis-metrics"),
@@ -122,6 +126,13 @@ function formatFileSize(bytes) {
   return `${Math.round(bytes / 1024)} KB`;
 }
 
+function formatTime(seconds) {
+  const safeSeconds = Math.max(0, seconds || 0);
+  const minutes = Math.floor(safeSeconds / 60);
+  const secs = Math.floor(safeSeconds % 60);
+  return `${minutes}:${String(secs).padStart(2, "0")}`;
+}
+
 function updateStatus(message) {
   elements.status.textContent = message;
 }
@@ -132,6 +143,7 @@ function showUploadMessage(message) {
 }
 
 function resetLoadedState() {
+  stopPlayback(true);
   setReady(false);
   state.originalBuffer = null;
   state.analysis = null;
@@ -150,6 +162,7 @@ function resetLoadedState() {
   elements.waveformPanel.classList.remove("has-waveform");
   elements.waveformDropCta.hidden = false;
   elements.waveformEmptyNote.hidden = false;
+  updatePlaybackUI();
   showUploadMessage("");
 }
 
@@ -206,8 +219,7 @@ function setProControlsEnabled(enabled) {
 }
 
 function setReady(enabled) {
-  elements.playOriginal.disabled = !enabled;
-  elements.stopPlayback.disabled = !enabled;
+  elements.playToggle.disabled = !enabled;
   elements.analyzeGenerate.disabled = !enabled || state.isGenerating;
   if (elements.generatePack) {
     elements.generatePack.disabled = !enabled || state.isGenerating || !state.proPreviewUnlocked;
@@ -230,29 +242,80 @@ function setGenerateLoadingState(isLoading) {
   setReady(Boolean(state.originalBuffer));
 }
 
-function stopPlayback() {
-  if (!state.currentSource) {
-    return;
-  }
-  state.currentSource.stop();
-  state.currentSource.disconnect();
-  state.currentSource = null;
+function updatePlaybackUI() {
+  const duration = state.originalBuffer?.duration || 0;
+  const currentTime = state.isPlaying
+    ? Math.min(duration, createAudioContext().currentTime - state.playbackStartedAt)
+    : state.playbackOffset;
+  elements.playToggle.textContent = state.isPlaying ? "Stop" : "Play Source";
+  elements.playbackTime.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
 }
 
-function playBuffer(buffer) {
+function cancelPlaybackFrame() {
+  if (state.playbackAnimationFrame) {
+    window.cancelAnimationFrame(state.playbackAnimationFrame);
+    state.playbackAnimationFrame = 0;
+  }
+}
+
+function stopPlayback(resetToStart = false) {
+  cancelPlaybackFrame();
+  if (state.currentSource) {
+    state.currentSource.onended = null;
+    state.currentSource.stop();
+    state.currentSource.disconnect();
+    state.currentSource = null;
+  }
+  state.isPlaying = false;
+  state.playbackOffset = resetToStart ? 0 : state.playbackOffset;
+  if (state.originalBuffer) {
+    renderWaveform(state.originalBuffer, state.originalBuffer.duration ? state.playbackOffset / state.originalBuffer.duration : 0);
+  }
+  updatePlaybackUI();
+}
+
+function tickPlayback() {
+  if (!state.isPlaying || !state.originalBuffer) {
+    cancelPlaybackFrame();
+    return;
+  }
+
+  const elapsed = Math.min(state.originalBuffer.duration, createAudioContext().currentTime - state.playbackStartedAt);
+  const ratio = state.originalBuffer.duration > 0 ? elapsed / state.originalBuffer.duration : 0;
+  renderWaveform(state.originalBuffer, ratio);
+  updatePlaybackUI();
+
+  if (elapsed >= state.originalBuffer.duration) {
+    stopPlayback(true);
+    return;
+  }
+
+  state.playbackAnimationFrame = window.requestAnimationFrame(tickPlayback);
+}
+
+function playBuffer(buffer, offset = 0) {
   const context = createAudioContext();
-  stopPlayback();
+  stopPlayback(false);
   const source = context.createBufferSource();
   source.buffer = buffer;
   source.connect(context.destination);
-  source.start();
+  state.playbackOffset = Math.max(0, Math.min(buffer.duration, offset));
+  state.playbackStartedAt = context.currentTime - state.playbackOffset;
+  state.isPlaying = true;
+  source.start(0, state.playbackOffset);
   source.onended = () => {
     if (state.currentSource === source) {
       state.currentSource.disconnect();
       state.currentSource = null;
+      state.isPlaying = false;
+      state.playbackOffset = 0;
+      cancelPlaybackFrame();
+      renderWaveform(buffer, 0);
+      updatePlaybackUI();
     }
   };
   state.currentSource = source;
+  tickPlayback();
 }
 
 function downmix(buffer) {
@@ -266,7 +329,7 @@ function downmix(buffer) {
   return mono;
 }
 
-function drawWaveform(buffer) {
+function drawWaveform(buffer, playheadRatio = null) {
   const canvas = elements.waveform;
   const context = canvas.getContext("2d");
   const width = canvas.width;
@@ -305,9 +368,21 @@ function drawWaveform(buffer) {
   }
 
   context.stroke();
+
+  if (playheadRatio !== null) {
+    const x = Math.max(0, Math.min(width, playheadRatio * width));
+    context.strokeStyle = "rgba(255, 244, 244, 0.92)";
+    context.lineWidth = 2;
+    context.beginPath();
+    context.moveTo(x, 0);
+    context.lineTo(x, height);
+    context.stroke();
+  }
+
   elements.waveformPanel.classList.add("has-waveform");
   elements.waveformDropCta.hidden = true;
   elements.waveformEmptyNote.hidden = true;
+  updatePlaybackUI();
 }
 
 function analyzeAudio(buffer) {
@@ -1086,6 +1161,33 @@ function handleDropZoneLeave(event) {
   }
 }
 
+function handleWaveformSeek(event) {
+  if (!state.originalBuffer) {
+    return;
+  }
+  const rect = elements.waveform.getBoundingClientRect();
+  if (!rect.width) {
+    return;
+  }
+  const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+  const offset = ratio * state.originalBuffer.duration;
+  playBuffer(state.originalBuffer, offset);
+  updateStatus(`Playing source audio from ${formatTime(offset)}.`);
+}
+
+function handlePlayToggle() {
+  if (!state.originalBuffer) {
+    return;
+  }
+  if (state.isPlaying) {
+    stopPlayback(true);
+    updateStatus("Playback stopped.");
+    return;
+  }
+  playBuffer(state.originalBuffer, state.playbackOffset);
+  updateStatus(`Playing source audio from ${formatTime(state.playbackOffset)}.`);
+}
+
 async function handleDropZoneDrop(event) {
   event.preventDefault();
   setDropZoneActive(false);
@@ -1280,17 +1382,8 @@ elements.waveformPanel.addEventListener("dragenter", handleDropZoneDrag);
 elements.waveformPanel.addEventListener("dragover", handleDropZoneDrag);
 elements.waveformPanel.addEventListener("dragleave", handleDropZoneLeave);
 elements.waveformPanel.addEventListener("drop", handleDropZoneDrop);
-elements.playOriginal.addEventListener("click", () => {
-  if (!state.originalBuffer) {
-    return;
-  }
-  playBuffer(state.originalBuffer);
-  updateStatus("Playing source audio.");
-});
-elements.stopPlayback.addEventListener("click", () => {
-  stopPlayback();
-  updateStatus("Playback stopped.");
-});
+elements.waveform.addEventListener("click", handleWaveformSeek);
+elements.playToggle.addEventListener("click", handlePlayToggle);
 elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
 elements.paidFeatureToggle.addEventListener("click", togglePaidFeatureUnlock);
 elements.paidFeatureUnlockButton.addEventListener("click", handlePaidFeatureUnlock);
@@ -1314,6 +1407,7 @@ for (const control of [
 updateControlLabels();
 state.proPreviewUnlocked = window.localStorage.getItem(PRO_PREVIEW_STORAGE_KEY) === "1";
 renderPaidFeatureState();
+updatePlaybackUI();
 setReady(false);
 if (SELF_TEST_ENABLED) {
   loadSyntheticSource();
