@@ -658,6 +658,10 @@ input[type="range"] {
   margin-top: 18px;
 }
 
+.section-actions {
+  justify-content: center;
+}
+
 button {
   padding: 13px 18px;
   border: 1px solid rgba(153, 0, 0, 0.18);

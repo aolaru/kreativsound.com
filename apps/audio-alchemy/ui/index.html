@@ -186,6 +186,13 @@
                 <small class="control-note">Free demo always generates 3 variants. Pro will unlock larger sets.</small>
               </label>
             </div>
+
+            <div class="actions section-actions">
+              <button id="analyze-generate" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Generate 3 Free Presets</span>
+              </button>
+            </div>
           </section>
 
           <section class="pro-control-panel control-section control-section-pro" id="pro-control-panel" aria-labelledby="pro-control-title">
@@ -268,14 +275,14 @@
                 <input id="drive-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
               </label>
             </div>
-          </section>
 
-          <div class="actions">
-            <button id="analyze-generate" type="button" disabled>
-              <span class="button-spinner" aria-hidden="true"></span>
-              <span class="button-label">Generate 3 Free Presets</span>
-            </button>
-          </div>
+            <div class="actions section-actions">
+              <button class="button primary" id="generate-pack" type="button" disabled>
+                <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+                Generate 32 Pro Presets
+              </button>
+            </div>
+          </section>
 
           <div class="status" id="status">Load a short audio file to generate 3 guided Vital preset directions. Vital is the current export target.</div>
           <p class="upgrade-hint">Pro will add more variants, more synths, batch mode, and saved projects.</p>
@@ -340,10 +347,6 @@
           <p class="paid-feature-preview-badge">Pro preview unlocked</p>
           <p class="paid-feature-preview-note">This browser can now preview the upcoming Audio Alchemy Pro access state for 32-pack generation.</p>
           <div class="paid-feature-preview-actions">
-            <button class="button primary" id="generate-pack" type="button" disabled>
-              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-              Generate 32 Pro Presets
-            </button>
             <button class="button secondary" id="download-pack" type="button" disabled>
               <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
               Download 32-Pack (.zip)
