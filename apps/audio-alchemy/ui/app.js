@@ -100,6 +100,14 @@ function createAudioContext() {
   return state.audioContext;
 }
 
+async function ensureAudioContextRunning() {
+  const context = createAudioContext();
+  if (context.state === "suspended") {
+    await context.resume();
+  }
+  return context;
+}
+
 function clamp(value, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
 }
@@ -293,8 +301,8 @@ function tickPlayback() {
   state.playbackAnimationFrame = window.requestAnimationFrame(tickPlayback);
 }
 
-function playBuffer(buffer, offset = 0) {
-  const context = createAudioContext();
+async function playBuffer(buffer, offset = 0) {
+  const context = await ensureAudioContextRunning();
   stopPlayback(false);
   const source = context.createBufferSource();
   source.buffer = buffer;
@@ -1171,8 +1179,13 @@ function handleWaveformSeek(event) {
   }
   const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
   const offset = ratio * state.originalBuffer.duration;
-  playBuffer(state.originalBuffer, offset);
-  updateStatus(`Playing source audio from ${formatTime(offset)}.`);
+  playBuffer(state.originalBuffer, offset)
+    .then(() => {
+      updateStatus(`Playing source audio from ${formatTime(offset)}.`);
+    })
+    .catch(() => {
+      updateStatus("Could not start audio playback.");
+    });
 }
 
 function handlePlayToggle() {
@@ -1184,8 +1197,13 @@ function handlePlayToggle() {
     updateStatus("Playback stopped.");
     return;
   }
-  playBuffer(state.originalBuffer, state.playbackOffset);
-  updateStatus(`Playing source audio from ${formatTime(state.playbackOffset)}.`);
+  playBuffer(state.originalBuffer, state.playbackOffset)
+    .then(() => {
+      updateStatus(`Playing source audio from ${formatTime(state.playbackOffset)}.`);
+    })
+    .catch(() => {
+      updateStatus("Could not start audio playback.");
+    });
 }
 
 async function handleDropZoneDrop(event) {
