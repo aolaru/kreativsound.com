@@ -1013,19 +1013,36 @@ function renderPresets(presets) {
     for (const [role, groupedPresets] of groups.entries()) {
       const section = document.createElement("section");
       section.className = "preset-group";
+      const shouldStartOpen = role === "Closest";
       section.innerHTML = `
-        <div class="preset-group-head">
-          <h3>${role}</h3>
-          <p>${describePackGroup(role)}</p>
-        </div>
+        <button class="preset-group-head" type="button" aria-expanded="${shouldStartOpen}" aria-controls="">
+          <div>
+            <h3>${role} <span class="preset-group-count">${groupedPresets.length}</span></h3>
+            <p>${describePackGroup(role)}</p>
+          </div>
+          <span class="preset-group-toggle-label">${shouldStartOpen ? "Hide presets" : "Show presets"}</span>
+        </button>
       `;
 
       const list = document.createElement("div");
       list.className = "preset-group-list";
+      list.hidden = !shouldStartOpen;
+      const listId = `preset-group-${role.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+      list.id = listId;
+      section.querySelector(".preset-group-head").setAttribute("aria-controls", listId);
 
       for (const preset of groupedPresets) {
         list.appendChild(buildPresetCard(preset, role, presets.length));
       }
+
+      const toggle = section.querySelector(".preset-group-head");
+      const toggleLabel = section.querySelector(".preset-group-toggle-label");
+      toggle.addEventListener("click", () => {
+        const isOpen = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", String(!isOpen));
+        toggleLabel.textContent = isOpen ? "Show presets" : "Hide presets";
+        list.hidden = isOpen;
+      });
 
       section.appendChild(list);
       elements.presetList.appendChild(section);
@@ -1086,7 +1103,7 @@ function describePackGroup(role) {
 
 async function downloadPreset(preset) {
   try {
-    updateStatus(`Rendering ${preset.name} in the browser...`);
+    updateStatus(`Preparing ${preset.name} for download...`);
     const { fileName, blob } = await buildVitalPresetBlob(preset);
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -1094,7 +1111,7 @@ async function downloadPreset(preset) {
     link.download = fileName;
     link.click();
     URL.revokeObjectURL(url);
-    updateStatus(`Downloaded ${fileName}.`);
+    updateStatus(`${preset.name} is ready.`);
   } catch (error) {
     updateStatus(error.message || "Could not download preset.");
   }
@@ -1111,7 +1128,7 @@ async function downloadPresetPack() {
   }
 
   try {
-    updateStatus("Building 32-preset ZIP in the browser...");
+    updateStatus("Preparing the 32-pack ZIP...");
     const zip = new window.JSZip();
     const folderName = sanitizeFileName(state.sourceName || "audio-alchemy-pack");
     const folder = zip.folder(folderName);
@@ -1128,7 +1145,7 @@ async function downloadPresetPack() {
     link.download = `${folderName}-32-pack.zip`;
     link.click();
     URL.revokeObjectURL(url);
-    updateStatus("Downloaded Audio Alchemy 32-pack ZIP.");
+    updateStatus("32-pack ZIP ready.");
   } catch (error) {
     updateStatus(error.message || "Could not build the 32-pack ZIP.");
   }
@@ -1197,7 +1214,7 @@ async function loadAudioFile(file, resetInput = false) {
     renderPresets([]);
     setReady(true);
 
-    updateStatus("File loaded. Generate 3 guided Vital variations from the source profile.");
+    updateStatus("Source ready. Generate 3 free presets or unlock the 32-pack.");
   } catch (error) {
     resetLoadedState();
     const message = "Unsupported or unreadable audio file. Please use a supported audio file under 10 MB.";
@@ -1291,7 +1308,7 @@ function loadSyntheticSource() {
   renderMetricGrid(elements.profileMetrics, []);
   renderPresets([]);
   setReady(true);
-  updateStatus("Self-test source loaded. Generating presets...");
+  updateStatus("Self-test source ready. Generating presets...");
   generatePresets();
 }
 
@@ -1300,7 +1317,7 @@ function generatePresets() {
     return;
   }
 
-  updateStatus("Analyzing source and mapping it to Vital parameters...");
+  updateStatus("Shaping 3 guided Vital preset directions...");
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
   const count = FREE_VARIANT_LIMIT;
@@ -1330,7 +1347,7 @@ function generatePresets() {
   ]);
 
   renderPresets(state.presets);
-  updateStatus(`Generated ${state.presets.length} guided Vital variations from the uploaded sound. Free demo is limited to ${FREE_VARIANT_LIMIT}.`);
+  updateStatus("3 guided Vital presets ready.");
   setReady(Boolean(state.originalBuffer));
 }
 
@@ -1339,7 +1356,7 @@ function generatePresetPack() {
     return;
   }
 
-  updateStatus("Building a 32-preset Vital pack from the uploaded source...");
+  updateStatus("Shaping a 32-preset Vital pack...");
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
   state.lastGenerationMode = "pro";
@@ -1368,7 +1385,7 @@ function generatePresetPack() {
   ]);
 
   renderPresets(state.presets);
-  updateStatus("Generated a 32-preset Vital pack with a wider variation spread from the uploaded source.");
+  updateStatus("32-preset Vital pack ready.");
   setReady(Boolean(state.originalBuffer));
 }
 
@@ -1378,7 +1395,7 @@ async function handleGeneratePresets() {
   }
 
   setGenerateLoadingState(true);
-  updateStatus("Analyzing audio locally...");
+  updateStatus("Generating 3 guided Vital presets...");
 
   await new Promise((resolve) => {
     window.setTimeout(resolve, GENERATE_DELAY_MS);
@@ -1397,7 +1414,7 @@ async function handleGeneratePresetPack() {
   }
 
   setGenerateLoadingState(true);
-  updateStatus("Expanding the source into a wider 32-preset pack...");
+  updateStatus("Generating a 32-preset Vital pack...");
 
   await new Promise((resolve) => {
     window.setTimeout(resolve, GENERATE_DELAY_MS);
@@ -1446,18 +1463,18 @@ function togglePaidFeatureUnlock() {
 function handlePaidFeatureUnlock() {
   const key = elements.paidFeatureKey.value.trim();
   if (!key) {
-    elements.paidFeatureUnlockNote.textContent = "Enter your Audio Alchemy Pro code to unlock this browser.";
+    elements.paidFeatureUnlockNote.textContent = "Enter your purchase code to unlock this browser.";
     return;
   }
   if (key !== PRO_PREVIEW_KEY) {
-    elements.paidFeatureUnlockNote.textContent = "Invalid Pro code. Check the code and try again.";
+    elements.paidFeatureUnlockNote.textContent = "Invalid purchase code. Check the code and try again.";
     return;
   }
 
   state.proPreviewUnlocked = true;
   window.localStorage.setItem(PRO_PREVIEW_STORAGE_KEY, "1");
   renderPaidFeatureState();
-  updateStatus("Audio Alchemy Pro unlocked in this browser.");
+  updateStatus("Audio Alchemy Pro is active in this browser.");
   setReady(Boolean(state.originalBuffer));
 }
 

@@ -825,9 +825,40 @@ button:disabled {
   gap: 12px;
 }
 
+.preset-group-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 245, 245, 0.52);
+  border: 1px solid rgba(153, 0, 0, 0.12);
+  text-align: left;
+}
+
+.preset-group-head:hover:enabled {
+  background: rgba(255, 241, 241, 0.68);
+}
+
 .preset-group-head h3 {
   margin: 0;
   font-size: 1rem;
+}
+
+.preset-group-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.8rem;
+  margin-left: 0.45rem;
+  padding: 0.08rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(209, 76, 76, 0.12);
+  border: 1px solid rgba(209, 76, 76, 0.18);
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
 }
 
 .preset-group-head p {
@@ -835,6 +866,13 @@ button:disabled {
   color: var(--soft);
   font-size: 0.9rem;
   line-height: 1.45;
+}
+
+.preset-group-toggle-label {
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .preset-group-list {
