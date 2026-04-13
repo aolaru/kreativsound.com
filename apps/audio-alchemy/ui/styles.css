@@ -768,6 +768,25 @@ button:disabled {
   gap: 20px;
 }
 
+.analysis-shell {
+  margin-bottom: 20px;
+  padding: 18px 20px;
+  background: rgba(255, 248, 248, 0.56);
+  border-color: rgba(153, 0, 0, 0.12);
+}
+
+.analysis-shell-head {
+  margin-bottom: 0;
+}
+
+.analysis-shell.is-open .analysis-shell-head {
+  margin-bottom: 16px;
+}
+
+.analysis-toggle {
+  white-space: nowrap;
+}
+
 .analysis-panel {
   opacity: 0.72;
 }
@@ -797,6 +816,29 @@ button:disabled {
 }
 
 .presets-panel.is-pack .preset-list {
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+.preset-group {
+  display: grid;
+  gap: 12px;
+}
+
+.preset-group-head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.preset-group-head p {
+  margin: 0.25rem 0 0;
+  color: var(--soft);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.preset-group-list {
+  display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 14px;
 }

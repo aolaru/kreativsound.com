@@ -290,22 +290,33 @@
 
       </section>
 
-      <section class="analysis-grid">
-        <section class="panel analysis-panel">
-          <div class="section-head">
-            <h2>Audio Analysis</h2>
-            <p class="muted">Raw descriptors extracted in-browser.</p>
+      <section class="panel analysis-shell" id="analysis-shell">
+        <div class="section-head analysis-shell-head">
+          <div>
+            <h2>Analysis Details</h2>
+            <p class="muted">Optional metrics behind the current mapping.</p>
           </div>
-          <div class="metric-grid" id="analysis-metrics"></div>
-        </section>
+          <button class="button secondary analysis-toggle" id="analysis-toggle" type="button" aria-expanded="false" aria-controls="analysis-content">
+            Show analysis
+          </button>
+        </div>
+        <div class="analysis-grid" id="analysis-content" hidden>
+          <section class="panel analysis-panel">
+            <div class="section-head">
+              <h2>Audio Analysis</h2>
+              <p class="muted">Raw descriptors extracted in-browser.</p>
+            </div>
+            <div class="metric-grid" id="analysis-metrics"></div>
+          </section>
 
-        <section class="panel analysis-panel">
-          <div class="section-head">
-            <h2>Sound Profile</h2>
-            <p class="muted">Normalized features that drive the current synth mapping.</p>
-          </div>
-          <div class="metric-grid" id="profile-metrics"></div>
-        </section>
+          <section class="panel analysis-panel">
+            <div class="section-head">
+              <h2>Sound Profile</h2>
+              <p class="muted">Normalized features that drive the current synth mapping.</p>
+            </div>
+            <div class="metric-grid" id="profile-metrics"></div>
+          </section>
+        </div>
       </section>
 
       <section class="panel presets-panel" id="presets-panel">
@@ -327,25 +338,25 @@
           <p class="paid-feature-note">Each pack is generated from your uploaded sound for your session, giving musicians a more personal starting point than a generic preset bank.</p>
         </div>
         <div class="paid-feature-actions" id="paid-feature-actions">
-          <a class="button primary" href="https://kreativ.gumroad.com/" target="_blank" rel="noopener noreferrer">
+          <a class="button primary" href="https://kreativ.gumroad.com/l/audio-alchemy-pro" target="_blank" rel="noopener noreferrer">
             <i class="fa-solid fa-lock" aria-hidden="true"></i>
             Buy Audio Alchemy Pro
           </a>
           <button class="button secondary paid-feature-toggle" id="paid-feature-toggle" type="button" aria-expanded="false" aria-controls="paid-feature-unlock">
             <i class="fa-solid fa-key" aria-hidden="true"></i>
-            Enter Pro key
+            Enter Pro code
           </button>
           <p class="paid-feature-meta">Includes 32 generated Vital presets with wider variation spread and pack-style export.</p>
         </div>
         <div class="paid-feature-unlock" id="paid-feature-unlock" hidden>
-          <label class="sr-only" for="paid-feature-key">Audio Alchemy Pro key</label>
-          <input id="paid-feature-key" type="text" placeholder="Enter your Audio Alchemy Pro key" autocomplete="off" />
+          <label class="sr-only" for="paid-feature-key">Audio Alchemy Pro code</label>
+          <input id="paid-feature-key" type="text" placeholder="Enter your Audio Alchemy Pro code" autocomplete="off" />
           <button class="button secondary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Unlock Pro</button>
-          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Use a Gumroad key later. For now, a local preview key can unlock this panel on your browser.</p>
+          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">After purchase, enter your Audio Alchemy Pro code to unlock 32-preset generation on this browser.</p>
         </div>
         <div class="paid-feature-preview" id="paid-feature-preview" hidden>
-          <p class="paid-feature-preview-badge">Pro preview unlocked</p>
-          <p class="paid-feature-preview-note">This browser can now preview the upcoming Audio Alchemy Pro access state for 32-pack generation.</p>
+          <p class="paid-feature-preview-badge">Audio Alchemy Pro unlocked</p>
+          <p class="paid-feature-preview-note">This browser can now generate and export 32-preset Vital packs from your uploaded source audio.</p>
           <div class="paid-feature-preview-actions">
             <button class="button secondary" id="download-pack" type="button" disabled>
               <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>

@@ -54,6 +54,9 @@ const elements = {
   analyzeGenerateLabel: document.querySelector("#analyze-generate .button-label"),
   analysisMetrics: document.querySelector("#analysis-metrics"),
   profileMetrics: document.querySelector("#profile-metrics"),
+  analysisShell: document.querySelector("#analysis-shell"),
+  analysisToggle: document.querySelector("#analysis-toggle"),
+  analysisContent: document.querySelector("#analysis-content"),
   presetList: document.querySelector("#preset-list"),
   presetsPanel: document.querySelector("#presets-panel"),
   paidFeaturePanel: document.querySelector("#paid-feature-panel"),
@@ -165,6 +168,7 @@ function resetLoadedState() {
   elements.fileChannels.textContent = "-";
   renderMetricGrid(elements.analysisMetrics, []);
   renderMetricGrid(elements.profileMetrics, []);
+  setAnalysisVisible(false);
   renderPresets([]);
   elements.waveform.getContext("2d").clearRect(0, 0, elements.waveform.width, elements.waveform.height);
   elements.waveformPanel.classList.remove("has-waveform");
@@ -996,11 +1000,49 @@ function renderPresets(presets) {
     return;
   }
 
+  if (presets.length > FREE_VARIANT_LIMIT) {
+    const groups = new Map();
+    for (const preset of presets) {
+      const role = variantRole(presets.indexOf(preset), preset);
+      if (!groups.has(role)) {
+        groups.set(role, []);
+      }
+      groups.get(role).push(preset);
+    }
+
+    for (const [role, groupedPresets] of groups.entries()) {
+      const section = document.createElement("section");
+      section.className = "preset-group";
+      section.innerHTML = `
+        <div class="preset-group-head">
+          <h3>${role}</h3>
+          <p>${describePackGroup(role)}</p>
+        </div>
+      `;
+
+      const list = document.createElement("div");
+      list.className = "preset-group-list";
+
+      for (const preset of groupedPresets) {
+        list.appendChild(buildPresetCard(preset, role, presets.length));
+      }
+
+      section.appendChild(list);
+      elements.presetList.appendChild(section);
+    }
+    return;
+  }
+
   for (const preset of presets) {
+    const role = variantRole(presets.indexOf(preset), preset);
+    elements.presetList.appendChild(buildPresetCard(preset, role, presets.length));
+  }
+}
+
+function buildPresetCard(preset, role, totalCount) {
     const card = document.createElement("article");
     card.className = "preset-card";
-    const role = variantRole(presets.indexOf(preset), preset);
-    const maxRows = presets.length > FREE_VARIANT_LIMIT ? 4 : 6;
+    const maxRows = totalCount > FREE_VARIANT_LIMIT ? 4 : 6;
     const paramRows = preset.parameters
       .slice(0, maxRows)
       .map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`)
@@ -1025,8 +1067,21 @@ function renderPresets(presets) {
     `;
     const button = card.querySelector(".download-button");
     button.addEventListener("click", () => downloadPreset(preset));
-    elements.presetList.appendChild(card);
+    return card;
   }
+
+function describePackGroup(role) {
+  const descriptions = {
+    Closest: "Nearest to the measured source profile, with restrained drift.",
+    Darker: "Lower ceiling, heavier body, and more muted upper tone.",
+    Brighter: "More open upper presence and clearer harmonic lift.",
+    Steadier: "Calmer modulation with tighter movement and less drift.",
+    "More Motion": "More animated modulation and a livelier movement profile.",
+    Wider: "Broader stereo image and more spacious width.",
+    Tighter: "More centered, drier, and more controlled variants.",
+    Textured: "Noisier, more grainy directions with extra atmosphere.",
+  };
+  return descriptions[role] || "Alternative directions shaped from the same source profile.";
 }
 
 async function downloadPreset(preset) {
@@ -1365,6 +1420,17 @@ function renderPaidFeatureState() {
   setProControlsEnabled(unlocked);
 }
 
+function setAnalysisVisible(visible) {
+  elements.analysisContent.hidden = !visible;
+  elements.analysisToggle.setAttribute("aria-expanded", String(visible));
+  elements.analysisToggle.textContent = visible ? "Hide analysis" : "Show analysis";
+  elements.analysisShell.classList.toggle("is-open", visible);
+}
+
+function toggleAnalysisVisibility() {
+  setAnalysisVisible(elements.analysisContent.hidden);
+}
+
 function togglePaidFeatureUnlock() {
   if (state.proPreviewUnlocked) {
     return;
@@ -1380,18 +1446,18 @@ function togglePaidFeatureUnlock() {
 function handlePaidFeatureUnlock() {
   const key = elements.paidFeatureKey.value.trim();
   if (!key) {
-    elements.paidFeatureUnlockNote.textContent = "Enter a preview key to unlock this browser.";
+    elements.paidFeatureUnlockNote.textContent = "Enter your Audio Alchemy Pro code to unlock this browser.";
     return;
   }
   if (key !== PRO_PREVIEW_KEY) {
-    elements.paidFeatureUnlockNote.textContent = "Invalid preview key. Check the key and try again.";
+    elements.paidFeatureUnlockNote.textContent = "Invalid Pro code. Check the code and try again.";
     return;
   }
 
   state.proPreviewUnlocked = true;
   window.localStorage.setItem(PRO_PREVIEW_STORAGE_KEY, "1");
   renderPaidFeatureState();
-  updateStatus("Audio Alchemy Pro preview unlocked in this browser.");
+  updateStatus("Audio Alchemy Pro unlocked in this browser.");
   setReady(Boolean(state.originalBuffer));
 }
 
@@ -1403,6 +1469,7 @@ elements.waveformPanel.addEventListener("drop", handleDropZoneDrop);
 elements.waveform.addEventListener("click", handleWaveformSeek);
 elements.playToggle.addEventListener("click", handlePlayToggle);
 elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
+elements.analysisToggle.addEventListener("click", toggleAnalysisVisibility);
 elements.paidFeatureToggle.addEventListener("click", togglePaidFeatureUnlock);
 elements.paidFeatureUnlockButton.addEventListener("click", handlePaidFeatureUnlock);
   elements.generatePack?.addEventListener("click", handleGeneratePresetPack);
@@ -1425,6 +1492,7 @@ for (const control of [
 updateControlLabels();
 state.proPreviewUnlocked = window.localStorage.getItem(PRO_PREVIEW_STORAGE_KEY) === "1";
 renderPaidFeatureState();
+setAnalysisVisible(false);
 updatePlaybackUI();
 setReady(false);
 if (SELF_TEST_ENABLED) {
