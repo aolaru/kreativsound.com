@@ -31,8 +31,10 @@ const elements = {
   inputMode: document.querySelector("#input-mode"),
   brightnessBias: document.querySelector("#brightness-bias"),
   movementBias: document.querySelector("#movement-bias"),
+  attackBias: document.querySelector("#attack-bias"),
   brightnessBiasValue: document.querySelector("#brightness-bias-value"),
   movementBiasValue: document.querySelector("#movement-bias-value"),
+  attackBiasValue: document.querySelector("#attack-bias-value"),
   proControlPanel: document.querySelector("#pro-control-panel"),
   dirtBias: document.querySelector("#dirt-bias"),
   widthBias: document.querySelector("#width-bias"),
@@ -206,6 +208,7 @@ function sanitizeFileName(value) {
 function updateControlLabels() {
   elements.brightnessBiasValue.textContent = `${elements.brightnessBias.value}%`;
   elements.movementBiasValue.textContent = `${elements.movementBias.value}%`;
+  elements.attackBiasValue.textContent = `${elements.attackBias.value}%`;
   elements.dirtBiasValue.textContent = `${elements.dirtBias.value}%`;
   elements.widthBiasValue.textContent = `${elements.widthBias.value}%`;
   elements.lengthBiasValue.textContent = `${elements.lengthBias.value}%`;
@@ -589,11 +592,12 @@ function determineFamily(analysis) {
 function buildProfile(analysis) {
   const brightnessBias = Number(elements.brightnessBias.value) / 100;
   const movementBias = Number(elements.movementBias.value) / 100;
+  const attackBias = Number(elements.attackBias.value) / 100;
   const family = determineFamily(analysis);
 
   const brightness = clamp(analysis.centroidHz / 6000 + brightnessBias * 0.35);
   const body = clamp(1 - analysis.centroidHz / 9000 + (analysis.pitchHz > 0 && analysis.pitchHz < 220 ? 0.12 : 0));
-  const attack = clamp(1 - analysis.onsetRatio);
+  const attack = clamp(1 - analysis.onsetRatio + attackBias * 0.3);
   const sustain = clamp(analysis.sustainRatio);
   const movement = clamp(analysis.movement * 1.4 + movementBias * 0.35);
   const noise = clamp(analysis.flatness * 1.8 + analysis.zeroCrossRate * 8);
@@ -763,6 +767,22 @@ function shapeProfile(baseProfile, recipe, index) {
     wash: vary(clamp((baseProfile.wash ?? 0.12) + washBias * 0.22 + (recipe.wash ?? 0)), (recipe.spread ?? 0.05) + spreadBoost, index, 29),
     drive: vary(clamp((baseProfile.drive ?? 0.08) + driveBias * 0.22 + (recipe.drive ?? 0)), (recipe.spread ?? 0.05) + spreadBoost, index, 30),
   };
+}
+
+function buildFreePack(profile) {
+  const recipes = [
+    { role: "Closest", brightness: -0.01, movement: -0.02, spread: 0.035, amountScale: 0.82 },
+    { role: "Darker", brightness: -0.15, body: 0.06, movement: -0.03, spread: 0.04, amountScale: 0.9 },
+    { role: "Brighter", brightness: 0.14, width: 0.05, movement: 0.04, spread: 0.045, amountScale: 0.94 },
+  ];
+
+  return recipes.map((recipe, index) => {
+    const shaped = shapeProfile(profile, recipe, index);
+    return mapProfileToVital(shaped, index, {
+      amountScale: recipe.amountScale,
+      roleLabel: recipe.role,
+    });
+  });
 }
 
 function buildProPack(profile) {
@@ -1060,6 +1080,7 @@ function buildPresetCard(preset, role, totalCount) {
     const card = document.createElement("article");
     card.className = "preset-card";
     const maxRows = totalCount > FREE_VARIANT_LIMIT ? 4 : 6;
+    const tags = totalCount > FREE_VARIANT_LIMIT ? [] : buildPresetTags(preset, role);
     const paramRows = preset.parameters
       .slice(0, maxRows)
       .map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`)
@@ -1073,6 +1094,7 @@ function buildPresetCard(preset, role, totalCount) {
         </div>
       </div>
       <p class="preset-summary">${preset.summary}</p>
+      ${tags.length ? `<div class="preset-tags">${tags.map((tag) => `<span class="preset-tag">${tag}</span>`).join("")}</div>` : ""}
       <p class="preset-quality">Why this result: ${buildPresetReason(preset, role)}</p>
       <div class="param-list">${paramRows}</div>
       <div class="preset-actions">
@@ -1086,6 +1108,34 @@ function buildPresetCard(preset, role, totalCount) {
     button.addEventListener("click", () => downloadPreset(preset));
     return card;
   }
+
+function buildPresetTags(preset, role) {
+  const tags = [role.toLowerCase()];
+
+  if (preset.parameterMap.filter_1_cutoff >= 62) {
+    tags.push("brighter");
+  } else if (preset.parameterMap.filter_1_cutoff <= 42) {
+    tags.push("darker");
+  }
+
+  if (preset.parameterMap.chorus_dry_wet >= 0.34 || preset.parameterMap.osc_1_stereo_spread >= 0.55) {
+    tags.push("wider");
+  }
+
+  if (preset.parameterMap.env_1_release >= 0.42) {
+    tags.push("longer tail");
+  } else if (preset.parameterMap.env_1_release <= 0.2) {
+    tags.push("tighter tail");
+  }
+
+  if (preset.parameterMap.distortion_mix >= 0.24 || preset.parameterMap.noise_level >= 0.14) {
+    tags.push("grittier");
+  } else if (preset.parameterMap.distortion_mix <= 0.1 && preset.parameterMap.noise_level <= 0.06) {
+    tags.push("cleaner");
+  }
+
+  return tags.slice(0, 3);
+}
 
 function describePackGroup(role) {
   const descriptions = {
@@ -1320,9 +1370,8 @@ function generatePresets() {
   updateStatus("Shaping 3 guided Vital preset directions...");
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
-  const count = FREE_VARIANT_LIMIT;
   state.lastGenerationMode = "free";
-  state.presets = Array.from({ length: count }, (_, index) => mapProfileToVital(state.profile, index));
+  state.presets = buildFreePack(state.profile);
 
   renderMetricGrid(elements.analysisMetrics, [
     ["Pitch Center", state.analysis.pitchHz ? `${Math.round(state.analysis.pitchHz)} Hz` : "Unclear"],
@@ -1347,7 +1396,7 @@ function generatePresets() {
   ]);
 
   renderPresets(state.presets);
-  updateStatus("3 guided Vital presets ready.");
+  updateStatus("3 guided Vital presets ready. Download the ones that feel closest to your track.");
   setReady(Boolean(state.originalBuffer));
 }
 
@@ -1495,6 +1544,7 @@ elements.paidFeatureUnlockButton.addEventListener("click", handlePaidFeatureUnlo
 for (const control of [
   elements.brightnessBias,
   elements.movementBias,
+  elements.attackBias,
   elements.dirtBias,
   elements.widthBias,
   elements.lengthBias,

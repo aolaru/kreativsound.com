@@ -177,13 +177,13 @@
               </label>
 
               <label class="control">
-                <span class="control-label">Variant Count
-                  <button class="info-tooltip" type="button" aria-label="Explain Variant Count" data-tooltip="The free version always generates 3 guided presets. Pro unlocks a larger 32-preset pack built from the same source.">
+                <span class="control-label">Softer / Harder Attack
+                  <button class="info-tooltip" type="button" aria-label="Explain Softer / Harder Attack" data-tooltip="Biases how soft or sharp the generated preset feels at the start. Higher values tighten the onset and make attacks feel more immediate.">
                     <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                   </button>
                 </span>
-                <strong class="fixed-value">3 presets</strong>
-                <small class="control-note">Free demo always generates 3 variants. Pro will unlock larger sets.</small>
+                <output id="attack-bias-value">0%</output>
+                <input id="attack-bias" type="range" min="-100" max="100" step="1" value="0" />
               </label>
             </div>
 
@@ -334,6 +334,7 @@
         <div class="paid-feature-copy">
           <p class="paid-feature-kicker">Paid feature</p>
           <h2 id="paid-feature-title">Generate a 32-preset Vital pack from your source audio</h2>
+          <p class="paid-feature-ownership">Buy once. Unlock Pro on this browser with your purchase code.</p>
           <p>Turn one source sound into a much larger preset pack shaped around its tone, envelope, and motion profile.</p>
           <p class="paid-feature-note">Each pack is generated from your uploaded sound for your session, giving musicians a more personal starting point than a generic preset bank.</p>
         </div>
@@ -362,6 +363,7 @@
               <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
               Download 32-Pack (.zip)
             </button>
+            <p class="paid-feature-download-note">Downloads 32 `.vital` files in one ZIP.</p>
           </div>
         </div>
       </section>
