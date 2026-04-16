@@ -87,7 +87,7 @@ const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
 const GENERATE_DELAY_MS = 500;
 const PRO_PREVIEW_STORAGE_KEY = "audio-alchemy-pro-preview-unlocked";
-const PRO_PREVIEW_KEY = "AA-PRO-PREVIEW-32";
+const PRO_PURCHASE_CODE = "AA-PRO-32-DGTW9930";
 const SUPPORTED_AUDIO_EXTENSIONS = [".wav", ".mp3", ".aiff", ".aif", ".m4a", ".aac", ".ogg", ".flac"];
 
 if ("serviceWorker" in navigator) {
@@ -679,7 +679,15 @@ function mapProfileToVital(profile, index, options = {}) {
     sustain,
     pitchHz: profile.pitchHz,
   });
-  const summary = `${familyLabel(family)} leaning ${brightness > 0.58 ? "bright" : "dark"}, ${movement > 0.44 ? "moving" : "steady"}, centered around ${register}.`;
+  const summary = buildPresetSummary({
+    family,
+    brightness,
+    movement,
+    width,
+    sustain,
+    attack,
+    register,
+  });
 
   return {
     name,
@@ -1079,9 +1087,10 @@ function renderPresets(presets) {
 function buildPresetCard(preset, role, totalCount) {
     const card = document.createElement("article");
     card.className = "preset-card";
-    const maxRows = totalCount > FREE_VARIANT_LIMIT ? 4 : 6;
+    const maxRows = totalCount > FREE_VARIANT_LIMIT ? 4 : 4;
     const tags = totalCount > FREE_VARIANT_LIMIT ? [] : buildPresetTags(preset, role);
-    const paramRows = preset.parameters
+    const visibleParameters = totalCount > FREE_VARIANT_LIMIT ? preset.parameters : selectFreeCardParameters(preset.parameters);
+    const paramRows = visibleParameters
       .slice(0, maxRows)
       .map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`)
       .join("");
@@ -1135,6 +1144,32 @@ function buildPresetTags(preset, role) {
   }
 
   return tags.slice(0, 3);
+}
+
+function selectFreeCardParameters(parameters) {
+  const preferredLabels = ["Filter Cutoff", "Env Attack", "Env Release", "Reverb Mix"];
+  return preferredLabels
+    .map((label) => parameters.find(([currentLabel]) => currentLabel === label))
+    .filter(Boolean);
+}
+
+function buildPresetSummary({ family, brightness, movement, width, sustain, attack, register }) {
+  const tone = brightness > 0.58 ? "brighter" : brightness < 0.42 ? "darker" : "balanced";
+  const motion = movement > 0.5 ? "more animated" : movement < 0.3 ? "steadier" : "lightly moving";
+  const space = width > 0.55 ? "with a wider image" : width < 0.3 ? "with a tighter image" : "with a centered image";
+  const tail = sustain > 0.58 ? "longer tail" : sustain < 0.32 ? "shorter tail" : "controlled tail";
+  const onset = attack > 0.62 ? "softer attack" : attack < 0.36 ? "harder attack" : "balanced attack";
+
+  if (family === "bass") {
+    return `${tone.charAt(0).toUpperCase() + tone.slice(1)} bass with ${onset}, ${space}, and a ${tail}.`;
+  }
+  if (family === "pluck") {
+    return `${tone.charAt(0).toUpperCase() + tone.slice(1)} pluck with ${onset}, ${motion}, and a ${tail}.`;
+  }
+  if (family === "texture") {
+    return `${tone.charAt(0).toUpperCase() + tone.slice(1)} texture around ${register}, ${motion}, and ${space}.`;
+  }
+  return `${tone.charAt(0).toUpperCase() + tone.slice(1)} pad around ${register} with ${onset}, ${motion}, and a ${tail}.`;
 }
 
 function describePackGroup(role) {
@@ -1515,7 +1550,7 @@ function handlePaidFeatureUnlock() {
     elements.paidFeatureUnlockNote.textContent = "Enter your purchase code to unlock this browser.";
     return;
   }
-  if (key !== PRO_PREVIEW_KEY) {
+  if (key !== PRO_PURCHASE_CODE) {
     elements.paidFeatureUnlockNote.textContent = "Invalid purchase code. Check the code and try again.";
     return;
   }

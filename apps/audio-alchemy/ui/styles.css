@@ -957,6 +957,24 @@ button:disabled {
   color: var(--muted);
 }
 
+.preset-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preset-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.24rem 0.56rem;
+  border-radius: 999px;
+  background: rgba(255, 245, 245, 0.82);
+  border: 1px solid rgba(153, 0, 0, 0.12);
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
 .presets-panel.is-pack .preset-summary,
 .presets-panel.is-pack .preset-quality {
   font-size: 0.92rem;
@@ -1040,11 +1058,49 @@ button:disabled {
   color: var(--muted);
 }
 
+.paid-feature-price {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0 0 0.55rem !important;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(209, 76, 76, 0.1);
+  border: 1px solid rgba(209, 76, 76, 0.18);
+  color: var(--accent-strong) !important;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.paid-feature-ownership {
+  margin: 0 0 0.5rem !important;
+  color: var(--accent-strong) !important;
+  font-weight: 600;
+}
+
+.paid-feature-list {
+  margin: 0 0 0.8rem;
+  padding-left: 1.15rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.paid-feature-list li + li {
+  margin-top: 0.18rem;
+}
+
 .paid-feature-note {
   margin-top: 0.6rem !important;
   color: var(--soft) !important;
   font-size: 0.9rem;
   line-height: 1.5;
+}
+
+.paid-feature-audience {
+  margin: 0 0 0.55rem !important;
+  color: var(--muted) !important;
+  font-weight: 500;
 }
 
 .paid-feature-actions {
@@ -1124,8 +1180,16 @@ button:disabled {
 .paid-feature-preview-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 12px;
   margin-top: 14px;
+}
+
+.paid-feature-download-note {
+  margin: 0;
+  color: var(--soft);
+  font-size: 0.84rem;
+  line-height: 1.4;
 }
 
 .app-footer {
