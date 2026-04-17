@@ -209,6 +209,41 @@
         </div>
       </section>
 
+      <section class="panel suite-panel" id="suite-panel" aria-labelledby="suite-title">
+        <div class="suite-copy">
+          <p class="suite-kicker">Full tool suite</p>
+          <h2 id="suite-title">Unlock the full Kreativ Sound browser tool suite</h2>
+          <p class="suite-price">Launch price: $19</p>
+          <p class="suite-ownership">Pay once. Unlock the suite on this browser with your purchase code.</p>
+          <ul class="suite-list">
+            <li>Audio Alchemy included</li>
+            <li>Preset Mutator included</li>
+            <li>Wave Fracture included</li>
+          </ul>
+        </div>
+        <div class="suite-actions" id="suite-actions">
+          <a class="button primary" href="https://kreativ.gumroad.com/l/audio-alchemy-pro" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            Unlock Full Tool Suite
+          </a>
+          <button class="button secondary suite-toggle" id="suite-toggle" type="button" aria-expanded="false" aria-controls="suite-unlock">
+            <i class="fa-solid fa-key" aria-hidden="true"></i>
+            Enter purchase code
+          </button>
+          <p class="suite-meta">One-time purchase. Unlocks all three Kreativ Sound tools on this browser.</p>
+        </div>
+        <div class="suite-unlock" id="suite-unlock" hidden>
+          <label class="sr-only" for="suite-key">Kreativ Sound Tools purchase code</label>
+          <input id="suite-key" type="text" placeholder="Enter your Kreativ Sound Tools purchase code" autocomplete="off" />
+          <button class="button secondary suite-unlock-button" id="suite-unlock-button" type="button">Unlock Suite</button>
+          <p class="suite-unlock-note" id="suite-unlock-note">After purchase, enter your code to unlock the full tool suite on this browser. No account is required.</p>
+        </div>
+        <div class="suite-active" id="suite-active" hidden>
+          <p class="suite-active-badge">Kreativ Sound Tools active</p>
+          <p class="suite-active-note">This browser is unlocked for Audio Alchemy, Preset Mutator, and Wave Fracture.</p>
+        </div>
+      </section>
+
       <footer class="app-footer">
         <p>Kreativ Sound experimental tool surface for preset-driven mutation.</p>
         <p class="app-version">Preset Mutator v0.2 beta</p>

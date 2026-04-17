@@ -14,6 +14,7 @@ const state = {
   analysis: null,
   variants: [],
   isGenerating: false,
+  suiteUnlocked: false,
 };
 
 const elements = {
@@ -38,10 +39,21 @@ const elements = {
   generateButton: document.querySelector("#generate-button"),
   generateButtonLabel: document.querySelector("#generate-button .button-label"),
   status: document.querySelector("#status"),
+  suitePanel: document.querySelector("#suite-panel"),
+  suiteActions: document.querySelector("#suite-actions"),
+  suiteToggle: document.querySelector("#suite-toggle"),
+  suiteUnlock: document.querySelector("#suite-unlock"),
+  suiteKey: document.querySelector("#suite-key"),
+  suiteUnlockButton: document.querySelector("#suite-unlock-button"),
+  suiteUnlockNote: document.querySelector("#suite-unlock-note"),
+  suiteActive: document.querySelector("#suite-active"),
   analysisMetrics: document.querySelector("#analysis-metrics"),
   profileMetrics: document.querySelector("#profile-metrics"),
   variantList: document.querySelector("#variant-list"),
 };
+
+const SUITE_UNLOCK_STORAGE_KEY = "kreativ-sound-tools-unlocked";
+const SUITE_PURCHASE_CODE = "AA-PRO-32-DGTW9930";
 
 function createAudioContext() {
   if (!state.audioContext) {
@@ -779,6 +791,43 @@ function bindDropZone() {
   });
 }
 
+function renderSuiteState() {
+  elements.suitePanel.classList.toggle("is-unlocked", state.suiteUnlocked);
+  elements.suiteActions.hidden = state.suiteUnlocked;
+  elements.suiteUnlock.hidden = true;
+  elements.suiteActive.hidden = !state.suiteUnlocked;
+  elements.suiteToggle?.setAttribute("aria-expanded", "false");
+}
+
+function toggleSuiteUnlock() {
+  if (state.suiteUnlocked) {
+    return;
+  }
+  const isOpen = !elements.suiteUnlock.hidden;
+  elements.suiteUnlock.hidden = isOpen;
+  elements.suiteToggle.setAttribute("aria-expanded", String(!isOpen));
+  if (!isOpen) {
+    elements.suiteKey.focus();
+  }
+}
+
+function handleSuiteUnlock() {
+  const key = elements.suiteKey.value.trim();
+  if (!key) {
+    elements.suiteUnlockNote.textContent = "Enter your purchase code to unlock this browser.";
+    return;
+  }
+  if (key !== SUITE_PURCHASE_CODE) {
+    elements.suiteUnlockNote.textContent = "Invalid purchase code. Check the code and try again.";
+    return;
+  }
+
+  state.suiteUnlocked = true;
+  window.localStorage.setItem(SUITE_UNLOCK_STORAGE_KEY, "1");
+  renderSuiteState();
+  updateStatus("Kreativ Sound Tools is active in this browser.");
+}
+
 elements.fileInput.addEventListener("change", (event) => {
   const [file] = event.target.files || [];
   if (file) {
@@ -805,7 +854,11 @@ elements.playOriginal.addEventListener("click", () => {
 });
 elements.stopPlayback.addEventListener("click", stopPlayback);
 elements.generateButton.addEventListener("click", generateVariants);
+elements.suiteToggle?.addEventListener("click", toggleSuiteUnlock);
+elements.suiteUnlockButton?.addEventListener("click", handleSuiteUnlock);
 
 updateControlLabels();
 resetLoadedState();
 bindDropZone();
+state.suiteUnlocked = window.localStorage.getItem(SUITE_UNLOCK_STORAGE_KEY) === "1";
+renderSuiteState();

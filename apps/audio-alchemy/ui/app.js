@@ -86,7 +86,8 @@ const PRO_PACK_COUNT = 32;
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
 const GENERATE_DELAY_MS = 500;
-const PRO_PREVIEW_STORAGE_KEY = "audio-alchemy-pro-preview-unlocked";
+const SUITE_UNLOCK_STORAGE_KEY = "kreativ-sound-tools-unlocked";
+const LEGACY_AUDIO_ALCHEMY_STORAGE_KEY = "audio-alchemy-pro-preview-unlocked";
 const PRO_PURCHASE_CODE = "AA-PRO-32-DGTW9930";
 const SUPPORTED_AUDIO_EXTENSIONS = [".wav", ".mp3", ".aiff", ".aif", ".m4a", ".aac", ".ogg", ".flac"];
 
@@ -1556,9 +1557,9 @@ function handlePaidFeatureUnlock() {
   }
 
   state.proPreviewUnlocked = true;
-  window.localStorage.setItem(PRO_PREVIEW_STORAGE_KEY, "1");
+  window.localStorage.setItem(SUITE_UNLOCK_STORAGE_KEY, "1");
   renderPaidFeatureState();
-  updateStatus("Audio Alchemy Pro is active in this browser.");
+  updateStatus("Kreativ Sound Tools is active in this browser.");
   setReady(Boolean(state.originalBuffer));
 }
 
@@ -1592,7 +1593,12 @@ for (const control of [
 }
 
 updateControlLabels();
-state.proPreviewUnlocked = window.localStorage.getItem(PRO_PREVIEW_STORAGE_KEY) === "1";
+state.proPreviewUnlocked =
+  window.localStorage.getItem(SUITE_UNLOCK_STORAGE_KEY) === "1" ||
+  window.localStorage.getItem(LEGACY_AUDIO_ALCHEMY_STORAGE_KEY) === "1";
+if (state.proPreviewUnlocked) {
+  window.localStorage.setItem(SUITE_UNLOCK_STORAGE_KEY, "1");
+}
 renderPaidFeatureState();
 setAnalysisVisible(false);
 updatePlaybackUI();
