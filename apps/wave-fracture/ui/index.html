@@ -19,6 +19,7 @@
       gtag("js", new Date());
       gtag("config", "G-QRTJS1KZD9");
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body>
@@ -43,7 +44,7 @@
 
       <section class="hero">
         <h1>Break one sound into three fractured variations</h1>
-        <p class="lede">Upload a short source sound, reshape it locally, and export 3 guided audio mutations.</p>
+        <p class="lede">Upload a short source sound, reshape it locally, and export 3 free mutations or a 32-variation Pro pack.</p>
       </section>
 
       <section class="panel upload-panel">
@@ -122,46 +123,80 @@
         <section class="panel controls-panel">
           <div class="section-head">
             <h2>Fracture Controls</h2>
-            <p class="muted">Push timing, texture, and space into three fast audio directions.</p>
+            <p class="muted">Push timing, texture, and space into three free directions or a larger Pro render pack.</p>
           </div>
 
-          <div class="control-grid">
-            <label class="control">
-              <span>Fracture Amount</span>
-              <output id="fracture-value">45%</output>
-              <input id="fracture-range" type="range" min="0" max="100" step="1" value="45" />
-            </label>
+          <section class="control-section control-section-free" aria-labelledby="free-control-title">
+            <div class="control-section-head">
+              <p class="control-section-kicker">Free</p>
+              <h3 id="free-control-title">Starter controls</h3>
+            </div>
 
-            <label class="control">
-              <span>Drier / Wider</span>
-              <output id="space-value">0%</output>
-              <input id="space-range" type="range" min="-100" max="100" step="1" value="0" />
-            </label>
+            <div class="control-grid">
+              <label class="control">
+                <span>Fracture Amount</span>
+                <output id="fracture-value">45%</output>
+                <input id="fracture-range" type="range" min="0" max="100" step="1" value="45" />
+              </label>
 
-            <label class="control">
-              <span>Cleaner / Grittier</span>
-              <output id="texture-value">0%</output>
-              <input id="texture-range" type="range" min="-100" max="100" step="1" value="0" />
-            </label>
+              <label class="control">
+                <span>Drier / Wider</span>
+                <output id="space-value">0%</output>
+                <input id="space-range" type="range" min="-100" max="100" step="1" value="0" />
+              </label>
 
-            <label class="control">
-              <span>Playback Focus</span>
-              <strong class="fixed-value">3 variations</strong>
-              <small class="control-note">Free always generates 3 fracture passes from one source.</small>
-            </label>
-          </div>
+              <label class="control">
+                <span>Cleaner / Grittier</span>
+                <output id="texture-value">0%</output>
+                <input id="texture-range" type="range" min="-100" max="100" step="1" value="0" />
+              </label>
+            </div>
 
-          <div class="actions">
+            <div class="actions section-actions">
+              <button id="generate-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Generate 3 Free Variations</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="control-section control-section-pro" id="pro-control-panel" aria-labelledby="pro-control-title">
+            <div class="control-section-head">
+              <p class="control-section-kicker">Pro</p>
+              <div>
+                <h3 id="pro-control-title">32-pack shaping</h3>
+                <p class="muted">These extra controls only affect the 32-audio Pro pack.</p>
+              </div>
+            </div>
+
+            <div class="control-grid">
+              <label class="control">
+                <span>Safer / More Broken</span>
+                <output id="broken-value">0%</output>
+                <input id="broken-range" type="range" min="-100" max="100" step="1" value="0" disabled />
+              </label>
+
+              <label class="control">
+                <span>Drier / Wetter</span>
+                <output id="wet-value">0%</output>
+                <input id="wet-range" type="range" min="-100" max="100" step="1" value="0" disabled />
+              </label>
+
+              <label class="control">
+                <span>Tighter / More Washed</span>
+                <output id="wash-value">0%</output>
+                <input id="wash-range" type="range" min="-100" max="100" step="1" value="0" disabled />
+              </label>
+            </div>
+          </section>
+
+          <div class="actions transport-actions">
             <button id="play-original" type="button" disabled>Play Source</button>
             <button id="stop-playback" type="button" disabled>Stop</button>
-            <button id="generate-button" type="button" disabled>
-              <span class="button-spinner" aria-hidden="true"></span>
-              <span class="button-label">Generate Variations</span>
-            </button>
           </div>
 
           <div class="status" id="status">Load a short audio file to generate 3 guided fracture variations.</div>
-          <p class="upgrade-hint">Pro can later add more fracture modes, batch exports, and longer render controls.</p>
+          <p class="upgrade-hint">The full suite unlock adds a 32-audio fracture pack, ZIP export, and future mode expansions.</p>
         </section>
 
         <section class="panel insight-panel">
@@ -214,7 +249,7 @@
           <ul class="suite-list">
             <li>Audio Alchemy included</li>
             <li>Preset Mutator included</li>
-            <li>Wave Fracture included</li>
+            <li>Wave Fracture 32-audio pack</li>
           </ul>
         </div>
         <div class="suite-actions" id="suite-actions">
@@ -237,6 +272,17 @@
         <div class="suite-active" id="suite-active" hidden>
           <p class="suite-active-badge">Kreativ Sound Tools active</p>
           <p class="suite-active-note">This browser is unlocked for Audio Alchemy, Preset Mutator, and Wave Fracture.</p>
+          <div class="suite-active-actions">
+            <button class="button primary" id="generate-pack" type="button" disabled>
+              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+              Generate 32 Audio Variations
+            </button>
+            <button class="button secondary" id="download-pack" type="button" disabled>
+              <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
+              Download 32-Pack (.zip)
+            </button>
+          </div>
+          <p class="suite-active-meta">Builds 32 WAV renders from the same source audio and downloads them as one ZIP.</p>
         </div>
       </section>
 

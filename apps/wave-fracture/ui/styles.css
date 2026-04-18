@@ -479,6 +479,51 @@ h2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.control-section {
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(153, 0, 0, 0.12);
+  background: rgba(255, 245, 245, 0.45);
+}
+
+.control-section + .control-section {
+  margin-top: 16px;
+}
+
+.control-section-free {
+  background: rgba(255, 245, 245, 0.52);
+}
+
+.control-section-pro {
+  background:
+    linear-gradient(180deg, rgba(179, 0, 0, 0.045) 0%, transparent 46%),
+    rgba(255, 245, 245, 0.5);
+}
+
+.control-section-pro.is-locked {
+  opacity: 0.72;
+}
+
+.control-section-head {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.control-section-head h3,
+.control-section-head p {
+  margin: 0;
+}
+
+.control-section-kicker {
+  margin: 0;
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
 .control {
   display: grid;
   gap: 10px;
@@ -527,6 +572,14 @@ input[type="range"] {
   margin-top: 18px;
 }
 
+.section-actions {
+  justify-content: center;
+}
+
+.transport-actions {
+  margin-top: 16px;
+}
+
 button {
   padding: 13px 18px;
   border: 1px solid rgba(153, 0, 0, 0.18);
@@ -544,6 +597,48 @@ button:hover:enabled {
 }
 
 button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+#generate-pack,
+.button.primary,
+.download-button {
+  background: linear-gradient(180deg, rgba(176, 38, 38, 0.95) 0%, rgba(123, 7, 7, 0.98) 100%);
+  border-color: rgba(239, 177, 177, 0.2);
+  color: #fff4f4;
+  font-weight: 700;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(153, 0, 0, 0.18);
+  background: rgba(153, 0, 0, 0.12);
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, opacity 120ms ease, border-color 120ms ease;
+}
+
+.button:hover:enabled {
+  transform: translateY(-1px);
+  background: rgba(153, 0, 0, 0.18);
+  border-color: rgba(153, 0, 0, 0.34);
+}
+
+.button.secondary {
+  background: rgba(153, 0, 0, 0.12);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.button:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
@@ -665,8 +760,72 @@ button:disabled {
 
 .preset-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
+}
+
+.preset-group {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 245, 245, 0.45);
+  border: 1px solid rgba(153, 0, 0, 0.1);
+}
+
+.preset-group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 14px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.preset-group-head h3 {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.02rem;
+}
+
+.preset-group-head p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.preset-group-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.8rem;
+  height: 1.8rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: rgba(153, 0, 0, 0.08);
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.preset-group-toggle-label {
+  flex: 0 0 auto;
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.preset-group-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
 }
 
 .self-test-note {
@@ -780,6 +939,10 @@ button:disabled {
   color: var(--soft);
   font-size: 0.92rem;
   line-height: 1.5;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .suite-panel {
@@ -909,6 +1072,20 @@ button:disabled {
 .suite-active-note {
   color: var(--soft);
   line-height: 1.5;
+}
+
+.suite-active-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.suite-active-meta {
+  margin-top: 12px !important;
+  color: var(--soft);
+  font-size: 0.84rem;
+  line-height: 1.45;
 }
 
 .app-footer {
