@@ -1189,6 +1189,10 @@ a:focus-visible,
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.product-tool-grid-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .tools-hero {
   max-width: 54rem;
 }
@@ -1206,6 +1210,10 @@ a:focus-visible,
   align-items: flex-start;
   gap: 0.75rem;
   height: 100%;
+}
+
+.product-tool-card-coming-soon {
+  max-width: 28rem;
 }
 
 .product-tool-mark {
@@ -1234,6 +1242,10 @@ a:focus-visible,
 
 .product-tool-card .product-actions {
   margin-top: auto;
+}
+
+.button.is-static {
+  pointer-events: none;
 }
 
 .product-panel-summary {

@@ -499,6 +499,70 @@ button.is-loading .button-spinner {
   gap: 16px;
 }
 
+.preset-group {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255, 245, 245, 0.45);
+  border: 1px solid rgba(153, 0, 0, 0.1);
+}
+
+.preset-group-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 14px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.preset-group-head h3 {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.02rem;
+}
+
+.preset-group-head p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.preset-group-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.8rem;
+  height: 1.8rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: rgba(153, 0, 0, 0.08);
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.preset-group-toggle-label {
+  flex: 0 0 auto;
+  color: var(--accent-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.preset-group-list {
+  display: grid;
+  gap: 14px;
+}
+
 .preset-card {
   display: grid;
   gap: 14px;
@@ -570,6 +634,36 @@ button.is-loading .button-spinner {
   color: #fff7f7;
   text-decoration: none;
   cursor: pointer;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(127, 0, 0, 0.16);
+  background: rgba(255, 245, 245, 0.75);
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button.primary {
+  background: linear-gradient(180deg, rgba(176, 38, 38, 0.95) 0%, rgba(123, 7, 7, 0.98) 100%);
+  color: #fff7f7;
+}
+
+.button.secondary {
+  background: rgba(255, 245, 245, 0.75);
+  color: var(--text);
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .download-badge {
@@ -726,6 +820,20 @@ button.is-loading .button-spinner {
   line-height: 1.5;
 }
 
+.suite-active-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.suite-active-meta {
+  margin-top: 12px !important;
+  color: var(--soft);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
 .app-footer {
   margin-top: 22px;
   text-align: center;
@@ -756,6 +864,35 @@ button.is-loading .button-spinner {
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 880px) {
+  .workspace,
+  .analysis-grid,
+  .suite-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .preset-summary,
+  .trust-grid,
+  .control-grid,
+  .preset-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .site-nav {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .nav-group,
+  .nav-group-utility {
+    justify-content: center;
+  }
+
+  .suite-unlock {
+    grid-template-columns: 1fr;
   }
 }
 

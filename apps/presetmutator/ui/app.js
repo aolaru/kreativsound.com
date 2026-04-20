@@ -1,7 +1,69 @@
-const VARIANT_ROLES = [
+const FREE_VARIANT_ROLES = [
   { key: "closest", label: "Closest", multiplier: 0.7, nameSuffix: "Closest" },
   { key: "bolder", label: "Bolder", multiplier: 1.0, nameSuffix: "Bolder" },
   { key: "wilder", label: "Wilder", multiplier: 1.35, nameSuffix: "Wilder" },
+];
+
+function createPackRole(group, index, config = {}) {
+  return {
+    key: `${group.key}-${index + 1}`,
+    label: `${group.label} ${index + 1}`,
+    nameSuffix: `${group.label} ${index + 1}`,
+    multiplier: config.multiplier ?? 1,
+    toneBias: config.toneBias ?? group.toneBias ?? 0,
+    motionBias: config.motionBias ?? group.motionBias ?? 0,
+    dirtBias: config.dirtBias ?? group.dirtBias ?? 0,
+    spaceBias: config.spaceBias ?? group.spaceBias ?? 0,
+    groupKey: group.key,
+    groupLabel: group.label,
+    groupDescription: group.description,
+  };
+}
+
+const PACK_GROUPS = [
+  { key: "closest", label: "Closest", description: "Tighter mutations that stay nearest to the source preset.", toneBias: 0, motionBias: 0, dirtBias: 0, spaceBias: 0 },
+  { key: "darker", label: "Darker", description: "Lower, moodier filter and voicing shifts with darker weight.", toneBias: -0.8, motionBias: -0.1, dirtBias: 0.1, spaceBias: -0.1 },
+  { key: "brighter", label: "Brighter", description: "Lifted tone, more upper harmonics, and more open cutoff moves.", toneBias: 0.8, motionBias: 0.1, dirtBias: -0.1, spaceBias: 0.05 },
+  { key: "more-motion", label: "More Motion", description: "Heavier movement and evolving modulation for more animation.", toneBias: 0, motionBias: 0.85, dirtBias: 0.05, spaceBias: 0.15 },
+  { key: "steadier", label: "Steadier", description: "Calmer timing and more restrained modulation movement.", toneBias: -0.05, motionBias: -0.8, dirtBias: -0.05, spaceBias: -0.05 },
+  { key: "cleaner", label: "Cleaner", description: "Smoother, tidier variants with less drive and roughness.", toneBias: 0.1, motionBias: -0.05, dirtBias: -0.85, spaceBias: 0.05 },
+  { key: "dirtier", label: "Dirtier", description: "More edge, drive, and grit pushed into the mutation spread.", toneBias: -0.05, motionBias: 0.05, dirtBias: 0.9, spaceBias: 0.05 },
+  { key: "wider", label: "Wider", description: "Broader stereo and space-biased variants for a larger spread.", toneBias: 0.1, motionBias: 0.2, dirtBias: 0, spaceBias: 0.9 },
+];
+
+const PRO_PACK_ROLES = [
+  createPackRole(PACK_GROUPS[0], 0, { multiplier: 0.8 }),
+  createPackRole(PACK_GROUPS[0], 1, { multiplier: 0.92, motionBias: -0.05 }),
+  createPackRole(PACK_GROUPS[0], 2, { multiplier: 1.02, toneBias: 0.08 }),
+  createPackRole(PACK_GROUPS[0], 3, { multiplier: 1.08, dirtBias: 0.06 }),
+  createPackRole(PACK_GROUPS[1], 0, { multiplier: 0.95 }),
+  createPackRole(PACK_GROUPS[1], 1, { multiplier: 1.04, motionBias: -0.18 }),
+  createPackRole(PACK_GROUPS[1], 2, { multiplier: 1.08, dirtBias: 0.18 }),
+  createPackRole(PACK_GROUPS[1], 3, { multiplier: 1.12, spaceBias: -0.16 }),
+  createPackRole(PACK_GROUPS[2], 0, { multiplier: 0.95 }),
+  createPackRole(PACK_GROUPS[2], 1, { multiplier: 1.04, motionBias: 0.18 }),
+  createPackRole(PACK_GROUPS[2], 2, { multiplier: 1.08, dirtBias: -0.15 }),
+  createPackRole(PACK_GROUPS[2], 3, { multiplier: 1.12, spaceBias: 0.16 }),
+  createPackRole(PACK_GROUPS[3], 0, { multiplier: 1.02 }),
+  createPackRole(PACK_GROUPS[3], 1, { multiplier: 1.08, toneBias: 0.1 }),
+  createPackRole(PACK_GROUPS[3], 2, { multiplier: 1.14, dirtBias: 0.1 }),
+  createPackRole(PACK_GROUPS[3], 3, { multiplier: 1.22, spaceBias: 0.22 }),
+  createPackRole(PACK_GROUPS[4], 0, { multiplier: 0.9 }),
+  createPackRole(PACK_GROUPS[4], 1, { multiplier: 0.98, toneBias: -0.12 }),
+  createPackRole(PACK_GROUPS[4], 2, { multiplier: 1.02, dirtBias: -0.08 }),
+  createPackRole(PACK_GROUPS[4], 3, { multiplier: 1.08, spaceBias: -0.14 }),
+  createPackRole(PACK_GROUPS[5], 0, { multiplier: 0.94 }),
+  createPackRole(PACK_GROUPS[5], 1, { multiplier: 1.0, toneBias: 0.12 }),
+  createPackRole(PACK_GROUPS[5], 2, { multiplier: 1.05, motionBias: -0.16 }),
+  createPackRole(PACK_GROUPS[5], 3, { multiplier: 1.1, spaceBias: 0.14 }),
+  createPackRole(PACK_GROUPS[6], 0, { multiplier: 1.0 }),
+  createPackRole(PACK_GROUPS[6], 1, { multiplier: 1.08, toneBias: -0.1 }),
+  createPackRole(PACK_GROUPS[6], 2, { multiplier: 1.14, motionBias: 0.16 }),
+  createPackRole(PACK_GROUPS[6], 3, { multiplier: 1.24, spaceBias: 0.12 }),
+  createPackRole(PACK_GROUPS[7], 0, { multiplier: 1.0 }),
+  createPackRole(PACK_GROUPS[7], 1, { multiplier: 1.08, toneBias: 0.12 }),
+  createPackRole(PACK_GROUPS[7], 2, { multiplier: 1.14, motionBias: 0.18 }),
+  createPackRole(PACK_GROUPS[7], 3, { multiplier: 1.22, dirtBias: 0.08 }),
 ];
 
 const SAFE_PARAMETER_BOUNDS = {
@@ -54,6 +116,7 @@ const state = {
   generatedVariants: [],
   isGenerating: false,
   suiteUnlocked: false,
+  lastGenerationMode: "free",
 };
 
 const elements = {
@@ -85,6 +148,8 @@ const elements = {
   suiteUnlockButton: document.querySelector("#suite-unlock-button"),
   suiteUnlockNote: document.querySelector("#suite-unlock-note"),
   suiteActive: document.querySelector("#suite-active"),
+  generatePack: document.querySelector("#generate-pack"),
+  downloadPack: document.querySelector("#download-pack"),
   sourceMetrics: document.querySelector("#source-metrics"),
   strategyMetrics: document.querySelector("#strategy-metrics"),
   presetList: document.querySelector("#preset-list"),
@@ -92,6 +157,7 @@ const elements = {
 
 const SUITE_UNLOCK_STORAGE_KEY = "kreativ-sound-tools-unlocked";
 const SUITE_PURCHASE_CODE = "AA-PRO-32-DGTW9930";
+const PRO_PACK_COUNT = PRO_PACK_ROLES.length;
 
 function clamp(value, low, high) {
   return Math.max(low, Math.min(high, value));
@@ -184,6 +250,10 @@ function presetSummary(data) {
     scalarKeys,
     macroCount: ["macro1", "macro2", "macro3", "macro4"].filter((key) => data[key]).length,
   };
+}
+
+function currentActionLabel() {
+  return state.lastGenerationMode === "pro" ? "Generate 32-Preset Pack" : "Generate 3 Free Variations";
 }
 
 function updateControlLabels() {
@@ -292,6 +362,12 @@ function updateSourceUi() {
     elements.presetWavetables.textContent = "-";
     elements.presetFile.textContent = "No file loaded";
     elements.generateButton.disabled = true;
+    if (elements.generatePack) {
+      elements.generatePack.disabled = true;
+    }
+    if (elements.downloadPack) {
+      elements.downloadPack.disabled = true;
+    }
     renderSourceMetrics();
     renderStrategyMetrics();
     return;
@@ -305,7 +381,13 @@ function updateSourceUi() {
   elements.presetModulations.textContent = String(summary.modulationCount);
   elements.presetWavetables.textContent = String(summary.wavetableCount);
   elements.presetFile.textContent = state.sourceFile.name;
-  elements.generateButton.disabled = false;
+  elements.generateButton.disabled = state.isGenerating ? true : false;
+  if (elements.generatePack) {
+    elements.generatePack.disabled = !state.suiteUnlocked || state.isGenerating;
+  }
+  if (elements.downloadPack) {
+    elements.downloadPack.disabled = state.isGenerating || state.lastGenerationMode !== "pro" || state.generatedVariants.length !== PRO_PACK_COUNT;
+  }
   renderSourceMetrics();
   renderStrategyMetrics();
 }
@@ -319,7 +401,7 @@ function buildStrategyWeights() {
   };
 }
 
-function mutateValue(key, value, config, rng, strategy, intensity) {
+function mutateValue(key, value, config, rng, strategy, intensity, role) {
   const span = config.high - config.low;
   const baseScale = span * strategy.amount * 0.17 * intensity;
   const randomOffset = (rng() * 2 - 1) * baseScale;
@@ -335,7 +417,20 @@ function mutateValue(key, value, config, rng, strategy, intensity) {
     directedOffset = span * ((strategy.motion * 0.35) + (strategy.tone * 0.15)) * 0.08 * intensity;
   }
 
-  const mutated = clamp(Number(value) + randomOffset + directedOffset, config.low, config.high);
+  let roleOffset = 0;
+  if (role) {
+    if (config.zone === "tone") {
+      roleOffset = span * role.toneBias * 0.08 * intensity;
+    } else if (config.zone === "motion") {
+      roleOffset = span * role.motionBias * 0.08 * intensity;
+    } else if (config.zone === "dirt") {
+      roleOffset = span * role.dirtBias * 0.1 * intensity;
+    } else if (config.zone === "space") {
+      roleOffset = span * role.spaceBias * 0.08 * intensity;
+    }
+  }
+
+  const mutated = clamp(Number(value) + randomOffset + directedOffset + roleOffset, config.low, config.high);
   return config.integral ? Math.round(mutated) : mutated;
 }
 
@@ -361,7 +456,7 @@ function chooseParameterPool(keys, strategy) {
   return scored.sort((left, right) => right.score - left.score);
 }
 
-function buildVariantDescription(role, strategy) {
+function buildVariantDescription(role, strategy, mode) {
   const descriptors = [];
   if (strategy.tone < -0.2) {
     descriptors.push("darker");
@@ -385,19 +480,25 @@ function buildVariantDescription(role, strategy) {
     descriptors.push("balanced");
   }
 
+  if (mode === "pro" && role.groupLabel) {
+    return `${role.groupLabel} mutation leaning ${descriptors.join(", ")} with a broader pack spread.`;
+  }
+
   return `${role.label} variation leaning ${descriptors.join(", ")}.`;
 }
 
-function generateVariants() {
+function generateVariants(mode = "free") {
   const source = state.sourcePreset;
   const strategy = buildStrategyWeights();
   const pool = chooseParameterPool(source.summary.scalarKeys, strategy);
+  const roles = mode === "pro" ? PRO_PACK_ROLES : FREE_VARIANT_ROLES;
 
-  return VARIANT_ROLES.map((role, index) => {
-    const rng = createRng(hashString(`${source.fileName}:${role.key}:${elements.amountRange.value}:${elements.brightnessRange.value}:${elements.motionRange.value}:${elements.dirtRange.value}`));
+  return roles.map((role, index) => {
+    const rng = createRng(hashString(`${mode}:${source.fileName}:${role.key}:${elements.amountRange.value}:${elements.brightnessRange.value}:${elements.motionRange.value}:${elements.dirtRange.value}`));
     const data = clone(source.data);
     const settings = data.settings;
-    const changeCount = clamp(Math.round(8 + strategy.amount * 16 + (index * 2)), 6, 22);
+    const baseChanges = mode === "pro" ? 10 : 8;
+    const changeCount = clamp(Math.round(baseChanges + strategy.amount * (mode === "pro" ? 18 : 16) + (index % 4) * 2), 6, mode === "pro" ? 24 : 22);
     const candidateKeys = pool.slice(0, Math.max(changeCount * 2, 12));
     const chosen = [];
 
@@ -415,19 +516,22 @@ function generateVariants() {
       if (!config) {
         continue;
       }
-      const nextValue = mutateValue(key, settings[key], config, rng, strategy, role.multiplier);
+      const nextValue = mutateValue(key, settings[key], config, rng, strategy, role.multiplier, role);
       if (Number(nextValue) !== Number(settings[key])) {
         settings[key] = nextValue;
         changedParameters.push(key);
       }
     }
 
-    const baseName = source.summary.name.replace(/\s+\/\s+(Closest|Bolder|Wilder)$/i, "").trim();
+    const baseName = source.summary.name.replace(/\s+\/\s+(Closest|Bolder|Wilder|.+\s\d+)$/i, "").trim();
     data.preset_name = `${baseName} / ${role.nameSuffix}`;
-    data.comments = buildVariantDescription(role, strategy);
+    data.comments = buildVariantDescription(role, strategy, mode);
 
     return {
       role,
+      groupKey: role.groupKey || "free",
+      groupLabel: role.groupLabel || "Free Variants",
+      groupDescription: role.groupDescription || "Three starter mutations generated from the loaded preset.",
       name: data.preset_name,
       description: data.comments,
       changedParameters,
@@ -449,52 +553,117 @@ function downloadVariant(variant) {
   URL.revokeObjectURL(url);
 }
 
+async function downloadVariantPack() {
+  if (!state.generatedVariants.length || !window.JSZip) {
+    return;
+  }
+
+  const zip = new window.JSZip();
+  for (const variant of state.generatedVariants) {
+    zip.file(variant.downloadName, JSON.stringify(variant.data, null, 2));
+  }
+
+  const blob = await zip.generateAsync({ type: "blob" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  const sourceName = state.sourcePreset?.summary?.name || "Preset Mutator Pack";
+  anchor.href = url;
+  anchor.download = `${slugifyFilename(sourceName)} - 32 Preset Pack.zip`;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+}
+
 function renderVariants() {
   if (!state.generatedVariants.length) {
-    elements.presetList.innerHTML = `<p class="empty-state">Choose one <strong>.vital</strong> preset, then click <strong>Generate Variations</strong> to create 3 playable mutations.</p>`;
+    elements.presetList.innerHTML = `<p class="empty-state">Choose one <strong>.vital</strong> preset, then click <strong>${currentActionLabel()}</strong> to create new playable mutations.</p>`;
     return;
   }
 
   elements.presetList.innerHTML = "";
+  const groups = new Map();
   for (const variant of state.generatedVariants) {
-    const card = document.createElement("article");
-    card.className = "preset-card";
-    card.innerHTML = `
-      <div class="preset-card-header">
+    const key = variant.groupKey || "free";
+    if (!groups.has(key)) {
+      groups.set(key, {
+        label: variant.groupLabel,
+        description: variant.groupDescription,
+        variants: [],
+      });
+    }
+    groups.get(key).variants.push(variant);
+  }
+
+  for (const [key, group] of groups.entries()) {
+    const section = document.createElement("section");
+    section.className = "preset-group";
+    const shouldStartOpen = state.lastGenerationMode !== "pro" || key === "closest";
+    const listId = `preset-group-${key}`;
+
+    section.innerHTML = `
+      <button class="preset-group-head" type="button" aria-expanded="${shouldStartOpen}" aria-controls="${listId}">
         <div>
-          <span class="preset-role">${variant.role.label}</span>
-          <h3>${variant.name}</h3>
-          <p class="preset-subline">${variant.description}</p>
+          <h3>${group.label} <span class="preset-group-count">${group.variants.length}</span></h3>
+          <p>${group.description}</p>
         </div>
-      </div>
-      <p class="preset-quality">${summarizeVariantFocus(variant)}</p>
-      <div class="preset-metrics">
-        <div>
-          <span class="metric-label">Changes</span>
-          <strong>${variant.changedParameters.length}</strong>
-        </div>
-        <div>
-          <span class="metric-label">Direction</span>
-          <strong>${variant.role.label}</strong>
-        </div>
-        <div>
-          <span class="metric-label">Format</span>
-          <strong>Vital</strong>
-        </div>
-      </div>
-      <div>
-        <span class="metric-label">Key changed parameters</span>
-        <div class="chip-list">
-          ${variant.changedParameters.slice(0, 8).map((item) => `<span class="chip">${item.replace(/_/g, " ")}</span>`).join("")}
-        </div>
-      </div>
-      <button class="download-button" type="button">
-        <span class="download-badge">VITAL</span>
-        <span>Download .vital</span>
+        <span class="preset-group-toggle-label">${shouldStartOpen ? "Hide presets" : "Show presets"}</span>
       </button>
+      <div class="preset-group-list${shouldStartOpen ? "" : " hidden"}" id="${listId}"></div>
     `;
-    card.querySelector(".download-button").addEventListener("click", () => downloadVariant(variant));
-    elements.presetList.appendChild(card);
+
+    const list = section.querySelector(".preset-group-list");
+    for (const variant of group.variants) {
+      const card = document.createElement("article");
+      card.className = "preset-card";
+      card.innerHTML = `
+        <div class="preset-card-header">
+          <div>
+            <span class="preset-role">${variant.role.label}</span>
+            <h3>${variant.name}</h3>
+            <p class="preset-subline">${variant.description}</p>
+          </div>
+        </div>
+        <p class="preset-quality">${summarizeVariantFocus(variant)}</p>
+        <div class="preset-metrics">
+          <div>
+            <span class="metric-label">Changes</span>
+            <strong>${variant.changedParameters.length}</strong>
+          </div>
+          <div>
+            <span class="metric-label">Direction</span>
+            <strong>${variant.groupLabel}</strong>
+          </div>
+          <div>
+            <span class="metric-label">Format</span>
+            <strong>Vital</strong>
+          </div>
+        </div>
+        <div>
+          <span class="metric-label">Key changed parameters</span>
+          <div class="chip-list">
+            ${variant.changedParameters.slice(0, 8).map((item) => `<span class="chip">${item.replace(/_/g, " ")}</span>`).join("")}
+          </div>
+        </div>
+        <button class="download-button" type="button">
+          <span class="download-badge">VITAL</span>
+          <span>Download .vital</span>
+        </button>
+      `;
+      card.querySelector(".download-button").addEventListener("click", () => downloadVariant(variant));
+      list.appendChild(card);
+    }
+
+    const toggle = section.querySelector(".preset-group-head");
+    const toggleLabel = section.querySelector(".preset-group-toggle-label");
+    toggle.addEventListener("click", () => {
+      const expanded = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!expanded));
+      list.classList.toggle("hidden", expanded);
+      toggleLabel.textContent = expanded ? "Show presets" : "Hide presets";
+    });
+
+    elements.presetList.appendChild(section);
   }
 }
 
@@ -528,10 +697,13 @@ async function loadPreset(file) {
     state.sourcePreset = { data, summary, fileName: file.name };
     state.sourceFile = file;
     state.generatedVariants = [];
+    state.lastGenerationMode = "free";
     setUploadMessage("");
     updateSourceUi();
     renderVariants();
-    elements.status.textContent = `Loaded ${summary.name}. Generate 3 new preset directions when ready.`;
+    elements.status.textContent = state.suiteUnlocked
+      ? `Loaded ${summary.name}. Generate 3 free variants or build the 32-preset pack.`
+      : `Loaded ${summary.name}. Generate 3 new preset directions when ready.`;
   } catch (error) {
     state.sourcePreset = null;
     state.sourceFile = null;
@@ -542,27 +714,43 @@ async function loadPreset(file) {
   }
 }
 
-async function handleGenerate() {
+function setGenerationLoadingState(isLoading, mode) {
+  state.isGenerating = isLoading;
+  elements.generateButton.disabled = isLoading || !state.sourcePreset;
+  elements.generateButton.classList.toggle("is-loading", isLoading && mode === "free");
+  elements.buttonLabel.textContent = isLoading && mode === "free" ? "Generating..." : "Generate 3 Free Variations";
+  if (elements.generatePack) {
+    elements.generatePack.disabled = isLoading || !state.sourcePreset || !state.suiteUnlocked;
+    elements.generatePack.classList.toggle("is-loading", isLoading && mode === "pro");
+  }
+  if (elements.downloadPack) {
+    elements.downloadPack.disabled = isLoading || state.lastGenerationMode !== "pro" || state.generatedVariants.length !== PRO_PACK_COUNT;
+  }
+}
+
+async function handleGenerate(mode = "free") {
   if (!state.sourcePreset || state.isGenerating) {
     return;
   }
+  if (mode === "pro" && !state.suiteUnlocked) {
+    return;
+  }
 
-  state.isGenerating = true;
-  elements.generateButton.disabled = true;
-  elements.generateButton.classList.add("is-loading");
-  elements.buttonLabel.textContent = "Generating...";
-  elements.status.textContent = "Mutating the source preset into 3 new directions...";
+  setGenerationLoadingState(true, mode);
+  elements.status.textContent = mode === "pro"
+    ? "Building a 32-preset mutation pack from the loaded source preset..."
+    : "Mutating the source preset into 3 new directions...";
 
   try {
     await new Promise((resolve) => window.setTimeout(resolve, 520));
-    state.generatedVariants = generateVariants();
+    state.generatedVariants = generateVariants(mode);
+    state.lastGenerationMode = mode;
     renderVariants();
-    elements.status.textContent = "3 preset variations generated. Download the one that feels closest.";
+    elements.status.textContent = mode === "pro"
+      ? "32-preset mutation pack ready. Expand each group and download individual presets or the full ZIP."
+      : "3 preset variations generated. Download the one that feels closest.";
   } finally {
-    state.isGenerating = false;
-    elements.generateButton.disabled = !state.sourcePreset;
-    elements.generateButton.classList.remove("is-loading");
-    elements.buttonLabel.textContent = "Generate Variations";
+    setGenerationLoadingState(false, mode);
   }
 }
 
@@ -601,6 +789,12 @@ function renderSuiteState() {
   elements.suiteUnlock.hidden = true;
   elements.suiteActive.hidden = !state.suiteUnlocked;
   elements.suiteToggle?.setAttribute("aria-expanded", "false");
+  if (elements.generatePack) {
+    elements.generatePack.disabled = !state.suiteUnlocked || !state.sourcePreset || state.isGenerating;
+  }
+  if (elements.downloadPack) {
+    elements.downloadPack.disabled = state.isGenerating || state.lastGenerationMode !== "pro" || state.generatedVariants.length !== PRO_PACK_COUNT;
+  }
 }
 
 function toggleSuiteUnlock() {
@@ -629,7 +823,9 @@ function handleSuiteUnlock() {
   state.suiteUnlocked = true;
   window.localStorage.setItem(SUITE_UNLOCK_STORAGE_KEY, "1");
   renderSuiteState();
-  elements.status.textContent = "Kreativ Sound Tools is active in this browser.";
+  elements.status.textContent = state.sourcePreset
+    ? "Kreativ Sound Tools is active in this browser. Generate the 32-preset pack when ready."
+    : "Kreativ Sound Tools is active in this browser.";
 }
 
 elements.fileInput.addEventListener("change", (event) => {
@@ -655,7 +851,9 @@ elements.dirtRange.addEventListener("input", () => {
   updateControlLabels();
   renderStrategyMetrics();
 });
-elements.generateButton.addEventListener("click", handleGenerate);
+elements.generateButton.addEventListener("click", () => handleGenerate("free"));
+elements.generatePack?.addEventListener("click", () => handleGenerate("pro"));
+elements.downloadPack?.addEventListener("click", downloadVariantPack);
 elements.suiteToggle?.addEventListener("click", toggleSuiteUnlock);
 elements.suiteUnlockButton?.addEventListener("click", handleSuiteUnlock);
 

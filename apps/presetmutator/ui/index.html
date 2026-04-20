@@ -19,6 +19,7 @@
       gtag("js", new Date());
       gtag("config", "G-QRTJS1KZD9");
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body>
@@ -43,14 +44,14 @@
 
       <section class="hero">
         <h1>Turn one Vital preset into three new directions</h1>
-        <p class="lede">Load a Vital preset, shape the mutation, and export 3 playable variations.</p>
+        <p class="lede">Load a Vital preset, shape the mutation, and export 3 free variations or a 32-preset Pro pack.</p>
       </section>
 
       <section class="panel upload-panel">
         <div class="section-head">
           <div>
             <h2>Input Preset</h2>
-            <p class="muted">Use one `.vital` preset file. The free version generates exactly 3 mutated variations.</p>
+            <p class="muted">Use one `.vital` preset file. Free generates 3 directions. The suite unlock adds a 32-preset pack.</p>
             <p class="input-note">Vital only for now. More synths will be supported in the future.</p>
           </div>
         </div>
@@ -156,12 +157,12 @@
           <div class="actions">
             <button id="generate-button" type="button" disabled>
               <span class="button-spinner" aria-hidden="true"></span>
-              <span class="button-label">Generate Variations</span>
+              <span class="button-label">Generate 3 Free Variations</span>
             </button>
           </div>
 
           <div class="status" id="status">Load one Vital preset to generate 3 new directions.</div>
-          <p class="upgrade-hint">Pro will add larger preset sets, batch mutation, style modes, and more synth formats.</p>
+          <p class="upgrade-hint">The full suite unlock adds a 32-preset mutation pack, ZIP export, and future tool updates.</p>
         </section>
 
         <section class="panel insight-panel">
@@ -217,7 +218,7 @@
           <p class="suite-ownership">Pay once. Unlock the suite on this browser with your purchase code.</p>
           <ul class="suite-list">
             <li>Audio Alchemy included</li>
-            <li>Preset Mutator included</li>
+            <li>Preset Mutator 32-preset pack</li>
             <li>Wave Fracture included</li>
           </ul>
         </div>
@@ -241,6 +242,17 @@
         <div class="suite-active" id="suite-active" hidden>
           <p class="suite-active-badge">Kreativ Sound Tools active</p>
           <p class="suite-active-note">This browser is unlocked for Audio Alchemy, Preset Mutator, and Wave Fracture.</p>
+          <div class="suite-active-actions">
+            <button class="button primary" id="generate-pack" type="button" disabled>
+              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+              Generate 32-Preset Pack
+            </button>
+            <button class="button secondary" id="download-pack" type="button" disabled>
+              <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
+              Download 32-Pack (.zip)
+            </button>
+          </div>
+          <p class="suite-active-meta">Builds 32 `.vital` files from the same source preset and downloads them as one ZIP.</p>
         </div>
       </section>
 
