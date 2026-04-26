@@ -1,0 +1,101 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="Sound | Kreativ Sound"
+  description="Atmospheric sound packs and audio textures for filmmakers, designers, and creators. Crafted for focus, mood, and creative flow."
+  canonical="https://kreativsound.com/sound/"
+  activeNav="sound"
+  bodyClass="home-page"
+  skipLinkTarget="#catalog-title"
+  skipLinkLabel="Skip to product catalog"
+  scripts={["/products.js", "/main.js"]}
+>
+  <header class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Ambient and cinematic audio</p>
+      <h1>Browse Sound</h1>
+      <p class="tagline">
+        Atmospheric sound packs and audio textures crafted for focus, mood, and creative flow.
+      </p>
+    </div>
+    <div class="hero-actions">
+      <a class="button primary" data-track="hero_explore_click" href="https://kreativ.gumroad.com" target="_blank" rel="noopener noreferrer">
+        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+        Explore Sound Packs
+      </a>
+      <a class="button secondary" data-track="hero_patreon_click" href="https://www.patreon.com/kreativsound" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-patreon" aria-hidden="true"></i>
+        Join Patreon
+      </a>
+    </div>
+  </header>
+
+  <section class="catalog card" aria-labelledby="catalog-title">
+    <h2 id="catalog-title">Browse Sound</h2>
+    <p class="catalog-intro">Jump to the format you want first.</p>
+    <div class="catalog-anchor-links" id="catalog-anchor-links" aria-label="Catalog sections" hidden>
+      <a href="#catalog-presets">Preset Packs</a>
+      <a href="#catalog-samples">Sample Packs</a>
+      <a href="#catalog-free">Free Sounds</a>
+      <a href="#catalog-legacy">Legacy Archive</a>
+    </div>
+    <article class="featured-product" aria-label="Featured product">
+      <img
+        class="featured-thumb"
+        src="/assets/thumbs/velvet-ruins.jpg"
+        width="96"
+        height="96"
+        alt="VELVET RUINS product artwork"
+        loading="eager"
+        decoding="async"
+      />
+      <div class="featured-content">
+        <p class="featured-label">Featured</p>
+        <h3>VELVET RUINS - Presets for Vital spectral synth</h3>
+        <p>Worn-down cinematic synth textures shaped for dark melody, atmosphere, and motion.</p>
+      </div>
+      <div class="featured-actions">
+        <a class="button secondary" href="/products/velvet-ruins/">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          Details
+        </a>
+        <a
+          class="button primary featured-cta"
+          data-track="featured_product_click"
+          href="https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+          Get VELVET RUINS
+        </a>
+      </div>
+    </article>
+    <div id="catalog-groups"></div>
+    <noscript>
+      <div class="noscript-fallback">
+        <p>JavaScript is disabled. Browse the full catalog directly:</p>
+        <ul class="noscript-list">
+          <li><a href="https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile" target="_blank" rel="noopener noreferrer">BIOFORMS - Synplant 2 Presets</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/monolush-fabfilter-one-presets?layout=profile" target="_blank" rel="noopener noreferrer">MONOLUSH - FabFilter One Presets</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/dirty-model?layout=profile" target="_blank" rel="noopener noreferrer">DIRTY MODEL - Moog Model D Presets</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/zephy-animoog-z-presets?layout=profile" target="_blank" rel="noopener noreferrer">ZEPHYR - Animoog Z Presets</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile" target="_blank" rel="noopener noreferrer">NEOLITH - Softube Models Presets</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile" target="_blank" rel="noopener noreferrer">VELVET RUINS - Vital Presets</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/sfxs-sound-effects-library?layout=profile" target="_blank" rel="noopener noreferrer">SFXS 2 - Sound Effects Collection</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/noize-oscillators?layout=profile" target="_blank" rel="noopener noreferrer">NOIZE 2 - Noise Textures and FX</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/enigma?layout=profile" target="_blank" rel="noopener noreferrer">ENIGMA 2 - Cinematic Atmospheres</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/bleeps-sharp-percussion-drum-samples?layout=profile" target="_blank" rel="noopener noreferrer">BLEEPS 2 - Experimental Percussion</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/space-inspired-atmospheres-textures?layout=profile" target="_blank" rel="noopener noreferrer">SPACE 2 - Space Atmospheres and Textures</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/tectonic-underground-textures?layout=profile" target="_blank" rel="noopener noreferrer">TECTONIC 2 - Dark Subs and Textures</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/horror-cinematic-scary-texture?layout=profile" target="_blank" rel="noopener noreferrer">HORROR 2 - Cinematic Scary Texture</a></li>
+          <li><a href="/assets/downloads/velvet-ruins-lite.zip">VELVET RUINS Lite - Free presets for Vital</a></li>
+          <li><a href="https://kreativ.gumroad.com/l/abyss-dark-ambient-presets-for-pro-53?layout=profile" target="_blank" rel="noopener noreferrer">ABYSS - Free Dark Ambient Presets</a></li>
+          <li>The Black Angel - ReFill</li>
+          <li><a href="https://kreativ.gumroad.com/l/daft-free-plasticz-presets?layout=profile" target="_blank" rel="noopener noreferrer">DAFT Plasticz Presets</a></li>
+        </ul>
+      </div>
+    </noscript>
+  </section>
+</BaseLayout>

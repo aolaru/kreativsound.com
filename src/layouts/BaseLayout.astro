@@ -1,0 +1,77 @@
+---
+import "../../style.css";
+import SiteNav from "../components/SiteNav.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+const {
+  title = "Kreativ Sound",
+  description = "Atmospheric sound packs, practical resources, and browser-based sound design tools in development.",
+  canonical = "https://kreativsound.com/",
+  activeNav = "home",
+  bodyClass = "top-level-page",
+  skipLinkTarget = "",
+  skipLinkLabel = "",
+  scripts = []
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f8e9e9" />
+    <meta name="robots" content="index,follow" />
+    <script is:inline>
+      (() => {
+        const stored = localStorage.getItem("theme");
+        const theme = stored === "light" || stored === "dark" ? stored : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+    <link rel="canonical" href={canonical} />
+    <meta property="og:site_name" content="Kreativ Sound" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content="https://kreativsound.com/og-image.svg" />
+    <meta property="og:image:alt" content="Kreativ Sound preview card" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="https://kreativsound.com/og-image.svg" />
+    <meta property="twitter:image:alt" content="Kreativ Sound preview card" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRTJS1KZD9"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("js", new Date());
+      gtag("config", "G-QRTJS1KZD9");
+    </script>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script>
+    <slot name="head" />
+  </head>
+  <body class={bodyClass}>
+    {skipLinkTarget && skipLinkLabel ? (
+      <a class="skip-link" href={skipLinkTarget}>{skipLinkLabel}</a>
+    ) : null}
+    <main class="container" id="top">
+      <SiteNav active={activeNav} />
+      <slot />
+      <SiteFooter />
+    </main>
+    <script is:inline src="/site.js"></script>
+    <script is:inline src="/share.js"></script>
+    {scripts.map((src) => <script is:inline src={src}></script>)}
+  </body>
+</html>

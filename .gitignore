@@ -2,3 +2,7 @@ assets/thumbs/*-source.png
 assets/thumbs/*-square.png
 reports/lighthouse/
 .DS_Store
+node_modules/
+dist/
+.astro/
+public/

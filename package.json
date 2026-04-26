@@ -1,0 +1,32 @@
+{
+  "name": "kreativsound.com",
+  "version": "1.0.0",
+  "description": "Official static website for [kreativsound.com](https://kreativsound.com).",
+  "main": "main.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "sync:astro-public": "node scripts/sync-astro-public.mjs",
+    "predev": "npm run sync:astro-public",
+    "prebuild": "npm run sync:astro-public",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aolaru/kreativsound.com.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/aolaru/kreativsound.com/issues"
+  },
+  "homepage": "https://github.com/aolaru/kreativsound.com#readme",
+  "dependencies": {
+    "astro": "^6.1.9"
+  }
+}
