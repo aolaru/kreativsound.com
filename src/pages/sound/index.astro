@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProductCatalog from "../../components/ProductCatalog.astro";
 ---
 <BaseLayout
   title="Sound | Kreativ Sound"
@@ -9,7 +10,6 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   bodyClass="home-page"
   skipLinkTarget="#catalog-title"
   skipLinkLabel="Skip to product catalog"
-  scripts={["/products.js", "/main.js"]}
 >
   <header class="hero">
     <div class="hero-copy">
@@ -34,12 +34,6 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   <section class="catalog card" aria-labelledby="catalog-title">
     <h2 id="catalog-title">Browse Sound</h2>
     <p class="catalog-intro">Jump to the format you want first.</p>
-    <div class="catalog-anchor-links" id="catalog-anchor-links" aria-label="Catalog sections" hidden>
-      <a href="#catalog-presets">Preset Packs</a>
-      <a href="#catalog-samples">Sample Packs</a>
-      <a href="#catalog-free">Free Sounds</a>
-      <a href="#catalog-legacy">Legacy Archive</a>
-    </div>
     <article class="featured-product" aria-label="Featured product">
       <img
         class="featured-thumb"
@@ -72,30 +66,6 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         </a>
       </div>
     </article>
-    <div id="catalog-groups"></div>
-    <noscript>
-      <div class="noscript-fallback">
-        <p>JavaScript is disabled. Browse the full catalog directly:</p>
-        <ul class="noscript-list">
-          <li><a href="https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile" target="_blank" rel="noopener noreferrer">BIOFORMS - Synplant 2 Presets</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/monolush-fabfilter-one-presets?layout=profile" target="_blank" rel="noopener noreferrer">MONOLUSH - FabFilter One Presets</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/dirty-model?layout=profile" target="_blank" rel="noopener noreferrer">DIRTY MODEL - Moog Model D Presets</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/zephy-animoog-z-presets?layout=profile" target="_blank" rel="noopener noreferrer">ZEPHYR - Animoog Z Presets</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile" target="_blank" rel="noopener noreferrer">NEOLITH - Softube Models Presets</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile" target="_blank" rel="noopener noreferrer">VELVET RUINS - Vital Presets</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/sfxs-sound-effects-library?layout=profile" target="_blank" rel="noopener noreferrer">SFXS 2 - Sound Effects Collection</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/noize-oscillators?layout=profile" target="_blank" rel="noopener noreferrer">NOIZE 2 - Noise Textures and FX</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/enigma?layout=profile" target="_blank" rel="noopener noreferrer">ENIGMA 2 - Cinematic Atmospheres</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/bleeps-sharp-percussion-drum-samples?layout=profile" target="_blank" rel="noopener noreferrer">BLEEPS 2 - Experimental Percussion</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/space-inspired-atmospheres-textures?layout=profile" target="_blank" rel="noopener noreferrer">SPACE 2 - Space Atmospheres and Textures</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/tectonic-underground-textures?layout=profile" target="_blank" rel="noopener noreferrer">TECTONIC 2 - Dark Subs and Textures</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/horror-cinematic-scary-texture?layout=profile" target="_blank" rel="noopener noreferrer">HORROR 2 - Cinematic Scary Texture</a></li>
-          <li><a href="/assets/downloads/velvet-ruins-lite.zip">VELVET RUINS Lite - Free presets for Vital</a></li>
-          <li><a href="https://kreativ.gumroad.com/l/abyss-dark-ambient-presets-for-pro-53?layout=profile" target="_blank" rel="noopener noreferrer">ABYSS - Free Dark Ambient Presets</a></li>
-          <li>The Black Angel - ReFill</li>
-          <li><a href="https://kreativ.gumroad.com/l/daft-free-plasticz-presets?layout=profile" target="_blank" rel="noopener noreferrer">DAFT Plasticz Presets</a></li>
-        </ul>
-      </div>
-    </noscript>
+    <ProductCatalog />
   </section>
 </BaseLayout>
