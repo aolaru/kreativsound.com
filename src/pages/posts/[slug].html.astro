@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getAllPosts } from "../../lib/posts";
+
+export function getStaticPaths() {
+  return getAllPosts().map((post) => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
+}
+
+const { post } = Astro.props;
+---
+<BaseLayout
+  title={post.title}
+  description={post.description}
+  canonical={post.canonical}
+  ogImage={post.ogImage}
+  ogType="article"
+  publishedTime={post.publishedTime}
+  activeNav={post.section}
+  bodyClass=""
+>
+  <Fragment set:html={post.articleHtml} />
+</BaseLayout>

@@ -28,13 +28,8 @@ const filesToCopy = [
 ];
 
 const directoriesToCopy = [
-  "about",
   "apps",
   "assets",
-  "contact",
-  "learn",
-  "news",
-  "posts",
   "products"
 ];
 
