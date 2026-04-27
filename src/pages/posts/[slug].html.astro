@@ -1,25 +1,34 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getAllPosts } from "../../lib/posts";
+import { getCollection, render } from "astro:content";
 
-export function getStaticPaths() {
-  return getAllPosts().map((post) => ({
-    params: { slug: post.slug },
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.md$/, "") },
     props: { post }
   }));
 }
 
 const { post } = Astro.props;
+const { Content } = await render(post);
 ---
 <BaseLayout
-  title={post.title}
-  description={post.description}
-  canonical={post.canonical}
-  ogImage={post.ogImage}
+  title={`${post.data.title} | Kreativ Sound`}
+  description={post.data.description}
+  canonical={post.data.canonical}
+  ogImage={post.data.ogImage || "https://kreativsound.com/og-image.svg"}
   ogType="article"
-  publishedTime={post.publishedTime}
-  activeNav={post.section}
+  publishedTime={post.data.published || ""}
+  robots={post.data.draft ? "noindex,nofollow" : "index,follow"}
+  activeNav={post.data.section}
   bodyClass=""
 >
-  <Fragment set:html={post.articleHtml} />
+  <article class="card page-main">
+    <h1 class="page-title">{post.data.title}</h1>
+    {post.data.published ? <p class="page-lead article-meta">Published {new Date(post.data.published).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p> : null}
+    <div class="stack article-stack">
+      <Content />
+    </div>
+  </article>
 </BaseLayout>

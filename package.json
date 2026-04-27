@@ -12,6 +12,7 @@
     "prebuild": "npm run sync:astro-public",
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "node scripts/fix-dist-post-routes.mjs",
     "preview": "astro preview"
   },
   "repository": {

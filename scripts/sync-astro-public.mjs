@@ -28,7 +28,6 @@ const filesToCopy = [
 const directoriesToCopy = [
   "apps",
   "assets",
-  "products"
 ];
 
 function resetDirectory(targetDir) {

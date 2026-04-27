@@ -1,0 +1,84 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { productPages } from "../../../lib/product-pages";
+
+export function getStaticPaths() {
+  return productPages.map((product) => ({
+    params: { slug: product.slug },
+    props: { product }
+  }));
+}
+
+const { product } = Astro.props;
+---
+<BaseLayout
+  title={product.title}
+  description={product.description}
+  canonical={product.canonical}
+  ogImage={product.ogImage}
+  ogImageAlt={product.ogImageAlt}
+  activeNav="sound"
+>
+  <article class="card page-main product-page">
+    <section class="product-hero">
+      <img class="product-hero-image" src={product.image} width="256" height="256" alt={product.imageAlt} />
+      <div>
+        <p class="product-kicker">{product.kicker}</p>
+        <h1 class="page-title">{product.title.replace(" | Kreativ Sound", "")}</h1>
+        <p class="page-lead">{product.lead}</p>
+        <p class="product-summary">{product.summary}</p>
+        <div class="product-actions">
+          <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            Buy on Gumroad
+          </a>
+          <a class="button secondary" href={product.secondaryUrl}>
+            <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+            {product.secondaryLabel}
+          </a>
+        </div>
+        <section class="product-demo" aria-label="Audio demo">
+          <div class="product-demo-header">
+            <span class="product-demo-title"><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Demo</span>
+            <span class="product-demo-note">Audio slot ready</span>
+          </div>
+          <p class="product-demo-placeholder">{product.demoPlaceholder}</p>
+        </section>
+      </div>
+    </section>
+
+    <section class="stack">
+      <div class="product-specs">
+        {product.specs.map((spec) => (
+          <div class="product-spec">
+            <span class="product-spec-label">{spec.label}</span>
+            <span class="product-spec-value">{spec.value}</span>
+          </div>
+        ))}
+      </div>
+
+      <section class="product-panel-grid">
+        {product.panels.map((panel) => (
+          <section class="product-panel">
+            <h2>{panel.title}</h2>
+            {panel.body ? <p>{panel.body}</p> : null}
+            {panel.items ? (
+              <ul>
+                {panel.items.map((item) => <li>{item}</li>)}
+              </ul>
+            ) : null}
+          </section>
+        ))}
+      </section>
+
+      <section class="product-section">
+        <h2>Related reading</h2>
+        <div class="product-related">
+          {product.related.map((item) => (
+            <a href={item.url}>{item.label} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          ))}
+        </div>
+      </section>
+    </section>
+  </article>
+</BaseLayout>
