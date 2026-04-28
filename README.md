@@ -117,7 +117,7 @@ git commit -m "Describe changes"
 git push
 ```
 
-If GitHub Pages (or another deployment target) is connected to `main`, pushes publish updates automatically.
+If you are using GitHub Pages, set the Pages source to `GitHub Actions`. This repository now includes a workflow that builds Astro and deploys `dist/` on pushes to `main`.
 
 ## Pre-Release Checks
 
