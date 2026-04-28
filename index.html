@@ -79,16 +79,23 @@
   <a class="skip-link" href="#catalog-title">Skip to product catalog</a>
 
   <main class="container" id="top">
+    
+
+    
     <nav class="site-nav site-nav-split site-nav-home" aria-label="Primary">
-      <div class="nav-group nav-group-main">
+      <a class="nav-brand nav-brand-left" href="/" aria-label="Kreativ Sound home">
+        <img class="nav-brand-mark" src="logo-128.svg" width="128" height="128" alt="Kreativ Sound logo" />
+      </a>
+      <form class="site-search" action="https://www.google.com/search" method="get" role="search">
+        <input type="hidden" name="sitesearch" value="kreativsound.com" />
+        <label class="sr-only" for="site-search-input">Search Kreativ Sound</label>
+        <i class="fa-solid fa-magnifying-glass site-search-icon" aria-hidden="true"></i>
+        <input class="site-search-input" id="site-search-input" name="q" type="search" placeholder="Search site" autocomplete="off" />
+      </form>
+      <div class="nav-group nav-group-right">
         <a class="nav-link active" href="/" aria-label="Sounds">Sounds</a>
         <a class="nav-link" href="/tools/">Tools</a>
         <a class="nav-link" href="/music/">Music</a>
-      </div>
-      <a class="nav-brand" href="/" aria-label="Kreativ Sound home">
-        <img class="nav-brand-mark" src="logo-128.svg" width="128" height="128" alt="Kreativ Sound logo" />
-      </a>
-      <div class="nav-group nav-group-utility">
         <a class="nav-link" href="/news/">News</a>
         <a class="nav-link" href="/learn/">Learn</a>
         <a class="nav-link" href="/about/">About</a>
@@ -104,8 +111,7 @@
         </button>
       </div>
     </nav>
-
-    <header class="hero">
+<header class="hero">
       <div class="hero-copy">
         <p class="eyebrow">Ambient and cinematic audio</p>
         <h1>Browse Sound</h1>
