@@ -4,7 +4,9 @@ description: "Kreativ Sound now includes three public browser tools: Audio Alche
 canonical: "https://kreativsound.com/posts/tools-lineup-update-2026-04-04.html"
 ogImage: "https://kreativsound.com/apps/audio-alchemy/ui/audio-alchemy-mark.svg"
 section: news
+kind: site
 published: "2026-04-04"
+featured: false
 draft: false
 ---
 <p>The Kreativ Sound tools area now includes three public browser tools: Audio Alchemy, Preset Mutator, and Wave Fracture.</p>

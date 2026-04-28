@@ -5,6 +5,7 @@ canonical: "https://kreativsound.com/posts/how-to-layer-bioforms-for-organic-mot
 ogImage: "https://kreativsound.com/assets/thumbs/bioforms.jpg"
 section: learn
 published: "2026-03-14"
+featured: false
 draft: false
 ---
 <figure class="article-figure">

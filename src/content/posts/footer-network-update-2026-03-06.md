@@ -4,7 +4,9 @@ description: "Footer and ecosystem link update from March 6, 2026."
 canonical: "https://kreativsound.com/posts/footer-network-update-2026-03-06.html"
 ogImage: "https://kreativsound.com/og-image.svg"
 section: news
+kind: site
 published: "2026-03-06"
+featured: false
 draft: false
 ---
 <p>The footer now includes direct links to Kreativ Font, Kreativ Sound, Kreativ WP, and Kreativ Tools to make network discovery easier.</p>

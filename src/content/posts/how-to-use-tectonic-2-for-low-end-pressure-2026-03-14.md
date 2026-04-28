@@ -5,6 +5,7 @@ canonical: "https://kreativsound.com/posts/how-to-use-tectonic-2-for-low-end-pre
 ogImage: "https://kreativsound.com/assets/thumbs/tectonic-2.jpg"
 section: learn
 published: "2026-03-14"
+featured: false
 draft: false
 ---
 <figure class="article-figure">

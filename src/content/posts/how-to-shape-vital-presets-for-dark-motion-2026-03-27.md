@@ -5,6 +5,7 @@ canonical: "https://kreativsound.com/posts/how-to-shape-vital-presets-for-dark-m
 ogImage: "https://kreativsound.com/assets/thumbs/velvet-ruins.jpg"
 section: learn
 published: "2026-03-27"
+featured: false
 draft: false
 ---
 <figure class="article-figure">

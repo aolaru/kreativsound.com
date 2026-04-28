@@ -5,6 +5,7 @@ canonical: "https://kreativsound.com/posts/three-ways-to-use-neolith-for-cinemat
 ogImage: "https://kreativsound.com/assets/thumbs/neolith.jpg"
 section: learn
 published: "2026-03-14"
+featured: false
 draft: false
 ---
 <figure class="article-figure">

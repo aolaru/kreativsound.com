@@ -4,7 +4,9 @@ description: "Audio Alchemy Free is now live on Kreativ Sound with local audio a
 canonical: "https://kreativsound.com/posts/audio-alchemy-free-launch-2026-04-02.html"
 ogImage: "https://kreativsound.com/apps/audio-alchemy/ui/audio-alchemy-mark.svg"
 section: news
+kind: release
 published: "2026-04-02"
+featured: false
 draft: false
 ---
 <p>Audio Alchemy Free is now live on Kreativ Sound as a browser-based tool for turning short source audio into playable Vital presets.</p>

@@ -4,6 +4,7 @@ description: "Draft post: notes from preset pack production workflow."
 canonical: "https://kreativsound.com/posts/preset-pack-production-notes.html"
 ogImage: "https://kreativsound.com/og-image.svg"
 section: learn
+featured: false
 draft: true
 ---
 <p>This draft covers naming conventions, macro mapping strategy, loudness consistency, and final QA before publishing.</p>

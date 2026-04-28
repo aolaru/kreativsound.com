@@ -1,5 +1,20 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const learnPosts = (await getCollection("posts", ({ data }) => data.section === "learn" && !data.draft))
+  .sort((a, b) => (b.data.published || "").localeCompare(a.data.published || ""));
+
+const featuredPost = learnPosts.find((post) => post.data.featured) || learnPosts[0];
+const latestPosts = learnPosts.slice(0, 6);
+
+function hrefFor(post) {
+  return `/posts/${post.id.replace(/\.md$/, ".html")}`;
+}
+
+function formatDate(date) {
+  return new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+}
 ---
 <BaseLayout
   title="Learn | Kreativ Sound"
@@ -15,12 +30,12 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         <h1 class="page-title">Short workflow guides for real sound design work.</h1>
         <p class="page-lead">Practical ideas tied to actual packs, with less theory and more direct use cases.</p>
       </div>
-      <a class="learn-featured" href="/posts/how-to-use-audio-alchemy-free-2026-04-02.html">
-        <img class="learn-featured-image" src="/apps/audio-alchemy/ui/audio-alchemy-mark.svg" width="256" height="256" alt="Audio Alchemy guide artwork" />
+      <a class="learn-featured" href={hrefFor(featuredPost)}>
+        <img class="learn-featured-image" src={featuredPost.data.ogImage || "/og-image.svg"} width="256" height="256" alt={`${featuredPost.data.title} artwork`} />
         <div class="learn-featured-copy">
           <span class="learn-card-kicker">Featured guide</span>
-          <h2>How to Use Audio Alchemy Free</h2>
-          <p>Get better results by choosing the right source sounds and using the two bias controls with restraint.</p>
+          <h2>{featuredPost.data.title}</h2>
+          <p>{featuredPost.data.description}</p>
           <span class="learn-card-link">Read guide <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
         </div>
       </a>
@@ -32,42 +47,14 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         <p>Fast reads with direct musical use.</p>
       </div>
       <div class="learn-grid">
-        <a class="learn-card" href="/posts/how-to-use-audio-alchemy-free-2026-04-02.html">
-          <img class="learn-card-image" src="/apps/audio-alchemy/ui/audio-alchemy-mark.svg" width="160" height="160" alt="Audio Alchemy guide artwork" />
-          <time datetime="2026-04-02">April 2, 2026</time>
-          <h3>How to Use Audio Alchemy Free</h3>
-          <p>Use short source sounds and small control moves for stronger preset results.</p>
-        </a>
-        <a class="learn-card" href="/posts/how-to-shape-vital-presets-for-dark-motion-2026-03-27.html">
-          <img class="learn-card-image" src="/assets/thumbs/velvet-ruins.jpg" width="160" height="160" alt="VELVET RUINS artwork" />
-          <time datetime="2026-03-27">March 27, 2026</time>
-          <h3>How to Shape Vital Presets for Dark Motion</h3>
-          <p>Build motion in Vital without losing weight or clarity.</p>
-        </a>
-        <a class="learn-card" href="/posts/crafting-ambient-textures.html">
-          <img class="learn-card-image" src="/assets/thumbs/bioforms.jpg" width="160" height="160" alt="Ambient textures guide artwork" />
-          <time datetime="2026-03-16">March 16, 2026</time>
-          <h3>Crafting Ambient Textures</h3>
-          <p>A short workflow for building space without overcrowding the mix.</p>
-        </a>
-        <a class="learn-card" href="/posts/how-to-use-tectonic-2-for-low-end-pressure-2026-03-14.html">
-          <img class="learn-card-image" src="/assets/thumbs/tectonic-2.jpg" width="160" height="160" alt="TECTONIC 2 artwork" />
-          <time datetime="2026-03-14">March 14, 2026</time>
-          <h3>How to Use TECTONIC 2 for Low-End Pressure</h3>
-          <p>Keep the low end heavy without making the whole track collapse.</p>
-        </a>
-        <a class="learn-card" href="/posts/how-to-layer-bioforms-for-organic-motion-2026-03-14.html">
-          <img class="learn-card-image" src="/assets/thumbs/bioforms.jpg" width="160" height="160" alt="BIOFORMS artwork" />
-          <time datetime="2026-03-14">March 14, 2026</time>
-          <h3>How to Layer BIOFORMS for Organic Motion</h3>
-          <p>Use one layer for tone and one for movement.</p>
-        </a>
-        <a class="learn-card" href="/posts/three-ways-to-use-neolith-for-cinematic-tension-2026-03-14.html">
-          <img class="learn-card-image" src="/assets/thumbs/neolith.jpg" width="160" height="160" alt="NEOLITH artwork" />
-          <time datetime="2026-03-14">March 14, 2026</time>
-          <h3>3 Ways to Use NEOLITH for Cinematic Tension</h3>
-          <p>Three focused ways to hold pressure without filling everything.</p>
-        </a>
+        {latestPosts.map((post) => (
+          <a class="learn-card" href={hrefFor(post)}>
+            <img class="learn-card-image" src={post.data.ogImage || "/og-image.svg"} width="160" height="160" alt={`${post.data.title} artwork`} />
+            {post.data.published ? <time datetime={post.data.published}>{formatDate(post.data.published)}</time> : null}
+            <h3>{post.data.title}</h3>
+            <p>{post.data.description}</p>
+          </a>
+        ))}
       </div>
     </section>
 

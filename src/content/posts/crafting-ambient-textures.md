@@ -5,6 +5,7 @@ canonical: "https://kreativsound.com/posts/crafting-ambient-textures.html"
 ogImage: "https://kreativsound.com/assets/thumbs/bioforms.jpg"
 section: learn
 published: "2026-03-16"
+featured: false
 draft: false
 ---
 <figure class="article-figure">

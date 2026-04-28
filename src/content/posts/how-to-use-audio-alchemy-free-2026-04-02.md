@@ -5,6 +5,7 @@ canonical: "https://kreativsound.com/posts/how-to-use-audio-alchemy-free-2026-04
 ogImage: "https://kreativsound.com/apps/audio-alchemy/ui/audio-alchemy-mark.svg"
 section: learn
 published: "2026-04-02"
+featured: true
 draft: false
 ---
 <figure class="article-figure">

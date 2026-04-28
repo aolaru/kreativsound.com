@@ -4,7 +4,9 @@ description: "Catalog media and thumbnail update from February 25, 2026."
 canonical: "https://kreativsound.com/posts/catalog-media-refresh-2026-02-25.html"
 ogImage: "https://kreativsound.com/og-image.svg"
 section: news
+kind: release
 published: "2026-02-25"
+featured: false
 draft: false
 ---
 <p>Thumbnail assets were consolidated to local optimized files to improve page speed, visual consistency, and deployment reliability.</p>

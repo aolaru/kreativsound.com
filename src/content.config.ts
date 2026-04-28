@@ -9,7 +9,9 @@ const posts = defineCollection({
     canonical: z.string().url(),
     ogImage: z.string().url().optional(),
     section: z.enum(["news", "learn"]),
+    kind: z.enum(["release", "site"]).optional(),
     published: z.string().optional(),
+    featured: z.boolean().default(false),
     draft: z.boolean().default(false)
   })
 });

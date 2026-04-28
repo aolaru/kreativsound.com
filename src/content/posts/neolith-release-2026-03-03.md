@@ -4,7 +4,9 @@ description: "Release notes for NEOLITH presets for Softube Models, published Ma
 canonical: "https://kreativsound.com/posts/neolith-release-2026-03-03.html"
 ogImage: "https://kreativsound.com/assets/thumbs/neolith.jpg"
 section: news
+kind: release
 published: "2026-03-03"
+featured: false
 draft: false
 ---
 <p>NEOLITH is now available for Softube Models. This release focuses on analog-forward tones designed for cinematic scenes, modern ambient scoring, and low-register tension work.</p>
