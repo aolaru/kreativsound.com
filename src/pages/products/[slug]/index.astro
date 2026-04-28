@@ -40,9 +40,18 @@ const { product } = Astro.props;
         <section class="product-demo" aria-label="Audio demo">
           <div class="product-demo-header">
             <span class="product-demo-title"><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Demo</span>
-            <span class="product-demo-note">Audio slot ready</span>
+            <span class="product-demo-note">{product.demo?.src ? "Listen now" : "Audio slot ready"}</span>
           </div>
-          <p class="product-demo-placeholder">{product.demoPlaceholder}</p>
+          {product.demo?.src ? (
+            <div class="product-card-demo">
+              <span class="product-card-demo-label">{product.demo.label || "Listen to demo"}</span>
+              <audio class="product-card-demo-player" controls preload="metadata">
+                <source src={product.demo.src} type={product.demo.type} />
+              </audio>
+            </div>
+          ) : (
+            <p class="product-demo-placeholder">{product.demoPlaceholder}</p>
+          )}
         </section>
       </div>
     </section>

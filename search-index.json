@@ -71,45 +71,101 @@
   },
   {
     "title": "MONOLUSH - Presets for FabFilter One",
-    "url": "https://kreativ.gumroad.com/l/monolush-fabfilter-one-presets?layout=profile",
+    "url": "/products/monolush/",
     "type": "Product",
     "thumbnail": "/assets/thumbs/monolush.jpg",
     "description": "Warm mono synth textures."
   },
   {
     "title": "DIRTY MODEL - Presets for Moog Model D",
-    "url": "https://kreativ.gumroad.com/l/dirty-model?layout=profile",
+    "url": "/products/dirty-model/",
     "type": "Product",
     "thumbnail": "/assets/thumbs/dirty-model.jpg",
     "description": "Driven basses and analog grit."
   },
   {
     "title": "ZEPHYR - Presets for Moog Animoog Z",
-    "url": "https://kreativ.gumroad.com/l/zephy-animoog-z-presets?layout=profile",
+    "url": "/products/zephyr/",
     "type": "Product",
     "thumbnail": "/assets/thumbs/zephyr.jpg",
     "description": "Airy motion-driven melodic layers."
   },
   {
     "title": "TECTONIC 2 - Dark Subs and Underground Textures",
-    "url": "https://kreativ.gumroad.com/l/tectonic-underground-textures?layout=profile",
+    "url": "/products/tectonic-2/",
     "type": "Product",
     "thumbnail": "/assets/thumbs/tectonic-2.jpg",
     "description": "Low-end pressure and subterranean atmospheres."
   },
   {
     "title": "SPACE 2 - Space Inspired Atmospheres and Textures",
-    "url": "https://kreativ.gumroad.com/l/space-inspired-atmospheres-textures?layout=profile",
+    "url": "/products/space-2/",
     "type": "Product",
     "thumbnail": "/assets/thumbs/space-2.jpg",
     "description": "Sci-fi ambience and distant environments."
   },
   {
     "title": "HORROR 2 - Cinematic Scary Texture",
-    "url": "https://kreativ.gumroad.com/l/horror-cinematic-scary-texture?layout=profile",
+    "url": "/products/horror-2/",
     "type": "Product",
     "thumbnail": "/assets/thumbs/horror-2.jpg",
     "description": "Horror stingers and uneasy drones."
+  },
+  {
+    "title": "SFXS 2 - Creative Sound Effects Collection",
+    "url": "/products/sfxs-2/",
+    "type": "Product",
+    "thumbnail": "/assets/thumbs/sfxs-2.jpg",
+    "description": "Design accents and cinematic transitions."
+  },
+  {
+    "title": "NOIZE 2 - Experimental Noise Textures and FX",
+    "url": "/products/noize-2/",
+    "type": "Product",
+    "thumbnail": "/assets/thumbs/noize-2.jpg",
+    "description": "Abstract noise layers and glitches."
+  },
+  {
+    "title": "ENIGMA 2 - Cinematic Mysterious Atmospheres",
+    "url": "/products/enigma-2/",
+    "type": "Product",
+    "thumbnail": "/assets/thumbs/enigma-2.jpg",
+    "description": "Dark tension beds for film scenes."
+  },
+  {
+    "title": "BLEEPS 2 - Experimental Percussion Sounds",
+    "url": "/products/bleeps-2/",
+    "type": "Product",
+    "thumbnail": "/assets/thumbs/bleeps-2.jpg",
+    "description": "Percussive one-shots and rhythmic FX."
+  },
+  {
+    "title": "VELVET RUINS Lite - Free presets for Vital",
+    "url": "/products/velvet-ruins-lite/",
+    "type": "Product",
+    "thumbnail": "/assets/thumbs/velvet-ruins-lite.jpg",
+    "description": "Free dark experimental Vital presets."
+  },
+  {
+    "title": "ABYSS - Free Dark Ambient Presets for PRO-53",
+    "url": "/products/abyss/",
+    "type": "Product",
+    "thumbnail": "/assets/thumbs/abyss.jpg",
+    "description": "Free atmospheric toolkit for dark ambient work."
+  },
+  {
+    "title": "The Black Angel - ReFill",
+    "url": "/products/the-black-angel/",
+    "type": "Product",
+    "thumbnail": "/assets/thumbs/the-black-angel.jpg",
+    "description": "Archive-only Reason ReFill and first release in the catalog."
+  },
+  {
+    "title": "DAFT Plasticz Presets",
+    "url": "/products/daft-plasticz/",
+    "type": "Product",
+    "thumbnail": "/assets/thumbs/daft-plasticz.jpg",
+    "description": "Legacy plastic and synthetic preset textures."
   },
   {
     "title": "How to Use TECTONIC 2 for Low-End Pressure",
