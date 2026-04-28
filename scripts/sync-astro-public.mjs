@@ -11,6 +11,7 @@ const filesToCopy = [
   "apple-touch-icon.png",
   "logo-128.svg",
   "og-image.svg",
+  "search-index.json",
   "site.js",
   "share.js",
   "robots.txt",
