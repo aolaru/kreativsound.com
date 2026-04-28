@@ -1,61 +1,15 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import SoundLanding from "../components/SoundLanding.astro";
 ---
 <BaseLayout
-  title="Kreativ Sound | Sound Design, Tools, and Creative Resources"
-  description="Kreativ Sound brings together atmospheric sound packs, a work-in-progress browser tools area, workflow guides, and music experiments for dark, cinematic, and experimental creators."
+  title="Kreativ Sound | Sounds"
+  description="Atmospheric sound packs and audio textures for filmmakers, designers, and creators. Crafted for focus, mood, and creative flow."
   canonical="https://kreativsound.com/"
-  activeNav="home"
+  activeNav="sound"
+  bodyClass="home-page"
+  skipLinkTarget="#catalog-title"
+  skipLinkLabel="Skip to product catalog"
 >
-  <section class="card page-main product-page home-front-page">
-    <div class="stack">
-      <header class="home-front-hero">
-        <p class="product-kicker">Kreativ Sound</p>
-        <h1 class="page-title">Sound design for darker, stranger, and more cinematic work.</h1>
-        <p class="page-lead">Sounds, tools in development, guides, and music from the Kreativ Sound world.</p>
-        <div class="product-actions">
-          <a class="button primary" href="/sound/">
-            <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
-            Explore Sounds
-          </a>
-          <a class="button secondary" href="/tools/">
-            <i class="fa-solid fa-flask-vial" aria-hidden="true"></i>
-            Explore Tools
-          </a>
-        </div>
-      </header>
-
-      <section class="home-feature-grid" aria-label="Featured highlights">
-        <article class="product-panel home-feature-card">
-          <img class="home-feature-image" src="/assets/thumbs/velvet-ruins.jpg" width="128" height="128" alt="VELVET RUINS artwork" />
-          <p class="product-kicker">Featured Sound Pack</p>
-          <h2>VELVET RUINS</h2>
-          <p>Worn-down cinematic presets for Vital built for dark melody, motion, and atmosphere.</p>
-          <div class="product-actions">
-            <a class="button primary" href="/products/velvet-ruins/">View Pack</a>
-          </div>
-        </article>
-
-        <article class="product-panel home-feature-card">
-          <img class="home-feature-image" src="/apps/presetmutator/ui/favicon.svg" width="128" height="128" alt="Preset Mutator logo" />
-          <p class="product-kicker">Tools Lab</p>
-          <h2>Preset Mutator</h2>
-          <p>The tools area is now being developed one release at a time. Preset Mutator is the next browser tool being prepared for a public launch.</p>
-          <div class="product-actions">
-            <a class="button secondary" href="/tools/">View Tools Status</a>
-          </div>
-        </article>
-
-        <article class="product-panel home-feature-card">
-          <img class="home-feature-image" src="/assets/thumbs/tectonic-2.jpg" width="128" height="128" alt="TECTONIC 2 article artwork" />
-          <p class="product-kicker">Latest Learn Article</p>
-          <h2>How to Use TECTONIC 2 for Low-End Pressure</h2>
-          <p>Keep the low end heavy without making the whole track collapse.</p>
-          <div class="product-actions">
-            <a class="button secondary" href="/posts/how-to-use-tectonic-2-for-low-end-pressure-2026-03-14.html">Read Article</a>
-          </div>
-        </article>
-      </section>
-    </div>
-  </section>
+  <SoundLanding />
 </BaseLayout>

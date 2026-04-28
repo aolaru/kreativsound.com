@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import ProductCatalog from "../../components/ProductCatalog.astro";
+import SoundLanding from "../../components/SoundLanding.astro";
 ---
 <BaseLayout
   title="Sound | Kreativ Sound"
@@ -11,62 +11,5 @@ import ProductCatalog from "../../components/ProductCatalog.astro";
   skipLinkTarget="#catalog-title"
   skipLinkLabel="Skip to product catalog"
 >
-  <header class="hero">
-    <div class="hero-copy">
-      <p class="eyebrow">Ambient and cinematic audio</p>
-      <h1>Browse Sound</h1>
-      <p class="tagline">
-        Atmospheric sound packs and audio textures built for dark melody, tension, and fast creative momentum.
-      </p>
-    </div>
-    <div class="hero-actions">
-      <a class="button primary" data-track="hero_explore_click" href="https://kreativ.gumroad.com" target="_blank" rel="noopener noreferrer">
-        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-        Explore Sound Packs
-      </a>
-      <a class="button secondary" data-track="hero_patreon_click" href="https://www.patreon.com/kreativsound" target="_blank" rel="noopener noreferrer">
-        <i class="fa-brands fa-patreon" aria-hidden="true"></i>
-        Join Patreon
-      </a>
-    </div>
-  </header>
-
-  <section class="catalog card" aria-labelledby="catalog-title">
-    <h2 id="catalog-title">Browse Sound</h2>
-    <p class="catalog-intro">Start with the featured pack below or jump straight to presets, sample packs, free sounds, and archive releases.</p>
-    <article class="featured-product" aria-label="Featured product">
-      <img
-        class="featured-thumb"
-        src="/assets/thumbs/velvet-ruins.jpg"
-        width="96"
-        height="96"
-        alt="VELVET RUINS product artwork"
-        loading="eager"
-        decoding="async"
-      />
-      <div class="featured-content">
-        <p class="featured-label">Featured</p>
-        <h3>VELVET RUINS - Presets for Vital spectral synth</h3>
-        <p>Worn-down cinematic synth textures shaped for dark melody, atmosphere, and motion.</p>
-        <p class="featured-supporting">Start here if you want immediate Vital atmosphere with damaged harmonics, soft spectral motion, and darker melodic weight.</p>
-      </div>
-      <div class="featured-actions">
-        <a class="button secondary" href="/products/velvet-ruins/">
-          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-          Details
-        </a>
-        <a
-          class="button primary featured-cta"
-          data-track="featured_product_click"
-          href="https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-          Get VELVET RUINS
-        </a>
-      </div>
-    </article>
-    <ProductCatalog />
-  </section>
+  <SoundLanding />
 </BaseLayout>
