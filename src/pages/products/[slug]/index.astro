@@ -20,13 +20,14 @@ const [primaryPanel, ...secondaryPanels] = product.panels;
   ogImageAlt={product.ogImageAlt}
   activeNav="sound"
 >
-  <article class="card page-main product-page product-page-modern">
+  <article class={`card page-main product-page product-page-modern product-page-${product.variant}`}>
     <section class="product-hero">
       <div class="product-hero-copy">
         <p class="product-kicker">{product.kicker}</p>
         <h1 class="page-title">{product.title.replace(" | Kreativ Sound", "")}</h1>
         <p class="page-lead">{product.lead}</p>
         <p class="product-summary">{product.summary}</p>
+        <p class="product-hero-note">{product.heroNote}</p>
         <div class="product-specs-inline" aria-label="Product summary">
           {product.specs.map((spec) => (
             <div class="product-spec-inline">
@@ -36,42 +37,57 @@ const [primaryPanel, ...secondaryPanels] = product.panels;
           ))}
         </div>
         <div class="product-actions">
-          <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
-            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-            Buy on Gumroad
-          </a>
+          {product.primaryUrl && product.primaryLabel ? (
+            <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+              {product.primaryLabel}
+            </a>
+          ) : null}
           <a class="button secondary" href={product.secondaryUrl}>
             <i class="fa-solid fa-book-open" aria-hidden="true"></i>
             {product.secondaryLabel}
           </a>
         </div>
-        <p class="product-trust-line">Instant access. Independent release. Built for darker, cinematic workflow use.</p>
+        <p class="product-trust-line">
+          {product.variant === "archive"
+            ? "Archive entry. Preserved for catalog history and earlier workflow reference."
+            : product.variant === "free"
+              ? "Free release. Direct download and immediate use."
+              : "Instant access. Independent release. Built for darker, cinematic workflow use."}
+        </p>
       </div>
 
       <div class="product-hero-media">
         <div class="product-cover-frame">
           <img class="product-hero-image" src={product.image} width="320" height="320" alt={product.imageAlt} />
         </div>
-        <section class="product-demo" aria-label="Audio demo">
-          <div class="product-demo-header">
-            <span class="product-demo-title"><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Demo</span>
-            <span class="product-demo-note">{product.demo?.src ? "Listen now" : "Audio slot ready"}</span>
-          </div>
-          {product.demo?.src ? (
-            <div class="product-card-demo">
-              <span class="product-card-demo-label">{product.demo.label || "Listen to demo"}</span>
-              <audio class="product-card-demo-player" controls preload="metadata">
-                <source src={product.demo.src} type={product.demo.type} />
-              </audio>
-            </div>
-          ) : (
-            <p class="product-demo-placeholder">{product.demoPlaceholder}</p>
-          )}
-        </section>
       </div>
     </section>
 
     <section class="stack">
+      {product.demo?.src ? (
+        <section class="product-demo product-demo-spotlight" aria-label="Audio demo">
+          <div class="product-demo-copy">
+            <p class="product-section-kicker">Hear the pack</p>
+            <h2>{product.demo.label || "Listen to demo"}</h2>
+            <p>{product.demoBlurb}</p>
+          </div>
+          <div class="product-demo-player-wrap">
+            <audio class="product-card-demo-player" controls preload="metadata">
+              <source src={product.demo.src} type={product.demo.type} />
+            </audio>
+          </div>
+        </section>
+      ) : (
+        <section class="product-demo product-demo-muted" aria-label="Audio demo">
+          <div class="product-demo-header">
+            <span class="product-demo-title"><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Demo</span>
+            <span class="product-demo-note">Not included here</span>
+          </div>
+          <p class="product-demo-placeholder">{product.demoPlaceholder}</p>
+        </section>
+      )}
+
       {primaryPanel ? (
         <section class="product-feature">
           <div class="product-feature-copy">
@@ -113,15 +129,23 @@ const [primaryPanel, ...secondaryPanels] = product.panels;
 
       <section class="product-cta-band">
         <div>
-          <p class="product-section-kicker">Ready to use it</p>
+          <p class="product-section-kicker">{product.variant === "archive" ? "Browse the archive" : "Ready to use it"}</p>
           <h2>{product.title.replace(" | Kreativ Sound", "")}</h2>
-          <p class="product-summary">{product.summary}</p>
+          <p class="product-summary">{product.heroNote}</p>
         </div>
         <div class="product-actions">
-          <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
-            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-            Buy on Gumroad
-          </a>
+          {product.primaryUrl && product.primaryLabel ? (
+            <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+              {product.primaryLabel}
+            </a>
+          ) : null}
+          {product.variant === "archive" ? (
+            <a class="button secondary" href={product.secondaryUrl}>
+              <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
+              {product.secondaryLabel}
+            </a>
+          ) : null}
         </div>
       </section>
     </section>

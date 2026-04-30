@@ -13,9 +13,13 @@ export type ProductPage = {
   kicker: string;
   lead: string;
   summary: string;
-  primaryUrl: string;
+  variant: "flagship" | "standard" | "free" | "archive";
+  primaryUrl?: string;
+  primaryLabel?: string;
   secondaryUrl: string;
   secondaryLabel: string;
+  heroNote: string;
+  demoBlurb?: string;
   demoPlaceholder?: string;
   demo?: { label: string; src: string; type?: string };
   specs: Array<{ label: string; value: string }>;
@@ -54,6 +58,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Flagship preset pack",
     lead: "Evolving presets for Synplant 2.",
     summary: "A preset collection built for organic motion, slow harmonic change, and atmospheric layers that feel alive without turning busy.",
+    heroNote: "Built for producers who want evolving tone that stays musical and mixable over longer cues.",
     secondaryUrl: "/posts/how-to-layer-bioforms-for-organic-motion-2026-03-14.html",
     secondaryLabel: "Hear it in context",
     demoPlaceholder: "Drop the BIOFORMS demo file here next. This block is ready for an inline player.",
@@ -88,6 +93,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Flagship preset pack",
     lead: "Presets for Softube Models.",
     summary: "An analog-forward preset set shaped for cinematic tension, heavy synth tone, and motion that feels deliberate rather than overdesigned.",
+    heroNote: "Made for darker cues that need pressure, analog body, and enough movement to stay alive without losing focus.",
     secondaryUrl: "/posts/three-ways-to-use-neolith-for-cinematic-tension-2026-03-14.html",
     secondaryLabel: "Hear it in context",
     demoPlaceholder: "Drop the NEOLITH demo file here next. This block is ready for an inline player.",
@@ -122,6 +128,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Flagship preset pack",
     lead: "Presets for Vital spectral synth.",
     summary: "A dark Vital preset set built for spectral movement, worn melodic tone, and cinematic atmosphere that feels aged without turning muddy.",
+    heroNote: "Shaped for musicians who want immediate mood, spectral movement, and darker melodic material without a polished preset-bank feel.",
     secondaryUrl: "/posts/velvet-ruins-release-2026-03-21.html",
     secondaryLabel: "Hear it in context",
     demoPlaceholder: "Drop the VELVET RUINS demo file here next. This block is ready for an inline player.",
@@ -155,6 +162,21 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Preset pack",
     lead: "Presets for FabFilter One.",
     summary: "A direct mono-synth preset set for warm basses, focused leads, and simple tonal layers that fit quickly into a track.",
+    heroNote: "Built for straight-to-work mono lines that feel warm, stable, and immediately usable.",
+    panels: [
+      {
+        title: "Why it lands quickly",
+        body: "MONOLUSH keeps the scope narrow on purpose. The presets focus on warm mono tone, clear low-mid presence, and simple melodic usefulness instead of trying to cover every synth role at once."
+      },
+      {
+        title: "Inside the pack",
+        items: [
+          "Warm basses and leads that sit quickly in a mix.",
+          "Simple tonal layers for direct arrangement work.",
+          "A tighter palette for producers who prefer fewer but more usable starting points."
+        ]
+      }
+    ],
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
@@ -164,6 +186,22 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Preset pack",
     lead: "Presets for Moog Model D.",
     summary: "A heavier analog preset set for bass, grit, and low-register movement when a track needs pressure without losing definition.",
+    heroNote: "Made for lines that need drive, body, and analog grit before any extra processing.",
+    demoBlurb: "The demo leans into the pack's stronger side: darker bass weight, driven tone, and rougher analog movement.",
+    panels: [
+      {
+        title: "Why it hits harder",
+        body: "DIRTY MODEL leans on Model D character instead of disguising it. The presets are shaped for dirtier bass pressure, rougher edge, and low-register movement that stays defined."
+      },
+      {
+        title: "Inside the pack",
+        items: [
+          "Driven bass patches with analog grit.",
+          "Low-register leads and heavier mono phrases.",
+          "A darker tonal range that still keeps note definition intact."
+        ]
+      }
+    ],
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
@@ -173,6 +211,22 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Preset pack",
     lead: "Presets for Moog Animoog Z.",
     summary: "A motion-led preset collection for melodic layers, lighter harmonic drift, and airier synth movement.",
+    heroNote: "A better fit for tracks that need lift, melodic drift, and lighter movement instead of dense low-end weight.",
+    demoBlurb: "The demo focuses on ZEPHYR's airier side: melodic drift, soft motion, and layered movement that stays light on its feet.",
+    panels: [
+      {
+        title: "Why it stays open",
+        body: "ZEPHYR is built around lighter motion and clearer upper-range movement. It works best when a track needs air, melodic drift, and atmosphere that stays active without becoming busy."
+      },
+      {
+        title: "Inside the pack",
+        items: [
+          "Airier melodic presets with soft internal motion.",
+          "Layer-friendly tonal material for wider arrangements.",
+          "A more open and floating direction than the darker flagship packs."
+        ]
+      }
+    ],
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
@@ -182,6 +236,22 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Sample collection",
     lead: "Creative sound effects collection.",
     summary: "A focused sample pack for transitions, accents, and quick design moments that give scenes or tracks extra motion.",
+    heroNote: "Built for editors, producers, and sound designers who want quick-impact accents rather than a giant unfocused FX library.",
+    demoBlurb: "The demo gives a fast overview of the pack's design accents, transitions, and smaller cinematic punctuation points.",
+    panels: [
+      {
+        title: "Why this library stays useful",
+        body: "SFXS 2 is focused on accents and motion cues rather than trying to become a complete effects archive. That makes it quicker to browse when you need one sharp design move."
+      },
+      {
+        title: "Inside the collection",
+        items: [
+          "Transition material for edits, intros, and scene movement.",
+          "Short cinematic accents and punctuation points.",
+          "A compact browsing experience instead of a sprawling FX dump."
+        ]
+      }
+    ],
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
@@ -191,6 +261,22 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Sample collection",
     lead: "Experimental noise textures and FX.",
     summary: "A library of abstract noise layers and glitch material for shaping movement, tension, and unstable detail.",
+    heroNote: "A good fit when clean source material feels too polite and the track needs unstable texture or abstract edge.",
+    demoBlurb: "The demo highlights the pack's abstract side: unstable noise layers, glitch detail, and broken motion.",
+    panels: [
+      {
+        title: "Why it feels less polite",
+        body: "NOIZE 2 is intentionally less stable than the atmosphere packs. It is built for abstract edge, broken detail, and noise material that can rough up a cleaner arrangement."
+      },
+      {
+        title: "Inside the collection",
+        items: [
+          "Abstract noise layers and glitch textures.",
+          "Broken movement for tension-building or sound design.",
+          "Material that works as a layer rather than a traditional melodic element."
+        ]
+      }
+    ],
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
@@ -200,6 +286,22 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Sample collection",
     lead: "Cinematic mysterious atmospheres.",
     summary: "A tension-focused sample pack for darker scenes, slow-building beds, and atmospheric ambiguity.",
+    heroNote: "Designed for scenes and cues that need mystery, slower build, and tension that stays restrained rather than loud.",
+    demoBlurb: "The demo stays close to the collection's intent: darker beds, slow suspense, and atmosphere with held-back motion.",
+    panels: [
+      {
+        title: "Why it stays restrained",
+        body: "ENIGMA 2 works best when you want tension without obvious impact sounds. The material is built to sit under a scene, hold ambiguity, and leave room for other elements."
+      },
+      {
+        title: "Inside the collection",
+        items: [
+          "Dark suspense beds for slower scenes and cues.",
+          "Atmospheric ambiguity without constant dramatic peaks.",
+          "A useful middle ground between ambient texture and overt horror material."
+        ]
+      }
+    ],
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
@@ -209,6 +311,21 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Sample collection",
     lead: "Experimental percussion sounds.",
     summary: "A compact set of one-shots and odd percussive textures for sharper rhythmic movement and design accents.",
+    heroNote: "Made for rhythm work that needs strange edges, unusual punctuation, and synthetic bite instead of standard drums.",
+    panels: [
+      {
+        title: "Why it cuts through",
+        body: "BLEEPS 2 is shaped around odd synthetic attacks and sharper percussive moments. It works best as a detail library for rhythmic punctuation rather than as a full drum toolkit."
+      },
+      {
+        title: "Inside the collection",
+        items: [
+          "Odd one-shots and sharper synthetic percussion.",
+          "Design accents for rhythm programming and transitions.",
+          "A useful layer pack when standard percussion feels too familiar."
+        ]
+      }
+    ],
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
@@ -218,6 +335,22 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Sample collection",
     lead: "Space-inspired atmospheres and textures.",
     summary: "A sample set for sci-fi space, distant environmental tone, and wide suspended ambience.",
+    heroNote: "A stronger fit for wide, suspended environments and sci-fi atmosphere than for dense foreground sound design.",
+    demoBlurb: "The demo focuses on the pack's suspended side: distant environments, wider ambience, and softer environmental motion.",
+    panels: [
+      {
+        title: "Why it feels distant",
+        body: "SPACE 2 is built for width and suspension. The material leans toward environmental atmosphere, sci-fi distance, and the kind of slow movement that helps a scene feel larger."
+      },
+      {
+        title: "Inside the collection",
+        items: [
+          "Sci-fi environmental beds and distant textures.",
+          "Wide ambience for suspended scene work.",
+          "A cleaner atmospheric direction than the darker pressure-based packs."
+        ]
+      }
+    ],
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
@@ -227,6 +360,22 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Sample collection",
     lead: "Dark subs and underground textures.",
     summary: "A lower-register texture pack built for pressure, underground movement, and cinematic heaviness.",
+    heroNote: "Built for cues that need subterranean weight, low-end pressure, and darker understructure before melodic detail.",
+    demoBlurb: "The demo leans into TECTONIC 2's core strength: pressure, subs, and heavier underground movement.",
+    panels: [
+      {
+        title: "Why it carries pressure",
+        body: "TECTONIC 2 puts the focus on lower-register force. The collection is designed to add weight, underground tension, and subs that can hold a cue together before anything melodic enters."
+      },
+      {
+        title: "Inside the collection",
+        items: [
+          "Dark subs and low-register texture layers.",
+          "Underground movement for heavier cinematic work.",
+          "Material that helps build pressure without overcomplicating arrangement decisions."
+        ]
+      }
+    ],
     secondaryUrl: "/posts/how-to-use-tectonic-2-for-low-end-pressure-2026-03-14.html",
     secondaryLabel: "Read the guide"
   },
@@ -236,6 +385,22 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Sample collection",
     lead: "Cinematic scary texture.",
     summary: "A horror-focused sample pack for drones, stingers, and uneasy sonic weight in darker scenes.",
+    heroNote: "This collection works when a cue needs unease, stingers, and atmospheric threat rather than subtle ambience.",
+    demoBlurb: "The demo emphasizes the horror side directly: uneasy drones, threat cues, and sharper darker gestures.",
+    panels: [
+      {
+        title: "Why it feels threatening",
+        body: "HORROR 2 is aimed at overt unease. The collection centers on darker threat textures, drones, and stingers that can shift a scene quickly without needing a large horror library."
+      },
+      {
+        title: "Inside the collection",
+        items: [
+          "Uneasy drones and darker tension layers.",
+          "Stingers and short threat cues for scene punctuation.",
+          "A more direct horror angle than the suspense-focused atmosphere packs."
+        ]
+      }
+    ],
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
@@ -245,6 +410,21 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Free release",
     lead: "Free presets for Vital.",
     summary: "A free set of darker experimental Vital presets that gives a quick entry point into the VELVET RUINS sound world.",
+    heroNote: "A practical way to try the darker VELVET RUINS direction before moving to the full pack.",
+    panels: [
+      {
+        title: "Why start here",
+        body: "VELVET RUINS Lite is designed as a real entry point, not throwaway filler. It gives you a smaller but usable slice of the darker spectral direction behind the full release."
+      },
+      {
+        title: "Inside the free pack",
+        items: [
+          "A compact Vital set with the VELVET RUINS mood intact.",
+          "Good starting material for darker cinematic sketches.",
+          "A direct bridge into the full pack if the sound world fits your work."
+        ]
+      }
+    ],
     secondaryUrl: "/products/velvet-ruins/",
     secondaryLabel: "See the full pack"
   },
@@ -254,6 +434,21 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Legacy archive",
     lead: "Free dark ambient presets for PRO-53.",
     summary: "A legacy free preset release that reflects an earlier atmospheric toolkit for darker ambient work.",
+    heroNote: "Kept online as a usable archive snapshot from an earlier period of darker ambient preset work.",
+    panels: [
+      {
+        title: "Why it still matters",
+        body: "ABYSS sits closer to the early catalog history, but it still carries a clear atmospheric direction. It is worth treating as an archive toolset rather than a current flagship release."
+      },
+      {
+        title: "Archive notes",
+        items: [
+          "An earlier PRO-53 preset release with darker ambient intent.",
+          "Useful as a historical snapshot of older Kreativ Sound tone-shaping.",
+          "Best approached as archive material rather than a new commercial centerpiece."
+        ]
+      }
+    ],
     secondaryUrl: "/news/",
     secondaryLabel: "See latest updates"
   },
@@ -263,6 +458,21 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Archive-only first release",
     lead: "Reason ReFill archive.",
     summary: "An early archive release built around Prophet V material and classic Reason workflows. This entry remains here as part of the catalog history.",
+    heroNote: "This is preserved as a first-release archive entry rather than a currently sold product.",
+    panels: [
+      {
+        title: "Why it stays in the archive",
+        body: "The Black Angel matters because it marks the starting point. It belongs on the site as catalog history first, and as a reference to earlier Reason-centered workflows second."
+      },
+      {
+        title: "Archive notes",
+        items: [
+          "The first product release in the catalog timeline.",
+          "Built around Prophet V material for classic Reason workflows.",
+          "Preserved as an archive entry rather than an active storefront product."
+        ]
+      }
+    ],
     secondaryUrl: "/",
     secondaryLabel: "Back to the archive"
   },
@@ -272,6 +482,21 @@ const productOverrides: Record<string, ProductPageOverride> = {
     kicker: "Legacy archive",
     lead: "Legacy plasticz presets.",
     summary: "An older preset archive kept online as part of the broader catalog history and earlier synthetic texture work.",
+    heroNote: "Archived as an earlier synthetic-texture experiment with a brighter, more plastic tone than the darker main catalog.",
+    panels: [
+      {
+        title: "Why it feels different",
+        body: "DAFT Plasticz comes from an older and more synthetic direction than the current darker flagship work. That difference is part of why it remains useful as an archive reference."
+      },
+      {
+        title: "Archive notes",
+        items: [
+          "Older plastic and synthetic preset textures.",
+          "A brighter archive contrast to the darker current catalog tone.",
+          "Best treated as historical flavor rather than a core release."
+        ]
+      }
+    ],
     secondaryUrl: "/news/",
     secondaryLabel: "See latest updates"
   }
@@ -297,6 +522,19 @@ function categoryKicker(category: ProductCategory) {
     case "Legacy":
       return "Legacy archive";
   }
+}
+
+function productVariant(slug: string, category: ProductCategory): ProductPage["variant"] {
+  if (slug === "bioforms" || slug === "neolith" || slug === "velvet-ruins") {
+    return "flagship";
+  }
+  if (category === "Legacy") {
+    return "archive";
+  }
+  if (category === "Free") {
+    return "free";
+  }
+  return "standard";
 }
 
 function defaultDescription(product: Product, name: string) {
@@ -327,6 +565,23 @@ function defaultSummary(product: Product, name: string) {
     case "Legacy":
       return `${name} stays in the archive as part of the earlier catalog and still reflects a useful direction for ${product.useCase.toLowerCase()}.`;
   }
+}
+
+function defaultHeroNote(product: Product, name: string) {
+  switch (product.category) {
+    case "Presets":
+      return `${name} is built for musicians who want a faster preset starting point around ${product.useCase.toLowerCase()}.`;
+    case "Samples":
+      return `${name} is built for producers and sound designers who want a tighter sample set around ${product.useCase.toLowerCase()}.`;
+    case "Free":
+      return `${name} is a lighter free way into the broader sound world without committing to a full commercial pack first.`;
+    case "Legacy":
+      return `${name} remains online as catalog history first, and as a still-usable archive direction second.`;
+  }
+}
+
+function defaultDemoBlurb(product: Product, name: string) {
+  return `This demo gives a quick read on ${name}'s core direction: ${product.useCase.toLowerCase()}.`;
 }
 
 function defaultSpecs(product: Product) {
@@ -377,9 +632,13 @@ export const productPages: ProductPage[] = products
       kicker: override.kicker || categoryKicker(product.category),
       lead: override.lead || defaultLead(product),
       summary: override.summary || defaultSummary(product, name),
-      primaryUrl: product.url || "/",
+      variant: override.variant || productVariant(slug, product.category),
+      primaryUrl: product.url,
+      primaryLabel: override.primaryLabel || (product.category === "Free" ? "Get free download" : product.url ? "Buy on Gumroad" : undefined),
       secondaryUrl: override.secondaryUrl || "/learn/",
       secondaryLabel: override.secondaryLabel || "See workflow guides",
+      heroNote: override.heroNote || defaultHeroNote(product, name),
+      demoBlurb: override.demoBlurb || (product.demo ? defaultDemoBlurb(product, name) : undefined),
       demoPlaceholder: override.demoPlaceholder || `Drop the ${name} demo file here next. This block is ready for an inline player.`,
       demo: product.demo,
       specs: override.specs || defaultSpecs(product),

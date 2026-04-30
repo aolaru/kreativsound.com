@@ -1184,6 +1184,12 @@ a:focus-visible,
   max-width: 50ch;
 }
 
+.product-hero-note {
+  max-width: 56ch;
+  color: var(--text);
+  font-size: 0.98rem;
+}
+
 .product-trust-line {
   font-size: 0.84rem;
   color: var(--soft);
@@ -1218,6 +1224,43 @@ a:focus-visible,
   border-radius: 20px;
   background: rgba(153, 0, 0, 0.06);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.product-demo-spotlight {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(280px, 1.05fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 1.2rem 1.25rem;
+  background:
+    linear-gradient(145deg, rgba(153, 0, 0, 0.08), rgba(255, 255, 255, 0.34)),
+    rgba(153, 0, 0, 0.04);
+}
+
+.product-demo-muted {
+  background: rgba(153, 0, 0, 0.035);
+}
+
+.product-demo-copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.product-demo-copy h2 {
+  margin-bottom: 0.15rem;
+}
+
+.product-demo-copy p {
+  color: var(--muted);
+}
+
+.product-demo-player-wrap {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.product-demo-player-wrap .product-card-demo-player {
+  width: 100%;
 }
 
 .product-demo-header {
@@ -1292,6 +1335,45 @@ a:focus-visible,
   border: 1px solid rgba(228, 171, 171, 0.18);
   border-radius: 20px;
   background: rgba(153, 0, 0, 0.04);
+}
+
+.product-page-flagship .product-page-modern,
+.product-page-flagship {
+  background:
+    radial-gradient(640px 280px at 100% 0%, rgba(153, 0, 0, 0.16), transparent 62%),
+    radial-gradient(440px 220px at 0% 0%, rgba(255, 255, 255, 0.22), transparent 65%),
+    var(--card);
+}
+
+.product-page-flagship .product-cover-frame {
+  padding: 1rem;
+  border-radius: 32px;
+  box-shadow: 0 28px 64px rgba(18, 6, 8, 0.18);
+}
+
+.product-page-archive .product-page-modern,
+.product-page-archive {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 18%),
+    rgba(250, 239, 239, 0.9);
+}
+
+.product-page-archive .product-cover-frame {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.22), rgba(60, 26, 26, 0.08)),
+    rgba(244, 236, 236, 0.8);
+  box-shadow: 0 20px 44px rgba(18, 6, 8, 0.1);
+}
+
+.product-page-archive .product-cta-band {
+  background: rgba(60, 26, 26, 0.04);
+}
+
+.product-page-free .product-cta-band,
+.product-page-free .product-demo-spotlight {
+  background:
+    linear-gradient(145deg, rgba(153, 0, 0, 0.06), rgba(255, 255, 255, 0.42)),
+    rgba(153, 0, 0, 0.03);
 }
 
 .product-feature h2,
@@ -1835,6 +1917,7 @@ a:focus-visible,
 
   .featured-product,
   .product-hero,
+  .product-demo-spotlight,
   .product-feature,
   .product-story-grid,
   .product-tool-grid,
