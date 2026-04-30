@@ -28,6 +28,42 @@ export type Product = {
 
 export const products: Product[] = [
   {
+    title: "BLACK ARCOLOGY - Industrial Presets for Pigments",
+    category: "Presets",
+    url: "https://kreativ.gumroad.com/l/black-arcology-industrial-presets-for-pigments",
+    detailsUrl: "/products/black-arcology/",
+    badge: "New",
+    thumbnail: "/assets/thumbs/black-arcology-thumb.png",
+    coverImage: "/assets/thumbs/black-arcology.png",
+    format: "Presets",
+    count: "Collection",
+    useCase: "Industrial pressure and machine tone"
+  },
+  {
+    title: "VELVET RUINS - Presets for Vital spectral synth",
+    category: "Presets",
+    url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
+    detailsUrl: "/products/velvet-ruins/",
+    extraAction: {
+      label: "Lite Free",
+      url: "/assets/downloads/velvet-ruins-lite.zip"
+    },
+    thumbnail: "/assets/thumbs/velvet-ruins.jpg",
+    format: "Presets",
+    count: "Collection",
+    useCase: "Dark melody and spectral motion"
+  },
+  {
+    title: "NEOLITH - Presets for Softube Models",
+    category: "Presets",
+    url: "https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile",
+    detailsUrl: "/products/neolith/",
+    thumbnail: "/assets/thumbs/neolith.jpg",
+    format: "Presets",
+    count: "Collection",
+    useCase: "Analog tension and cinematic weight"
+  },
+  {
     title: "BIOFORMS - Evolving Presets for Synplant 2",
     category: "Presets",
     url: "https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile",
@@ -76,42 +112,6 @@ export const products: Product[] = [
       src: "/assets/audio/zephyr-demo-01.mp3",
       type: "audio/mpeg"
     }
-  },
-  {
-    title: "NEOLITH - Presets for Softube Models",
-    category: "Presets",
-    url: "https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile",
-    detailsUrl: "/products/neolith/",
-    thumbnail: "/assets/thumbs/neolith.jpg",
-    format: "Presets",
-    count: "Collection",
-    useCase: "Analog tension and cinematic weight"
-  },
-  {
-    title: "VELVET RUINS - Presets for Vital spectral synth",
-    category: "Presets",
-    url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
-    detailsUrl: "/products/velvet-ruins/",
-    extraAction: {
-      label: "Lite Free",
-      url: "/assets/downloads/velvet-ruins-lite.zip"
-    },
-    thumbnail: "/assets/thumbs/velvet-ruins.jpg",
-    format: "Presets",
-    count: "Collection",
-    useCase: "Dark melody and spectral motion"
-  },
-  {
-    title: "BLACK ARCOLOGY - Industrial Presets for Pigments",
-    category: "Presets",
-    url: "https://kreativ.gumroad.com/l/black-arcology-industrial-presets-for-pigments",
-    detailsUrl: "/products/black-arcology/",
-    badge: "New",
-    thumbnail: "/assets/thumbs/black-arcology-thumb.png",
-    coverImage: "/assets/thumbs/black-arcology.png",
-    format: "Presets",
-    count: "Collection",
-    useCase: "Industrial pressure and machine tone"
   },
   {
     title: "SFXS 2 - Creative Sound Effects Collection",
