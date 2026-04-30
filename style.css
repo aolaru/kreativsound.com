@@ -1,19 +1,19 @@
 :root {
-  --bg: #12090a;
-  --bg-alt: #1d0d10;
-  --bg-soft: #251113;
-  --text: #f4eaea;
-  --muted: #c8b1b1;
-  --soft: rgba(206, 174, 174, 0.74);
-  --card: rgba(38, 15, 19, 0.84);
-  --card-strong: rgba(54, 20, 24, 0.92);
-  --card-border: rgba(153, 0, 0, 0.36);
-  --card-border-hover: rgba(219, 127, 127, 0.68);
+  --bg: #0d1018;
+  --bg-alt: #131722;
+  --bg-soft: #1a1f2d;
+  --text: #f5eef1;
+  --muted: #c9bdc4;
+  --soft: rgba(205, 191, 199, 0.72);
+  --card: rgba(18, 22, 34, 0.84);
+  --card-strong: rgba(28, 33, 50, 0.92);
+  --card-border: rgba(190, 76, 76, 0.26);
+  --card-border-hover: rgba(233, 136, 136, 0.52);
   --accent: #990000;
-  --accent-strong: #efb1b1;
-  --accent-bright: #d14c4c;
-  --shadow-soft: 0 18px 40px rgba(16, 3, 5, 0.28);
-  --shadow-card: 0 22px 54px rgba(18, 6, 8, 0.18);
+  --accent-strong: #f0b7b7;
+  --accent-bright: #dd5a5a;
+  --shadow-soft: 0 20px 44px rgba(4, 6, 12, 0.42);
+  --shadow-card: 0 26px 62px rgba(4, 6, 12, 0.5);
 }
 
 [data-theme="light"] {
@@ -46,9 +46,9 @@ body {
   color: var(--text);
   min-height: 100vh;
   background:
-    radial-gradient(1200px 620px at 90% -12%, rgba(153, 0, 0, 0.22), transparent 58%),
-    radial-gradient(980px 520px at -10% 108%, rgba(129, 39, 39, 0.18), transparent 62%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.34) 0%, transparent 30%),
+    radial-gradient(1200px 620px at 90% -12%, rgba(153, 0, 0, 0.16), transparent 58%),
+    radial-gradient(980px 520px at -10% 108%, rgba(129, 39, 39, 0.12), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 24%),
     linear-gradient(160deg, var(--bg) 0%, var(--bg-alt) 100%);
   transition: background 220ms ease, color 220ms ease;
 }
@@ -176,11 +176,11 @@ a:focus-visible,
   border: 1px solid rgba(153, 0, 0, 0.18);
   border-radius: 999px;
   padding: 0.7rem 1rem 0.7rem 2.5rem;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--text);
   font: inherit;
   font-size: 0.92rem;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .site-search-input::placeholder {
@@ -190,7 +190,7 @@ a:focus-visible,
 .site-search-input:focus {
   outline: 2px solid var(--accent-bright);
   outline-offset: 2px;
-  border-color: rgba(153, 0, 0, 0.3);
+  border-color: rgba(221, 90, 90, 0.38);
 }
 
 .site-search-results {
@@ -202,10 +202,10 @@ a:focus-visible,
   display: grid;
   gap: 0.25rem;
   padding: 0.4rem;
-  border: 1px solid rgba(153, 0, 0, 0.16);
+  border: 1px solid rgba(190, 76, 76, 0.18);
   border-radius: 18px;
-  background: rgba(255, 248, 248, 0.98);
-  box-shadow: 0 18px 40px rgba(32, 8, 10, 0.12);
+  background: rgba(14, 17, 27, 0.96);
+  box-shadow: 0 22px 44px rgba(4, 6, 12, 0.44);
   backdrop-filter: blur(10px);
 }
 
@@ -222,7 +222,7 @@ a:focus-visible,
 
 .site-search-result:hover,
 .site-search-result.is-active {
-  background: rgba(153, 0, 0, 0.08);
+  background: rgba(153, 0, 0, 0.12);
   text-decoration: none;
 }
 
@@ -308,7 +308,7 @@ a:focus-visible,
   border: 1px solid var(--card-border);
   border-radius: 18px;
   padding: 1.4rem;
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(8px);
   box-shadow: var(--shadow-soft);
   transition: transform 170ms ease, border-color 170ms ease, box-shadow 170ms ease, background 170ms ease;
 }
@@ -346,7 +346,7 @@ a:focus-visible,
 .home-page .catalog {
   padding-top: 1.08rem;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, transparent 22%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 22%),
     var(--card);
   box-shadow: var(--shadow-card);
 }
@@ -407,14 +407,9 @@ a:focus-visible,
   padding: 0.55rem;
   border: 1px solid var(--card-border);
   border-radius: 16px;
-  background: rgba(255, 245, 245, 0.96);
-  box-shadow: 0 18px 34px rgba(69, 22, 22, 0.14);
+  background: rgba(14, 17, 27, 0.96);
+  box-shadow: 0 18px 34px rgba(4, 6, 12, 0.42);
   z-index: 20;
-}
-
-[data-theme="dark"] .share-menu {
-  background: rgba(24, 11, 13, 0.96);
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.28);
 }
 
 .share-menu-item {

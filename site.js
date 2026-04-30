@@ -12,7 +12,7 @@ function getCurrentTheme() {
 
 function syncThemeUi(theme) {
   if (themeColorMeta) {
-    themeColorMeta.setAttribute("content", theme === "dark" ? "#0f1526" : "#f8e9e9");
+    themeColorMeta.setAttribute("content", theme === "dark" ? "#0d1018" : "#f8e9e9");
   }
 
   if (themeToggle) {
