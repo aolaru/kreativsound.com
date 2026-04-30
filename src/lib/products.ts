@@ -19,6 +19,7 @@ export type Product = {
   badge?: string;
   extraAction?: ProductAction;
   thumbnail?: string;
+  coverImage?: string;
   format: string;
   count: string;
   useCase: string;
@@ -107,7 +108,8 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/black-arcology-industrial-presets-for-pigments",
     detailsUrl: "/products/black-arcology/",
     badge: "New",
-    thumbnail: "/assets/thumbs/black-arcology.png",
+    thumbnail: "/assets/thumbs/black-arcology-thumb.png",
+    coverImage: "/assets/thumbs/black-arcology.png",
     format: "Presets",
     count: "Collection",
     useCase: "Industrial pressure, darker machine tone, and cinematic synthetic weight"
