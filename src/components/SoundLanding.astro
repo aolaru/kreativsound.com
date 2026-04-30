@@ -3,7 +3,7 @@ import ProductCatalog from "./ProductCatalog.astro";
 
 const {
   titleId = "catalog-title",
-  intro = "Start with the featured pack below or jump straight to presets, sample packs, free sounds, and archive releases.",
+  intro = "Start with the featured release, then move through presets, sample packs, free sounds, and archive material.",
 } = Astro.props;
 ---
 <header class="hero">
@@ -11,17 +11,17 @@ const {
     <p class="eyebrow">Ambient and cinematic audio</p>
     <h1>Browse Sound</h1>
     <p class="tagline">
-      Atmospheric sound packs and audio textures built for dark melody, tension, and fast creative momentum.
+      Dark sound packs for tension, melody, and cinematic motion.
     </p>
   </div>
   <div class="hero-actions">
-    <a class="button primary" data-track="hero_explore_click" href="https://kreativ.gumroad.com" target="_blank" rel="noopener noreferrer">
+    <a class="button primary" data-track="hero_explore_click" href="#catalog-presets">
       <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-      Explore Sound Packs
+      Browse Preset Packs
     </a>
-    <a class="button secondary" data-track="hero_patreon_click" href="https://www.patreon.com/kreativsound" target="_blank" rel="noopener noreferrer">
-      <i class="fa-brands fa-patreon" aria-hidden="true"></i>
-      Join Patreon
+    <a class="button secondary" data-track="hero_free_click" href="#catalog-free">
+      <i class="fa-solid fa-download" aria-hidden="true"></i>
+      Get Free Sounds
     </a>
   </div>
 </header>
@@ -42,8 +42,8 @@ const {
     <div class="featured-content">
       <p class="featured-label">Featured</p>
       <h3>BLACK ARCOLOGY - Industrial Presets for Pigments</h3>
-      <p>Industrial drones, evolving keys, melodic keys, and fractured FX for darker Pigments work.</p>
-      <p class="featured-supporting">A darker Pigments pack built for machine pressure, industrial edge, and cinematic tension without generic preset-bank gloss.</p>
+      <p>128 darker Pigments presets for industrial drones, evolving keys, and fractured FX.</p>
+      <p class="featured-supporting">Built for machine pressure, industrial edge, and cinematic tension without preset-bank gloss.</p>
     </div>
     <div class="featured-actions">
       <a class="button secondary" href="/products/black-arcology/">

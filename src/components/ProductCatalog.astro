@@ -12,6 +12,11 @@ function ctaText(category: string) {
   if (category === "Legacy") return "Open Archive";
   return "Buy Now";
 }
+
+const initialVisibleCount: Partial<Record<typeof categories[number], number>> = {
+  Presets: 7,
+  Samples: 6
+};
 ---
 <div class="catalog-anchor-links" aria-label="Catalog sections" hidden={categories.length === 0}>
   {categories.map((category) => (
@@ -20,11 +25,14 @@ function ctaText(category: string) {
 </div>
 {categories.map((category, categoryIndex) => {
   const categoryItems = products.filter((product) => product.category === category);
+  const initialCount = initialVisibleCount[category] ?? categoryItems.length;
+  const visibleItems = categoryItems.slice(0, initialCount);
+  const overflowItems = categoryItems.slice(initialCount);
   return (
     <section class="catalog-group" id={categoryIds[category]}>
       <h3>{categoryLabels[category]}</h3>
       <ul class="product-grid">
-        {categoryItems.map((item, itemIndex) => {
+        {visibleItems.map((item, itemIndex) => {
           const hasPrimaryAction = Boolean(item.url);
           const fetchPriority = categoryIndex === 0 && itemIndex < 6 ? "high" : "auto";
 
@@ -67,6 +75,55 @@ function ctaText(category: string) {
           );
         })}
       </ul>
+      {overflowItems.length > 0 ? (
+        <details class="catalog-more">
+          <summary>Show all {categoryLabels[category].toLowerCase()}</summary>
+          <ul class="product-grid product-grid-continued">
+            {overflowItems.map((item, itemIndex) => {
+              const hasPrimaryAction = Boolean(item.url);
+              const fetchPriority = categoryIndex === 0 && itemIndex < 6 ? "high" : "auto";
+
+              return (
+                <li>
+                  <div class="product-card-stack">
+                    <div class="product-card product-card-static">
+                      {item.badge ? (
+                        <span class:list={["product-badge", item.badge.toLowerCase() === "new" && "is-new", item.badge.toLowerCase() === "updated" && "is-updated"]}>
+                          {item.badge}
+                        </span>
+                      ) : null}
+                      <img
+                        class="product-thumb"
+                        src={item.thumbnail || "/logo-128.svg"}
+                        alt={`${item.title} thumbnail`}
+                        width="128"
+                        height="128"
+                        loading="lazy"
+                        decoding="async"
+                        fetchpriority={fetchPriority}
+                      />
+                      <span class="product-title">{item.title}</span>
+                      <span class="product-meta">{item.format} | {item.count}</span>
+                      <span class="product-use">{item.useCase}</span>
+                      <div class="product-action-row">
+                        {item.detailsUrl ? <a class="product-action-link" href={item.detailsUrl}>Details</a> : null}
+                        {item.extraAction?.url ? <a class="product-action-link" href={item.extraAction.url}>{item.extraAction.label || "More"}</a> : null}
+                        {hasPrimaryAction ? (
+                          <a class="product-action-link is-primary" data-track="product_card_click" href={item.url} target="_blank" rel="noopener noreferrer">
+                            {ctaText(item.category)}
+                          </a>
+                        ) : (
+                          <span class="product-action-link is-muted">Archive only</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </details>
+      ) : null}
     </section>
   );
 })}

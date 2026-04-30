@@ -35,7 +35,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/bioforms.jpg",
     format: "Presets",
     count: "32+ patches",
-    useCase: "Organic evolving tones and ambient beds"
+    useCase: "Organic motion and ambient beds"
   },
   {
     title: "MONOLUSH - Presets for FabFilter One",
@@ -45,7 +45,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/monolush.jpg",
     format: "Presets",
     count: "132 patches",
-    useCase: "Warm mono synth textures"
+    useCase: "Warm mono basses and leads"
   },
   {
     title: "DIRTY MODEL - Presets for Moog Model D",
@@ -70,7 +70,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/zephyr.jpg",
     format: "Presets",
     count: "96 patches",
-    useCase: "Airy motion-driven melodic layers",
+    useCase: "Airy melodic movement",
     demo: {
       label: "Listen to demo",
       src: "/assets/audio/zephyr-demo-01.mp3",
@@ -85,7 +85,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/neolith.jpg",
     format: "Presets",
     count: "Collection",
-    useCase: "Analog-forward textures and cinematic synth tone shaping"
+    useCase: "Analog tension and cinematic weight"
   },
   {
     title: "VELVET RUINS - Presets for Vital spectral synth",
@@ -99,7 +99,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/velvet-ruins.jpg",
     format: "Presets",
     count: "Collection",
-    useCase: "Worn-down cinematic synth textures and dark melodic atmosphere"
+    useCase: "Dark melody and spectral motion"
   },
   {
     title: "BLACK ARCOLOGY - Industrial Presets for Pigments",
@@ -111,7 +111,7 @@ export const products: Product[] = [
     coverImage: "/assets/thumbs/black-arcology.png",
     format: "Presets",
     count: "Collection",
-    useCase: "Industrial pressure, darker machine tone, and cinematic synthetic weight"
+    useCase: "Industrial pressure and machine tone"
   },
   {
     title: "SFXS 2 - Creative Sound Effects Collection",
@@ -121,7 +121,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/sfxs-2.jpg",
     format: "WAV samples",
     count: "Collection",
-    useCase: "Design accents and cinematic transitions",
+    useCase: "Cinematic accents and transitions",
     demo: {
       label: "Listen to demo",
       src: "/assets/audio/sfxs-2-demo-01.mp3",
@@ -136,7 +136,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/noize-2.jpg",
     format: "WAV samples",
     count: "Collection",
-    useCase: "Abstract noise layers and glitches",
+    useCase: "Abstract noise and glitch layers",
     demo: {
       label: "Listen to demo",
       src: "/assets/audio/noize-2-demo-01.mp3",
@@ -151,7 +151,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/enigma-2.jpg",
     format: "WAV samples",
     count: "Collection",
-    useCase: "Dark tension beds for film scenes",
+    useCase: "Dark suspense beds",
     demo: {
       label: "Listen to demo",
       src: "/assets/audio/enigma-2-demo-01.mp3",
@@ -191,7 +191,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/tectonic-2.jpg",
     format: "WAV samples",
     count: "Collection",
-    useCase: "Low-end pressure and subterranean atmospheres",
+    useCase: "Low-end pressure and subterranean textures",
     demo: {
       label: "Listen to demo",
       src: "/assets/audio/tectonic-2-demo-01.mp3",
@@ -222,7 +222,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/velvet-ruins-lite.jpg",
     format: "Presets",
     count: "20 presets",
-    useCase: "Free dark experimental Vital presets"
+    useCase: "Free dark Vital presets"
   },
   {
     title: "BLACK ARCOLOGY Lite - Free presets for Pigments",
@@ -234,7 +234,7 @@ export const products: Product[] = [
     coverImage: "/assets/thumbs/black-arcology-lite.png",
     format: "Presets",
     count: "Free pack",
-    useCase: "Free industrial drones, evolving keys, and fractured FX for Pigments"
+    useCase: "Free industrial drones and fractured FX for Pigments"
   },
   {
     title: "ABYSS - Free Dark Ambient Presets for PRO-53",
@@ -244,7 +244,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/abyss.jpg",
     format: "Presets",
     count: "215 sounds",
-    useCase: "Free atmospheric toolkit for dark ambient work"
+    useCase: "Free dark ambient toolkit"
   },
   {
     title: "The Black Angel - ReFill",
@@ -254,7 +254,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/the-black-angel.jpg",
     format: "Reason ReFill",
     count: "101 NNXT + 102 REX2",
-    useCase: "First release archive built around Prophet V material for classic Reason workflows"
+    useCase: "Archive built around classic Prophet V material"
   },
   {
     title: "DAFT Plasticz Presets",
@@ -264,7 +264,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/daft-plasticz.jpg",
     format: "Presets",
     count: "Archive",
-    useCase: "Legacy plastic and synthetic preset textures"
+    useCase: "Legacy plastic and synthetic textures"
   }
 ];
 
