@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Kreativ Sound logo">
   <defs>
-    <linearGradient id="logo-k-gradient" x1="28" y1="22" x2="101" y2="106" gradientUnits="userSpaceOnUse">
+    <linearGradient id="logo-k-gradient" x1="30" y1="21" x2="99" y2="107" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#990000" />
-      <stop offset="1" stop-color="#d14c4c" />
+      <stop offset="1" stop-color="#e05b5b" />
     </linearGradient>
   </defs>
-  <rect width="128" height="128" rx="14" fill="#12090a" />
+  <rect width="128" height="128" rx="20" fill="#12090a" />
   <path
     fill="url(#logo-k-gradient)"
-    d="M31 23h18v34l31-34h23L67 63l38 42H80L49 71v34H31z"
+    d="M29 21h20v35l32-35h24L69 63l40 44H82L49 72v35H29z"
   />
 </svg>

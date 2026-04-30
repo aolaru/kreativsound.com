@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Kreativ Sound favicon">
   <defs>
-    <linearGradient id="k-gradient" x1="22" y1="18" x2="79" y2="82" gradientUnits="userSpaceOnUse">
+    <linearGradient id="k-gradient" x1="24" y1="16" x2="78" y2="84" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#990000" />
-      <stop offset="1" stop-color="#d14c4c" />
+      <stop offset="1" stop-color="#e05b5b" />
     </linearGradient>
   </defs>
-  <rect width="100" height="100" rx="22" fill="#12090a" />
+  <rect width="100" height="100" rx="24" fill="#12090a" />
   <path
     fill="url(#k-gradient)"
-    d="M24 18h14v26l24-26h18L52 49l29 33H62L38 55v27H24z"
+    d="M23 16h16v28l25-28h19L53 49l31 35H63L39 57v27H23z"
   />
 </svg>

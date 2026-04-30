@@ -1,5 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Kreativ Sound logo">
-  <rect width="128" height="128" fill="#000000" rx="18" />
-  <text x="64" y="56" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="1.2" fill="#ffffff">KREATIV</text>
-  <text x="64" y="82" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" font-weight="700" letter-spacing="1.0" fill="#ffffff">SOUND</text>
+  <defs>
+    <linearGradient id="legacy-logo-k-gradient" x1="30" y1="21" x2="99" y2="107" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#990000" />
+      <stop offset="1" stop-color="#e05b5b" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="20" fill="#12090a" />
+  <path
+    fill="url(#legacy-logo-k-gradient)"
+    d="M29 21h20v35l32-35h24L69 63l40 44H82L49 72v35H29z"
+  />
 </svg>
