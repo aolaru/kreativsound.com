@@ -8,6 +8,9 @@ const newsPosts = (await getCollection("posts", ({ data }) => data.section === "
 const releasePosts = newsPosts.filter((post) => post.data.kind === "release");
 const sitePosts = newsPosts.filter((post) => post.data.kind === "site");
 
+const leadRelease = releasePosts[0];
+const moreReleases = releasePosts.slice(1);
+
 function hrefFor(post) {
   return `/posts/${post.id.replace(/\.md$/, ".html")}`;
 }
@@ -21,31 +24,72 @@ function formatDate(date) {
   description="Latest sound releases and important updates from Kreativ Sound."
   canonical="https://kreativsound.com/news/"
   activeNav="news"
-  ogImage="https://kreativsound.com/assets/thumbs/velvet-ruins.jpg"
+  ogImage={leadRelease?.data.ogImage || "https://kreativsound.com/assets/thumbs/velvet-ruins.jpg"}
 >
-  <section class="card page-main">
-    <h1 class="page-title">News</h1>
-    <p class="page-lead">Latest sound releases and important site updates.</p>
-    <div class="stack news-stack">
-      <article class="news-block">
-        <h2>Latest Sound Releases</h2>
-        <ul class="news-list">
-          {releasePosts.map((post) => (
-            <li>
+  <section class="card page-main news-page">
+    <div class="news-hero">
+      <div class="news-hero-copy">
+        <p class="eyebrow">News</p>
+        <h1 class="page-title">Release updates and studio notes.</h1>
+        <p class="page-lead">New packs, free drops, and focused site updates from Kreativ Sound.</p>
+      </div>
+
+      {leadRelease ? (
+        <article class="news-featured">
+          <img
+            class="news-featured-thumb"
+            src={new URL(leadRelease.data.ogImage || "https://kreativsound.com/og-image.svg").pathname}
+            alt={`${leadRelease.data.title} artwork`}
+            width="160"
+            height="160"
+            loading="eager"
+            decoding="async"
+          />
+          <div class="news-featured-copy">
+            <p class="featured-label">Latest release</p>
+            <h2>{leadRelease.data.title}</h2>
+            <time datetime={leadRelease.data.published}>{formatDate(leadRelease.data.published)}</time>
+            <p>{leadRelease.data.description}</p>
+            <a class="button primary" href={hrefFor(leadRelease)}>
+              <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              Read release
+            </a>
+          </div>
+        </article>
+      ) : null}
+    </div>
+
+    <div class="news-sections">
+      <article class="news-panel">
+        <div class="news-panel-head">
+          <p class="product-section-kicker">Releases</p>
+          <h2>Latest Sound Releases</h2>
+          <p>Recent preset packs, sample releases, and free drops.</p>
+        </div>
+        <ul class="news-card-list">
+          {moreReleases.map((post) => (
+            <li class="news-card">
               <time datetime={post.data.published}>{formatDate(post.data.published)}</time>
-              <span>{post.data.description}</span>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
               <a href={hrefFor(post)}>Read update <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
             </li>
           ))}
         </ul>
       </article>
-      <article class="news-block">
-        <h2>Important Site News</h2>
-        <ul class="news-list">
+
+      <article class="news-panel">
+        <div class="news-panel-head">
+          <p class="product-section-kicker">Site</p>
+          <h2>Important Site News</h2>
+          <p>Workflow changes, tooling updates, and public-facing platform notes.</p>
+        </div>
+        <ul class="news-card-list">
           {sitePosts.map((post) => (
-            <li>
+            <li class="news-card">
               <time datetime={post.data.published}>{formatDate(post.data.published)}</time>
-              <span>{post.data.description}</span>
+              <h3>{post.data.title}</h3>
+              <p>{post.data.description}</p>
               <a href={hrefFor(post)}>Read update <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
             </li>
           ))}

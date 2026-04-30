@@ -7,13 +7,39 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   canonical="https://kreativsound.com/contact/"
   activeNav="contact"
 >
-  <section class="card page-main">
-    <h1 class="page-title">Contact</h1>
-    <p class="page-lead">For licensing, partnerships, support, or custom requests.</p>
-    <ul class="contact-list">
-      <li><i class="fa-solid fa-envelope" aria-hidden="true"></i> Email: <a href="mailto:info@kreativsound.com">info@kreativsound.com</a></li>
-      <li><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i> Store: <a href="https://kreativ.gumroad.com" target="_blank" rel="noopener noreferrer">kreativ.gumroad.com</a></li>
-      <li><i class="fa-brands fa-patreon" aria-hidden="true"></i> Patreon: <a href="https://www.patreon.com/kreativsound" target="_blank" rel="noopener noreferrer">patreon.com/kreativsound</a></li>
-    </ul>
+  <section class="card page-main contact-page-modern">
+    <div class="contact-hero">
+      <div class="contact-hero-copy">
+        <p class="eyebrow">Contact</p>
+        <h1 class="page-title">Licensing, partnerships, support, and direct requests.</h1>
+        <p class="page-lead">Use the channels below for product questions, release-related communication, collaborations, or custom use cases tied to the catalog.</p>
+      </div>
+      <div class="contact-hero-panel">
+        <p class="product-section-kicker">Response path</p>
+        <h2>Start with email for anything specific</h2>
+        <p>Email is the best route for licensing and direct requests. Store and Patreon links are there for product access and ongoing support.</p>
+      </div>
+    </div>
+
+    <div class="contact-grid">
+      <a class="contact-card" href="mailto:info@kreativsound.com">
+        <span class="contact-card-icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span>
+        <span class="learn-card-kicker">Email</span>
+        <h2>info@kreativsound.com</h2>
+        <p>For licensing, support, partnerships, and custom questions.</p>
+      </a>
+      <a class="contact-card" href="https://kreativ.gumroad.com" target="_blank" rel="noopener noreferrer">
+        <span class="contact-card-icon"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
+        <span class="learn-card-kicker">Store</span>
+        <h2>kreativ.gumroad.com</h2>
+        <p>Browse the current releases, free downloads, and catalog updates.</p>
+      </a>
+      <a class="contact-card" href="https://www.patreon.com/kreativsound" target="_blank" rel="noopener noreferrer">
+        <span class="contact-card-icon"><i class="fa-brands fa-patreon" aria-hidden="true"></i></span>
+        <span class="learn-card-kicker">Patreon</span>
+        <h2>patreon.com/kreativsound</h2>
+        <p>Support ongoing work and follow future sound releases more closely.</p>
+      </a>
+    </div>
   </section>
 </BaseLayout>

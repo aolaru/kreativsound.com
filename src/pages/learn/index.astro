@@ -27,8 +27,8 @@ function formatDate(date) {
     <div class="learn-hero">
       <div class="learn-hero-copy">
         <p class="eyebrow">Learn</p>
-        <h1 class="page-title">Short workflow guides for real sound design work.</h1>
-        <p class="page-lead">Practical ideas tied to actual packs, with less theory and more direct use cases.</p>
+        <h1 class="page-title">Short workflow guides built around real production use.</h1>
+        <p class="page-lead">Practical notes tied to actual packs, with less theory and more direct decisions around tension, motion, layering, and sonic restraint.</p>
       </div>
       <a class="learn-featured" href={hrefFor(featuredPost)}>
         <img class="learn-featured-image" src={featuredPost.data.ogImage || "/og-image.svg"} width="256" height="256" alt={`${featuredPost.data.title} artwork`} />
@@ -39,6 +39,19 @@ function formatDate(date) {
           <span class="learn-card-link">Read guide <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
         </div>
       </a>
+    </div>
+
+    <div class="learn-notes">
+      <article class="learn-note">
+        <span class="learn-card-kicker">Approach</span>
+        <h2>Built from actual releases</h2>
+        <p>Each guide stays tied to real packs and real decisions instead of abstract synthesis theory.</p>
+      </article>
+      <article class="learn-note">
+        <span class="learn-card-kicker">Focus</span>
+        <h2>Fast reads, usable outcomes</h2>
+        <p>The goal is faster movement from browsing sounds to actually placing them inside cues, beds, and transitions.</p>
+      </article>
     </div>
 
     <section class="learn-section">
