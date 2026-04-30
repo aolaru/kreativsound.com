@@ -7,22 +7,25 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PRODUCTS_JS = ROOT / "products.js"
+PRODUCTS_TS = ROOT / "src/lib/products.ts"
 
 
 def route_to_path(route: str) -> Path:
+    if route.startswith("/products/") and route.endswith("/"):
+        return ROOT / "src/lib/product-pages.ts"
     if route == "/":
-        return ROOT / "index.html"
+        return ROOT / "src/pages/index.astro"
     if route.startswith("/") and route.endswith("/"):
-        return ROOT / route.strip("/") / "index.html"
+        direct = ROOT / "src/pages" / route.strip("/") / "index.astro"
+        return direct
     return ROOT / route.lstrip("/")
 
 
 def main() -> int:
-    text = PRODUCTS_JS.read_text()
+    text = PRODUCTS_TS.read_text()
     errors: list[str] = []
 
-    for thumb in re.findall(r'thumbnail:\s*"([^"]+)"', text):
+    for thumb in re.findall(r'(?:thumbnail|coverImage):\s*"([^"]+)"', text):
         path = ROOT / thumb
         if thumb.startswith(("http://", "https://")):
             continue

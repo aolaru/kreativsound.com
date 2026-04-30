@@ -4,28 +4,32 @@ Official static website for [kreativsound.com](https://kreativsound.com).
 
 ## Stack
 
-- HTML (`index.html`, `404.html`)
-- CSS (`style.css`)
-- Vanilla JavaScript (`products.js`, `main.js`)
-- Static assets (`assets/`, SVG files)
+- Astro (`src/`, `dist/`)
+- Shared CSS (`style.css`)
+- Lightweight client scripts (`site.js`, `share.js`)
+- Static assets (`assets/`, `apps/`, SVG files)
 
 ## Local Preview
 
-Serve the site from the project root with a local HTTP server.
-
-Example:
+Use Astro for local development:
 
 ```bash
-python3 -m http.server 4173
+npm install
+npm run dev
 ```
 
 Then open:
 
 ```text
-http://127.0.0.1:4173/
+http://127.0.0.1:4321/
 ```
 
-`file://` preview is no longer reliable because the site uses root-relative links and trailing-slash routes such as `/news/` and `/learn/`.
+For a production-style local check:
+
+```bash
+npm run build
+npm run preview
+```
 
 ## PresetMutator Local Webapp
 
@@ -57,37 +61,22 @@ You can override the bind settings if needed:
 PRESETMUTATOR_HOST=127.0.0.1 PRESETMUTATOR_PORT=4185 bash run-presetmutator.sh
 ```
 
-## Build Generated Pages
-
-Shared secondary pages, post pages, redirects, and `sitemap.xml` are generated from:
-
-- `scripts/build-site.ps1`
-
-Regenerate them with:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/build-site.ps1
-```
-
-## Editing Product Cards
+## Editing Product Catalog
 
 Product data is maintained in:
 
-- `products.js`
+- `src/lib/products.ts`
+- `src/lib/product-pages.ts`
 
-Each product includes title, category, URL, thumbnail path, and metadata shown on the card.
+Catalog cards, featured product presentation, and product detail content all flow from those files.
 
 ## Editing News, Learn, and Posts
 
-Post metadata and page copy for generated sections are maintained in:
+Post content now lives in:
 
-- `scripts/build-site.ps1`
+- `src/content/posts/`
 
-After editing that file, run:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/build-site.ps1
-```
+`News`, `Learn`, and post routes are generated from the Astro content collection.
 
 ## Thumbnails
 
@@ -117,7 +106,7 @@ git commit -m "Describe changes"
 git push
 ```
 
-If you are using GitHub Pages, set the Pages source to `GitHub Actions`. This repository now includes a workflow that builds Astro and deploys `dist/` on pushes to `main`.
+GitHub Pages should use `GitHub Actions`. This repository includes a workflow that builds Astro and deploys `dist/` on pushes to `main`.
 
 ## Pre-Release Checks
 

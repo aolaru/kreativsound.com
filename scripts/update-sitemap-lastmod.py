@@ -33,10 +33,20 @@ def loc_to_path(loc: str) -> Path | None:
     if not loc.startswith(prefix):
         return None
     route = loc[len(prefix):]
+
+    if route.startswith("/posts/") and route.endswith(".html"):
+        slug = route.split("/posts/", 1)[1][:-5]
+        return ROOT / "src/content/posts" / f"{slug}.md"
+
+    if route.startswith("/products/") and route.endswith("/"):
+        return ROOT / "src/lib/product-pages.ts"
+
     if route == "/":
-        return ROOT / "index.html"
+        return ROOT / "src/pages/index.astro"
+
     if route.endswith("/"):
-        return ROOT / route.strip("/") / "index.html"
+        return ROOT / "src/pages" / route.strip("/") / "index.astro"
+
     return ROOT / route.lstrip("/")
 
 

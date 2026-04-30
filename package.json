@@ -2,7 +2,6 @@
   "name": "kreativsound.com",
   "version": "1.0.0",
   "description": "Official static website for [kreativsound.com](https://kreativsound.com).",
-  "main": "main.js",
   "directories": {
     "doc": "docs"
   },

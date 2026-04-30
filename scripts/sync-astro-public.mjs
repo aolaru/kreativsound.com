@@ -17,13 +17,7 @@ const filesToCopy = [
   "robots.txt",
   "sitemap.xml",
   "CNAME",
-  "404.html",
-  "about.html",
-  "contact.html",
-  "learn.html",
-  "news.html",
-  "sound.html",
-  "tools.html"
+  "404.html"
 ];
 
 const directoriesToCopy = [
