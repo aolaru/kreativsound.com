@@ -26,84 +26,42 @@ function ctaText(category: string) {
       <ul class="product-grid">
         {categoryItems.map((item, itemIndex) => {
           const hasPrimaryAction = Boolean(item.url);
-          const hasDemo = Boolean(item.demo?.src);
-          const hasActionRow = Boolean(item.detailsUrl || item.extraAction);
-          const usesStaticCard = hasActionRow || hasDemo || !hasPrimaryAction;
           const fetchPriority = categoryIndex === 0 && itemIndex < 6 ? "high" : "auto";
 
           return (
             <li>
               <div class="product-card-stack">
-                {usesStaticCard ? (
-                  <div class="product-card product-card-static">
-                    {item.badge ? (
-                      <span class:list={["product-badge", item.badge.toLowerCase() === "new" && "is-new", item.badge.toLowerCase() === "updated" && "is-updated"]}>
-                        {item.badge}
-                      </span>
-                    ) : null}
-                    <img
-                      class="product-thumb"
-                      src={item.thumbnail || "/logo-128.svg"}
-                      alt={`${item.title} thumbnail`}
-                      width="128"
-                      height="128"
-                      loading="eager"
-                      decoding="async"
-                      fetchpriority={fetchPriority}
-                    />
-                    <span class="product-title">{item.title}</span>
-                    <span class="product-meta">{item.format} | {item.count}</span>
-                    <span class="product-use">{item.useCase}</span>
-                    {hasDemo ? (
-                      <div class="product-card-demo">
-                        <span class="product-card-demo-label">{item.demo?.label || "Demo"}</span>
-                        <audio class="product-card-demo-player" controls preload="metadata">
-                          <source src={item.demo?.src} type={item.demo?.type} />
-                        </audio>
-                      </div>
-                    ) : null}
-                    <div class="product-action-row">
-                      {item.detailsUrl ? <a class="product-action-link" href={item.detailsUrl}>Details</a> : null}
-                      {item.extraAction?.url ? <a class="product-action-link" href={item.extraAction.url}>{item.extraAction.label || "More"}</a> : null}
-                      {hasPrimaryAction ? (
-                        <a class="product-action-link is-primary" data-track="product_card_click" href={item.url} target="_blank" rel="noopener noreferrer">
-                          {ctaText(item.category)}
-                        </a>
-                      ) : (
-                        <span class="product-action-link is-muted">Archive only</span>
-                      )}
-                    </div>
+                <div class="product-card product-card-static">
+                  {item.badge ? (
+                    <span class:list={["product-badge", item.badge.toLowerCase() === "new" && "is-new", item.badge.toLowerCase() === "updated" && "is-updated"]}>
+                      {item.badge}
+                    </span>
+                  ) : null}
+                  <img
+                    class="product-thumb"
+                    src={item.thumbnail || "/logo-128.svg"}
+                    alt={`${item.title} thumbnail`}
+                    width="128"
+                    height="128"
+                    loading="eager"
+                    decoding="async"
+                    fetchpriority={fetchPriority}
+                  />
+                  <span class="product-title">{item.title}</span>
+                  <span class="product-meta">{item.format} | {item.count}</span>
+                  <span class="product-use">{item.useCase}</span>
+                  <div class="product-action-row">
+                    {item.detailsUrl ? <a class="product-action-link" href={item.detailsUrl}>Details</a> : null}
+                    {item.extraAction?.url ? <a class="product-action-link" href={item.extraAction.url}>{item.extraAction.label || "More"}</a> : null}
+                    {hasPrimaryAction ? (
+                      <a class="product-action-link is-primary" data-track="product_card_click" href={item.url} target="_blank" rel="noopener noreferrer">
+                        {ctaText(item.category)}
+                      </a>
+                    ) : (
+                      <span class="product-action-link is-muted">Archive only</span>
+                    )}
                   </div>
-                ) : (
-                  <a
-                    class="product-card"
-                    data-track="product_card_click"
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={item.title}
-                  >
-                    {item.badge ? (
-                      <span class:list={["product-badge", item.badge.toLowerCase() === "new" && "is-new", item.badge.toLowerCase() === "updated" && "is-updated"]}>
-                        {item.badge}
-                      </span>
-                    ) : null}
-                    <img
-                      class="product-thumb"
-                      src={item.thumbnail || "/logo-128.svg"}
-                      alt={`${item.title} thumbnail`}
-                      width="128"
-                      height="128"
-                      loading="eager"
-                      decoding="async"
-                      fetchpriority={fetchPriority}
-                    />
-                    <span class="product-title">{item.title}</span>
-                    <span class="product-meta">{item.format} | {item.count}</span>
-                    <span class="product-use">{item.useCase}</span>
-                    <span class="product-cta">{ctaText(item.category)}</span>
-                  </a>
-                )}
+                </div>
               </div>
             </li>
           );

@@ -58,22 +58,8 @@ function renderCatalog() {
       const stack = document.createElement("div");
       stack.className = "product-card-stack";
       const hasPrimaryAction = Boolean(item.url);
-      const hasDemo = Boolean(item.demo && item.demo.src);
-      const hasActionRow = Boolean(item.detailsUrl || item.extraAction);
-      const usesStaticCard = hasActionRow || hasDemo || !hasPrimaryAction;
-
-      const card = document.createElement(usesStaticCard ? "div" : "a");
-      card.className = "product-card";
-
-      if (usesStaticCard) {
-        card.classList.add("product-card-static");
-      } else {
-        card.dataset.track = "product_card_click";
-        card.href = resolveSiteUrl(item.url);
-        card.target = "_blank";
-        card.rel = "noopener noreferrer";
-        card.setAttribute("aria-label", item.title);
-      }
+      const card = document.createElement("div");
+      card.className = "product-card product-card-static";
 
       const img = document.createElement("img");
       img.className = "product-thumb";
@@ -110,87 +96,46 @@ function renderCatalog() {
       useCase.className = "product-use";
       useCase.textContent = item.useCase;
 
-      const cta = document.createElement("span");
-      cta.className = "product-cta";
-      if (item.category === "Free") {
-        cta.textContent = "Get Free Sounds";
-      } else if (item.category === "Legacy") {
-        cta.textContent = "Open Archive";
-      } else {
-        cta.textContent = "Buy Now";
-      }
-
       card.appendChild(img);
       card.appendChild(title);
       card.appendChild(meta);
       card.appendChild(useCase);
-      if (hasDemo) {
-        const demo = document.createElement("div");
-        demo.className = "product-card-demo";
+      const actions = document.createElement("div");
+      actions.className = "product-action-row";
 
-        const demoLabel = document.createElement("span");
-        demoLabel.className = "product-card-demo-label";
-        demoLabel.textContent = item.demo.label || "Demo";
-
-        const audio = document.createElement("audio");
-        audio.className = "product-card-demo-player";
-        audio.controls = true;
-        audio.preload = "metadata";
-
-        const source = document.createElement("source");
-        source.src = resolveSiteUrl(item.demo.src);
-        if (item.demo.type) {
-          source.type = item.demo.type;
-        }
-        audio.appendChild(source);
-        audio.load();
-
-        demo.appendChild(demoLabel);
-        demo.appendChild(audio);
-        card.appendChild(demo);
-      }
-      if (!usesStaticCard && hasPrimaryAction) {
-        card.appendChild(cta);
+      if (item.detailsUrl) {
+        const detailsLink = document.createElement("a");
+        detailsLink.className = "product-action-link";
+        detailsLink.href = resolveSiteUrl(item.detailsUrl);
+        detailsLink.textContent = "Details";
+        actions.appendChild(detailsLink);
       }
 
-      if (usesStaticCard) {
-        const actions = document.createElement("div");
-        actions.className = "product-action-row";
-
-        if (item.detailsUrl) {
-          const detailsLink = document.createElement("a");
-          detailsLink.className = "product-action-link";
-          detailsLink.href = resolveSiteUrl(item.detailsUrl);
-          detailsLink.textContent = "Details";
-          actions.appendChild(detailsLink);
-        }
-
-        if (item.extraAction && item.extraAction.url) {
-          const extraLink = document.createElement("a");
-          extraLink.className = "product-action-link";
-          extraLink.href = resolveSiteUrl(item.extraAction.url);
-          extraLink.textContent = item.extraAction.label || "More";
-          actions.appendChild(extraLink);
-        }
-
-        if (hasPrimaryAction) {
-          const buyLink = document.createElement("a");
-          buyLink.className = "product-action-link is-primary";
-          buyLink.dataset.track = "product_card_click";
-          buyLink.href = resolveSiteUrl(item.url);
-          buyLink.target = "_blank";
-          buyLink.rel = "noopener noreferrer";
-          buyLink.textContent = item.category === "Free" ? "Get Free Sounds" : item.category === "Legacy" ? "Open Archive" : "Buy Now";
-          actions.appendChild(buyLink);
-        } else {
-          const archiveLabel = document.createElement("span");
-          archiveLabel.className = "product-action-link is-muted";
-          archiveLabel.textContent = "Archive only";
-          actions.appendChild(archiveLabel);
-        }
-
-        card.appendChild(actions);
+      if (item.extraAction && item.extraAction.url) {
+        const extraLink = document.createElement("a");
+        extraLink.className = "product-action-link";
+        extraLink.href = resolveSiteUrl(item.extraAction.url);
+        extraLink.textContent = item.extraAction.label || "More";
+        actions.appendChild(extraLink);
       }
+
+      if (hasPrimaryAction) {
+        const buyLink = document.createElement("a");
+        buyLink.className = "product-action-link is-primary";
+        buyLink.dataset.track = "product_card_click";
+        buyLink.href = resolveSiteUrl(item.url);
+        buyLink.target = "_blank";
+        buyLink.rel = "noopener noreferrer";
+        buyLink.textContent = item.category === "Free" ? "Get Free Sounds" : item.category === "Legacy" ? "Open Archive" : "Buy Now";
+        actions.appendChild(buyLink);
+      } else {
+        const archiveLabel = document.createElement("span");
+        archiveLabel.className = "product-action-link is-muted";
+        archiveLabel.textContent = "Archive only";
+        actions.appendChild(archiveLabel);
+      }
+
+      card.appendChild(actions);
 
       stack.appendChild(card);
 
