@@ -92,7 +92,6 @@ export const products: Product[] = [
     category: "Presets",
     url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
     detailsUrl: "/products/velvet-ruins/",
-    badge: "New",
     extraAction: {
       label: "Lite Free",
       url: "/assets/downloads/velvet-ruins-lite.zip"
@@ -262,7 +261,6 @@ export const products: Product[] = [
     category: "Legacy",
     url: "https://kreativ.gumroad.com/l/daft-free-plasticz-presets?layout=profile",
     detailsUrl: "/products/daft-plasticz/",
-    badge: "New",
     thumbnail: "/assets/thumbs/daft-plasticz.jpg",
     format: "Presets",
     count: "Archive",

@@ -158,24 +158,50 @@ const productOverrides: Record<string, ProductPageOverride> = {
   },
   "black-arcology": {
     headline: "BLACK ARCOLOGY",
-    description: "BLACK ARCOLOGY is an Arturia Pigments preset pack focused on industrial pressure, machine-edge tone, and darker cinematic synthetic weight.",
+    description: "BLACK ARCOLOGY is a dark cinematic Arturia Pigments preset collection built for industrial pressure, evolving tension, and character-driven synthetic tone.",
     kicker: "New preset pack",
     lead: "Industrial presets for Arturia Pigments.",
-    summary: "A darker Pigments preset set built for machine pressure, industrial texture, and synthetic weight that still feels musical enough to anchor a cue.",
-    heroNote: "Built for producers who want harsher machine-edge tone, industrial motion, and cinematic synthetic weight without drifting into generic EDM preset-bank territory.",
+    summary: "A 128-preset Pigments collection built for industrial drones, textures, melodic keys, and fractured FX that feel dark, modern, cinematic, and immediately useful in real productions.",
+    heroNote: "BLACK ARCOLOGY is built for producers who want depth, tension, movement, and character without ending up in the generic preset-bank lane. It is less a utility pack and more a mood engine.",
+    specs: [
+      { label: "Format", value: "Arturia Pigments presets" },
+      { label: "Included", value: "128 presets" },
+      { label: "Best for", value: "Industrial atmospheres, cinematic drones, keys, and fractured FX" }
+    ],
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides",
     panels: [
       {
         title: "Why this pack hits differently",
-        body: "BLACK ARCOLOGY pushes Pigments toward harsher, heavier territory. The presets lean on industrial pressure, machine-like edge, and darker synthetic motion without losing musical control."
+        body: "BLACK ARCOLOGY is designed around texture, movement, and atmosphere first. The presets balance usable musicality with experimental edge, so they work for layering, intros, transitions, and full compositions without feeling static or overpolished."
       },
       {
         title: "Inside the pack",
         items: [
-          "Industrial-leaning presets with darker machine tone.",
-          "Heavier synthetic textures for pressure and tension-building.",
-          "A stronger edge than the softer atmospheric flagship packs."
+          "128 presets for Arturia Pigments.",
+          "32 drones.",
+          "32 industrial textures.",
+          "32 melodic keys.",
+          "32 FX and noise presets."
+        ]
+      },
+      {
+        title: "Sound palette",
+        items: [
+          "Dark industrial atmospheres.",
+          "Evolving cinematic drones.",
+          "Noir-inspired melodic keys.",
+          "Broken, metallic, and spatial FX.",
+          "Experimental textures for sound design."
+        ]
+      },
+      {
+        title: "Best use and requirements",
+        items: [
+          "Ambient, industrial, techno, and experimental electronic work.",
+          "Film, soundtrack, trailer, and game-audio scoring.",
+          "Arturia Pigments, latest version recommended.",
+          "Import the included .pgtx file directly into Pigments via the preset browser."
         ]
       }
     ],
@@ -458,27 +484,51 @@ const productOverrides: Record<string, ProductPageOverride> = {
   },
   "black-arcology-lite": {
     headline: "BLACK ARCOLOGY Lite",
-    description: "BLACK ARCOLOGY Lite is a free Pigments preset pack offering an entry point into the darker industrial tone of the full release.",
+    description: "BLACK ARCOLOGY Lite is a free 32-preset Pigments collection offering a compact entry point into the darker industrial tone of the full release.",
     kicker: "Free release",
     lead: "Free presets for Arturia Pigments.",
-    summary: "A free Pigments set built around industrial drones, evolving keys, and fractured FX that introduces the BLACK ARCOLOGY sound world without the full pack.",
-    heroNote: "A practical entry point if you want to test the industrial Pigments direction before moving to the full BLACK ARCOLOGY release.",
+    summary: "A free 32-preset Pigments set built around industrial drones, evolving keys, melodic keys, and fractured FX that introduces the BLACK ARCOLOGY sound world without the full pack.",
+    heroNote: "This is the compact entry point into the BLACK ARCOLOGY sound palette: dark, cinematic, industrial, and immediately usable enough to test before going deeper.",
+    specs: [
+      { label: "Format", value: "Arturia Pigments presets" },
+      { label: "Included", value: "32 presets" },
+      { label: "Best for", value: "Industrial drones, melodic keys, and fractured FX" }
+    ],
     panels: [
       {
         title: "Why start here",
-        body: "BLACK ARCOLOGY Lite is designed as a real trial slice of the larger release. It keeps the darker machine tone, industrial pressure, and fractured FX direction intact instead of acting like a disposable teaser."
+        body: "BLACK ARCOLOGY Lite is designed as a real, compact introduction to the darker cinematic world of BLACK ARCOLOGY. It gives you a usable slice of the full sound palette, from evolving drones and industrial textures to melodic keys and experimental FX, instead of acting like a throwaway teaser."
       },
       {
         title: "Inside the free pack",
         items: [
-          "Industrial-leaning Pigments presets with darker machine tone.",
-          "A usable set of drones, evolving keys, and fractured FX.",
-          "A direct bridge into the full BLACK ARCOLOGY release if the sound world fits your work."
+          "32 presets for Arturia Pigments.",
+          "8 drones.",
+          "8 industrial textures.",
+          "8 melodic keys.",
+          "8 FX and noise presets."
+        ]
+      },
+      {
+        title: "Sound palette",
+        items: [
+          "Dark evolving drones.",
+          "Industrial and mechanical tones.",
+          "Moody melodic keys.",
+          "Broken and experimental FX textures."
+        ]
+      },
+      {
+        title: "Requirements and upgrade path",
+        items: [
+          "Arturia Pigments, latest version recommended.",
+          "Built to be instantly usable, dark, atmospheric, and character-driven.",
+          "The full BLACK ARCOLOGY release expands this to 128 presets with deeper variation and a broader toolkit."
         ]
       }
     ],
     secondaryUrl: "/products/black-arcology/",
-    secondaryLabel: "See the full pack"
+    secondaryLabel: "Upgrade to the full pack"
   },
   abyss: {
     headline: "ABYSS",

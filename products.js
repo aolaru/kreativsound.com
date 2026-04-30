@@ -61,7 +61,6 @@ window.KREATIV_PRODUCTS = [
     category: "Presets",
     url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
     detailsUrl: "/products/velvet-ruins/",
-    badge: "New",
     extraAction: {
       label: "Lite Free",
       url: "assets/downloads/velvet-ruins-lite.zip"
@@ -218,7 +217,6 @@ window.KREATIV_PRODUCTS = [
     title: "DAFT Plasticz Presets",
     category: "Legacy",
     url: "https://kreativ.gumroad.com/l/daft-free-plasticz-presets?layout=profile",
-    badge: "New",
     thumbnail: "assets/thumbs/daft-plasticz.jpg",
     format: "Presets",
     count: "Archive",
