@@ -72,6 +72,16 @@ window.KREATIV_PRODUCTS = [
     useCase: "Worn-down cinematic synth textures and dark melodic atmosphere"
   },
   {
+    title: "BLACK ARCOLOGY - Industrial Presets for Pigments",
+    category: "Presets",
+    url: "https://kreativ.gumroad.com/l/black-arcology-industrial-presets-for-pigments",
+    detailsUrl: "/products/black-arcology/",
+    badge: "New",
+    format: "Presets",
+    count: "Collection",
+    useCase: "Industrial pressure, darker machine tone, and cinematic synthetic weight"
+  },
+  {
     title: "SFXS 2 - Creative Sound Effects Collection",
     category: "Samples",
     url: "https://kreativ.gumroad.com/l/sfxs-sound-effects-library?layout=profile",

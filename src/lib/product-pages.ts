@@ -156,6 +156,34 @@ const productOverrides: Record<string, ProductPageOverride> = {
       { label: "More workflow guides", url: "/learn/" }
     ]
   },
+  "black-arcology": {
+    headline: "BLACK ARCOLOGY",
+    description: "BLACK ARCOLOGY is an Arturia Pigments preset pack focused on industrial pressure, machine-edge tone, and darker cinematic synthetic weight.",
+    kicker: "New preset pack",
+    lead: "Industrial presets for Arturia Pigments.",
+    summary: "A darker Pigments preset set built for machine pressure, industrial texture, and synthetic weight that still feels musical enough to anchor a cue.",
+    heroNote: "Built for producers who want harsher machine-edge tone, industrial motion, and cinematic synthetic weight without drifting into generic EDM preset-bank territory.",
+    secondaryUrl: "/learn/",
+    secondaryLabel: "See workflow guides",
+    panels: [
+      {
+        title: "Why this pack hits differently",
+        body: "BLACK ARCOLOGY pushes Pigments toward harsher, heavier territory. The presets lean on industrial pressure, machine-like edge, and darker synthetic motion without losing musical control."
+      },
+      {
+        title: "Inside the pack",
+        items: [
+          "Industrial-leaning presets with darker machine tone.",
+          "Heavier synthetic textures for pressure and tension-building.",
+          "A stronger edge than the softer atmospheric flagship packs."
+        ]
+      }
+    ],
+    related: [
+      { label: "Browse workflow guides", url: "/learn/" },
+      { label: "Back to the full sound catalog", url: "/" }
+    ]
+  },
   monolush: {
     headline: "MONOLUSH",
     description: "MONOLUSH is a FabFilter One preset pack shaped around warm mono synth tone and direct melodic usefulness.",
