@@ -456,6 +456,30 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/products/velvet-ruins/",
     secondaryLabel: "See the full pack"
   },
+  "black-arcology-lite": {
+    headline: "BLACK ARCOLOGY Lite",
+    description: "BLACK ARCOLOGY Lite is a free Pigments preset pack offering an entry point into the darker industrial tone of the full release.",
+    kicker: "Free release",
+    lead: "Free presets for Arturia Pigments.",
+    summary: "A free Pigments set built around industrial drones, evolving keys, and fractured FX that introduces the BLACK ARCOLOGY sound world without the full pack.",
+    heroNote: "A practical entry point if you want to test the industrial Pigments direction before moving to the full BLACK ARCOLOGY release.",
+    panels: [
+      {
+        title: "Why start here",
+        body: "BLACK ARCOLOGY Lite is designed as a real trial slice of the larger release. It keeps the darker machine tone, industrial pressure, and fractured FX direction intact instead of acting like a disposable teaser."
+      },
+      {
+        title: "Inside the free pack",
+        items: [
+          "Industrial-leaning Pigments presets with darker machine tone.",
+          "A usable set of drones, evolving keys, and fractured FX.",
+          "A direct bridge into the full BLACK ARCOLOGY release if the sound world fits your work."
+        ]
+      }
+    ],
+    secondaryUrl: "/products/black-arcology/",
+    secondaryLabel: "See the full pack"
+  },
   abyss: {
     headline: "ABYSS",
     description: "ABYSS is a free PRO-53 preset archive focused on dark ambient tone and earlier Kreativ Sound atmosphere work.",

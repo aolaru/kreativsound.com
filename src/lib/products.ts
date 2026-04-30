@@ -226,6 +226,18 @@ export const products: Product[] = [
     useCase: "Free dark experimental Vital presets"
   },
   {
+    title: "BLACK ARCOLOGY Lite - Free presets for Pigments",
+    category: "Free",
+    url: "https://kreativ.gumroad.com/l/black-arcology-lite",
+    detailsUrl: "/products/black-arcology-lite/",
+    badge: "New",
+    thumbnail: "/assets/thumbs/black-arcology-lite-thumb.png",
+    coverImage: "/assets/thumbs/black-arcology-lite.png",
+    format: "Presets",
+    count: "Free pack",
+    useCase: "Free industrial drones, evolving keys, and fractured FX for Pigments"
+  },
+  {
     title: "ABYSS - Free Dark Ambient Presets for PRO-53",
     category: "Legacy",
     url: "https://kreativ.gumroad.com/l/abyss-dark-ambient-presets-for-pro-53?layout=profile",
