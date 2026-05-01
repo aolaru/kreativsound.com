@@ -78,6 +78,21 @@ Post content now lives in:
 
 `News`, `Learn`, and post routes are generated from the Astro content collection.
 
+When a new release goes live, add a matching `News` post in the same pass so the release timeline stays current.
+
+## Editing Music
+
+Music artist and release data lives in:
+
+- `src/lib/music.ts`
+
+The `Music` page renders from that structured source. When you add a new public release:
+
+1. add the release entry in `src/lib/music.ts`
+2. add or update the matching `News` post in `src/content/posts/`
+
+That keeps `Music` and `News` aligned instead of drifting apart.
+
 ## Thumbnails
 
 Optimized local thumbnails are stored in:
@@ -145,7 +160,7 @@ bash scripts/release-gate.sh
 - Refresh sitemap freshness metadata explicitly when needed:
 
 ```bash
-python3 scripts/update-sitemap-lastmod.py
+npm run sitemap
 ```
 
 ## Analytics

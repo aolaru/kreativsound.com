@@ -11,8 +11,10 @@
     "prebuild": "npm run sync:astro-public",
     "dev": "astro dev",
     "build": "astro build",
-    "postbuild": "node scripts/fix-dist-post-routes.mjs",
-    "preview": "astro preview"
+    "postbuild": "node scripts/fix-dist-post-routes.mjs && npm run sitemap",
+    "preview": "astro preview",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "sitemap:check": "node scripts/generate-sitemap.mjs --check"
   },
   "repository": {
     "type": "git",

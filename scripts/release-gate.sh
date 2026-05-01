@@ -2,8 +2,8 @@
 set -euo pipefail
 
 echo "[1/6] Checking sitemap freshness..."
-if ! python3 scripts/update-sitemap-lastmod.py --check; then
-  echo "Warning: sitemap.xml lastmod values are stale."
+if ! npm run sitemap:check; then
+  echo "Warning: sitemap.xml is stale."
 fi
 
 echo "[2/6] Checking product assets..."

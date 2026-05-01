@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { musicArtists } from "../../lib/music";
 ---
 <BaseLayout
   title="Music | Kreativ Sound"
@@ -22,86 +23,56 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     </div>
 
     <div class="music-artist-stack">
-      <section class="music-artist-shell" aria-labelledby="olaru-heading">
-        <div class="music-artist-head">
-          <div>
-            <p class="learn-card-kicker">Artist</p>
-            <h2 id="olaru-heading">Olaru</h2>
-            <p class="music-artist-intro">Ambient pieces, studies, and melodic sketches published on Bandcamp, shaped heavily with Kreativ Sound textures, samples, and presets.</p>
+      {musicArtists.map((artist) => (
+        <section
+          class:list={["music-artist-shell", artist.shellClass]}
+          aria-labelledby={`${artist.slug}-heading`}
+        >
+          <div class="music-artist-head">
+            <div>
+              <p class="learn-card-kicker">Artist</p>
+              <h2 id={`${artist.slug}-heading`}>{artist.name}</h2>
+              <p class="music-artist-intro">{artist.intro}</p>
+            </div>
+            <a
+              class="button secondary"
+              href={artist.platformHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              {artist.platformLabel}
+            </a>
           </div>
-          <a class="button secondary" href="https://olaru.bandcamp.com/" target="_blank" rel="noopener noreferrer">
-            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
-            Visit Bandcamp
-          </a>
-        </div>
-        <div class="music-grid">
-          <a class="music-card" href="https://olaru.bandcamp.com/album/memories" target="_blank" rel="noopener noreferrer">
-            <img class="music-card-image" src="https://f4.bcbits.com/img/a1549831212_2.jpg" alt="Memories album cover" loading="lazy" />
-            <span class="learn-card-kicker">Album</span>
-            <h3>Memories</h3>
-            <p>Sketchbook ambience and melodic memory fragments.</p>
-            <span class="music-card-link">Open on Bandcamp <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
-          </a>
-          <a class="music-card" href="https://olaru.bandcamp.com/album/trees" target="_blank" rel="noopener noreferrer">
-            <img class="music-card-image" src="https://f4.bcbits.com/img/a0092871322_2.jpg" alt="Trees album cover" loading="lazy" />
-            <span class="learn-card-kicker">Album</span>
-            <h3>Trees</h3>
-            <p>Organic studies with texture, distance, and color.</p>
-            <span class="music-card-link">Open on Bandcamp <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
-          </a>
-          <a class="music-card" href="https://olaru.bandcamp.com/album/vision-no-return" target="_blank" rel="noopener noreferrer">
-            <img class="music-card-image" src="https://f4.bcbits.com/img/a1511504117_2.jpg" alt="Vision No Return album cover" loading="lazy" />
-            <span class="learn-card-kicker">Album</span>
-            <h3>Vision No Return</h3>
-            <p>Melancholic motion and hazier cinematic drift.</p>
-            <span class="music-card-link">Open on Bandcamp <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
-          </a>
-          <a class="music-card" href="https://olaru.bandcamp.com/album/nightfall" target="_blank" rel="noopener noreferrer">
-            <img class="music-card-image" src="https://f4.bcbits.com/img/a1183385430_2.jpg" alt="Nightfall album cover" loading="lazy" />
-            <span class="learn-card-kicker">Album</span>
-            <h3>Nightfall</h3>
-            <p>Low-light ambience and restrained melodic cues.</p>
-            <span class="music-card-link">Open on Bandcamp <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
-          </a>
-          <a class="music-card" href="https://olaru.bandcamp.com/album/selected-ghosts" target="_blank" rel="noopener noreferrer">
-            <img class="music-card-image" src="https://f4.bcbits.com/img/a1961746094_2.jpg" alt="Selected Ghosts album cover" loading="lazy" />
-            <span class="learn-card-kicker">Album</span>
-            <h3>Selected Ghosts</h3>
-            <p>Atmospheric fragments and shadowed piano distance.</p>
-            <span class="music-card-link">Open on Bandcamp <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
-          </a>
-          <a class="music-card" href="https://olaru.bandcamp.com/album/ambitones" target="_blank" rel="noopener noreferrer">
-            <img class="music-card-image" src="https://f4.bcbits.com/img/a2196578473_2.jpg" alt="Ambitones album cover" loading="lazy" />
-            <span class="learn-card-kicker">Album</span>
-            <h3>Ambitones</h3>
-            <p>Minimal tonal studies with spatial restraint.</p>
-            <span class="music-card-link">Open on Bandcamp <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
-          </a>
-        </div>
-      </section>
-
-      <section class="music-artist-shell music-artist-shell-alt" aria-labelledby="rethyn-heading">
-        <div class="music-artist-head">
-          <div>
-            <p class="learn-card-kicker">Artist</p>
-            <h2 id="rethyn-heading">Rethyn</h2>
-            <p class="music-artist-intro">Electronic sketches and signal-driven pieces under the Rethyn moniker, also built with strong use of Kreativ Sound sounds and presets.</p>
+          <div class:list={["music-grid", artist.gridClass]}>
+            {artist.releases.map((release) => (
+              <a
+                class:list={[
+                  "music-card",
+                  artist.gridClass === "music-grid-single" && "music-card-featured",
+                ]}
+                href={release.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  class="music-card-image"
+                  src={release.image}
+                  alt={release.imageAlt}
+                  loading="lazy"
+                />
+                <span class="learn-card-kicker">{release.type}</span>
+                <h3>{release.title}</h3>
+                <p>{release.summary}</p>
+                <span class="music-card-link">
+                  {release.linkLabel}{" "}
+                  <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                </span>
+              </a>
+            ))}
           </div>
-          <a class="button secondary" href="https://open.spotify.com/artist/7iwBaUeCQYimysZAoKh42X" target="_blank" rel="noopener noreferrer">
-            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
-            Open Spotify
-          </a>
-        </div>
-        <div class="music-grid music-grid-single">
-          <a class="music-card music-card-featured" href="https://music.amazon.com/artists/B0GV4RM888/rethyn" target="_blank" rel="noopener noreferrer">
-            <img class="music-card-image" src="https://m.media-amazon.com/images/I/31zy-G17D-L._SX354_SY354_BL0_QL100__UXNaN_FMjpg_QL85_.jpg" alt="Holo Signal cover" loading="lazy" />
-            <span class="learn-card-kicker">Single</span>
-            <h3>Holo Signal</h3>
-            <p>Released March 27, 2026. Includes <strong>Holo Signal</strong> and <strong>Holo Drift</strong> as the first public Rethyn release.</p>
-            <span class="music-card-link">Open artist page <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></span>
-          </a>
-        </div>
-      </section>
+        </section>
+      ))}
     </div>
   </section>
 </BaseLayout>
