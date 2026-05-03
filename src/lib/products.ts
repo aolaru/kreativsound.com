@@ -45,7 +45,7 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
     detailsUrl: "/products/velvet-ruins/",
     extraAction: {
-      label: "Lite Free",
+      label: "Download Free",
       url: "/assets/downloads/velvet-ruins-lite.zip"
     },
     thumbnail: "/assets/thumbs/velvet-ruins.jpg",

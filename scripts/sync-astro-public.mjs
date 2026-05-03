@@ -13,7 +13,6 @@ const filesToCopy = [
   "og-image.svg",
   "search-index.json",
   "site.js",
-  "share.js",
   "robots.txt",
   "sitemap.xml",
   "CNAME",

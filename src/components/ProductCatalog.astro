@@ -1,19 +1,24 @@
 ---
 import { categoryIds, categoryLabels, preferredCategoryOrder, products } from "../lib/products";
 
+const {
+  visibleCategories = preferredCategoryOrder,
+  showCategoryNav = true
+} = Astro.props;
+
 const discoveredCategories = Array.from(new Set(products.map((product) => product.category)));
 const categories = [
   ...preferredCategoryOrder.filter((category) => discoveredCategories.includes(category)),
   ...discoveredCategories.filter((category) => !preferredCategoryOrder.includes(category))
-];
+].filter((category) => visibleCategories.includes(category));
 
 function ctaText(category: string) {
-  if (category === "Free") return "Get Free Sounds";
-  if (category === "Legacy") return "Open Archive";
-  return "Buy Now";
+  if (category === "Free") return "Download Free";
+  if (category === "Legacy") return "View Archive";
+  return "Get Pack";
 }
 ---
-<div class="catalog-anchor-links" aria-label="Catalog sections" hidden={categories.length === 0}>
+<div class="catalog-anchor-links" aria-label="Catalog sections" hidden={!showCategoryNav || categories.length === 0}>
   {categories.map((category) => (
     <a href={`#${categoryIds[category]}`}>{categoryLabels[category]}</a>
   ))}

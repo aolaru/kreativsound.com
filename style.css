@@ -362,6 +362,28 @@ a:focus-visible,
   margin-bottom: 0.65rem;
 }
 
+.home-page .catalog-secondary-links {
+  margin-top: 1.35rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(153, 0, 0, 0.12);
+  display: grid;
+  gap: 0.7rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.home-page .catalog-secondary-links p {
+  color: var(--soft);
+  font-size: 0.92rem;
+}
+
+.home-page .catalog-secondary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
 .top-level-page .page-main {
   margin-top: 0;
 }

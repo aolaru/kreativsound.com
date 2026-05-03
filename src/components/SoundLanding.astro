@@ -3,8 +3,11 @@ import ProductCatalog from "./ProductCatalog.astro";
 
 const {
   titleId = "catalog-title",
+  mode = "full",
   intro = "Start with the featured release, then move through presets, sample packs, free sounds, and archive material.",
 } = Astro.props;
+
+const isCurated = mode === "curated";
 ---
 <header class="hero">
   <div class="hero-copy">
@@ -21,7 +24,7 @@ const {
     </a>
     <a class="button secondary" data-track="hero_free_click" href="#catalog-free">
       <i class="fa-solid fa-download" aria-hidden="true"></i>
-      Get Free Sounds
+      Download Free Sounds
     </a>
   </div>
 </header>
@@ -58,9 +61,27 @@ const {
         rel="noopener noreferrer"
       >
         <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-        Get BLACK ARCOLOGY
+        Get Pack
       </a>
     </div>
   </article>
-  <ProductCatalog />
+  <ProductCatalog
+    visibleCategories={isCurated ? ["Presets", "Free"] : undefined}
+    showCategoryNav={!isCurated}
+  />
+  {isCurated ? (
+    <div class="catalog-secondary-links" aria-label="More sound categories">
+      <p>Looking for sample packs or archive releases?</p>
+      <div class="catalog-secondary-actions">
+        <a class="button secondary" href="/sound/#catalog-samples">
+          <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
+          Browse Sample Packs
+        </a>
+        <a class="button secondary" href="/sound/#catalog-legacy">
+          <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
+          View Archive
+        </a>
+      </div>
+    </div>
+  ) : null}
 </section>
