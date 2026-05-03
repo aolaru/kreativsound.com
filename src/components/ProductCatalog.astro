@@ -21,7 +21,7 @@ function ctaText(category: string) {
 {categories.map((category, categoryIndex) => {
   const categoryItems = products.filter((product) => product.category === category);
   return (
-    <section class="catalog-group" id={categoryIds[category]}>
+    <section class:list={["catalog-group", category === "Legacy" && "catalog-group-legacy"]} id={categoryIds[category]}>
       <h3>{categoryLabels[category]}</h3>
       <ul class="product-grid">
         {categoryItems.map((item, itemIndex) => {
@@ -31,7 +31,7 @@ function ctaText(category: string) {
           return (
             <li>
               <div class="product-card-stack">
-                <div class="product-card product-card-static">
+                <div class:list={["product-card", "product-card-static", category === "Legacy" && "product-card-legacy"]}>
                   {item.badge ? (
                     <span class:list={["product-badge", item.badge.toLowerCase() === "new" && "is-new", item.badge.toLowerCase() === "updated" && "is-updated"]}>
                       {item.badge}
