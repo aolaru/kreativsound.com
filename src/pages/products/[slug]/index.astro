@@ -11,6 +11,7 @@ export function getStaticPaths() {
 
 const { product } = Astro.props;
 const [primaryPanel, ...secondaryPanels] = product.panels;
+const hasDemo = Boolean(product.demo?.src);
 ---
 <BaseLayout
   title={product.title}
@@ -65,7 +66,7 @@ const [primaryPanel, ...secondaryPanels] = product.panels;
     </section>
 
     <section class="stack">
-      {product.demo?.src ? (
+      {hasDemo && (
         <section class="product-demo product-demo-spotlight" aria-label="Audio demo">
           <div class="product-demo-copy">
             <p class="product-section-kicker">Hear the pack</p>
@@ -77,14 +78,6 @@ const [primaryPanel, ...secondaryPanels] = product.panels;
               <source src={product.demo.src} type={product.demo.type} />
             </audio>
           </div>
-        </section>
-      ) : (
-        <section class="product-demo product-demo-muted" aria-label="Audio demo">
-          <div class="product-demo-header">
-            <span class="product-demo-title"><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Demo</span>
-            <span class="product-demo-note">Not included here</span>
-          </div>
-          <p class="product-demo-placeholder">{product.demoPlaceholder}</p>
         </section>
       )}
 
@@ -105,7 +98,6 @@ const [primaryPanel, ...secondaryPanels] = product.panels;
       <section class="product-story-grid">
         {secondaryPanels.map((panel) => (
           <section class="product-panel product-panel-modern">
-            <p class="product-section-kicker">{panel.title}</p>
             <h2>{panel.title}</h2>
             {panel.body ? <p>{panel.body}</p> : null}
             {panel.items ? (
@@ -127,11 +119,14 @@ const [primaryPanel, ...secondaryPanels] = product.panels;
         </section>
       </section>
 
-      <section class="product-cta-band">
-        <div>
-          <p class="product-section-kicker">{product.variant === "archive" ? "Browse the archive" : "Ready to use it"}</p>
-          <h2>{product.title.replace(" | Kreativ Sound", "")}</h2>
-          <p class="product-summary">{product.heroNote}</p>
+      <section class="product-cta-strip">
+        <div class="product-cta-copy">
+          <p class="product-section-kicker">{product.variant === "archive" ? "Archive entry" : "Ready when you are"}</p>
+          <p class="product-cta-line">
+            {product.variant === "archive"
+              ? "Use the detail page for context, then jump back into the broader archive when you need older material."
+              : product.heroNote}
+          </p>
         </div>
         <div class="product-actions">
           {product.primaryUrl && product.primaryLabel ? (
