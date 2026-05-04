@@ -56,6 +56,18 @@ const hasDemo = Boolean(product.demo?.src);
               ? "Free release. Direct download and immediate use."
               : "Instant access. Independent release. Built for darker, cinematic workflow use."}
         </p>
+        {product.liteUrl ? (
+          <div class="product-lite-callout">
+            <div class="product-lite-copy">
+              <p class="product-section-kicker">Lite version available</p>
+              <p>{product.liteNote || "Prefer to test the sound first? Start with the free Lite version."}</p>
+            </div>
+            <a class="button secondary" href={product.liteUrl}>
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+              {product.liteLabel || "Download Lite"}
+            </a>
+          </div>
+        ) : null}
       </div>
 
       <div class="product-hero-media">

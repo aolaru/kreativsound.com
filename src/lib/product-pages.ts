@@ -18,6 +18,9 @@ export type ProductPage = {
   primaryLabel?: string;
   secondaryUrl: string;
   secondaryLabel: string;
+  liteUrl?: string;
+  liteLabel?: string;
+  liteNote?: string;
   heroNote: string;
   demoBlurb?: string;
   demoPlaceholder?: string;
@@ -131,6 +134,9 @@ const productOverrides: Record<string, ProductPageOverride> = {
     heroNote: "Shaped for musicians who want immediate mood, spectral movement, and darker melodic material without a polished preset-bank feel.",
     secondaryUrl: "/posts/velvet-ruins-release-2026-03-21.html",
     secondaryLabel: "Hear it in context",
+    liteUrl: "/products/velvet-ruins-lite/",
+    liteLabel: "Download Lite",
+    liteNote: "Want to try the sound first? Start with the free Lite version, then come back for the full pack.",
     demoPlaceholder: "Drop the VELVET RUINS demo file here next. This block is ready for an inline player.",
     specs: [
       { label: "Format", value: "Vital presets" },
@@ -163,6 +169,9 @@ const productOverrides: Record<string, ProductPageOverride> = {
     lead: "Industrial presets for Arturia Pigments.",
     summary: "A 128-preset Pigments collection built for industrial drones, textures, melodic keys, and fractured FX that feel dark, modern, cinematic, and immediately useful in real productions.",
     heroNote: "BLACK ARCOLOGY is built for producers who want depth, tension, movement, and character without ending up in the generic preset-bank lane. It is less a utility pack and more a mood engine.",
+    liteUrl: "/products/black-arcology-lite/",
+    liteLabel: "Download Lite",
+    liteNote: "If you want a free entry point first, use BLACK ARCOLOGY Lite before moving into the full 128-preset collection.",
     specs: [
       { label: "Format", value: "Arturia Pigments presets" },
       { label: "Included", value: "128 presets" },
