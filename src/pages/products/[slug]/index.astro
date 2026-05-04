@@ -59,10 +59,10 @@ const hasDemo = Boolean(product.demo?.src);
         {product.liteUrl ? (
           <div class="product-lite-callout">
             <div class="product-lite-copy">
-              <p class="product-section-kicker">Lite version available</p>
+              <p class="product-section-kicker">Try it free</p>
               <p>{product.liteNote || "Prefer to test the sound first? Start with the free Lite version."}</p>
             </div>
-            <a class="button secondary" href={product.liteUrl}>
+            <a class="product-lite-link" href={product.liteUrl}>
               <i class="fa-solid fa-download" aria-hidden="true"></i>
               {product.liteLabel || "Download Lite"}
             </a>

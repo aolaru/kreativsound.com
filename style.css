@@ -1233,24 +1233,45 @@ a:focus-visible,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.9rem;
-  margin-top: 0.2rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid rgba(228, 171, 171, 0.18);
-  border-radius: 18px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, transparent 34%),
-    rgba(153, 0, 0, 0.045);
+  gap: 0.75rem;
+  max-width: 34rem;
+  margin-top: 0.05rem;
+  padding: 0.68rem 0.78rem;
+  border: 1px solid rgba(228, 171, 171, 0.14);
+  border-radius: 14px;
+  background: rgba(153, 0, 0, 0.035);
 }
 
 .product-lite-copy {
   display: grid;
-  gap: 0.24rem;
+  gap: 0.16rem;
 }
 
 .product-lite-copy p:last-child {
   margin: 0;
   color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.product-lite-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  gap: 0.38rem;
+  min-height: 34px;
+  padding: 0.34rem 0.72rem;
+  border-radius: 999px;
+  color: var(--accent-strong);
+  background: rgba(153, 0, 0, 0.07);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.product-lite-link:hover {
+  text-decoration: none;
+  background: rgba(153, 0, 0, 0.12);
 }
 
 .product-specs-inline {
