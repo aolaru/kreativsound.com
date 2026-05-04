@@ -37,18 +37,6 @@ const hasDemo = Boolean(product.demo?.src);
             </div>
           ))}
         </div>
-        <div class="product-actions">
-          {product.primaryUrl && product.primaryLabel ? (
-            <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
-              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-              {product.primaryLabel}
-            </a>
-          ) : null}
-          <a class="button secondary" href={product.secondaryUrl}>
-            <i class="fa-solid fa-book-open" aria-hidden="true"></i>
-            {product.secondaryLabel}
-          </a>
-        </div>
         <p class="product-trust-line">
           {product.variant === "archive"
             ? "Archive entry. Preserved for catalog history and earlier workflow reference."
@@ -56,24 +44,29 @@ const hasDemo = Boolean(product.demo?.src);
               ? "Free release. Direct download and immediate use."
               : "Instant access. Independent release. Built for darker, cinematic workflow use."}
         </p>
-        {product.liteUrl ? (
-          <div class="product-lite-callout">
-            <div class="product-lite-copy">
-              <p class="product-section-kicker">Try it free</p>
-              <p>{product.liteNote || "Prefer to test the sound first? Start with the free Lite version."}</p>
-            </div>
-            <a class="product-lite-link" href={product.liteUrl}>
-              <i class="fa-solid fa-download" aria-hidden="true"></i>
-              {product.liteLabel || "Download Lite"}
-            </a>
-          </div>
-        ) : null}
       </div>
 
       <div class="product-hero-media">
         <div class="product-cover-frame">
           <img class="product-hero-image" src={product.image} width="320" height="320" alt={product.imageAlt} />
         </div>
+        <div class="product-media-actions">
+          {product.primaryUrl && product.primaryLabel ? (
+            <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+              {product.primaryLabel}
+            </a>
+          ) : null}
+          {product.liteUrl ? (
+            <a class="button secondary" href={product.liteUrl}>
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+              {product.liteLabel || "Download Lite"}
+            </a>
+          ) : null}
+        </div>
+        {product.liteUrl ? (
+          <p class="product-lite-note">{product.liteNote || "Prefer to test the sound first? Start with the free Lite version."}</p>
+        ) : null}
       </div>
     </section>
 
