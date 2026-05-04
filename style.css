@@ -715,6 +715,33 @@ a:focus-visible,
   text-align: center;
 }
 
+#catalog-free .product-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
+  justify-content: center;
+}
+
+#catalog-free .product-card {
+  padding: 0.82rem 0.88rem 0.76rem;
+  gap: 0.38rem;
+}
+
+#catalog-free .product-thumb {
+  width: 124px;
+  height: 124px;
+  min-width: 124px;
+  min-height: 124px;
+  max-width: 124px;
+  max-height: 124px;
+}
+
+#catalog-free .product-title {
+  min-height: 2.3em;
+}
+
+#catalog-free .product-use {
+  min-height: 2.5em;
+}
+
 .home-tools {
   margin-top: 1rem;
   padding: 1.2rem;

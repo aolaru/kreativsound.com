@@ -30,8 +30,7 @@ const isCurated = mode === "curated";
 </header>
 
 <section class="catalog card" aria-labelledby={titleId}>
-  <h2 id={titleId}>Browse Sound</h2>
-  <p class="catalog-intro">{intro}</p>
+  <p class="catalog-intro" id={titleId}>{intro}</p>
   <article class="featured-product" aria-label="Featured product">
     <img
       class="featured-thumb"
@@ -66,17 +65,13 @@ const isCurated = mode === "curated";
     </div>
   </article>
   <ProductCatalog
-    visibleCategories={isCurated ? ["Presets", "Free"] : undefined}
-    showCategoryNav={!isCurated}
+    visibleCategories={isCurated ? ["Presets", "Samples", "Free"] : undefined}
+    showCategoryNav={isCurated}
   />
   {isCurated ? (
     <div class="catalog-secondary-links" aria-label="More sound categories">
-      <p>Looking for sample packs or archive releases?</p>
+      <p>Looking for archive releases?</p>
       <div class="catalog-secondary-actions">
-        <a class="button secondary" href="/sound/#catalog-samples">
-          <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
-          Browse Sample Packs
-        </a>
         <a class="button secondary" href="/sound/#catalog-legacy">
           <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
           View Archive
