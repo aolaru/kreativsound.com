@@ -6,7 +6,7 @@ const learnPosts = (await getCollection("posts", ({ data }) => data.section === 
   .sort((a, b) => (b.data.published || "").localeCompare(a.data.published || ""));
 
 const featuredPost = learnPosts.find((post) => post.data.featured) || learnPosts[0];
-const latestPosts = learnPosts.slice(0, 6);
+const latestPosts = learnPosts.filter((post) => post.id !== featuredPost.id).slice(0, 6);
 
 function hrefFor(post) {
   return `/posts/${post.id.replace(/\.md$/, ".html")}`;
@@ -27,13 +27,24 @@ function formatDate(date) {
     <div class="learn-hero">
       <div class="learn-hero-copy">
         <p class="eyebrow">Learn</p>
-        <h1 class="page-title">Short workflow guides built around real production use.</h1>
-        <p class="page-lead">Practical notes tied to actual packs, with less theory and more direct decisions around tension, motion, layering, and sonic restraint.</p>
+        <h1 class="page-title">Short sound-design guides you can use immediately.</h1>
+        <p class="page-lead">Practical notes tied to actual packs, with less theory and more direct decisions around tension, motion, layering, and restraint.</p>
+        <div class="learn-quick-links" aria-label="Learn shortcuts">
+          <a href="#latest-guides">
+            <strong>{learnPosts.length}</strong>
+            <span>Practical guides</span>
+          </a>
+          <a href="#learn-covers">
+            <strong>3</strong>
+            <span>Main topics</span>
+          </a>
+        </div>
       </div>
       <a class="learn-featured" href={hrefFor(featuredPost)}>
         <img class="learn-featured-image" src={featuredPost.data.ogImage || "/og-image.svg"} width="256" height="256" alt={`${featuredPost.data.title} artwork`} />
         <div class="learn-featured-copy">
           <span class="learn-card-kicker">Featured guide</span>
+          {featuredPost.data.published ? <time datetime={featuredPost.data.published}>{formatDate(featuredPost.data.published)}</time> : null}
           <h2>{featuredPost.data.title}</h2>
           <p>{featuredPost.data.description}</p>
           <span class="learn-card-link">Read guide <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
@@ -54,7 +65,7 @@ function formatDate(date) {
       </article>
     </div>
 
-    <section class="learn-section">
+    <section class="learn-section" id="latest-guides">
       <div class="learn-section-head">
         <h2>Latest Guides</h2>
         <p>Fast reads with direct musical use.</p>
@@ -63,15 +74,18 @@ function formatDate(date) {
         {latestPosts.map((post) => (
           <a class="learn-card" href={hrefFor(post)}>
             <img class="learn-card-image" src={post.data.ogImage || "/og-image.svg"} width="160" height="160" alt={`${post.data.title} artwork`} />
-            {post.data.published ? <time datetime={post.data.published}>{formatDate(post.data.published)}</time> : null}
-            <h3>{post.data.title}</h3>
-            <p>{post.data.description}</p>
+            <span class="learn-card-copy">
+              {post.data.published ? <time datetime={post.data.published}>{formatDate(post.data.published)}</time> : null}
+              <span class="learn-card-title">{post.data.title}</span>
+              <span class="learn-card-summary">{post.data.description}</span>
+              <span class="learn-card-link">Read guide <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+            </span>
           </a>
         ))}
       </div>
     </section>
 
-    <section class="learn-section">
+    <section class="learn-section" id="learn-covers">
       <div class="learn-section-head">
         <h2>What Learn Covers</h2>
         <p>Built around practical use, not long theory.</p>

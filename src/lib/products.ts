@@ -264,12 +264,12 @@ export const products: Product[] = [
   }
 ];
 
-export const preferredCategoryOrder: ProductCategory[] = ["Presets", "Samples", "Free", "Legacy"];
+export const preferredCategoryOrder: ProductCategory[] = ["Presets", "Free", "Samples", "Legacy"];
 
 export const categoryLabels: Record<ProductCategory, string> = {
   Presets: "Preset Packs",
   Samples: "Sample Packs",
-  Free: "Free Sounds",
+  Free: "Free Packs",
   Legacy: "Legacy Archive"
 };
 

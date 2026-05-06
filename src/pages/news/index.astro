@@ -10,6 +10,7 @@ const sitePosts = newsPosts.filter((post) => post.data.kind === "site");
 
 const leadRelease = releasePosts[0];
 const moreReleases = releasePosts.slice(1);
+const latestSitePost = sitePosts[0];
 
 function hrefFor(post) {
   return `/posts/${post.id.replace(/\.md$/, ".html")}`;
@@ -17,6 +18,10 @@ function hrefFor(post) {
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+}
+
+function imageFor(post) {
+  return new URL(post.data.ogImage || "https://kreativsound.com/og-image.svg").pathname;
 }
 ---
 <BaseLayout
@@ -30,8 +35,18 @@ function formatDate(date) {
     <div class="news-hero">
       <div class="news-hero-copy">
         <p class="eyebrow">News</p>
-        <h1 class="page-title">Release updates and studio notes.</h1>
-        <p class="page-lead">New packs, free drops, and focused site updates from Kreativ Sound.</p>
+        <h1 class="page-title">Release news, tool notes, and catalog updates.</h1>
+        <p class="page-lead">A single place for new sound packs, free drops, Preset Mutator progress, and important site changes.</p>
+        <div class="news-quick-stats" aria-label="News categories">
+          <a href="#releases">
+            <strong>{releasePosts.length}</strong>
+            <span>Release updates</span>
+          </a>
+          <a href="#site-notes">
+            <strong>{sitePosts.length}</strong>
+            <span>Site and tool notes</span>
+          </a>
+        </div>
       </div>
 
       {leadRelease ? (
@@ -39,7 +54,7 @@ function formatDate(date) {
           <a class="news-featured-media" href={hrefFor(leadRelease)} aria-label={`Read ${leadRelease.data.title}`}>
             <img
               class="news-featured-thumb"
-              src={new URL(leadRelease.data.ogImage || "https://kreativsound.com/og-image.svg").pathname}
+              src={imageFor(leadRelease)}
               alt={`${leadRelease.data.title} artwork`}
               width="320"
               height="180"
@@ -48,9 +63,11 @@ function formatDate(date) {
             />
           </a>
           <div class="news-featured-copy">
-            <p class="featured-label">Latest release</p>
+            <div class="news-featured-meta">
+              <p class="featured-label">Latest release</p>
+              <time datetime={leadRelease.data.published}>{formatDate(leadRelease.data.published)}</time>
+            </div>
             <h2>{leadRelease.data.title}</h2>
-            <time datetime={leadRelease.data.published}>{formatDate(leadRelease.data.published)}</time>
             <p>{leadRelease.data.description}</p>
             <a class="button primary" href={hrefFor(leadRelease)}>
               <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
@@ -59,10 +76,19 @@ function formatDate(date) {
           </div>
         </article>
       ) : null}
+
+      {latestSitePost ? (
+        <aside class="news-current-note">
+          <p class="product-section-kicker">Current focus</p>
+          <h2>{latestSitePost.data.title}</h2>
+          <p>{latestSitePost.data.description}</p>
+          <a href={hrefFor(latestSitePost)}>Read note <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </aside>
+      ) : null}
     </div>
 
     <div class="news-sections">
-      <article class="news-panel">
+      <article class="news-panel" id="releases">
         <div class="news-panel-head">
           <p class="product-section-kicker">Releases</p>
           <h2>Latest Sound Releases</h2>
@@ -70,29 +96,46 @@ function formatDate(date) {
         </div>
         <ul class="news-card-list">
           {moreReleases.map((post) => (
-            <li class="news-card">
-              <time datetime={post.data.published}>{formatDate(post.data.published)}</time>
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
-              <a href={hrefFor(post)}>Read update <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            <li>
+              <a class="news-card news-card-release" href={hrefFor(post)}>
+                <img
+                  class="news-card-art"
+                  src={imageFor(post)}
+                  alt={`${post.data.title} artwork`}
+                  width="96"
+                  height="96"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span class="news-card-copy">
+                  <time datetime={post.data.published}>{formatDate(post.data.published)}</time>
+                  <span class="news-card-title">{post.data.title}</span>
+                  <span class="news-card-summary">{post.data.description}</span>
+                  <span class="news-card-action">Read update <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                </span>
+              </a>
             </li>
           ))}
         </ul>
       </article>
 
-      <article class="news-panel">
+      <article class="news-panel" id="site-notes">
         <div class="news-panel-head">
           <p class="product-section-kicker">Site</p>
-          <h2>Important Site News</h2>
+          <h2>Site and Tool Notes</h2>
           <p>Workflow changes, tooling updates, and public-facing platform notes.</p>
         </div>
         <ul class="news-card-list">
           {sitePosts.map((post) => (
-            <li class="news-card">
-              <time datetime={post.data.published}>{formatDate(post.data.published)}</time>
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
-              <a href={hrefFor(post)}>Read update <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            <li>
+              <a class="news-card" href={hrefFor(post)}>
+                <span class="news-card-copy">
+                  <time datetime={post.data.published}>{formatDate(post.data.published)}</time>
+                  <span class="news-card-title">{post.data.title}</span>
+                  <span class="news-card-summary">{post.data.description}</span>
+                  <span class="news-card-action">Read note <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                </span>
+              </a>
             </li>
           ))}
         </ul>

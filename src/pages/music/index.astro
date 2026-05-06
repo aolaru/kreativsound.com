@@ -61,12 +61,19 @@ import { musicArtists } from "../../lib/music";
                   alt={release.imageAlt}
                   loading="lazy"
                 />
-                <span class="learn-card-kicker">{release.type}</span>
-                <h3>{release.title}</h3>
-                <p>{release.summary}</p>
-                <span class="music-card-link">
-                  {release.linkLabel}{" "}
-                  <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                <span class="music-card-body">
+                  <span class="learn-card-kicker">{release.type}</span>
+                  <span class="music-card-title">{release.title}</span>
+                  {release.meta?.length ? (
+                    <span class="music-card-meta">
+                      {release.meta.map((item) => <span>{item}</span>)}
+                    </span>
+                  ) : null}
+                  <span class="music-card-summary">{release.summary}</span>
+                  <span class="music-card-link">
+                    {release.linkLabel}{" "}
+                    <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                  </span>
                 </span>
               </a>
             ))}

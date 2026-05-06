@@ -8,6 +8,29 @@ const {
 } = Astro.props;
 
 const isCurated = mode === "curated";
+
+const categoryOverview = [
+  {
+    label: "Preset Packs",
+    href: "#catalog-presets",
+    text: "Current synth preset releases for Pigments, Vital, Synplant, Moog, Softube, and FabFilter."
+  },
+  {
+    label: "Free Packs",
+    href: "#catalog-free",
+    text: "Lite versions and free entry points before buying into a full release."
+  },
+  {
+    label: "Sample Packs",
+    href: "#catalog-samples",
+    text: "WAV textures, effects, atmospheres, percussion, subs, and cinematic beds."
+  },
+  {
+    label: "Archive",
+    href: isCurated ? "/sound/#catalog-legacy" : "#catalog-legacy",
+    text: "Older legacy material kept available without mixing it into the current catalog."
+  }
+];
 ---
 <header class="hero">
   <div class="hero-copy">
@@ -64,8 +87,16 @@ const isCurated = mode === "curated";
       </a>
     </div>
   </article>
+  <div class="catalog-overview" aria-label="Catalog overview">
+    {categoryOverview.map((item) => (
+      <a class="catalog-overview-card" href={item.href}>
+        <span>{item.label}</span>
+        <small>{item.text}</small>
+      </a>
+    ))}
+  </div>
   <ProductCatalog
-    visibleCategories={isCurated ? ["Presets", "Samples", "Free"] : undefined}
+    visibleCategories={isCurated ? ["Presets", "Free", "Samples"] : undefined}
     showCategoryNav={isCurated}
   />
   {isCurated ? (

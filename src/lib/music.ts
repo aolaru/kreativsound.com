@@ -5,6 +5,7 @@ export type MusicRelease = {
   image: string;
   imageAlt: string;
   summary: string;
+  meta?: string[];
   linkLabel: string;
 };
 
@@ -101,8 +102,8 @@ export const musicArtists: MusicArtist[] = [
         image:
           "https://m.media-amazon.com/images/I/31zy-G17D-L._SX354_SY354_BL0_QL100__UXNaN_FMjpg_QL85_.jpg",
         imageAlt: "Holo Signal cover",
-        summary:
-          "Released March 27, 2026. Includes Holo Signal and Holo Drift as the first public Rethyn release.",
+        summary: "Signal-shaped electronic sketches built from the same darker Kreativ Sound palette.",
+        meta: ["March 27, 2026", "2 tracks"],
         linkLabel: "Open artist page",
       },
     ],
