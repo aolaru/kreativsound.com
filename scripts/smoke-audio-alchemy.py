@@ -104,6 +104,20 @@ def main() -> int:
         ]:
             require(mutate_dom, needle, "/apps/preset-mutator/ui/mutate/", errors)
 
+        scratch_dom = dump_dom(chrome, base_url + "/apps/preset-mutator/ui/scratch/")
+        for needle in [
+            "Preset Mutator",
+            "Create a Vital preset from intent",
+            "Audio to Preset",
+            "Mutate Preset",
+            "From Scratch",
+            "Preset Intent",
+            "Generate 3 Free Presets",
+            "Preset Mutator Pro",
+            "Serum 2 and Pigments 7 are planned future targets.",
+        ]:
+            require(scratch_dom, needle, "/apps/preset-mutator/ui/scratch/", errors)
+
         if errors:
             print("Preset Mutator smoke test failed:")
             for error in errors:

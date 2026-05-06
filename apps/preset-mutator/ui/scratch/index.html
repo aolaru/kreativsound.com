@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preset Mutator | From Scratch</title>
+    <meta name="theme-color" content="#fdf5f5" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <link rel="icon" type="image/svg+xml" href="../preset-mutator-mark.svg" />
+    <link rel="apple-touch-icon" href="../preset-mutator-mark.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRTJS1KZD9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-QRTJS1KZD9");
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+    <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="site-nav site-nav-split site-nav-home" aria-label="Primary">
+        <div class="nav-group nav-group-main">
+          <a class="nav-link" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer">Back to Kreativ Sound</a>
+        </div>
+        <a class="nav-brand nav-brand-wordmark" href="https://kreativsound.com/apps/preset-mutator/ui/scratch/" aria-label="Preset Mutator From Scratch">
+          <img class="nav-brand-mark-image" src="../preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
+          <span class="nav-brand-copy">
+            <strong>Preset Mutator</strong>
+          </span>
+        </a>
+        <div class="nav-group nav-group-utility"></div>
+      </nav>
+
+      <section class="hero">
+        <p class="eyebrow">From Scratch beta</p>
+        <h1>Create a Vital preset from intent</h1>
+        <p class="lede">Choose a direction, shape the feel, and export 3 free Vital presets or a 32-preset Pro pack.</p>
+        <div class="mode-tabs" aria-label="Preset Mutator modes">
+          <a class="mode-tab" href="../">
+            <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
+            Audio to Preset
+          </a>
+          <a class="mode-tab" href="../mutate/">
+            <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+            Mutate Preset
+          </a>
+          <button class="mode-tab is-active" type="button" aria-current="true">
+            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+            From Scratch
+            <span>Live beta</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="panel intent-panel">
+        <div class="section-head">
+          <div>
+            <h2>Preset Intent</h2>
+            <p class="muted">No audio or source preset needed. This mode builds a starter profile from musical intent.</p>
+            <p class="input-note">Vital only for now. Serum 2 and Pigments 7 are planned future targets.</p>
+          </div>
+        </div>
+
+        <div class="intent-grid">
+          <label class="control">
+            <span class="control-label">Sound Type</span>
+            <select id="family-select">
+              <option value="pad">Pad / Atmosphere</option>
+              <option value="pluck">Pluck / Keys</option>
+              <option value="bass">Bass</option>
+              <option value="texture">Drone / Texture</option>
+            </select>
+          </label>
+
+          <label class="control">
+            <span class="control-label">Mood</span>
+            <select id="mood-select">
+              <option value="dark">Dark / cinematic</option>
+              <option value="warm">Warm / melodic</option>
+              <option value="clean">Clean / modern</option>
+              <option value="broken">Broken / experimental</option>
+            </select>
+          </label>
+
+          <label class="control">
+            <span class="control-label">Register</span>
+            <select id="register-select">
+              <option value="low">Low</option>
+              <option value="mid" selected>Mid</option>
+              <option value="high">High</option>
+            </select>
+          </label>
+
+          <label class="control intent-text-control">
+            <span class="control-label">Short Intent</span>
+            <textarea id="intent-text" rows="4" maxlength="180" placeholder="Example: dark evolving key for a tense intro"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <section class="panel controls-panel">
+          <div class="section-head">
+            <div>
+              <h2>Shape the Starting Point</h2>
+              <p class="muted">These controls bias the generated preset profile before export.</p>
+            </div>
+          </div>
+
+          <div class="control-grid">
+            <label class="control">
+              <span class="control-label">Darker / Brighter</span>
+              <output id="brightness-value">0%</output>
+              <input id="brightness-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+            <label class="control">
+              <span class="control-label">Steadier / More Motion</span>
+              <output id="motion-value">0%</output>
+              <input id="motion-range" type="range" min="-100" max="100" step="1" value="18" />
+            </label>
+            <label class="control">
+              <span class="control-label">Softer / Harder Attack</span>
+              <output id="attack-value">0%</output>
+              <input id="attack-range" type="range" min="-100" max="100" step="1" value="-8" />
+            </label>
+            <label class="control">
+              <span class="control-label">Narrower / Wider</span>
+              <output id="width-value">0%</output>
+              <input id="width-range" type="range" min="-100" max="100" step="1" value="12" />
+            </label>
+          </div>
+
+          <div class="actions section-actions">
+            <button id="generate-button" type="button">
+              <span class="button-spinner" aria-hidden="true"></span>
+              <span class="button-label">Generate 3 Free Presets</span>
+            </button>
+          </div>
+
+          <div class="status" id="status">Choose an intent, then generate 3 Vital presets from scratch.</div>
+          <p class="upgrade-hint">Preset Mutator Pro unlocks a 32-preset from-scratch pack and ZIP export.</p>
+        </section>
+
+        <section class="panel insight-panel">
+          <div class="section-head">
+            <h2>Best Use</h2>
+            <p class="muted">Treat these as fast musical starting points.</p>
+          </div>
+          <ul class="insights">
+            <li>Use the short intent to name and bias the result.</li>
+            <li>Generate a few starts, then refine the best one in Vital.</li>
+            <li>Use Audio to Preset when you need the tool to follow a real source sound.</li>
+          </ul>
+        </section>
+      </section>
+
+      <section class="analysis-grid">
+        <section class="panel analysis-panel">
+          <div class="section-head">
+            <h2>Intent Profile</h2>
+            <p class="muted">The current normalized profile before preset export.</p>
+          </div>
+          <div class="metric-grid" id="profile-metrics"></div>
+        </section>
+
+        <section class="panel analysis-panel">
+          <div class="section-head">
+            <h2>Privacy and Processing</h2>
+            <p class="muted">Everything stays local to your browser.</p>
+          </div>
+          <div class="trust-grid scratch-trust-grid">
+            <div class="trust-item">
+              <span class="meta-label">No Upload</span>
+              <p>No audio or preset file is needed.</p>
+            </div>
+            <div class="trust-item">
+              <span class="meta-label">Local Export</span>
+              <p>Vital files are generated in your browser.</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel presets-panel" id="presets-panel">
+        <div class="section-head">
+          <h2>Generated Preset Variants</h2>
+          <p class="muted">Each result exports as a real `.vital` file built from curated Vital seeds.</p>
+        </div>
+        <div class="preset-list" id="preset-list">
+          <p class="empty-state">Click <strong>Generate 3 Free Presets</strong> to create from-scratch Vital starting points.</p>
+        </div>
+      </section>
+
+      <section class="panel paid-feature-panel" id="paid-feature-panel" aria-labelledby="paid-feature-title">
+        <div class="paid-feature-copy">
+          <p class="paid-feature-kicker">Preset Mutator Pro</p>
+          <h2 id="paid-feature-title">Unlock the full from-scratch workflow</h2>
+          <p class="paid-feature-price">Launch price: $19</p>
+          <p class="paid-feature-ownership">Pay once. Unlock Pro on this browser with your purchase code.</p>
+          <ul class="paid-feature-list">
+            <li>3 free Vital preset starts</li>
+            <li>32-preset from-scratch pack</li>
+            <li>ZIP export for Pro packs</li>
+          </ul>
+        </div>
+        <div class="paid-feature-actions" id="paid-feature-actions">
+          <a class="button primary" href="https://kreativ.gumroad.com/l/preset-mutator-pro" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            Unlock Preset Mutator Pro
+          </a>
+          <button class="button secondary paid-feature-toggle" id="paid-feature-toggle" type="button" aria-expanded="false" aria-controls="paid-feature-unlock">
+            <i class="fa-solid fa-key" aria-hidden="true"></i>
+            Enter purchase code
+          </button>
+          <p class="paid-feature-meta">One-time purchase. Unlocks Pro generation on this browser.</p>
+        </div>
+        <div class="paid-feature-unlock" id="paid-feature-unlock" hidden>
+          <label class="sr-only" for="paid-feature-key">Preset Mutator purchase code</label>
+          <input id="paid-feature-key" type="text" placeholder="Enter your Preset Mutator purchase code" autocomplete="off" />
+          <button class="button secondary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Unlock Pro</button>
+          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">After purchase, enter your code to unlock Pro generation on this browser. No account is required.</p>
+        </div>
+        <div class="paid-feature-preview" id="paid-feature-preview" hidden>
+          <p class="paid-feature-preview-badge">Preset Mutator Pro active</p>
+          <p class="paid-feature-preview-note">This browser is unlocked for 32-preset from-scratch packs and ZIP export.</p>
+          <div class="paid-feature-preview-actions">
+            <button class="button primary" id="generate-pack" type="button">
+              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+              Generate 32 Pro Presets
+            </button>
+            <button class="button secondary" id="download-pack" type="button" disabled>
+              <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
+              Download 32-Pack (.zip)
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="app-footer">
+        <p>Kreativ Sound experimental tool surface for synth preset generation. Vital is live first; Serum 2 and Pigments 7 are planned.</p>
+        <p class="app-version">Preset Mutator v0.3 scratch beta</p>
+      </footer>
+    </main>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>

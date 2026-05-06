@@ -1,0 +1,66 @@
+.intent-panel,
+.analysis-grid > .panel,
+.presets-panel {
+  padding: 24px;
+}
+
+.intent-panel,
+.analysis-grid,
+.presets-panel {
+  margin-bottom: 20px;
+}
+
+.intent-panel {
+  background:
+    linear-gradient(180deg, rgba(179, 0, 0, 0.035) 0%, transparent 38%),
+    var(--panel-strong);
+}
+
+.intent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.intent-text-control {
+  grid-column: 1 / -1;
+}
+
+select,
+textarea {
+  width: 100%;
+  border: 1px solid rgba(153, 0, 0, 0.2);
+  border-radius: 14px;
+  color: var(--text);
+  background: rgba(255, 245, 245, 0.72);
+  font: inherit;
+}
+
+select {
+  min-height: 42px;
+  padding: 0 0.8rem;
+}
+
+textarea {
+  min-height: 112px;
+  padding: 0.8rem;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.scratch-trust-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.paid-feature-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+@media (max-width: 780px) {
+  .intent-grid,
+  .scratch-trust-grid {
+    grid-template-columns: 1fr;
+  }
+}

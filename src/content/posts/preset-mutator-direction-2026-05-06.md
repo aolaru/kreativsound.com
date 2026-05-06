@@ -33,7 +33,7 @@ draft: false
 <p>Audio to Preset for Vital is available today. It works best with short pads, plucks, bass notes, drones, and textures instead of full songs or dense mixes.</p>
 
 <h2>What comes next</h2>
-<p><strong>Mutate Preset</strong> is now available as a Vital beta inside Preset Mutator. <strong>From Scratch</strong> remains planned as a future mode, with Serum 2 and Pigments 7 support planned alongside the next format expansion after the current Vital workflow is solid.</p>
+<p><strong>Mutate Preset</strong> and <strong>From Scratch</strong> are now available as Vital betas inside Preset Mutator. Serum 2 and Pigments 7 support remain planned alongside the next format expansion after the current Vital workflow is solid.</p>
 
 <h2>Why this direction</h2>
 <p>Preset Mutator fits the current Kreativ Sound catalog: practical, local-first, fast enough for sound-design sketching, and focused on usable starting points rather than heavy studio software.</p>
@@ -42,4 +42,5 @@ draft: false
   <a class="button primary" href="/tools/">View Tools</a>
   <a class="button secondary" href="/apps/preset-mutator/ui/">Open Preset Mutator</a>
   <a class="button secondary" href="/apps/preset-mutator/ui/mutate/">Open Mutate Preset</a>
+  <a class="button secondary" href="/apps/preset-mutator/ui/scratch/">Open From Scratch</a>
 </div>
