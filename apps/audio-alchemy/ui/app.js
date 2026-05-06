@@ -203,7 +203,7 @@ function createSyntheticBuffer() {
 
 function sanitizeFileName(value) {
   const cleaned = value.replace(/[<>:"/\\|?*\u0000-\u001f]/g, "").trim();
-  return cleaned || "Audio Alchemy Vital";
+  return cleaned || "Preset Mutator Vital";
 }
 
 function updateControlLabels() {
@@ -985,7 +985,7 @@ function applyParameterMapToPreset(data, preset) {
   settings.osc_2_unison_voices = Math.round(clamp(settings.osc_2_unison_voices, 1, 8));
   settings.preset_name = preset.name;
 
-  rendered.author = "Audio Alchemy";
+  rendered.author = "Preset Mutator";
   rendered.comments = preset.summary;
   rendered.preset_style = preset.familyKey.charAt(0).toUpperCase() + preset.familyKey.slice(1);
   rendered.macro1 = "Tone";
@@ -1216,7 +1216,7 @@ async function downloadPresetPack() {
   try {
     updateStatus("Preparing the 32-pack ZIP...");
     const zip = new window.JSZip();
-    const folderName = sanitizeFileName(state.sourceName || "audio-alchemy-pack");
+    const folderName = sanitizeFileName(state.sourceName || "preset-mutator-pack");
     const folder = zip.folder(folderName);
 
     for (const preset of state.presets) {
@@ -1559,7 +1559,7 @@ function handlePaidFeatureUnlock() {
   state.proPreviewUnlocked = true;
   window.localStorage.setItem(SUITE_UNLOCK_STORAGE_KEY, "1");
   renderPaidFeatureState();
-  updateStatus("Kreativ Sound Tools is active in this browser.");
+  updateStatus("Preset Mutator Pro is active in this browser.");
   setReady(Boolean(state.originalBuffer));
 }
 

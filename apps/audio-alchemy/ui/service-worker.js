@@ -1,4 +1,4 @@
-const CACHE_NAME = "audio-alchemy-shell-v1";
+const CACHE_NAME = "preset-mutator-shell-v1";
 const SHELL_ASSETS = [
   "./",
   "./index.html",

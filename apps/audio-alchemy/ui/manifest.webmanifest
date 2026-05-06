@@ -1,8 +1,8 @@
 {
   "id": "/apps/audio-alchemy/ui/",
-  "name": "Audio Alchemy",
-  "short_name": "Audio Alchemy",
-  "description": "Generate guided Vital preset variations from a source sound.",
+  "name": "Preset Mutator",
+  "short_name": "Preset Mutator",
+  "description": "Create Vital presets from audio, existing presets, or scratch ideas.",
   "start_url": "/apps/audio-alchemy/ui/",
   "scope": "/apps/audio-alchemy/ui/",
   "display": "standalone",

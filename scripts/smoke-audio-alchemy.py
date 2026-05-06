@@ -77,24 +77,26 @@ def main() -> int:
 
         dom = dump_dom(chrome, base_url + "/apps/audio-alchemy/ui/?self_test=1")
         for needle in [
-            "Audio Alchemy",
-            "FREE. Local processing. No AI.",
+            "Preset Mutator",
+            "Audio to Preset",
+            "Mutate Preset",
+            "From Scratch",
             "Self-test mode generated synthetic demo presets.",
             "Generated Preset Variants",
-            "Download .vital",
+            "Download Preset",
             "Closest",
             "Brighter",
-            "Generated 3 Vital variants from the uploaded sound. Free demo is limited to 3.",
+            "3 guided Vital presets ready. Download the ones that feel closest to your track.",
         ]:
             require(dom, needle, "/apps/audio-alchemy/ui/?self_test=1", errors)
 
         if errors:
-            print("Audio Alchemy smoke test failed:")
+            print("Preset Mutator smoke test failed:")
             for error in errors:
                 print(f"- {error}")
             return 1
 
-        print("Audio Alchemy smoke checks passed.")
+        print("Preset Mutator smoke checks passed.")
         return 0
     finally:
         server.shutdown()

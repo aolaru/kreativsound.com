@@ -10,8 +10,8 @@
     "title": "Tools",
     "url": "/tools/",
     "type": "Page",
-    "thumbnail": "/apps/presetmutator/ui/favicon.svg",
-    "description": "Work-in-progress browser tool lab."
+    "thumbnail": "/apps/audio-alchemy/ui/audio-alchemy-mark.svg",
+    "description": "Preset Mutator browser tool for Vital preset generation."
   },
   {
     "title": "Music",
@@ -189,7 +189,7 @@
     "description": "Practical guide to using TECTONIC 2 for low-end pressure."
   },
   {
-    "title": "How to Use Audio Alchemy Free",
+    "title": "How to Use Preset Mutator Audio to Preset",
     "url": "/posts/how-to-use-audio-alchemy-free-2026-04-02.html",
     "type": "Article",
     "thumbnail": "/apps/audio-alchemy/ui/audio-alchemy-mark.svg",

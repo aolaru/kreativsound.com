@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Audio Alchemy | Guided Vital Preset Generation</title>
+    <title>Preset Mutator | Vital Preset Generation</title>
     <meta name="theme-color" content="#fdf5f5" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Audio Alchemy" />
+    <meta name="apple-mobile-web-app-title" content="Preset Mutator" />
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" type="image/svg+xml" href="./audio-alchemy-mark.svg" />
@@ -31,30 +31,42 @@
         <div class="nav-group nav-group-main">
           <a class="nav-link" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer">Back to Kreativ Sound</a>
         </div>
-        <a class="nav-brand nav-brand-wordmark" href="https://kreativsound.com/apps/audio-alchemy/ui/" aria-label="Audio Alchemy home">
+        <a class="nav-brand nav-brand-wordmark" href="https://kreativsound.com/apps/audio-alchemy/ui/" aria-label="Preset Mutator home">
           <img class="nav-brand-mark-image" src="./audio-alchemy-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
-            <strong>Audio Alchemy</strong>
+            <strong>Preset Mutator</strong>
           </span>
         </a>
-        <div class="nav-group nav-group-utility">
-          <button class="nav-link share-button" id="share-button" type="button" aria-label="Share this page">
-            <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
-            <span class="sr-only">Share this page</span>
-          </button>
-        </div>
+        <div class="nav-group nav-group-utility"></div>
       </nav>
 
       <section class="hero">
-        <h1>Turn a source sound into guided Vital preset ideas</h1>
-        <p class="lede">Upload a sound and generate 3 free Vital preset variations shaped by its tone, envelope, and motion.</p>
+        <p class="eyebrow">Vital preset tool</p>
+        <h1>Create, mutate, and export Vital presets</h1>
+        <p class="lede">Start with audio today. Preset mutation and from-scratch generation are the next modes.</p>
+        <div class="mode-tabs" aria-label="Preset Mutator modes">
+          <button class="mode-tab is-active" type="button" aria-current="true">
+            <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
+            Audio to Preset
+          </button>
+          <button class="mode-tab" type="button" disabled>
+            <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+            Mutate Preset
+            <span>Coming soon</span>
+          </button>
+          <button class="mode-tab" type="button" disabled>
+            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+            From Scratch
+            <span>Coming soon</span>
+          </button>
+        </div>
       </section>
 
       <section class="panel upload-panel">
         <div class="section-head">
           <div>
             <h2>Input Audio</h2>
-            <p class="muted">Supported formats: WAV, MP3, AIFF, M4A, OGG, FLAC. Max 10 MB.</p>
+            <p class="muted">Audio to Preset mode. Supported formats: WAV, MP3, AIFF, M4A, OGG, FLAC. Max 10 MB.</p>
             <p class="input-note">Use a short audio sample. Pads, plucks, basses, drones, and textures work best.</p>
             <p class="input-note">Full songs, long loops, and dense mixes usually give weaker results.</p>
           </div>
@@ -143,7 +155,7 @@
             <div class="control-grid">
               <label class="control">
                 <span class="control-label">Sound Type
-                  <button class="info-tooltip" type="button" aria-label="Explain Sound Type" data-tooltip="Chooses how the source should be interpreted before mapping. Auto Detect lets Audio Alchemy decide between pad, pluck, bass, or texture.">
+                  <button class="info-tooltip" type="button" aria-label="Explain Sound Type" data-tooltip="Chooses how the source should be interpreted before mapping. Auto Detect lets Preset Mutator decide between pad, pluck, bass, or texture.">
                     <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                   </button>
                 </span>
@@ -284,8 +296,8 @@
             </div>
           </section>
 
-          <div class="status" id="status">Load a short audio file to generate 3 guided Vital preset directions. Vital is the current export target.</div>
-          <p class="upgrade-hint">Pro will add more variants, more synths, batch mode, and saved projects.</p>
+          <div class="status" id="status">Load a short audio file to generate 3 guided Vital preset directions. Audio to Preset is the active mode.</div>
+          <p class="upgrade-hint">Next modes: mutate an existing `.vital` preset or create a preset from scratch.</p>
         </section>
 
       </section>
@@ -326,46 +338,46 @@
         </div>
         <p class="self-test-note" id="self-test-note" hidden>Self-test mode generated synthetic demo presets.</p>
         <div class="preset-list" id="preset-list">
-          <p class="empty-state">Choose a source audio file, then click <strong>Generate 3 Free Presets</strong> to create 3 guided Vital starting points.</p>
+        <p class="empty-state">Choose a source audio file, then click <strong>Generate 3 Free Presets</strong> to create 3 guided Vital starting points.</p>
         </div>
       </section>
 
       <section class="panel paid-feature-panel" id="paid-feature-panel" aria-labelledby="paid-feature-title">
         <div class="paid-feature-copy">
-          <p class="paid-feature-kicker">Full tool suite</p>
-          <h2 id="paid-feature-title">Unlock the full Kreativ Sound browser tool suite</h2>
+          <p class="paid-feature-kicker">Preset Mutator Pro</p>
+          <h2 id="paid-feature-title">Unlock the full Preset Mutator workflow</h2>
           <p class="paid-feature-price">Launch price: $19</p>
-          <p class="paid-feature-ownership">Pay once. Unlock the suite on this browser with your purchase code.</p>
+          <p class="paid-feature-ownership">Pay once. Unlock Pro on this browser with your purchase code.</p>
           <ul class="paid-feature-list">
-            <li>32-preset pack generation</li>
-            <li>Preset Mutator included</li>
-            <li>Wave Fracture included</li>
+            <li>Audio to Preset 32-pack generation</li>
+            <li>Preset mutation mode planned</li>
+            <li>From-scratch mode planned</li>
             <li>One ZIP export</li>
           </ul>
-          <p class="paid-feature-audience">For musicians who want all three Kreativ Sound tools in one lifetime unlock.</p>
-          <p>Buy once and use Audio Alchemy, Preset Mutator, and Wave Fracture from the same browser-based toolkit.</p>
+          <p class="paid-feature-audience">For musicians who want a focused browser tool for building Vital preset packs.</p>
+          <p>Preset Mutator starts with audio-driven generation and will expand into preset mutation and from-scratch preset creation.</p>
           <p class="paid-feature-note">Each pack is generated from your uploaded sound for your session, giving musicians a more personal starting point than a generic preset bank.</p>
         </div>
         <div class="paid-feature-actions" id="paid-feature-actions">
           <a class="button primary" href="https://kreativ.gumroad.com/l/audio-alchemy-pro" target="_blank" rel="noopener noreferrer">
             <i class="fa-solid fa-lock" aria-hidden="true"></i>
-            Unlock Full Tool Suite
+            Unlock Preset Mutator Pro
           </a>
           <button class="button secondary paid-feature-toggle" id="paid-feature-toggle" type="button" aria-expanded="false" aria-controls="paid-feature-unlock">
             <i class="fa-solid fa-key" aria-hidden="true"></i>
             Enter purchase code
           </button>
-          <p class="paid-feature-meta">One-time purchase. Unlocks Audio Alchemy, Preset Mutator, and Wave Fracture on this browser.</p>
+          <p class="paid-feature-meta">One-time purchase. Unlocks Preset Mutator Pro on this browser.</p>
         </div>
         <div class="paid-feature-unlock" id="paid-feature-unlock" hidden>
-          <label class="sr-only" for="paid-feature-key">Kreativ Sound Tools purchase code</label>
-          <input id="paid-feature-key" type="text" placeholder="Enter your Kreativ Sound Tools purchase code" autocomplete="off" />
-          <button class="button secondary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Unlock Suite</button>
-          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">After purchase, enter your code to unlock the full tool suite on this browser. No account is required.</p>
+          <label class="sr-only" for="paid-feature-key">Preset Mutator purchase code</label>
+          <input id="paid-feature-key" type="text" placeholder="Enter your Preset Mutator purchase code" autocomplete="off" />
+          <button class="button secondary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Unlock Pro</button>
+          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">After purchase, enter your code to unlock Preset Mutator Pro on this browser. No account is required.</p>
         </div>
         <div class="paid-feature-preview" id="paid-feature-preview" hidden>
-          <p class="paid-feature-preview-badge">Kreativ Sound Tools active</p>
-          <p class="paid-feature-preview-note">This browser is unlocked for Audio Alchemy, Preset Mutator, and Wave Fracture.</p>
+          <p class="paid-feature-preview-badge">Preset Mutator Pro active</p>
+          <p class="paid-feature-preview-note">This browser is unlocked for Preset Mutator Pro.</p>
           <div class="paid-feature-preview-actions">
             <button class="button secondary" id="download-pack" type="button" disabled>
               <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
@@ -377,13 +389,12 @@
       </section>
 
       <footer class="app-footer">
-        <p>Kreativ Sound experimental tool surface for audio-driven preset generation.</p>
-        <p class="app-version">Audio Alchemy v0.3 beta</p>
+        <p>Kreativ Sound experimental tool surface for Vital preset generation.</p>
+        <p class="app-version">Preset Mutator v0.3 beta</p>
       </footer>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
     <script src="./app.js" type="module"></script>
-    <script src="/share.js"></script>
   </body>
 </html>

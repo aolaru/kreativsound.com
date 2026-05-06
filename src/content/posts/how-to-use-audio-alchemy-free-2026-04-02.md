@@ -1,6 +1,6 @@
 ---
-title: "How to Use Audio Alchemy Free"
-description: "A short guide to getting better results from Audio Alchemy Free using short source sounds and a simple preset-generation workflow."
+title: "How to Use Preset Mutator Audio to Preset"
+description: "A short guide to getting better results from Preset Mutator using short source sounds and the Audio to Preset workflow."
 canonical: "https://kreativsound.com/posts/how-to-use-audio-alchemy-free-2026-04-02.html"
 ogImage: "https://kreativsound.com/apps/audio-alchemy/ui/audio-alchemy-mark.svg"
 section: learn
@@ -14,12 +14,12 @@ draft: false
             src="../apps/audio-alchemy/ui/audio-alchemy-mark.svg"
             width="128"
             height="128"
-            alt="Audio Alchemy logo"
+            alt="Preset Mutator logo"
             loading="eager"
             decoding="async"
           />
         </figure>
-        <p>Audio Alchemy Free works best when you treat it like a fast sketch tool. Give it one short source sound, keep the input simple, and let it produce three starting presets you can refine from there.</p>
+        <p>Preset Mutator works best when you treat Audio to Preset mode like a fast sketch tool. Give it one short source sound, keep the input simple, and let it produce three starting presets you can refine from there.</p>
 
         <h2>1. Use one clear source sound</h2>
         <p>Short pads, plucks, bass notes, drones, and textures usually work better than full tracks. The cleaner the source, the easier it is for the tool to infer useful tone, motion, and envelope information.</p>
@@ -35,6 +35,6 @@ draft: false
 
         <p>The simplest way to get stronger results is to keep the source short, focused, and musically obvious.</p>
         <div class="article-cta">
-          <a class="button primary" href="/apps/audio-alchemy/ui/">Open Audio Alchemy Free</a>
+          <a class="button primary" href="/apps/audio-alchemy/ui/">Open Preset Mutator</a>
           <a class="button secondary" href="/learn/">Back to Learn</a>
         </div>
