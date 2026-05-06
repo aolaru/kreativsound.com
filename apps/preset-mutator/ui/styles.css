@@ -184,6 +184,17 @@ output {
   background: rgba(153, 0, 0, 0.06);
   font-weight: 700;
   cursor: default;
+  text-decoration: none;
+}
+
+.mode-tab[href] {
+  cursor: pointer;
+}
+
+.mode-tab[href]:hover {
+  border-color: rgba(153, 0, 0, 0.34);
+  background: rgba(153, 0, 0, 0.1);
+  text-decoration: none;
 }
 
 .mode-tab.is-active {

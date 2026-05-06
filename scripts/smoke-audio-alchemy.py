@@ -80,6 +80,7 @@ def main() -> int:
             "Preset Mutator",
             "Audio to Preset",
             "Mutate Preset",
+            "Live beta",
             "From Scratch",
             "Self-test mode generated synthetic demo presets.",
             "Generated Preset Variants",
@@ -89,6 +90,19 @@ def main() -> int:
             "3 guided Vital presets ready. Download the ones that feel closest to your track.",
         ]:
             require(dom, needle, "/apps/preset-mutator/ui/?self_test=1", errors)
+
+        mutate_dom = dump_dom(chrome, base_url + "/apps/preset-mutator/ui/mutate/")
+        for needle in [
+            "Preset Mutator",
+            "Turn one Vital preset into three new directions",
+            "Audio to Preset",
+            "Mutate Preset",
+            "Generate 3 Free Variations",
+            "Mutation Controls",
+            "Preset Mutator Pro",
+            "Serum 2 and Pigments 7 are planned future targets.",
+        ]:
+            require(mutate_dom, needle, "/apps/preset-mutator/ui/mutate/", errors)
 
         if errors:
             print("Preset Mutator smoke test failed:")

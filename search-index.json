@@ -11,7 +11,7 @@
     "url": "/tools/",
     "type": "Page",
     "thumbnail": "/apps/preset-mutator/ui/preset-mutator-mark.svg",
-    "description": "Preset Mutator browser tool for synth preset generation. Vital is live first; Serum 2 and Pigments 7 are planned."
+    "description": "Preset Mutator browser tool for audio-to-preset generation and mutating existing Vital presets. Serum 2 and Pigments 7 are planned."
   },
   {
     "title": "Music",
