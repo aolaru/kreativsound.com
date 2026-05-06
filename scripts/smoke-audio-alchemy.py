@@ -75,7 +75,7 @@ def main() -> int:
     try:
         errors: list[str] = []
 
-        dom = dump_dom(chrome, base_url + "/apps/audio-alchemy/ui/?self_test=1")
+        dom = dump_dom(chrome, base_url + "/apps/preset-mutator/ui/?self_test=1")
         for needle in [
             "Preset Mutator",
             "Audio to Preset",
@@ -88,7 +88,7 @@ def main() -> int:
             "Brighter",
             "3 guided Vital presets ready. Download the ones that feel closest to your track.",
         ]:
-            require(dom, needle, "/apps/audio-alchemy/ui/?self_test=1", errors)
+            require(dom, needle, "/apps/preset-mutator/ui/?self_test=1", errors)
 
         if errors:
             print("Preset Mutator smoke test failed:")

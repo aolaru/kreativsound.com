@@ -1,8 +1,8 @@
 ---
 title: "How to Turn One Audio Texture into a Vital Preset with Preset Mutator"
-description: "A practical Preset Mutator workflow for turning one focused audio texture into playable Vital preset starting points."
+description: "A practical Preset Mutator workflow for turning one focused audio texture into playable preset starting points. Vital is live first, with Serum 2 and Pigments 7 planned."
 canonical: "https://kreativsound.com/posts/how-to-turn-one-audio-texture-into-vital-preset-with-preset-mutator-2026-05-06.html"
-ogImage: "https://kreativsound.com/apps/audio-alchemy/ui/audio-alchemy-mark.svg"
+ogImage: "https://kreativsound.com/apps/preset-mutator/ui/preset-mutator-mark.svg"
 section: learn
 published: "2026-05-06"
 featured: false
@@ -11,7 +11,7 @@ draft: false
 <figure class="article-figure">
   <img
     class="article-image"
-    src="../apps/audio-alchemy/ui/audio-alchemy-mark.svg"
+    src="../apps/preset-mutator/ui/preset-mutator-mark.svg"
     width="128"
     height="128"
     alt="Preset Mutator logo"
@@ -21,6 +21,8 @@ draft: false
 </figure>
 
 <p>Preset Mutator is strongest when the input is focused. One clear audio texture gives the tool a better chance of generating useful Vital preset directions than a dense loop or finished mix.</p>
+
+<p>This guide uses the current Vital workflow. The same product direction is planned to expand later toward Serum 2 and Pigments 7 support.</p>
 
 <h2>1. Choose a short source</h2>
 <p>Use a sound that has one clear identity: a drone, pad, pluck, bass note, noisy layer, or tonal texture. Shorter material is easier to translate into envelope, tone, and movement decisions.</p>
@@ -37,6 +39,6 @@ draft: false
 <p>The workflow is simple: isolate one texture, generate three preset ideas, then keep the one that gives you the best starting direction.</p>
 
 <div class="article-cta">
-  <a class="button primary" href="/apps/audio-alchemy/ui/">Open Preset Mutator</a>
+  <a class="button primary" href="/apps/preset-mutator/ui/">Open Preset Mutator</a>
   <a class="button secondary" href="/tools/">View Tools</a>
 </div>

@@ -145,7 +145,7 @@ python3 scripts/check-product-assets.py
 python3 scripts/smoke-site.py
 ```
 
-- Run Preset Mutator smoke checks:
+- Run Preset Mutator smoke checks for the current Vital workflow:
 
 ```bash
 python3 scripts/smoke-audio-alchemy.py

@@ -1,8 +1,8 @@
 ---
 title: "How to Use Preset Mutator Audio to Preset"
-description: "A short guide to getting better results from Preset Mutator using short source sounds and the Audio to Preset workflow."
+description: "A short guide to getting better results from Preset Mutator using short source sounds and the current Vital Audio to Preset workflow."
 canonical: "https://kreativsound.com/posts/how-to-use-audio-alchemy-free-2026-04-02.html"
-ogImage: "https://kreativsound.com/apps/audio-alchemy/ui/audio-alchemy-mark.svg"
+ogImage: "https://kreativsound.com/apps/preset-mutator/ui/preset-mutator-mark.svg"
 section: learn
 published: "2026-04-02"
 featured: true
@@ -11,7 +11,7 @@ draft: false
 <figure class="article-figure">
           <img
             class="article-image"
-            src="../apps/audio-alchemy/ui/audio-alchemy-mark.svg"
+            src="../apps/preset-mutator/ui/preset-mutator-mark.svg"
             width="128"
             height="128"
             alt="Preset Mutator logo"
@@ -20,6 +20,7 @@ draft: false
           />
         </figure>
         <p>Preset Mutator works best when you treat Audio to Preset mode like a fast sketch tool. Give it one short source sound, keep the input simple, and let it produce three starting presets you can refine from there.</p>
+        <p>The current public workflow exports Vital presets first. Serum 2 and Pigments 7 support are planned future targets, but the advice here starts with the live Vital mode.</p>
 
         <h2>1. Use one clear source sound</h2>
         <p>Short pads, plucks, bass notes, drones, and textures usually work better than full tracks. The cleaner the source, the easier it is for the tool to infer useful tone, motion, and envelope information.</p>
@@ -35,6 +36,6 @@ draft: false
 
         <p>The simplest way to get stronger results is to keep the source short, focused, and musically obvious.</p>
         <div class="article-cta">
-          <a class="button primary" href="/apps/audio-alchemy/ui/">Open Preset Mutator</a>
+          <a class="button primary" href="/apps/preset-mutator/ui/">Open Preset Mutator</a>
           <a class="button secondary" href="/learn/">Back to Learn</a>
         </div>
