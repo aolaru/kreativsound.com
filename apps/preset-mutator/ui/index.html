@@ -43,7 +43,7 @@
       <section class="hero">
         <p class="eyebrow">Synth preset tool</p>
         <h1>Create, mutate, and export synth presets</h1>
-        <p class="lede">Vital export is live now. Serum 2 and Pigments 7 support are planned next.</p>
+        <p class="lede">Three Vital beta workflows for turning audio, existing presets, or simple intent into playable preset starts.</p>
         <div class="mode-tabs" aria-label="Preset Mutator modes">
           <button class="mode-tab is-active" type="button" aria-current="true">
             <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
@@ -60,15 +60,29 @@
             <span>Live beta</span>
           </a>
         </div>
+        <div class="mode-proof-grid" aria-label="Audio to Preset summary">
+          <div>
+            <span>Source</span>
+            <strong>Short audio</strong>
+          </div>
+          <div>
+            <span>Free</span>
+            <strong>3 Vital presets</strong>
+          </div>
+          <div>
+            <span>Pro</span>
+            <strong>32 presets + ZIP</strong>
+          </div>
+        </div>
       </section>
 
       <section class="panel upload-panel">
         <div class="section-head">
           <div>
             <h2>Input Audio</h2>
-            <p class="muted">Audio to Preset mode. Supported formats: WAV, MP3, AIFF, M4A, OGG, FLAC. Max 10 MB.</p>
-            <p class="input-note">Use a short audio sample. Pads, plucks, basses, drones, and textures work best.</p>
-            <p class="input-note">Full songs, long loops, and dense mixes usually give weaker results.</p>
+            <p class="muted">Upload one short source sound and generate playable Vital preset starts inspired by its tone and shape.</p>
+            <p class="input-note">Best inputs: one-shot notes, basses, pads, plucks, drones, and clean textures. Supported formats: WAV, MP3, AIFF, M4A, OGG, FLAC. Max 10 MB.</p>
+            <p class="input-note">Avoid full songs, long loops, and dense mixes. They usually produce weaker mappings.</p>
           </div>
         </div>
         <p class="upload-message" id="upload-message" hidden></p>
@@ -296,7 +310,7 @@
             </div>
           </section>
 
-          <div class="status" id="status">Load a short audio file to generate 3 guided Vital preset directions. Audio to Preset is the active mode.</div>
+          <div class="status" id="status">Load a short audio file, then generate 3 guided Vital preset starts.</div>
           <p class="upgrade-hint">Mutate Preset and From Scratch are available as Vital betas.</p>
         </section>
 
@@ -334,11 +348,11 @@
       <section class="panel presets-panel" id="presets-panel">
         <div class="section-head">
           <h2>Generated Preset Variants</h2>
-          <p class="muted">Preview 3 guided mappings, then download real `.vital` files built from curated Vital seeds.</p>
+          <p class="muted">Preview the generated directions, then download real `.vital` files built from curated Vital seeds.</p>
         </div>
         <p class="self-test-note" id="self-test-note" hidden>Self-test mode generated synthetic demo presets.</p>
         <div class="preset-list" id="preset-list">
-        <p class="empty-state">Choose a source audio file, then click <strong>Generate 3 Free Presets</strong> to create 3 guided Vital starting points.</p>
+        <p class="empty-state">Choose a short source sound, then click <strong>Generate 3 Free Presets</strong>. Use Pro when you want a full 32-preset pack from the same source.</p>
         </div>
       </section>
 
@@ -355,8 +369,8 @@
             <li>One ZIP export</li>
           </ul>
           <p class="paid-feature-audience">For musicians who want a focused browser tool for building synth preset packs.</p>
-          <p>Preset Mutator starts with Vital audio-driven generation, preset mutation, and from-scratch creation, with Serum 2 and Pigments 7 support planned next.</p>
-          <p class="paid-feature-note">Each pack is generated from your uploaded sound for your session, giving musicians a more personal starting point than a generic preset bank.</p>
+          <p>Preset Mutator includes Audio to Preset, Mutate Preset, and From Scratch for Vital, with Serum 2 and Pigments 7 support planned next.</p>
+          <p class="paid-feature-note">Pro is for building fuller preset packs faster: more variations, more shaping controls, and one ZIP download.</p>
         </div>
         <div class="paid-feature-actions" id="paid-feature-actions">
           <a class="button primary" href="https://kreativ.gumroad.com/l/preset-mutator-pro" target="_blank" rel="noopener noreferrer">
@@ -389,7 +403,7 @@
       </section>
 
       <footer class="app-footer">
-        <p>Kreativ Sound experimental tool surface for synth preset generation. Vital is live first; Serum 2 and Pigments 7 are planned.</p>
+        <p>Kreativ Sound experimental tool surface for Vital preset generation. Serum 2 and Pigments 7 are planned.</p>
         <p class="app-version">Preset Mutator v0.3 beta</p>
       </footer>
     </main>
