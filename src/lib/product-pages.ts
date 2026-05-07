@@ -21,6 +21,8 @@ export type ProductPage = {
   liteUrl?: string;
   liteLabel?: string;
   liteNote?: string;
+  valueLine?: string;
+  ctaLine?: string;
   heroNote: string;
   demoBlurb?: string;
   demoPlaceholder?: string;
@@ -171,7 +173,9 @@ const productOverrides: Record<string, ProductPageOverride> = {
     heroNote: "BLACK ARCOLOGY is built for producers who want depth, tension, movement, and character without ending up in the generic preset-bank lane. It is less a utility pack and more a mood engine.",
     liteUrl: "/products/black-arcology-lite/",
     liteLabel: "Download Lite",
-    liteNote: "If you want a free entry point first, use BLACK ARCOLOGY Lite before moving into the full 128-preset collection.",
+    liteNote: "Try the free 32-preset Lite version first. Upgrade when you want the full 128-preset collection.",
+    valueLine: "128 Pigments presets · Instant download · Pay once",
+    ctaLine: "Ready to build darker Pigments tracks? Get the full 128-preset BLACK ARCOLOGY collection.",
     specs: [
       { label: "Format", value: "Arturia Pigments presets" },
       { label: "Included", value: "128 presets" },

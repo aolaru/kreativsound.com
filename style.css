@@ -1342,6 +1342,16 @@ a:focus-visible,
   text-align: right;
 }
 
+.product-value-line {
+  width: min(100%, 470px);
+  margin: -0.2rem 0 0;
+  color: var(--text);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: right;
+}
+
 .product-specs-inline {
   display: flex;
   flex-wrap: wrap;

@@ -64,6 +64,9 @@ const hasDemo = Boolean(product.demo?.src);
             </a>
           ) : null}
         </div>
+        {product.valueLine ? (
+          <p class="product-value-line">{product.valueLine}</p>
+        ) : null}
         {product.liteUrl ? (
           <p class="product-lite-note">{product.liteNote || "Prefer to test the sound first? Start with the free Lite version."}</p>
         ) : null}
@@ -130,7 +133,7 @@ const hasDemo = Boolean(product.demo?.src);
           <p class="product-cta-line">
             {product.variant === "archive"
               ? "Use the detail page for context, then jump back into the broader archive when you need older material."
-              : product.heroNote}
+              : product.ctaLine || product.heroNote}
           </p>
         </div>
         <div class="product-actions">
