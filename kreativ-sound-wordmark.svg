@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="112" viewBox="0 0 380 112" role="img" aria-label="Kreativ Sound">
+  <defs>
+    <linearGradient id="lockup-bg" x1="16" y1="10" x2="94" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1b0b0d" />
+      <stop offset="0.54" stop-color="#0d1018" />
+      <stop offset="1" stop-color="#080a10" />
+    </linearGradient>
+    <linearGradient id="lockup-k" x1="28" y1="20" x2="86" y2="92" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#990000" />
+      <stop offset="0.5" stop-color="#c91818" />
+      <stop offset="1" stop-color="#e05b5b" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="104" height="104" rx="28" fill="url(#lockup-bg)" />
+  <rect x="8" y="8" width="96" height="96" rx="24" fill="none" stroke="#563035" stroke-opacity="0.62" />
+  <path fill="url(#lockup-k)" d="M28 20h18v31l28-31h22L63 56l35 38H76L46 63v31H28z" />
+  <g font-family="Space Grotesk, Arial, sans-serif" font-weight="700">
+    <text x="128" y="50" fill="#f7ecec" font-size="33" letter-spacing="1">KREATIV</text>
+    <text x="128" y="82" fill="#e05b5b" font-size="24" letter-spacing="5">SOUND</text>
+  </g>
+  <path d="M128 92h214" stroke="#563035" stroke-opacity="0.5" />
+</svg>

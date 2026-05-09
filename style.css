@@ -109,9 +109,9 @@ a:focus-visible,
 
 .site-nav-home {
   display: grid;
-  grid-template-columns: auto minmax(220px, 1fr) auto;
+  grid-template-columns: auto minmax(180px, 1fr) auto;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
   padding: 0.25rem 1.4rem 0;
   margin-bottom: 1.2rem;
   padding-bottom: 0.9rem;
@@ -153,12 +153,19 @@ a:focus-visible,
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
 }
 
+.nav-brand-lockup {
+  display: block;
+  width: clamp(150px, 17vw, 190px);
+  height: auto;
+  filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.2));
+}
+
 .site-search {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 360px;
+  max-width: 320px;
   margin: 0 auto;
 }
 
@@ -2560,6 +2567,10 @@ a:focus-visible,
   .nav-brand-mark {
     width: 68px;
     height: 68px;
+  }
+
+  .nav-brand-lockup {
+    width: min(220px, 74vw);
   }
 
   .product-grid {

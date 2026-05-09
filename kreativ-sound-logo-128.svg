@@ -1,13 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Kreativ Sound logo">
   <defs>
-    <linearGradient id="legacy-logo-k-gradient" x1="30" y1="21" x2="99" y2="107" gradientUnits="userSpaceOnUse">
+    <linearGradient id="mark-bg" x1="18" y1="12" x2="112" y2="118" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1b0b0d" />
+      <stop offset="0.52" stop-color="#0d1018" />
+      <stop offset="1" stop-color="#080a10" />
+    </linearGradient>
+    <linearGradient id="mark-k" x1="30" y1="22" x2="100" y2="108" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#990000" />
+      <stop offset="0.5" stop-color="#c91818" />
       <stop offset="1" stop-color="#e05b5b" />
     </linearGradient>
+    <radialGradient id="mark-glow" cx="78%" cy="20%" r="76%">
+      <stop offset="0" stop-color="#e05b5b" stop-opacity="0.32" />
+      <stop offset="0.42" stop-color="#990000" stop-opacity="0.11" />
+      <stop offset="1" stop-color="#990000" stop-opacity="0" />
+    </radialGradient>
   </defs>
-  <rect width="128" height="128" rx="20" fill="#12090a" />
-  <path
-    fill="url(#legacy-logo-k-gradient)"
-    d="M29 21h20v35l32-35h24L69 63l40 44H82L49 72v35H29z"
-  />
+  <rect width="128" height="128" rx="28" fill="url(#mark-bg)" />
+  <rect x="3.5" y="3.5" width="121" height="121" rx="25" fill="none" stroke="#563035" stroke-opacity="0.58" />
+  <circle cx="92" cy="26" r="54" fill="url(#mark-glow)" />
+  <path fill="url(#mark-k)" d="M28 21h22v36l33-36h25L70 62l41 45H84L50 71v36H28z" />
+  <path fill="#fff" fill-opacity="0.08" d="M50 21h6v86h-6z" />
 </svg>
