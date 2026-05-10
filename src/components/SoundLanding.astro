@@ -5,6 +5,7 @@ const {
   titleId = "catalog-title",
   mode = "full",
   intro = "Start with the featured release, then move through presets, sample packs, free sounds, and archive material.",
+  showGuide = true,
 } = Astro.props;
 
 const isCurated = mode === "curated";
@@ -95,31 +96,33 @@ const categoryOverview = [
       </a>
     ))}
   </div>
-  <section class="catalog-guide" aria-label="How to choose a Kreativ Sound pack">
-    <div>
-      <p class="featured-label">How to choose</p>
-      <h2>Start with the sound world you need today.</h2>
-      <p>If the catalog feels wide, use these quick entry points before browsing everything.</p>
-    </div>
-    <div class="catalog-guide-grid">
-      <a href="/products/black-arcology/">
-        <strong>Dark Pigments pressure</strong>
-        <span>Choose Black Arcology for industrial drones, machine tone, melodic keys, and fractured FX.</span>
-      </a>
-      <a href="/products/velvet-ruins/">
-        <strong>Dark Vital melody</strong>
-        <span>Choose Velvet Ruins for spectral movement, worn melodic tone, and cinematic Vital presets.</span>
-      </a>
-      <a href="/products/neolith/">
-        <strong>Analog tension</strong>
-        <span>Choose NEOLITH when you need Softube Models presets with low-register weight and restrained motion.</span>
-      </a>
-      <a href="#catalog-free">
-        <strong>Test first</strong>
-        <span>Start with Free Packs if you want to check the palette before buying a full release.</span>
-      </a>
-    </div>
-  </section>
+  {showGuide ? (
+    <section class="catalog-guide" aria-label="How to choose a Kreativ Sound pack">
+      <div>
+        <p class="featured-label">How to choose</p>
+        <h2>Start with the sound world you need today.</h2>
+        <p>If the catalog feels wide, use these quick entry points before browsing everything.</p>
+      </div>
+      <div class="catalog-guide-grid">
+        <a href="/products/black-arcology/">
+          <strong>Dark Pigments pressure</strong>
+          <span>Choose Black Arcology for industrial drones, machine tone, melodic keys, and fractured FX.</span>
+        </a>
+        <a href="/products/velvet-ruins/">
+          <strong>Dark Vital melody</strong>
+          <span>Choose Velvet Ruins for spectral movement, worn melodic tone, and cinematic Vital presets.</span>
+        </a>
+        <a href="/products/neolith/">
+          <strong>Analog tension</strong>
+          <span>Choose NEOLITH when you need Softube Models presets with low-register weight and restrained motion.</span>
+        </a>
+        <a href="#catalog-free">
+          <strong>Test first</strong>
+          <span>Start with Free Packs if you want to check the palette before buying a full release.</span>
+        </a>
+      </div>
+    </section>
+  ) : null}
   <ProductCatalog
     visibleCategories={isCurated ? ["Presets", "Free", "Samples"] : undefined}
     showCategoryNav={isCurated}
