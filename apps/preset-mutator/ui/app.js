@@ -916,6 +916,37 @@ function buildPresetReason(preset, role) {
   return `${reasons[0]}; ${reasons[1]}.`;
 }
 
+function confidenceForPreset(preset, role) {
+  let score = 84;
+  if (role === "Closest") {
+    score += 8;
+  } else if (role === "Darker" || role === "Brighter") {
+    score += 5;
+  } else if (role === "More Motion") {
+    score += 3;
+  }
+  if (preset.parameterMap.filter_1_cutoff >= 18 && preset.parameterMap.filter_1_cutoff <= 92) {
+    score += 2;
+  }
+  if (preset.parameterMap.env_1_release >= 0.08 && preset.parameterMap.env_1_release <= 0.82) {
+    score += 2;
+  }
+  return `${Math.min(96, score)}%`;
+}
+
+function bestUseForPreset(preset) {
+  if (preset.familyKey === "bass") {
+    return "Bass foundations and low tension";
+  }
+  if (preset.familyKey === "pluck") {
+    return "Hooks, accents, and melodic pulses";
+  }
+  if (preset.familyKey === "texture") {
+    return "Atmospheres, transitions, and beds";
+  }
+  return "Pads, intros, and cinematic support";
+}
+
 function familyLabel(family) {
   const labels = {
     pad: "Pad / Atmosphere",
@@ -1105,6 +1136,10 @@ function buildPresetCard(preset, role, totalCount) {
       </div>
       <p class="preset-summary">${preset.summary}</p>
       ${tags.length ? `<div class="preset-tags">${tags.map((tag) => `<span class="preset-tag">${tag}</span>`).join("")}</div>` : ""}
+      <div class="preset-confidence">
+        <span><strong>${confidenceForPreset(preset, role)}</strong> confidence</span>
+        <span><strong>Best use</strong> ${bestUseForPreset(preset)}</span>
+      </div>
       <p class="preset-quality">Why this result: ${buildPresetReason(preset, role)}</p>
       <div class="param-list">${paramRows}</div>
       <div class="preset-actions">

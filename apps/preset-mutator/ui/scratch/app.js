@@ -347,6 +347,10 @@ function renderPresets(presets) {
         </div>
       </div>
       <p class="preset-summary">${preset.summary}</p>
+      <div class="preset-confidence">
+        <span><strong>${confidenceForPreset(preset)}</strong> confidence</span>
+        <span><strong>Best use</strong> ${bestUseForPreset(preset)}</span>
+      </div>
       <p class="preset-quality">Why this result: built from the selected intent profile, then biased toward ${preset.roleLabel.toLowerCase()} behavior.</p>
       <div class="param-list">${preset.parameters.map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`).join("")}</div>
       <div class="preset-actions">
@@ -361,9 +365,40 @@ function renderPresets(presets) {
   }
 }
 
+function confidenceForPreset(preset) {
+  let score = 83;
+  if (preset.roleLabel === "Closest") {
+    score += 8;
+  } else if (preset.roleLabel === "Darker" || preset.roleLabel === "Brighter") {
+    score += 5;
+  } else if (preset.roleLabel === "More Motion") {
+    score += 3;
+  }
+  if (preset.parameterMap.filter_1_cutoff >= 18 && preset.parameterMap.filter_1_cutoff <= 92) {
+    score += 2;
+  }
+  if (preset.parameterMap.env_1_release >= 0.06 && preset.parameterMap.env_1_release <= 0.9) {
+    score += 2;
+  }
+  return `${Math.min(95, score)}%`;
+}
+
+function bestUseForPreset(preset) {
+  if (preset.familyKey === "bass") {
+    return "Low-end starts and bass sketches";
+  }
+  if (preset.familyKey === "pluck") {
+    return "Keys, pulses, and melodic hooks";
+  }
+  if (preset.familyKey === "texture") {
+    return "Drones, FX beds, and transitions";
+  }
+  return "Pads, cues, and atmospheric layers";
+}
+
 function seedUrlForFamily(family) {
   const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
-  return new URL(`../../../audio-alchemy/assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, window.location.href);
+  return new URL(`../../assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, window.location.href);
 }
 
 async function loadSeedPreset(family) {

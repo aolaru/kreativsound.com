@@ -44,25 +44,32 @@
         <p class="eyebrow">Synth preset tool</p>
         <h1>Create, mutate, and export synth presets</h1>
         <p class="lede">Three Vital beta workflows for turning audio, existing presets, or simple intent into playable preset starts.</p>
-        <div class="mode-tabs" aria-label="Preset Mutator modes">
+        <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator source">
           <button class="mode-tab is-active" type="button" aria-current="true">
             <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
-            Audio to Preset
+            <span class="mode-copy">
+              <strong>Audio</strong>
+              <small>Analyze one short sound</small>
+            </span>
           </button>
           <a class="mode-tab" href="./mutate/">
             <i class="fa-solid fa-sliders" aria-hidden="true"></i>
-            Mutate Preset
-            <span>Live beta</span>
+            <span class="mode-copy">
+              <strong>Preset</strong>
+              <small>Mutate one .vital file</small>
+            </span>
           </a>
           <a class="mode-tab" href="./scratch/">
             <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
-            From Scratch
-            <span>Live beta</span>
+            <span class="mode-copy">
+              <strong>Scratch</strong>
+              <small>Start from intent</small>
+            </span>
           </a>
         </div>
         <div class="mode-proof-grid" aria-label="Audio to Preset summary">
           <div>
-            <span>Source</span>
+            <span>Current source</span>
             <strong>Short audio</strong>
           </div>
           <div>
@@ -70,7 +77,7 @@
             <strong>3 Vital presets</strong>
           </div>
           <div>
-            <span>Pro</span>
+            <span>Pro output</span>
             <strong>32 presets + ZIP</strong>
           </div>
         </div>

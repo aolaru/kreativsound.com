@@ -627,6 +627,10 @@ function renderVariants() {
         <p class="preset-quality">${summarizeVariantFocus(variant)}</p>
         <div class="preset-metrics">
           <div>
+            <span class="metric-label">Confidence</span>
+            <strong>${confidenceForVariant(variant)}%</strong>
+          </div>
+          <div>
             <span class="metric-label">Changes</span>
             <strong>${variant.changedParameters.length}</strong>
           </div>
@@ -637,6 +641,10 @@ function renderVariants() {
           <div>
             <span class="metric-label">Format</span>
             <strong>Vital</strong>
+          </div>
+          <div>
+            <span class="metric-label">Best use</span>
+            <strong>${bestUseForVariant(variant)}</strong>
           </div>
         </div>
         <div>
@@ -665,6 +673,40 @@ function renderVariants() {
 
     elements.presetList.appendChild(section);
   }
+}
+
+function confidenceForVariant(variant) {
+  let score = 82;
+  if (variant.groupKey === "closest") {
+    score += 9;
+  } else if (variant.groupKey === "darker" || variant.groupKey === "brighter") {
+    score += 5;
+  } else if (variant.groupKey === "more-motion" || variant.groupKey === "steadier") {
+    score += 3;
+  }
+  if (variant.changedParameters.length >= 6 && variant.changedParameters.length <= 18) {
+    score += 4;
+  }
+  return Math.min(96, score);
+}
+
+function bestUseForVariant(variant) {
+  if (variant.groupKey === "closest") {
+    return "Safer alternates";
+  }
+  if (variant.groupKey === "darker") {
+    return "Darker cue layers";
+  }
+  if (variant.groupKey === "brighter") {
+    return "Clearer lead parts";
+  }
+  if (variant.groupKey === "wider") {
+    return "Wide layers";
+  }
+  if (variant.groupKey === "dirtier") {
+    return "Edge and grit";
+  }
+  return "Exploration";
 }
 
 async function loadPreset(file) {

@@ -176,8 +176,8 @@ output {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 40px;
-  padding: 0.52rem 0.8rem;
+  min-height: 54px;
+  padding: 0.62rem 0.9rem;
   border: 1px solid rgba(153, 0, 0, 0.18);
   border-radius: 999px;
   color: var(--text);
@@ -185,6 +185,33 @@ output {
   font-weight: 700;
   cursor: default;
   text-decoration: none;
+}
+
+.mode-source-tabs {
+  align-items: stretch;
+}
+
+.mode-copy {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 9.4rem;
+  text-align: left;
+}
+
+.mode-copy strong {
+  font-size: 0.9rem;
+  line-height: 1.05;
+}
+
+.mode-copy small {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.mode-tab.is-active .mode-copy small {
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .mode-tab[href] {
@@ -208,7 +235,7 @@ output {
   opacity: 0.72;
 }
 
-.mode-tab span {
+.mode-tab > span:not(.mode-copy) {
   padding: 0.14rem 0.42rem;
   border-radius: 999px;
   color: var(--accent-strong);
@@ -996,6 +1023,29 @@ button:disabled {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.preset-confidence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.preset-confidence span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.34rem 0.58rem;
+  border: 1px solid rgba(153, 0, 0, 0.14);
+  border-radius: 999px;
+  color: var(--muted);
+  background: rgba(153, 0, 0, 0.045);
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
+.preset-confidence strong {
+  color: var(--accent-strong);
 }
 
 .preset-tag {
