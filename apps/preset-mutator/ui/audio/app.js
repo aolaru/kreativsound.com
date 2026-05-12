@@ -87,13 +87,13 @@ const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
 const GENERATE_DELAY_MS = 500;
 const SUITE_UNLOCK_STORAGE_KEY = "kreativ-sound-tools-unlocked";
-const LEGACY_AUDIO_ALCHEMY_STORAGE_KEY = "audio-alchemy-pro-preview-unlocked";
+const LEGACY_AUDIO_ALCHEMY_STORAGE_KEY = "preset-mutator-pro-preview-unlocked";
 const PRO_PURCHASE_CODE = "AA-PRO-32-DGTW9930";
 const SUPPORTED_AUDIO_EXTENSIONS = [".wav", ".mp3", ".aiff", ".aif", ".m4a", ".aac", ".ogg", ".flac"];
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js").catch(() => {
+    navigator.serviceWorker.register("../service-worker.js").catch(() => {
       // Installability should fail quietly rather than affecting the app UI.
     });
   });
@@ -916,6 +916,37 @@ function buildPresetReason(preset, role) {
   return `${reasons[0]}; ${reasons[1]}.`;
 }
 
+function confidenceForPreset(preset, role) {
+  let score = 84;
+  if (role === "Closest") {
+    score += 8;
+  } else if (role === "Darker" || role === "Brighter") {
+    score += 5;
+  } else if (role === "More Motion") {
+    score += 3;
+  }
+  if (preset.parameterMap.filter_1_cutoff >= 18 && preset.parameterMap.filter_1_cutoff <= 92) {
+    score += 2;
+  }
+  if (preset.parameterMap.env_1_release >= 0.08 && preset.parameterMap.env_1_release <= 0.82) {
+    score += 2;
+  }
+  return `${Math.min(96, score)}%`;
+}
+
+function bestUseForPreset(preset) {
+  if (preset.familyKey === "bass") {
+    return "Bass foundations and low tension";
+  }
+  if (preset.familyKey === "pluck") {
+    return "Hooks, accents, and melodic pulses";
+  }
+  if (preset.familyKey === "texture") {
+    return "Atmospheres, transitions, and beds";
+  }
+  return "Pads, intros, and cinematic support";
+}
+
 function familyLabel(family) {
   const labels = {
     pad: "Pad / Atmosphere",
@@ -939,7 +970,7 @@ function noteName(frequency) {
 
 function seedUrlForFamily(family) {
   const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
-  return new URL(`../assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, window.location.href);
+  return new URL(`../../assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, window.location.href);
 }
 
 async function loadSeedPreset(family) {
@@ -1105,6 +1136,10 @@ function buildPresetCard(preset, role, totalCount) {
       </div>
       <p class="preset-summary">${preset.summary}</p>
       ${tags.length ? `<div class="preset-tags">${tags.map((tag) => `<span class="preset-tag">${tag}</span>`).join("")}</div>` : ""}
+      <div class="preset-confidence">
+        <span><strong>${confidenceForPreset(preset, role)}</strong> confidence</span>
+        <span><strong>Best use</strong> ${bestUseForPreset(preset)}</span>
+      </div>
       <p class="preset-quality">Why this result: ${buildPresetReason(preset, role)}</p>
       <div class="param-list">${paramRows}</div>
       <div class="preset-actions">

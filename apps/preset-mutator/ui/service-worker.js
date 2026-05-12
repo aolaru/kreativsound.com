@@ -1,9 +1,17 @@
-const CACHE_NAME = "preset-mutator-shell-v2";
+const CACHE_NAME = "preset-mutator-shell-v3";
 const SHELL_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./scratch/index.html",
+  "./scratch/styles.css",
+  "./scratch/app.js",
+  "./mutate/index.html",
+  "./mutate/styles.css",
+  "./mutate/app.js",
+  "./audio/index.html",
+  "./audio/app.js",
   "./manifest.webmanifest",
   "./preset-mutator-mark.svg",
 ];
@@ -36,6 +44,27 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  const shouldPreferNetwork =
+    request.mode === "navigate" ||
+    ["document", "script", "style"].includes(request.destination);
+
+  if (shouldPreferNetwork) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (!response.ok || response.type === "opaque") {
+            return response;
+          }
+
+          const cloned = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
+          return response;
+        })
+        .catch(() => caches.match(request)),
+    );
     return;
   }
 

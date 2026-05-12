@@ -31,35 +31,21 @@ npm run build
 npm run preview
 ```
 
-## PresetMutator Local Webapp
+## Preset Mutator Browser App
 
-`PresetMutator` now lives inside this repo under:
+The public browser app lives under:
 
-- `apps/presetmutator`
-
-Start it from the repo root with:
-
-```bash
-bash run-presetmutator.sh
-```
-
-Stable local URL:
+- `apps/preset-mutator`
 
 ```text
-http://127.0.0.1:4185/
+http://127.0.0.1:4321/apps/preset-mutator/ui/
 ```
 
 Notes:
 
-- this avoids the main site preview port (`4173`)
-- it is local-only by default (`127.0.0.1`)
-- it is not linked anywhere on the public website
-
-You can override the bind settings if needed:
-
-```bash
-PRESETMUTATOR_HOST=127.0.0.1 PRESETMUTATOR_PORT=4185 bash run-presetmutator.sh
-```
+- `apps/preset-mutator/ui/` is the current public app.
+- `apps/audio-alchemy/ui/` is a legacy redirect to Audio to Preset.
+- `apps/presetmutator/` is retired and only kept as a redirect path.
 
 ## Editing Product Catalog
 

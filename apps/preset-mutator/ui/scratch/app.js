@@ -49,6 +49,14 @@ const UNLOCK_STORAGE_KEY = "kreativ-sound-tools-unlocked";
 const LEGACY_UNLOCK_STORAGE_KEY = "preset-mutator-pro-preview-unlocked";
 const PRO_PURCHASE_CODE = "AA-PRO-32-DGTW9930";
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("../service-worker.js").catch(() => {
+      // Installability should fail quietly rather than affecting the app UI.
+    });
+  });
+}
+
 const MOOD_PROFILE = {
   dark: { brightness: 0.32, body: 0.68, movement: 0.44, noise: 0.34, width: 0.48, sustain: 0.64, wetness: 0.32, drive: 0.18 },
   warm: { brightness: 0.5, body: 0.72, movement: 0.36, noise: 0.18, width: 0.42, sustain: 0.58, wetness: 0.24, drive: 0.08 },

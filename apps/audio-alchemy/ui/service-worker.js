@@ -1,31 +1,12 @@
-const CACHE_NAME = "preset-mutator-shell-v1";
-const SHELL_ASSETS = [
-  "./",
-  "./index.html",
-  "./styles.css",
-  "./app.js",
-  "./manifest.webmanifest",
-  "./audio-alchemy-mark.svg",
-];
+const REDIRECT_TARGET = "/apps/preset-mutator/ui/audio/";
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_ASSETS)),
-  );
+  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))));
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key)),
-      ),
-    ),
-  );
-  self.clients.claim();
+  event.waitUntil(self.clients.claim());
 });
 
 self.addEventListener("fetch", (event) => {
@@ -35,25 +16,11 @@ self.addEventListener("fetch", (event) => {
   }
 
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) {
+  if (url.origin !== self.location.origin || url.pathname.endsWith("/service-worker.js")) {
     return;
   }
 
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) {
-        return cached;
-      }
-
-      return fetch(request).then((response) => {
-        if (!response.ok || response.type === "opaque") {
-          return response;
-        }
-
-        const cloned = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
-        return response;
-      });
-    }),
-  );
+  if (url.pathname.startsWith("/apps/audio-alchemy/ui")) {
+    event.respondWith(Response.redirect(REDIRECT_TARGET, 301));
+  }
 });

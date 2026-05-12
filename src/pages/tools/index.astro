@@ -13,12 +13,12 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         <div class="tools-hero-copy">
           <p class="product-kicker">Tools lab</p>
           <h1 class="page-title">Preset Mutator</h1>
-          <p class="page-lead">A focused browser tool for turning audio, existing presets, or simple intent into usable Vital preset starting points.</p>
+          <p class="page-lead">Create Vital presets from scratch, mutate one preset, or analyze audio. From Scratch is the default starting point.</p>
         </div>
         <article class="product-panel product-panel-modern product-panel-accent tools-hero-panel">
           <p class="product-section-kicker">Current direction</p>
-          <h2>One product, three creation paths</h2>
-          <p>Audio to Preset, Mutate Preset, and From Scratch are live for Vital. Serum 2 and Pigments 7 support stays planned after the Vital workflow is solid.</p>
+          <h2>One tool, three creation paths</h2>
+          <p>One local-first app, three Vital workflows. Serum 2 and Pigments 7 support comes after the Vital workflow is solid.</p>
         </article>
       </div>
 
@@ -27,7 +27,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
           <span class="product-tool-flow">Audio -&gt; synth preset</span>
           <img class="product-tool-mark" src="/apps/preset-mutator/ui/preset-mutator-mark.svg" width="128" height="128" alt="Preset Mutator logo" />
           <h2>Preset Mutator</h2>
-          <p>Upload a short sound, mutate one existing Vital preset, or create from a simple intent. Vital export is live now, with Serum 2 and Pigments 7 planned as expansion targets.</p>
+          <p>Create from scratch, mutate one existing Vital preset, or analyze a short sound. Vital export is live now, with Serum 2 and Pigments 7 planned as expansion targets.</p>
           <p class="product-tool-supporting">Best for quick sound-design sketches: pads, plucks, bass notes, drones, and textures that can become playable preset ideas.</p>
           <div class="product-actions">
             <a class="button primary" href="/apps/preset-mutator/ui/">
@@ -39,29 +39,27 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       </div>
 
       <section class="product-panel product-panel-summary product-panel-modern">
-          <h2>Current tools strategy</h2>
-          <ul>
-            <li>Preset Mutator is the main browser tool product.</li>
-            <li>Audio to Preset uses the existing local audio analysis workflow.</li>
-            <li>Mutate Preset loads one `.vital` preset and creates related variations in the browser.</li>
-            <li>From Scratch creates Vital starting points from intent controls, without a source file.</li>
-            <li>Vital export is live first. Serum 2 and Pigments 7 support are planned next synth targets.</li>
-          </ul>
+        <h2>Current tools strategy</h2>
+        <ul>
+          <li>Preset Mutator is the main Kreativ Sound browser tool.</li>
+          <li>From Scratch creates Vital starts without a source file.</li>
+          <li>Mutate Preset loads one `.vital` preset and creates related variations.</li>
+          <li>Audio to Preset analyzes one short source sound locally.</li>
+          <li>Vital export is live first. Serum 2 and Pigments 7 support are planned next synth targets.</li>
+        </ul>
       </section>
 
       <section class="product-panel-grid tools-mode-grid" aria-label="Preset Mutator modes">
         <article class="product-panel product-panel-modern product-panel-accent">
-          <p class="product-section-kicker">Live now</p>
-          <h2>Audio to Preset</h2>
-          <p>Use one short source sound, analyze it locally, and generate Vital preset directions you can refine.</p>
+          <p class="product-section-kicker">Default path</p>
+          <h2>From Scratch</h2>
+          <p>Generate a new Vital preset direction from a simple intent instead of starting from a source file.</p>
+          <div class="product-actions">
+            <a class="button secondary" href="/apps/preset-mutator/ui/">Open From Scratch</a>
+          </div>
         </article>
         <article class="product-panel product-panel-modern">
-          <p class="product-section-kicker">Planned synths</p>
-          <h2>Serum 2 and Pigments 7</h2>
-          <p>Future format support is planned around Serum 2 and Arturia Pigments 7, alongside the current Vital workflow.</p>
-        </article>
-        <article class="product-panel product-panel-modern">
-          <p class="product-section-kicker">Live beta</p>
+          <p class="product-section-kicker">Preset source</p>
           <h2>Mutate Preset</h2>
           <p>Load one Vital preset and push it into related variations without losing the original sound identity.</p>
           <div class="product-actions">
@@ -69,11 +67,11 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
           </div>
         </article>
         <article class="product-panel product-panel-modern">
-          <p class="product-section-kicker">Live beta</p>
-          <h2>From Scratch</h2>
-          <p>Generate a new preset direction from a simple intent instead of starting from an audio example.</p>
+          <p class="product-section-kicker">Audio source</p>
+          <h2>Audio to Preset</h2>
+          <p>Use one short source sound, analyze it locally, and generate Vital preset directions you can refine.</p>
           <div class="product-actions">
-            <a class="button secondary" href="/apps/preset-mutator/ui/scratch/">Open From Scratch</a>
+            <a class="button secondary" href="/apps/preset-mutator/ui/audio/">Open Audio to Preset</a>
           </div>
         </article>
       </section>
