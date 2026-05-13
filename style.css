@@ -1438,6 +1438,16 @@ a:focus-visible,
   width: 100%;
 }
 
+.product-demo-placeholder {
+  background:
+    linear-gradient(145deg, rgba(153, 0, 0, 0.07), rgba(255, 255, 255, 0.14)),
+    rgba(153, 0, 0, 0.035);
+}
+
+.product-demo-placeholder .product-demo-player-wrap {
+  justify-items: end;
+}
+
 .product-spec-label {
   display: block;
   font-size: 0.69rem;

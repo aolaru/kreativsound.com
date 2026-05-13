@@ -66,7 +66,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     heroNote: "Built for producers who want evolving tone that stays musical and mixable over longer cues.",
     secondaryUrl: "/posts/how-to-layer-bioforms-for-organic-motion-2026-03-14.html",
     secondaryLabel: "Hear it in context",
-    demoPlaceholder: "Drop the BIOFORMS demo file here next. This block is ready for an inline player.",
+    demoPlaceholder: "A dedicated audio demo is being prepared for BIOFORMS. Until then, the workflow guide shows where the pack fits in real ambient layering.",
     specs: [
       { label: "Format", value: "Synplant 2 presets" },
       { label: "Focus", value: "Organic movement and evolving tone" },
@@ -101,7 +101,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     heroNote: "Made for darker cues that need pressure, analog body, and enough movement to stay alive without losing focus.",
     secondaryUrl: "/posts/three-ways-to-use-neolith-for-cinematic-tension-2026-03-14.html",
     secondaryLabel: "Hear it in context",
-    demoPlaceholder: "Drop the NEOLITH demo file here next. This block is ready for an inline player.",
+    demoPlaceholder: "A dedicated audio demo is being prepared for NEOLITH. Until then, the workflow guide shows how to use it for cinematic tension.",
     specs: [
       { label: "Format", value: "Softube Models presets" },
       { label: "Focus", value: "Analog weight and cinematic tone" },
@@ -139,7 +139,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     liteUrl: "/products/velvet-ruins-lite/",
     liteLabel: "Download Lite",
     liteNote: "Want to try the sound first? Start with the free Lite version, then come back for the full pack.",
-    demoPlaceholder: "Drop the VELVET RUINS demo file here next. This block is ready for an inline player.",
+    demoPlaceholder: "A dedicated audio demo is being prepared for VELVET RUINS. The free Lite version is the best way to test the sound palette right now.",
     specs: [
       { label: "Format", value: "Vital presets" },
       { label: "Focus", value: "Dark melody and spectral motion" },
@@ -174,6 +174,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     liteUrl: "/products/black-arcology-lite/",
     liteLabel: "Download Lite",
     liteNote: "Try the free 32-preset Lite version first. Upgrade when you want the full 128-preset collection.",
+    demoPlaceholder: "A dedicated audio demo is being prepared for BLACK ARCOLOGY. The free Lite version is the best way to test the Pigments sound palette right now.",
     valueLine: "128 Pigments presets · Instant download · Pay once",
     ctaLine: "Ready to build darker Pigments tracks? Get the full 128-preset BLACK ARCOLOGY collection.",
     specs: [
@@ -640,7 +641,7 @@ function categoryKicker(category: ProductCategory) {
 }
 
 function productVariant(slug: string, category: ProductCategory): ProductPage["variant"] {
-  if (slug === "bioforms" || slug === "neolith" || slug === "velvet-ruins") {
+  if (slug === "black-arcology" || slug === "bioforms" || slug === "neolith" || slug === "velvet-ruins") {
     return "flagship";
   }
   if (category === "Legacy") {

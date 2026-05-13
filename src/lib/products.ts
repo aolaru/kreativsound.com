@@ -35,8 +35,8 @@ export const products: Product[] = [
     badge: "New",
     thumbnail: "/assets/thumbs/black-arcology-thumb.png",
     coverImage: "/assets/thumbs/black-arcology.png",
-    format: "Presets",
-    count: "Collection",
+    format: "Pigments presets",
+    count: "128 presets",
     useCase: "Industrial pressure and machine tone"
   },
   {
@@ -45,8 +45,8 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
     detailsUrl: "/products/velvet-ruins/",
     thumbnail: "/assets/thumbs/velvet-ruins.jpg",
-    format: "Presets",
-    count: "Collection",
+    format: "Vital presets",
+    count: "Full pack",
     useCase: "Dark melody and spectral motion"
   },
   {
@@ -55,8 +55,8 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile",
     detailsUrl: "/products/neolith/",
     thumbnail: "/assets/thumbs/neolith.jpg",
-    format: "Presets",
-    count: "Collection",
+    format: "Softube Models presets",
+    count: "Full pack",
     useCase: "Analog tension and cinematic weight"
   },
   {
@@ -65,7 +65,7 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile",
     detailsUrl: "/products/bioforms/",
     thumbnail: "/assets/thumbs/bioforms.jpg",
-    format: "Presets",
+    format: "Synplant 2 presets",
     count: "32+ patches",
     useCase: "Organic motion and ambient beds"
   },
@@ -75,7 +75,7 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/monolush-fabfilter-one-presets?layout=profile",
     detailsUrl: "/products/monolush/",
     thumbnail: "/assets/thumbs/monolush.jpg",
-    format: "Presets",
+    format: "FabFilter One presets",
     count: "132 patches",
     useCase: "Warm mono basses and leads"
   },
@@ -85,7 +85,7 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/dirty-model?layout=profile",
     detailsUrl: "/products/dirty-model/",
     thumbnail: "/assets/thumbs/dirty-model.jpg",
-    format: "Presets",
+    format: "Moog Model D presets",
     count: "64 patches",
     useCase: "Driven basses and analog grit",
     demo: {
@@ -100,7 +100,7 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/zephy-animoog-z-presets?layout=profile",
     detailsUrl: "/products/zephyr/",
     thumbnail: "/assets/thumbs/zephyr.jpg",
-    format: "Presets",
+    format: "Animoog Z presets",
     count: "96 patches",
     useCase: "Airy melodic movement",
     demo: {
@@ -116,7 +116,7 @@ export const products: Product[] = [
     detailsUrl: "/products/sfxs-2/",
     thumbnail: "/assets/thumbs/sfxs-2.jpg",
     format: "WAV samples",
-    count: "Collection",
+    count: "FX pack",
     useCase: "Cinematic accents and transitions",
     demo: {
       label: "Listen to demo",
@@ -131,7 +131,7 @@ export const products: Product[] = [
     detailsUrl: "/products/noize-2/",
     thumbnail: "/assets/thumbs/noize-2.jpg",
     format: "WAV samples",
-    count: "Collection",
+    count: "Noise pack",
     useCase: "Abstract noise and glitch layers",
     demo: {
       label: "Listen to demo",
@@ -146,7 +146,7 @@ export const products: Product[] = [
     detailsUrl: "/products/enigma-2/",
     thumbnail: "/assets/thumbs/enigma-2.jpg",
     format: "WAV samples",
-    count: "Collection",
+    count: "Atmosphere pack",
     useCase: "Dark suspense beds",
     demo: {
       label: "Listen to demo",
@@ -161,7 +161,7 @@ export const products: Product[] = [
     detailsUrl: "/products/bleeps-2/",
     thumbnail: "/assets/thumbs/bleeps-2.jpg",
     format: "WAV samples",
-    count: "Collection",
+    count: "Percussion pack",
     useCase: "Percussive one-shots and rhythmic FX"
   },
   {
@@ -171,7 +171,7 @@ export const products: Product[] = [
     detailsUrl: "/products/space-2/",
     thumbnail: "/assets/thumbs/space-2.jpg",
     format: "WAV samples",
-    count: "Collection",
+    count: "Atmosphere pack",
     useCase: "Sci-fi ambience and distant environments",
     demo: {
       label: "Listen to demo",
@@ -186,7 +186,7 @@ export const products: Product[] = [
     detailsUrl: "/products/tectonic-2/",
     thumbnail: "/assets/thumbs/tectonic-2.jpg",
     format: "WAV samples",
-    count: "Collection",
+    count: "Low-end pack",
     useCase: "Low-end pressure and subterranean textures",
     demo: {
       label: "Listen to demo",
@@ -201,7 +201,7 @@ export const products: Product[] = [
     detailsUrl: "/products/horror-2/",
     thumbnail: "/assets/thumbs/horror-2.jpg",
     format: "WAV samples",
-    count: "Collection",
+    count: "Horror pack",
     useCase: "Horror stingers and uneasy drones",
     demo: {
       label: "Listen to demo",
@@ -216,7 +216,7 @@ export const products: Product[] = [
     detailsUrl: "/products/velvet-ruins-lite/",
     badge: "New",
     thumbnail: "/assets/thumbs/velvet-ruins-lite.jpg",
-    format: "Presets",
+    format: "Vital presets",
     count: "20 presets",
     useCase: "Free dark Vital presets"
   },
@@ -228,8 +228,8 @@ export const products: Product[] = [
     badge: "New",
     thumbnail: "/assets/thumbs/black-arcology-lite-thumb.png",
     coverImage: "/assets/thumbs/black-arcology-lite.png",
-    format: "Presets",
-    count: "Free pack",
+    format: "Pigments presets",
+    count: "32 presets",
     useCase: "Free industrial drones and fractured FX for Pigments"
   },
   {
@@ -238,7 +238,7 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/abyss-dark-ambient-presets-for-pro-53?layout=profile",
     detailsUrl: "/products/abyss/",
     thumbnail: "/assets/thumbs/abyss.jpg",
-    format: "Presets",
+    format: "PRO-53 presets",
     count: "215 sounds",
     useCase: "Free dark ambient toolkit"
   },
@@ -258,7 +258,7 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/daft-free-plasticz-presets?layout=profile",
     detailsUrl: "/products/daft-plasticz/",
     thumbnail: "/assets/thumbs/daft-plasticz.jpg",
-    format: "Presets",
+    format: "Legacy presets",
     count: "Archive",
     useCase: "Legacy plastic and synthetic textures"
   }

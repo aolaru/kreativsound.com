@@ -32,7 +32,7 @@ textarea {
   border: 1px solid rgba(153, 0, 0, 0.2);
   border-radius: 14px;
   color: var(--text);
-  background: rgba(255, 245, 245, 0.72);
+  background: rgba(255, 255, 255, 0.055);
   font: inherit;
 }
 
@@ -49,7 +49,7 @@ textarea {
 }
 
 .scratch-trust-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .paid-feature-preview-actions {

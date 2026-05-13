@@ -55,6 +55,14 @@ function ctaText(category: string) {
                   <span class="product-title">{item.title}</span>
                   <span class="product-meta">{item.format} | {item.count}</span>
                   <span class="product-use">{item.useCase}</span>
+                  {item.demo?.src ? (
+                    <div class="product-card-demo">
+                      <span class="product-card-demo-label">{item.demo.label || "Listen to demo"}</span>
+                      <audio class="product-card-demo-player" controls preload="metadata">
+                        <source src={item.demo.src} type={item.demo.type || "audio/mpeg"} />
+                      </audio>
+                    </div>
+                  ) : null}
                   <div class="product-action-row">
                     {item.detailsUrl ? <a class="product-action-link" href={item.detailsUrl}>Details</a> : null}
                     {item.extraAction?.url ? <a class="product-action-link" href={item.extraAction.url}>{item.extraAction.label || "More"}</a> : null}

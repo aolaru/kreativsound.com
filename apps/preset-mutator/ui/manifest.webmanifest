@@ -6,8 +6,8 @@
   "start_url": "/apps/preset-mutator/ui/",
   "scope": "/apps/preset-mutator/ui/",
   "display": "standalone",
-  "background_color": "#fdf5f5",
-  "theme_color": "#fdf5f5",
+  "background_color": "#0d1018",
+  "theme_color": "#0d1018",
   "icons": [
     {
       "src": "./preset-mutator-mark.svg",

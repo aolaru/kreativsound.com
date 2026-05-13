@@ -17,6 +17,7 @@ const filesToCopy = [
   "og-image.svg",
   "search-index.json",
   "site.js",
+  "share.js",
   "robots.txt",
   "sitemap.xml",
   "CNAME",
@@ -24,8 +25,19 @@ const filesToCopy = [
 ];
 
 const directoriesToCopy = [
-  "apps",
   "assets",
+];
+
+const appDirectoriesToCopy = [
+  "apps/preset-mutator",
+  "apps/wave-fracture",
+];
+
+const appRedirectFilesToCopy = [
+  "apps/audio-alchemy/ui/index.html",
+  "apps/audio-alchemy/ui/service-worker.js",
+  "apps/presetmutator/index.html",
+  "apps/presetmutator/ui/index.html",
 ];
 
 function resetDirectory(targetDir) {
@@ -39,6 +51,16 @@ function copyEntry(relativePath) {
   fs.cpSync(sourcePath, targetPath, { recursive: true });
 }
 
+function copyIfExists(relativePath) {
+  const sourcePath = path.join(rootDir, relativePath);
+  if (!fs.existsSync(sourcePath)) {
+    return;
+  }
+  const targetPath = path.join(publicDir, relativePath);
+  fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+  fs.cpSync(sourcePath, targetPath, { recursive: true });
+}
+
 resetDirectory(publicDir);
 
 for (const filePath of filesToCopy) {
@@ -47,4 +69,12 @@ for (const filePath of filesToCopy) {
 
 for (const directoryPath of directoriesToCopy) {
   copyEntry(directoryPath);
+}
+
+for (const directoryPath of appDirectoriesToCopy) {
+  copyIfExists(directoryPath);
+}
+
+for (const filePath of appRedirectFilesToCopy) {
+  copyIfExists(filePath);
 }
