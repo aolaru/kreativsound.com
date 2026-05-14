@@ -2,7 +2,7 @@
 title: "Black Arcology and Black Arcology Lite Released for Arturia Pigments"
 description: "Black Arcology and Black Arcology Lite are now available for Arturia Pigments, spanning industrial drones, evolving keys, and fractured FX."
 canonical: "https://kreativsound.com/posts/black-arcology-release-2026-04-30.html"
-ogImage: "https://kreativsound.com/assets/thumbs/black-arcology.png"
+ogImage: "https://kreativsound.com/assets/thumbs/black-arcology.webp"
 section: news
 kind: release
 published: "2026-04-30"

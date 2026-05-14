@@ -96,13 +96,14 @@ function priorityForRoute(route) {
   if (route === "/") return "1.0";
   if (route === "/sound/") return "0.9";
   if (route === "/news/" || route === "/learn/" || route === "/tools/") return "0.8";
+  if (route.startsWith("/tools/")) return "0.8";
   if (route.startsWith("/products/")) return "0.8";
   if (route.startsWith("/posts/")) return "0.7";
   return "0.7";
 }
 
 function changefreqForRoute(route) {
-  if (route === "/" || route === "/sound/" || route === "/news/" || route === "/learn/" || route === "/tools/") {
+  if (route === "/" || route === "/sound/" || route === "/news/" || route === "/learn/" || route === "/tools/" || route.startsWith("/tools/")) {
     return "weekly";
   }
   return "monthly";

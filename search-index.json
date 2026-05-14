@@ -14,6 +14,13 @@
     "description": "Preset Mutator browser tool for from-scratch Vital starts, preset mutation, and audio-to-preset generation. Serum 2 and Pigments 7 are planned."
   },
   {
+    "title": "Preset Mutator",
+    "url": "/tools/preset-mutator/",
+    "type": "Tool",
+    "thumbnail": "/apps/preset-mutator/ui/preset-mutator-mark.svg",
+    "description": "Browser-based Vital preset generator with From Scratch, Mutate Preset, and Audio to Preset workflows."
+  },
+  {
     "title": "Music",
     "url": "/music/",
     "type": "Page",

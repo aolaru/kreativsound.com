@@ -34,7 +34,11 @@ export const products: Product[] = [
     detailsUrl: "/products/black-arcology/",
     badge: "New",
     thumbnail: "/assets/thumbs/black-arcology-thumb.png",
-    coverImage: "/assets/thumbs/black-arcology.png",
+    coverImage: "/assets/thumbs/black-arcology.webp",
+    extraAction: {
+      label: "Try Lite",
+      url: "/products/black-arcology-lite/"
+    },
     format: "Pigments presets",
     count: "128 presets",
     useCase: "Industrial pressure and machine tone"
@@ -45,6 +49,10 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
     detailsUrl: "/products/velvet-ruins/",
     thumbnail: "/assets/thumbs/velvet-ruins.jpg",
+    extraAction: {
+      label: "Try Lite",
+      url: "/products/velvet-ruins-lite/"
+    },
     format: "Vital presets",
     count: "Full pack",
     useCase: "Dark melody and spectral motion"
@@ -227,7 +235,7 @@ export const products: Product[] = [
     detailsUrl: "/products/black-arcology-lite/",
     badge: "New",
     thumbnail: "/assets/thumbs/black-arcology-lite-thumb.png",
-    coverImage: "/assets/thumbs/black-arcology-lite.png",
+    coverImage: "/assets/thumbs/black-arcology-lite.webp",
     format: "Pigments presets",
     count: "32 presets",
     useCase: "Free industrial drones and fractured FX for Pigments"

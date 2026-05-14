@@ -2,7 +2,7 @@
 title: "How to Use Black Arcology for Industrial Drones"
 description: "A practical guide to using Black Arcology for dark industrial drones, pressure beds, and cinematic movement."
 canonical: "https://kreativsound.com/posts/how-to-use-black-arcology-for-industrial-drones-2026-05-06.html"
-ogImage: "https://kreativsound.com/assets/thumbs/black-arcology.png"
+ogImage: "https://kreativsound.com/assets/thumbs/black-arcology.webp"
 section: learn
 published: "2026-05-06"
 featured: false

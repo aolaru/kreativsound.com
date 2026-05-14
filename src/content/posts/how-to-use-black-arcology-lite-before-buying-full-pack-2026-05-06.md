@@ -2,7 +2,7 @@
 title: "How to Use Black Arcology Lite Before Buying the Full Pack"
 description: "Use Black Arcology Lite as a quick test of the Pigments sound palette before moving into the full Black Arcology collection."
 canonical: "https://kreativsound.com/posts/how-to-use-black-arcology-lite-before-buying-full-pack-2026-05-06.html"
-ogImage: "https://kreativsound.com/assets/thumbs/black-arcology-lite.png"
+ogImage: "https://kreativsound.com/assets/thumbs/black-arcology-lite.webp"
 section: learn
 published: "2026-05-06"
 featured: false

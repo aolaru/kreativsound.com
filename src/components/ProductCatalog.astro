@@ -58,7 +58,7 @@ function ctaText(category: string) {
                   {item.demo?.src ? (
                     <div class="product-card-demo">
                       <span class="product-card-demo-label">{item.demo.label || "Listen to demo"}</span>
-                      <audio class="product-card-demo-player" controls preload="metadata">
+                      <audio class="product-card-demo-player" controls preload="none">
                         <source src={item.demo.src} type={item.demo.type || "audio/mpeg"} />
                       </audio>
                     </div>

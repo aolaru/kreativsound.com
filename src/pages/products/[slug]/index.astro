@@ -13,6 +13,58 @@ const { product } = Astro.props;
 const [primaryPanel, ...secondaryPanels] = product.panels;
 const hasDemo = Boolean(product.demo?.src);
 const showDemoPlaceholder = !hasDemo && product.variant === "flagship" && Boolean(product.demoPlaceholder);
+const productName = product.title.replace(" | Kreativ Sound", "");
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: productName,
+  description: product.description,
+  image: product.ogImage,
+  brand: {
+    "@type": "Brand",
+    name: "Kreativ Sound"
+  },
+  category: product.kicker,
+  offers: product.primaryUrl ? {
+    "@type": "Offer",
+    url: product.primaryUrl,
+    availability: "https://schema.org/InStock",
+    priceCurrency: "USD"
+  } : undefined
+};
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Kreativ Sound",
+      item: "https://kreativsound.com/"
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Products",
+      item: "https://kreativsound.com/sound/"
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: productName,
+      item: product.canonical
+    }
+  ]
+};
+const proofPoints = product.variant === "archive" ? [
+  "Archive entry preserved for catalog history.",
+  "Kept separate from the current flagship catalog.",
+  "Still available as a reference point for older Kreativ Sound material."
+] : [
+  "Created by Andrei Olaru for the same sound world used in Olaru and Rethyn releases.",
+  hasDemo ? "Includes an inline audio demo so you can hear the direction before buying." : product.liteUrl ? "Free Lite version available when you want to test the palette first." : "Dedicated audio demo is still on the content roadmap for this pack.",
+  "Independent digital release with direct access through the linked store channel."
+];
 ---
 <BaseLayout
   title={product.title}
@@ -22,11 +74,13 @@ const showDemoPlaceholder = !hasDemo && product.variant === "flagship" && Boolea
   ogImageAlt={product.ogImageAlt}
   activeNav="sound"
 >
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   <article class={`card page-main product-page product-page-modern product-page-${product.variant}`}>
     <section class="product-hero">
       <div class="product-hero-copy">
         <p class="product-kicker">{product.kicker}</p>
-        <h1 class="page-title">{product.title.replace(" | Kreativ Sound", "")}</h1>
+        <h1 class="page-title">{productName}</h1>
         <p class="page-lead">{product.lead}</p>
         <p class="product-summary">{product.summary}</p>
         <p class="product-hero-note">{product.heroNote}</p>
@@ -112,6 +166,15 @@ const showDemoPlaceholder = !hasDemo && product.variant === "flagship" && Boolea
           </div>
         </section>
       )}
+
+      <section class="product-proof-strip" aria-label="Trust and proof">
+        {proofPoints.map((point) => (
+          <article>
+            <i class="fa-solid fa-check" aria-hidden="true"></i>
+            <p>{point}</p>
+          </article>
+        ))}
+      </section>
 
       {primaryPanel ? (
         <section class="product-feature">
