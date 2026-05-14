@@ -58,7 +58,7 @@ const categoryOverview = [
 </header>
 
 <section class="catalog card" aria-labelledby={titleId}>
-  <p class="catalog-intro" id={titleId}>{intro}</p>
+  {intro ? <p class="catalog-intro" id={titleId}>{intro}</p> : <span class="sr-only" id={titleId}>Sound catalog</span>}
   <article class="featured-product" aria-label="Featured product">
     <img
       class="featured-thumb"
