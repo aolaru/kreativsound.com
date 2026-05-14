@@ -56,6 +56,57 @@ const sharedRelatedByCategory: Record<ProductCategory, Array<{ label: string; ur
 };
 
 const productOverrides: Record<string, ProductPageOverride> = {
+  "operators-fm8": {
+    headline: "OPERATORS",
+    description: "OPERATORS is a 64-preset soundset for Native Instruments FM8, focused on atmospheric motion, digital textures, and frequency-driven synthesis.",
+    kicker: "New preset pack",
+    lead: "Atmos and motion presets for Native Instruments FM8.",
+    summary: "A compact FM8 soundset built around evolving pads, dark drones, synthetic basses, metallic bells, expressive leads, plucks, sweeps, strings, and experimental FM textures.",
+    heroNote: "OPERATORS is for producers who want cold digital edge, movement, depth, and atmosphere from FM8 without digging through a giant unfocused bank.",
+    valueLine: "64 FM8 presets · 4 MB download · Pay once",
+    ctaLine: "Ready to add a colder FM edge to your tracks? Get OPERATORS for Native Instruments FM8.",
+    specs: [
+      { label: "Format", value: "Native Instruments FM8 presets" },
+      { label: "Included", value: "64 presets" },
+      { label: "Best for", value: "Ambient, cinematic scoring, electronic production, and sound design" }
+    ],
+    panels: [
+      {
+        title: "Why this pack works",
+        body: "OPERATORS leans into FM8's digital character instead of trying to soften it into a generic synth bank. The presets focus on motion, frequency detail, and atmospheric tone that can become pads, drones, leads, transitions, or sound-design layers."
+      },
+      {
+        title: "Inside the pack",
+        items: [
+          "64 presets for Native Instruments FM8.",
+          "Evolving pads and dark drones.",
+          "Synthetic basses, expressive leads, plucks, and sweeps.",
+          "Metallic bells, strings, and experimental FM textures."
+        ]
+      },
+      {
+        title: "Sound palette",
+        items: [
+          "Cold digital atmosphere.",
+          "Frequency-driven motion and harmonic shimmer.",
+          "Metallic and synthetic FM detail.",
+          "Ambient, cinematic, and electronic production material."
+        ]
+      },
+      {
+        title: "Requirements",
+        items: [
+          "Native Instruments FM8.",
+          "A workflow that benefits from atmospheric FM presets rather than analog-style subtractive patches.",
+          "Good for layering, cue building, intros, transitions, and experimental electronic sketches."
+        ]
+      }
+    ],
+    related: [
+      { label: "Read the release note", url: "/posts/operators-fm8-release-2026-05-14.html" },
+      { label: "Back to the full sound catalog", url: "/" }
+    ]
+  },
   bioforms: {
     title: "BIOFORMS | Kreativ Sound",
     headline: "BIOFORMS",

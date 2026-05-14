@@ -28,11 +28,22 @@ export type Product = {
 
 export const products: Product[] = [
   {
+    title: "OPERATORS - Atmos & Motion for Native Instruments FM8",
+    category: "Presets",
+    url: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
+    detailsUrl: "/products/operators-fm8/",
+    badge: "New",
+    thumbnail: "/assets/thumbs/operators-fm8-thumb.webp",
+    coverImage: "/assets/thumbs/operators-fm8.webp",
+    format: "FM8 presets",
+    count: "64 presets",
+    useCase: "Atmospheric motion and digital FM textures"
+  },
+  {
     title: "BLACK ARCOLOGY - Industrial Presets for Pigments",
     category: "Presets",
     url: "https://kreativ.gumroad.com/l/black-arcology-industrial-presets-for-pigments",
     detailsUrl: "/products/black-arcology/",
-    badge: "New",
     thumbnail: "/assets/thumbs/black-arcology-thumb.png",
     coverImage: "/assets/thumbs/black-arcology.webp",
     extraAction: {

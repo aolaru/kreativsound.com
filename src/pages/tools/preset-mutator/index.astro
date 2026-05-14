@@ -3,6 +3,7 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 const appUrl = "/apps/preset-mutator/ui/";
 const gumroadUrl = "https://kreativ.gumroad.com/l/preset-mutator-pro";
+const paypalUrl = "https://www.paypal.com/ncp/payment/RUGQ6S3NW7HE4";
 const softwareSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
@@ -12,13 +13,22 @@ const softwareSchema = {
   description: "Preset Mutator creates Vital preset starting points from scratch ideas, existing Vital presets, or short audio sources. Serum 2 and Pigments 7 support are planned.",
   url: "https://kreativsound.com/tools/preset-mutator/",
   image: "https://kreativsound.com/apps/preset-mutator/ui/preset-mutator-mark.svg",
-  offers: {
-    "@type": "Offer",
-    url: gumroadUrl,
-    price: "19",
-    priceCurrency: "USD",
-    availability: "https://schema.org/InStock"
-  },
+  offers: [
+    {
+      "@type": "Offer",
+      url: gumroadUrl,
+      price: "19",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock"
+    },
+    {
+      "@type": "Offer",
+      url: paypalUrl,
+      price: "19",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock"
+    }
+  ],
   creator: {
     "@type": "Person",
     name: "Andrei Olaru"
@@ -68,10 +78,14 @@ const softwareSchema = {
           </a>
           <a class="button secondary" href={gumroadUrl} target="_blank" rel="noopener noreferrer">
             <i class="fa-solid fa-lock" aria-hidden="true"></i>
-            Unlock Pro
+            Buy on Gumroad
+          </a>
+          <a class="button secondary" href={paypalUrl} target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-paypal" aria-hidden="true"></i>
+            Pay with PayPal
           </a>
         </div>
-        <p class="product-value-line">Free mode generates 3 Vital starts. Pro unlocks 32-preset packs and ZIP export.</p>
+        <p class="product-value-line">Free mode generates 3 Vital starts. Pro unlocks 32-preset packs and ZIP export. Gumroad is the default checkout; PayPal is available if you prefer it.</p>
       </div>
     </section>
 
@@ -147,6 +161,10 @@ const softwareSchema = {
         <a class="button primary" href={appUrl}>
           <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
           Open Preset Mutator
+        </a>
+        <a class="button secondary" href={paypalUrl} target="_blank" rel="noopener noreferrer">
+          <i class="fa-brands fa-paypal" aria-hidden="true"></i>
+          Pay with PayPal
         </a>
       </div>
     </section>

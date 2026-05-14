@@ -3,8 +3,8 @@
     "title": "Browse Sound",
     "url": "/",
     "type": "Page",
-    "thumbnail": "/assets/thumbs/velvet-ruins.jpg",
-    "description": "Atmospheric sound packs and audio textures."
+    "thumbnail": "/assets/thumbs/operators-fm8-thumb.webp",
+    "description": "Atmospheric sound packs, preset packs, and audio textures."
   },
   {
     "title": "Tools",
@@ -31,7 +31,7 @@
     "title": "News",
     "url": "/news/",
     "type": "Page",
-    "thumbnail": "/assets/thumbs/velvet-ruins.jpg",
+    "thumbnail": "/assets/thumbs/operators-fm8.webp",
     "description": "Latest releases and site updates."
   },
   {
@@ -54,6 +54,13 @@
     "type": "Page",
     "thumbnail": "/logo-128.svg",
     "description": "Contact Kreativ Sound."
+  },
+  {
+    "title": "OPERATORS - Atmos & Motion for Native Instruments FM8",
+    "url": "/products/operators-fm8/",
+    "type": "Product",
+    "thumbnail": "/assets/thumbs/operators-fm8-thumb.webp",
+    "description": "64 FM8 presets for atmospheric motion, digital textures, and frequency-driven synthesis."
   },
   {
     "title": "BIOFORMS - Evolving Presets for Synplant 2",
@@ -187,6 +194,13 @@
     "type": "Product",
     "thumbnail": "/assets/thumbs/daft-plasticz.jpg",
     "description": "Legacy plastic and synthetic preset textures."
+  },
+  {
+    "title": "OPERATORS Released for Native Instruments FM8",
+    "url": "/posts/operators-fm8-release-2026-05-14.html",
+    "type": "Article",
+    "thumbnail": "/assets/thumbs/operators-fm8.webp",
+    "description": "Release note for the 64-preset OPERATORS FM8 soundset."
   },
   {
     "title": "How to Use TECTONIC 2 for Low-End Pressure",
