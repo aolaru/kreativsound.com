@@ -92,29 +92,6 @@ const categoryOverview = [
       </a>
     </div>
   </article>
-  <div class="catalog-overview" aria-label="Catalog overview">
-    {categoryOverview.map((item) => (
-      <a class="catalog-overview-card" href={item.href}>
-        <small>{item.route}</small>
-        <span>{item.label}</span>
-        <small>{item.text}</small>
-      </a>
-    ))}
-  </div>
-  <section class="catalog-proof" aria-label="Kreativ Sound proof points">
-    <article>
-      <span>Used in real releases</span>
-      <p>Olaru and Rethyn music projects use the same samples, presets, and sound-design palette.</p>
-    </article>
-    <article>
-      <span>Try before buying</span>
-      <p>Free Lite packs exist for the newest flagship directions, including Black Arcology and Velvet Ruins.</p>
-    </article>
-    <article>
-      <span>Independent catalog</span>
-      <p>Available through Kreativ Sound channels including Gumroad, Patreon, and KVR Marketplace.</p>
-    </article>
-  </section>
   {showGuide ? (
     <section class="catalog-guide" aria-label="How to choose a Kreativ Sound pack">
       <div>
@@ -146,6 +123,29 @@ const categoryOverview = [
     visibleCategories={isCurated ? ["Presets", "Free", "Samples"] : undefined}
     showCategoryNav={isCurated}
   />
+  <div class="catalog-overview" aria-label="Catalog overview">
+    {categoryOverview.map((item) => (
+      <a class="catalog-overview-card" href={item.href}>
+        <small>{item.route}</small>
+        <span>{item.label}</span>
+        <small>{item.text}</small>
+      </a>
+    ))}
+  </div>
+  <section class="catalog-proof" aria-label="Kreativ Sound proof points">
+    <article>
+      <span>Used in real releases</span>
+      <p>Olaru and Rethyn music projects use the same samples, presets, and sound-design palette.</p>
+    </article>
+    <article>
+      <span>Try before buying</span>
+      <p>Free Lite packs exist for the newest flagship directions, including Black Arcology and Velvet Ruins.</p>
+    </article>
+    <article>
+      <span>Independent catalog</span>
+      <p>Available through Kreativ Sound channels including Gumroad, Patreon, and KVR Marketplace.</p>
+    </article>
+  </section>
   {isCurated ? (
     <div class="catalog-secondary-links" aria-label="More sound categories">
       <p>Looking for archive releases?</p>
