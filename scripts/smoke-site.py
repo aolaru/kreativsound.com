@@ -96,9 +96,9 @@ def main() -> int:
             "/music/": ["Music", "Olaru", "Rethyn", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
-            "/products/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Try the Lite version"],
-            "/products/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Read the workflow guide"],
-            "/products/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Read the workflow guide"],
+            "/products/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Product Description", "Product Specifications", "Requirements"],
+            "/products/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Product Description", "Product Specifications", "Requirements"],
+            "/products/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Product Description", "Product Specifications", "Requirements"],
         }
 
         for route, needles in pages.items():

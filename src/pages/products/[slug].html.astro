@@ -10,10 +10,16 @@ export function getStaticPaths() {
 }
 
 const { product } = Astro.props;
-const [primaryPanel, ...secondaryPanels] = product.panels;
 const hasDemo = Boolean(product.demo?.src);
-const showDemoPlaceholder = !hasDemo && product.variant === "flagship" && Boolean(product.demoPlaceholder);
 const productName = product.title.replace(" | Kreativ Sound", "");
+const purchaseActions = [
+  product.primaryUrl && product.primaryLabel
+    ? { url: product.primaryUrl, label: product.primaryLabel, icon: purchaseIcon(product.primaryUrl) }
+    : null,
+  product.purchaseAltUrl && product.purchaseAltLabel
+    ? { url: product.purchaseAltUrl, label: product.purchaseAltLabel, icon: purchaseIcon(product.purchaseAltUrl) }
+    : null
+].filter(Boolean);
 
 function purchaseIcon(url?: string) {
   return url?.includes("paypal.com") ? "fa-brands fa-paypal" : "fa-solid fa-bag-shopping";
@@ -75,15 +81,6 @@ const breadcrumbSchema = {
     }
   ]
 };
-const proofPoints = product.proofPoints || (product.variant === "archive" ? [
-  "Archive entry preserved for catalog history.",
-  "Kept separate from the current flagship catalog.",
-  "Still available as a reference point for older Kreativ Sound material."
-] : [
-  "Created by Andrei Olaru for the same sound world used in Olaru and Rethyn releases.",
-  hasDemo ? "Includes an inline audio demo so you can hear the direction before buying." : product.liteUrl ? "Free Lite version available when you want to test the palette first." : "Dedicated audio demo is still on the content roadmap for this pack.",
-  "Independent digital release with direct access through the linked store channel."
-]);
 ---
 <BaseLayout
   title={product.title}
@@ -95,180 +92,85 @@ const proofPoints = product.proofPoints || (product.variant === "archive" ? [
 >
   <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
-  <article class={`card page-main product-page product-page-modern product-page-${product.variant}`}>
-    <section class="product-hero">
-      <div class="product-hero-copy">
-        <p class="product-kicker">{product.kicker}</p>
-        <h1 class="page-title">{productName}</h1>
-        <p class="page-lead">{product.lead}</p>
-        <p class="product-summary">{product.summary}</p>
-        <p class="product-hero-note">{product.heroNote}</p>
-        <div class="product-specs-inline" aria-label="Product summary">
-          {product.specs.map((spec) => (
-            <div class="product-spec-inline">
-              <span class="product-spec-label">{spec.label}</span>
-              <span class="product-spec-value">{spec.value}</span>
-            </div>
-          ))}
-        </div>
-        <p class="product-trust-line">
-          {product.variant === "archive"
-            ? "Archive entry. Preserved for catalog history and earlier workflow reference."
-            : product.variant === "free"
-              ? "Free release. Direct download and immediate use."
-              : "Instant access. Independent release. Built for darker, cinematic workflow use."}
-        </p>
-      </div>
+  <article class={`card page-main product-page product-page-landing product-page-${product.variant}`}>
+    <header class="product-landing-hero">
+      <p class="product-kicker">{product.kicker}</p>
+      <h1 class="page-title">{productName}</h1>
+      <p class="page-lead">{product.subtitle}</p>
 
-      <div class="product-hero-media">
-        <div class="product-cover-frame">
-          <img class="product-hero-image" src={product.image} width="320" height="320" alt={product.imageAlt} />
-        </div>
-        <div class="product-media-actions">
-          {product.primaryUrl && product.primaryLabel ? (
-            <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
-              <i class={purchaseIcon(product.primaryUrl)} aria-hidden="true"></i>
-              {product.primaryLabel}
-            </a>
-          ) : null}
-          {product.purchaseAltUrl && product.purchaseAltLabel ? (
-            <a class="button secondary" href={product.purchaseAltUrl} target="_blank" rel="noopener noreferrer">
-              <i class={purchaseIcon(product.purchaseAltUrl)} aria-hidden="true"></i>
-              {product.purchaseAltLabel}
-            </a>
-          ) : null}
-          {product.liteUrl ? (
-            <a class="button secondary" href={product.liteUrl}>
-              <i class="fa-solid fa-download" aria-hidden="true"></i>
-              {product.liteLabel || "Download Lite"}
-            </a>
-          ) : null}
-        </div>
-        {product.valueLine ? (
-          <p class="product-value-line">{product.valueLine}</p>
-        ) : null}
-        {product.liteUrl ? (
-          <p class="product-lite-note">{product.liteNote || "Prefer to test the sound first? Start with the free Lite version."}</p>
-        ) : null}
-      </div>
-    </section>
+      <figure class="product-landing-media">
+        <img class="product-landing-image" src={product.image} width="520" height="520" alt={product.imageAlt} />
+      </figure>
 
-    <section class="stack">
-      {hasDemo && (
-        <section class="product-demo product-demo-spotlight" aria-label="Audio demo">
-          <div class="product-demo-copy">
-            <p class="product-section-kicker">Hear the pack</p>
-            <h2>{product.demo.label || "Listen to demo"}</h2>
-            <p>{product.demoBlurb}</p>
-          </div>
-          <div class="product-demo-player-wrap">
-            <audio class="product-card-demo-player" controls preload="metadata">
-              <source src={product.demo.src} type={product.demo.type} />
-            </audio>
-          </div>
-        </section>
-      )}
-
-      {showDemoPlaceholder && (
-        <section class="product-demo product-demo-spotlight product-demo-placeholder" aria-label="Audio demo status">
-          <div class="product-demo-copy">
-            <p class="product-section-kicker">Demo coming next</p>
-            <h2>Try the sound first</h2>
-            <p>{product.demoPlaceholder}</p>
-          </div>
-          <div class="product-demo-player-wrap">
-            {product.liteUrl ? (
-              <a class="button secondary" href={product.liteUrl}>
-                <i class="fa-solid fa-download" aria-hidden="true"></i>
-                Try the Lite version
-              </a>
-            ) : (
-              <a class="button secondary" href={product.secondaryUrl}>
-                <i class="fa-solid fa-book-open" aria-hidden="true"></i>
-                Read the workflow guide
-              </a>
-            )}
-          </div>
-        </section>
-      )}
-
-      <section class="product-proof-strip" aria-label="Trust and proof">
-        {proofPoints.map((point) => (
-          <article>
-            <i class="fa-solid fa-check" aria-hidden="true"></i>
-            <p>{point}</p>
-          </article>
-        ))}
-      </section>
-
-      {primaryPanel ? (
-        <section class="product-feature">
-          <div class="product-feature-copy">
-            <p class="product-section-kicker">Why this pack</p>
-            <h2>{primaryPanel.title}</h2>
-            {primaryPanel.body ? <p>{primaryPanel.body}</p> : null}
-          </div>
-          <div class="product-feature-support">
-            <p class="product-section-kicker">Best use</p>
-            <p>{product.summary}</p>
-          </div>
+      {hasDemo ? (
+        <section class="product-landing-demo" aria-label="Audio demo">
+          <h2>{product.demo.label || "Audio demo"}</h2>
+          {product.demoBlurb ? <p>{product.demoBlurb}</p> : null}
+          <audio class="product-card-demo-player" controls preload="metadata">
+            <source src={product.demo.src} type={product.demo.type} />
+          </audio>
         </section>
       ) : null}
 
-      <section class="product-story-grid">
-        {secondaryPanels.map((panel) => (
-          <section class="product-panel product-panel-modern">
-            <h2>{panel.title}</h2>
-            {panel.body ? <p>{panel.body}</p> : null}
-            {panel.items ? (
-              <ul>
-                {panel.items.map((item) => <li>{item}</li>)}
-              </ul>
-            ) : null}
-          </section>
-        ))}
-
-        <section class="product-panel product-panel-modern product-panel-accent">
-          <p class="product-section-kicker">Related</p>
-          <h2>Use it in context</h2>
-          <div class="product-related">
-            {product.related.map((item) => (
-              <a href={item.url}>{item.label} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            ))}
-          </div>
-        </section>
-      </section>
-
-      <section class="product-cta-strip">
-        <div class="product-cta-copy">
-          <p class="product-section-kicker">{product.variant === "archive" ? "Archive entry" : "Ready when you are"}</p>
-          <p class="product-cta-line">
-            {product.variant === "archive"
-              ? "Use the detail page for context, then jump back into the broader archive when you need older material."
-              : product.ctaLine || product.heroNote}
-          </p>
+      {purchaseActions.length ? (
+        <div class="product-landing-actions" aria-label="Purchase options">
+          {purchaseActions.map((action) => (
+            <a class={action.icon.includes("paypal") ? "button primary" : "button secondary"} href={action.url} target="_blank" rel="noopener noreferrer">
+              <i class={action.icon} aria-hidden="true"></i>
+              {action.label}
+            </a>
+          ))}
         </div>
-        <div class="product-actions">
-          {product.primaryUrl && product.primaryLabel ? (
-            <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
-              <i class={purchaseIcon(product.primaryUrl)} aria-hidden="true"></i>
-              {product.primaryLabel}
-            </a>
-          ) : null}
-          {product.purchaseAltUrl && product.purchaseAltLabel ? (
-            <a class="button secondary" href={product.purchaseAltUrl} target="_blank" rel="noopener noreferrer">
-              <i class={purchaseIcon(product.purchaseAltUrl)} aria-hidden="true"></i>
-              {product.purchaseAltLabel}
-            </a>
-          ) : null}
-          {product.variant === "archive" ? (
-            <a class="button secondary" href={product.secondaryUrl}>
-              <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
-              {product.secondaryLabel}
-            </a>
-          ) : null}
+      ) : null}
+
+      {product.shortMeta ? <p class="product-landing-meta">{product.shortMeta}</p> : null}
+    </header>
+
+    {product.longDescription.length ? (
+      <section class="product-landing-section product-description-section" aria-labelledby="product-description-title">
+        <h2 id="product-description-title">Product Description</h2>
+        <div class="product-long-description">
+          {product.longDescription.map((paragraph) => <p>{paragraph}</p>)}
         </div>
       </section>
-    </section>
+    ) : null}
+
+    {product.specifications.length ? (
+      <section class="product-landing-section" aria-labelledby="product-specifications-title">
+        <h2 id="product-specifications-title">Product Specifications</h2>
+        <dl class="product-specification-list">
+          {product.specifications.map((spec) => (
+            <div>
+              <dt>{spec.label}</dt>
+              <dd>{spec.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    ) : null}
+
+    {product.requirements.length ? (
+      <section class="product-landing-section" aria-labelledby="product-requirements-title">
+        <h2 id="product-requirements-title">Requirements</h2>
+        <div class="product-requirements-copy">
+          {product.requirements.map((requirement) => <p>{requirement}</p>)}
+        </div>
+      </section>
+    ) : null}
+
+    {purchaseActions.length ? (
+      <section class="product-final-cta" aria-labelledby="product-final-cta-title">
+        <h2 id="product-final-cta-title">Ready to download {productName}?</h2>
+        <p>{product.ctaLine || product.heroNote}</p>
+        <div class="product-landing-actions">
+          {purchaseActions.map((action) => (
+            <a class={action.icon.includes("paypal") ? "button primary" : "button secondary"} href={action.url} target="_blank" rel="noopener noreferrer">
+              <i class={action.icon} aria-hidden="true"></i>
+              {action.label}
+            </a>
+          ))}
+        </div>
+      </section>
+    ) : null}
   </article>
 </BaseLayout>

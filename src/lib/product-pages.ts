@@ -4,6 +4,7 @@ export type ProductPage = {
   slug: string;
   title: string;
   headline: string;
+  subtitle: string;
   description: string;
   canonical: string;
   ogImage: string;
@@ -23,6 +24,7 @@ export type ProductPage = {
   liteUrl?: string;
   liteLabel?: string;
   liteNote?: string;
+  shortMeta?: string;
   valueLine?: string;
   ctaLine?: string;
   proofPoints?: string[];
@@ -31,6 +33,9 @@ export type ProductPage = {
   demoPlaceholder?: string;
   demo?: { label: string; src: string; type?: string };
   specs: Array<{ label: string; value: string }>;
+  specifications: Array<{ label: string; value: string }>;
+  requirements: string[];
+  longDescription: string[];
   panels: Array<{ title: string; body?: string; items?: string[] }>;
   related: Array<{ label: string; url: string }>;
 };
@@ -64,8 +69,10 @@ const productOverrides: Record<string, ProductPageOverride> = {
     description: "OPERATORS is a 64-preset soundset for Native Instruments FM8, focused on atmospheric motion, digital textures, and frequency-driven synthesis.",
     kicker: "New preset pack",
     lead: "64 presets for Native Instruments FM8.",
+    subtitle: "64 FM8 Presets for Native Instruments FM8",
     summary: "Digital FM material for pads, drones, basses, bells, leads, plucks, sweeps, strings, and FX.",
     heroNote: "Requires Native Instruments FM8. Delivered as a small preset download with PayPal and Gumroad checkout options.",
+    shortMeta: "64 presets • 4 MB download • FM8 preset bank",
     valueLine: "64 FM8 presets | 4 MB download | PayPal or Gumroad",
     ctaLine: "Get the 64-preset FM8 bank.",
     primaryUrl: "https://www.paypal.com/ncp/payment/TS44NMWAGW2DL",
@@ -82,6 +89,27 @@ const productOverrides: Record<string, ProductPageOverride> = {
       { label: "Format", value: "FM8 presets" },
       { label: "Count", value: "64 presets" },
       { label: "Download", value: "4 MB" }
+    ],
+    longDescription: [
+      "OPERATORS is a 64-preset sound bank for Native Instruments FM8, built around cold digital motion, metallic FM detail, and cinematic atmosphere.",
+      "The bank focuses on evolving pads, dark drones, expressive basses, bells, plucks, leads, strings, sweeps, and experimental FX. It is designed for ambient, cinematic, electronic, industrial, and darker experimental production.",
+      "Instead of trying to imitate analog subtractive synths, OPERATORS embraces the character of FM synthesis: glassy harmonics, metallic movement, precise digital textures, and frequency-driven motion."
+    ],
+    specifications: [
+      { label: "Product type", value: "Preset bank" },
+      { label: "Synth", value: "Native Instruments FM8" },
+      { label: "Format", value: "FM8 presets" },
+      { label: "Preset count", value: "64 presets" },
+      { label: "Download size", value: "4 MB" },
+      { label: "Categories", value: "Pads, drones, basses, bells, leads, plucks, sweeps, strings, FX" },
+      { label: "Delivery", value: "Digital download" },
+      { label: "License", value: "Personal and commercial music production use" },
+      { label: "Checkout", value: "PayPal or Gumroad" }
+    ],
+    requirements: [
+      "Native Instruments FM8 is required to use these presets.",
+      "You need a DAW or host that can load FM8, such as Ableton Live, Logic Pro, Cubase, FL Studio, Bitwig Studio, Reaper, or similar.",
+      "The presets are best used as digital FM material for ambient, cinematic, electronic, industrial, and experimental music production."
     ],
     panels: [
       {
@@ -775,6 +803,50 @@ function defaultSpecs(product: Product) {
   ];
 }
 
+function defaultShortMeta(product: Product) {
+  return [product.count, product.format, product.useCase].filter(Boolean).join(" • ");
+}
+
+function defaultSpecifications(product: Product, specs: ProductPage["specs"]) {
+  return [
+    { label: "Product type", value: product.category === "Samples" ? "Sample collection" : product.category === "Free" ? "Free release" : product.category === "Legacy" ? "Legacy archive" : "Preset bank" },
+    ...specs,
+    { label: "Delivery", value: "Digital download" },
+    { label: "Checkout", value: product.url ? "External checkout" : "See product notes" }
+  ];
+}
+
+function uniqueText(values: Array<string | undefined>) {
+  return [...new Set(values.map((value) => value?.trim()).filter(Boolean) as string[])];
+}
+
+function defaultLongDescription(product: Product, description: string, summary: string, heroNote: string) {
+  return uniqueText([description, summary, heroNote]);
+}
+
+function defaultRequirements(product: Product, panels: ProductPage["panels"]) {
+  const requirementPanel = panels.find((panel) => panel.title.toLowerCase().includes("requirement"));
+  if (requirementPanel?.items?.length) {
+    return requirementPanel.items;
+  }
+
+  if (product.category === "Presets") {
+    return [
+      `${product.format} support is required to use this release.`,
+      "Use a DAW or host that can load the target instrument or preset format."
+    ];
+  }
+
+  if (product.category === "Samples") {
+    return [
+      "Use any DAW, sampler, or audio editor that can import WAV audio.",
+      "No specific synth plugin is required."
+    ];
+  }
+
+  return ["See the product notes and linked checkout page for compatibility details."];
+}
+
 function defaultPanels(product: Product) {
   const formatLabel = product.category === "Samples" ? "Collection focus" : "Sound character";
   const getLabel = product.category === "Legacy" ? "Archive notes" : "What you get";
@@ -806,6 +878,7 @@ export const productPages: ProductPage[] = products
       slug,
       title: override.title || `${name} | Kreativ Sound`,
       headline: override.headline || name,
+      subtitle: override.subtitle || override.lead || defaultLead(product),
       description: override.description || defaultDescription(product, name),
       canonical: `https://kreativsound.com/products/${slug}`,
       ogImage: `https://kreativsound.com${product.coverImage || product.thumbnail || "/logo-128.svg"}`,
@@ -833,6 +906,9 @@ export const productPages: ProductPage[] = products
       demoPlaceholder: override.demoPlaceholder || `Drop the ${name} demo file here next. This block is ready for an inline player.`,
       demo: product.demo,
       specs: override.specs || defaultSpecs(product),
+      specifications: override.specifications || defaultSpecifications(product, override.specs || defaultSpecs(product)),
+      requirements: override.requirements || defaultRequirements(product, override.panels || defaultPanels(product)),
+      longDescription: override.longDescription || defaultLongDescription(product, override.description || defaultDescription(product, name), override.summary || defaultSummary(product, name), override.heroNote || defaultHeroNote(product, name)),
       panels: override.panels || defaultPanels(product),
       related: override.related || sharedRelatedByCategory[product.category]
     };
