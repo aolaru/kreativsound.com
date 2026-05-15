@@ -58,7 +58,7 @@ const sharedRelatedByCategory: Record<ProductCategory, Array<{ label: string; ur
 };
 
 const productOverrides: Record<string, ProductPageOverride> = {
-  "operators-fm8": {
+  "operators-fm8-presets": {
     headline: "OPERATORS",
     description: "OPERATORS is a 64-preset soundset for Native Instruments FM8, focused on atmospheric motion, digital textures, and frequency-driven synthesis.",
     kicker: "New preset pack",
@@ -113,7 +113,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
       { label: "Back to the full sound catalog", url: "/" }
     ]
   },
-  bioforms: {
+  "bioforms-synplant-2-presets": {
     title: "BIOFORMS | Kreativ Sound",
     headline: "BIOFORMS",
     description: "BIOFORMS is a Synplant 2 preset pack focused on evolving motion, organic tone, and atmospheric movement.",
@@ -148,7 +148,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
       { label: "More workflow guides", url: "/learn/" }
     ]
   },
-  neolith: {
+  "neolith-softube-models-presets": {
     title: "NEOLITH | Kreativ Sound",
     headline: "NEOLITH",
     description: "NEOLITH is a preset pack for Softube Models built around analog-forward tone, cinematic tension, and textured synth weight.",
@@ -183,7 +183,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
       { label: "NEOLITH release notes", url: "/posts/neolith-release-2026-03-03.html" }
     ]
   },
-  "velvet-ruins": {
+  "velvet-ruins-vital-presets": {
     title: "VELVET RUINS | Kreativ Sound",
     headline: "VELVET RUINS",
     description: "VELVET RUINS is a Vital preset pack focused on worn-down cinematic texture, dark melody, and spectral motion.",
@@ -193,7 +193,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     heroNote: "Shaped for musicians who want immediate mood, spectral movement, and darker melodic material without a polished preset-bank feel.",
     secondaryUrl: "/posts/velvet-ruins-release-2026-03-21.html",
     secondaryLabel: "Hear it in context",
-    liteUrl: "/products/velvet-ruins-lite/",
+    liteUrl: "/products/velvet-ruins-lite-vital-presets",
     liteLabel: "Download Lite",
     liteNote: "Want to try the sound first? Start with the free Lite version, then come back for the full pack.",
     demoPlaceholder: "A dedicated audio demo is being prepared for VELVET RUINS. The free Lite version is the best way to test the sound palette right now.",
@@ -221,14 +221,14 @@ const productOverrides: Record<string, ProductPageOverride> = {
       { label: "More workflow guides", url: "/learn/" }
     ]
   },
-  "black-arcology": {
+  "black-arcology-pigments-presets": {
     headline: "BLACK ARCOLOGY",
     description: "BLACK ARCOLOGY is a dark cinematic Arturia Pigments preset collection built for industrial pressure, evolving tension, and character-driven synthetic tone.",
     kicker: "New preset pack",
     lead: "Industrial presets for Arturia Pigments.",
     summary: "A 128-preset Pigments collection built for industrial drones, textures, melodic keys, and fractured FX that feel dark, modern, cinematic, and immediately useful in real productions.",
     heroNote: "BLACK ARCOLOGY is built for producers who want depth, tension, movement, and character without ending up in the generic preset-bank lane. It is less a utility pack and more a mood engine.",
-    liteUrl: "/products/black-arcology-lite/",
+    liteUrl: "/products/black-arcology-lite-pigments-presets",
     liteLabel: "Download Lite",
     liteNote: "Try the free 32-preset Lite version first. Upgrade when you want the full 128-preset collection.",
     demoPlaceholder: "A dedicated audio demo is being prepared for BLACK ARCOLOGY. The free Lite version is the best way to test the Pigments sound palette right now.",
@@ -281,7 +281,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
       { label: "Back to the full sound catalog", url: "/" }
     ]
   },
-  monolush: {
+  "monolush-fabfilter-one-presets": {
     headline: "MONOLUSH",
     description: "MONOLUSH is a FabFilter One preset pack shaped around warm mono synth tone and direct melodic usefulness.",
     kicker: "Preset pack",
@@ -305,7 +305,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
-  "dirty-model": {
+  "dirty-model-moog-model-d-presets": {
     headline: "DIRTY MODEL",
     description: "DIRTY MODEL is a Moog Model D preset pack focused on driven basses, analog grit, and darker low-end tone.",
     kicker: "Preset pack",
@@ -330,7 +330,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
-  zephyr: {
+  "zephyr-animoog-z-presets": {
     headline: "ZEPHYR",
     description: "ZEPHYR is a preset pack for Moog Animoog Z built for airy movement, melodic motion, and layered atmosphere.",
     kicker: "Preset pack",
@@ -355,7 +355,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
-  "sfxs-2": {
+  "sfxs-2-sound-effects": {
     headline: "SFXS 2",
     description: "SFXS 2 is a sound-effects collection focused on creative accents, cinematic transitions, and design detail.",
     kicker: "Sample collection",
@@ -380,7 +380,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
-  "noize-2": {
+  "noize-2-noise-textures": {
     headline: "NOIZE 2",
     description: "NOIZE 2 is an experimental noise and FX collection built for abstract layers, glitch detail, and texture shaping.",
     kicker: "Sample collection",
@@ -405,7 +405,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
-  "enigma-2": {
+  "enigma-2-cinematic-atmospheres": {
     headline: "ENIGMA 2",
     description: "ENIGMA 2 is a cinematic atmosphere collection focused on dark tension beds and restrained mystery.",
     kicker: "Sample collection",
@@ -430,7 +430,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
-  "bleeps-2": {
+  "bleeps-2-percussion-sounds": {
     headline: "BLEEPS 2",
     description: "BLEEPS 2 is an experimental percussion sample pack built for strange rhythm accents and synthetic percussive detail.",
     kicker: "Sample collection",
@@ -454,7 +454,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
-  "space-2": {
+  "space-2-atmospheres-textures": {
     headline: "SPACE 2",
     description: "SPACE 2 is an atmosphere and texture library shaped for sci-fi ambience, distant environments, and suspended motion.",
     kicker: "Sample collection",
@@ -479,7 +479,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
-  "tectonic-2": {
+  "tectonic-2-dark-subs-textures": {
     headline: "TECTONIC 2",
     description: "TECTONIC 2 is a dark subs and underground texture collection focused on low-end pressure and subterranean atmosphere.",
     kicker: "Sample collection",
@@ -504,7 +504,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/posts/how-to-use-tectonic-2-for-low-end-pressure-2026-03-14.html",
     secondaryLabel: "Read the guide"
   },
-  "horror-2": {
+  "horror-2-cinematic-textures": {
     headline: "HORROR 2",
     description: "HORROR 2 is a cinematic horror texture collection focused on stingers, uneasy drones, and darker atmosphere.",
     kicker: "Sample collection",
@@ -529,7 +529,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/learn/",
     secondaryLabel: "See workflow guides"
   },
-  "velvet-ruins-lite": {
+  "velvet-ruins-lite-vital-presets": {
     headline: "VELVET RUINS Lite",
     description: "VELVET RUINS Lite is a free Vital preset pack offering a lighter entry point into the worn-down atmosphere of the full release.",
     kicker: "Free release",
@@ -550,10 +550,10 @@ const productOverrides: Record<string, ProductPageOverride> = {
         ]
       }
     ],
-    secondaryUrl: "/products/velvet-ruins/",
+    secondaryUrl: "/products/velvet-ruins-vital-presets",
     secondaryLabel: "See the full pack"
   },
-  "black-arcology-lite": {
+  "black-arcology-lite-pigments-presets": {
     headline: "BLACK ARCOLOGY Lite",
     description: "BLACK ARCOLOGY Lite is a free 32-preset Pigments collection offering a compact entry point into the darker industrial tone of the full release.",
     kicker: "Free release",
@@ -598,7 +598,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
         ]
       }
     ],
-    secondaryUrl: "/products/black-arcology/",
+    secondaryUrl: "/products/black-arcology-pigments-presets",
     secondaryLabel: "Upgrade to the full pack"
   },
   abyss: {
@@ -625,7 +625,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/news/",
     secondaryLabel: "See latest updates"
   },
-  "the-black-angel": {
+  "the-black-angel-refill": {
     headline: "The Black Angel",
     description: "The Black Angel is an archive-only Reason ReFill and the first product release in the Kreativ Sound catalog history.",
     kicker: "Archive-only first release",
@@ -649,7 +649,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     secondaryUrl: "/",
     secondaryLabel: "Back to the archive"
   },
-  "daft-plasticz": {
+  "daft-plasticz-presets": {
     headline: "DAFT Plasticz",
     description: "DAFT Plasticz is a legacy preset archive focused on plastic, synthetic textures and older sound-design experiments.",
     kicker: "Legacy archive",
@@ -698,7 +698,12 @@ function categoryKicker(category: ProductCategory) {
 }
 
 function productVariant(slug: string, category: ProductCategory): ProductPage["variant"] {
-  if (slug === "black-arcology" || slug === "bioforms" || slug === "neolith" || slug === "velvet-ruins") {
+  if (
+    slug === "black-arcology-pigments-presets" ||
+    slug === "bioforms-synplant-2-presets" ||
+    slug === "neolith-softube-models-presets" ||
+    slug === "velvet-ruins-vital-presets"
+  ) {
     return "flagship";
   }
   if (category === "Legacy") {
@@ -797,7 +802,7 @@ export const productPages: ProductPage[] = products
       title: override.title || `${name} | Kreativ Sound`,
       headline: override.headline || name,
       description: override.description || defaultDescription(product, name),
-      canonical: `https://kreativsound.com/products/${slug}/`,
+      canonical: `https://kreativsound.com/products/${slug}`,
       ogImage: `https://kreativsound.com${product.coverImage || product.thumbnail || "/logo-128.svg"}`,
       ogImageAlt: override.ogImageAlt || `${name} product cover`,
       image: product.coverImage || product.thumbnail || "/logo-128.svg",

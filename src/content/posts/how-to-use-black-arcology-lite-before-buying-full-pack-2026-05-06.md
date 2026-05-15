@@ -37,6 +37,6 @@ draft: false
 <p>Use Lite first when you want a low-friction test. Move to the full pack when the sound direction fits your work and you need more options in the same world.</p>
 
 <div class="article-cta">
-  <a class="button primary" href="/products/black-arcology-lite/">Download Black Arcology Lite</a>
-  <a class="button secondary" href="/products/black-arcology/">View Full Version</a>
+  <a class="button primary" href="/products/black-arcology-lite-pigments-presets">Download Black Arcology Lite</a>
+  <a class="button secondary" href="/products/black-arcology-pigments-presets">View Full Version</a>
 </div>

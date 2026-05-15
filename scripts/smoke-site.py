@@ -11,11 +11,20 @@ from socketserver import ThreadingMixIn
 
 
 ROOT = Path(__file__).resolve().parents[1]
+DIST = ROOT / "dist"
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
     def log_message(self, format: str, *args) -> None:
         return
+
+    def translate_path(self, path: str) -> str:
+        resolved = Path(super().translate_path(path))
+        if not resolved.exists() and not resolved.suffix:
+            html_file = Path(f"{resolved}.html")
+            if html_file.exists():
+                return str(html_file)
+        return str(resolved)
 
     def handle(self) -> None:
         try:
@@ -68,7 +77,11 @@ def main() -> int:
         print("Chrome/Chromium is required for smoke-site.py.")
         return 1
 
-    handler = partial(QuietHandler, directory=str(ROOT))
+    if not DIST.exists():
+        print("dist/ is required for smoke-site.py. Run npm run build first.")
+        return 1
+
+    handler = partial(QuietHandler, directory=str(DIST))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -83,9 +96,9 @@ def main() -> int:
             "/music/": ["Music", "Olaru", "Rethyn", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
-            "/products/velvet-ruins/": ["Buy on Gumroad", "VELVET RUINS", "Demo", "Audio slot ready"],
-            "/products/neolith/": ["Buy on Gumroad", "NEOLITH", "Demo", "Audio slot ready"],
-            "/products/bioforms/": ["Buy on Gumroad", "BIOFORMS", "Demo", "Audio slot ready"],
+            "/products/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Try the Lite version"],
+            "/products/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Read the workflow guide"],
+            "/products/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Read the workflow guide"],
         }
 
         for route, needles in pages.items():
@@ -94,11 +107,11 @@ def main() -> int:
                 require(dom, needle, route, errors)
 
             if route == "/":
-                require(dom, 'href="/products/velvet-ruins/"', route, errors)
-                require(dom, 'href="/products/neolith/"', route, errors)
-                require(dom, 'href="/products/bioforms/"', route, errors)
-                require(dom, "assets/downloads/velvet-ruins-lite.zip", route, errors)
-                require(dom, "Legacy Archive", route, errors)
+                require(dom, 'href="/products/velvet-ruins-vital-presets"', route, errors)
+                require(dom, 'href="/products/neolith-softube-models-presets"', route, errors)
+                require(dom, 'href="/products/bioforms-synplant-2-presets"', route, errors)
+                require(dom, "Preset Packs", route, errors)
+                require(dom, "Free Packs", route, errors)
 
         if errors:
             print("Smoke test failed:")

@@ -11,7 +11,7 @@ PRODUCTS_TS = ROOT / "src/lib/products.ts"
 
 
 def route_to_path(route: str) -> Path:
-    if route.startswith("/products/") and route.endswith("/"):
+    if route.startswith("/products/"):
         return ROOT / "src/lib/product-pages.ts"
     if route == "/":
         return ROOT / "src/pages/index.astro"
@@ -26,7 +26,7 @@ def main() -> int:
     errors: list[str] = []
 
     for thumb in re.findall(r'(?:thumbnail|coverImage):\s*"([^"]+)"', text):
-        path = ROOT / thumb
+        path = ROOT / thumb.lstrip("/")
         if thumb.startswith(("http://", "https://")):
             continue
         if not path.exists():
@@ -35,7 +35,7 @@ def main() -> int:
     for demo in re.findall(r'src:\s*"([^"]+)"', text):
         if demo.startswith(("http://", "https://")):
             continue
-        path = ROOT / demo
+        path = ROOT / demo.lstrip("/")
         if not path.exists():
             errors.append(f"Missing demo asset: {demo}")
 
@@ -49,14 +49,14 @@ def main() -> int:
     for extra in re.findall(r'extraAction:\s*\{\s*label:\s*"[^"]+",\s*url:\s*"([^"]+)"\s*\}', text, flags=re.S):
         if extra.startswith(("http://", "https://")):
             continue
-        path = ROOT / extra
+        path = route_to_path(extra)
         if not path.exists():
             errors.append(f"Missing extra action asset: {extra}")
 
     for url in re.findall(r'url:\s*"([^"]+)"', text):
         if url.startswith(("http://", "https://")):
             continue
-        path = ROOT / url
+        path = route_to_path(url)
         if not path.exists():
             errors.append(f"Missing product URL target: {url}")
 

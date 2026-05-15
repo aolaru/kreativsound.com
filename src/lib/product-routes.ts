@@ -1,0 +1,22 @@
+export const productRedirects = [
+  { from: "operators-fm8", to: "operators-fm8-presets" },
+  { from: "black-arcology", to: "black-arcology-pigments-presets" },
+  { from: "velvet-ruins", to: "velvet-ruins-vital-presets" },
+  { from: "neolith", to: "neolith-softube-models-presets" },
+  { from: "bioforms", to: "bioforms-synplant-2-presets" },
+  { from: "monolush", to: "monolush-fabfilter-one-presets" },
+  { from: "dirty-model", to: "dirty-model-moog-model-d-presets" },
+  { from: "zephyr", to: "zephyr-animoog-z-presets" },
+  { from: "sfxs-2", to: "sfxs-2-sound-effects" },
+  { from: "noize-2", to: "noize-2-noise-textures" },
+  { from: "enigma-2", to: "enigma-2-cinematic-atmospheres" },
+  { from: "bleeps-2", to: "bleeps-2-percussion-sounds" },
+  { from: "space-2", to: "space-2-atmospheres-textures" },
+  { from: "tectonic-2", to: "tectonic-2-dark-subs-textures" },
+  { from: "horror-2", to: "horror-2-cinematic-textures" },
+  { from: "velvet-ruins-lite", to: "velvet-ruins-lite-vital-presets" },
+  { from: "black-arcology-lite", to: "black-arcology-lite-pigments-presets" },
+  { from: "abyss", to: "abyss-pro-53-presets" },
+  { from: "the-black-angel", to: "the-black-angel-refill" },
+  { from: "daft-plasticz", to: "daft-plasticz-presets" }
+] as const;

@@ -1,10 +1,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
+import { productRedirects } from "../src/lib/product-routes.ts";
 
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, "dist");
 const siteUrl = "https://kreativsound.com";
+const legacyProductRoutes = new Set(productRedirects.map(({ from }) => `/products/${from}/`));
 
 function runGit(args) {
   try {
@@ -56,7 +58,11 @@ function routeFromFile(filePath) {
     return null;
   }
   if (relative.endsWith("/index.html")) {
-    return `/${relative.replace(/\/index\.html$/, "/")}`;
+    const route = `/${relative.replace(/\/index\.html$/, "/")}`;
+    return legacyProductRoutes.has(route) ? null : route;
+  }
+  if (relative.startsWith("products/") && relative.endsWith(".html")) {
+    return `/${relative.replace(/\.html$/, "")}`;
   }
   return `/${relative}`;
 }
@@ -69,7 +75,7 @@ function sourcePathForRoute(route) {
     const slug = route.slice("/posts/".length, -".html".length);
     return `src/content/posts/${slug}.md`;
   }
-  if (route.startsWith("/products/") && route.endsWith("/")) {
+  if (route.startsWith("/products/")) {
     return "src/lib/product-pages.ts";
   }
   if (route.endsWith("/")) {

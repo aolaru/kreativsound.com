@@ -37,6 +37,6 @@ draft: false
 <p>The strongest Black Arcology drones usually come from restraint: one dark center, one texture layer, and slow movement that creates pressure over time.</p>
 
 <div class="article-cta">
-  <a class="button primary" href="/products/black-arcology/">View Black Arcology</a>
+  <a class="button primary" href="/products/black-arcology-pigments-presets">View Black Arcology</a>
   <a class="button secondary" href="/learn/">Back to Learn</a>
 </div>

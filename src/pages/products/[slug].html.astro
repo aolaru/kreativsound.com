@@ -1,6 +1,6 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { productPages } from "../../../lib/product-pages";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { productPages } from "../../lib/product-pages";
 
 export function getStaticPaths() {
   return productPages.map((product) => ({
