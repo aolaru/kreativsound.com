@@ -75,7 +75,7 @@ const breadcrumbSchema = {
     }
   ]
 };
-const proofPoints = product.variant === "archive" ? [
+const proofPoints = product.proofPoints || (product.variant === "archive" ? [
   "Archive entry preserved for catalog history.",
   "Kept separate from the current flagship catalog.",
   "Still available as a reference point for older Kreativ Sound material."
@@ -83,7 +83,7 @@ const proofPoints = product.variant === "archive" ? [
   "Created by Andrei Olaru for the same sound world used in Olaru and Rethyn releases.",
   hasDemo ? "Includes an inline audio demo so you can hear the direction before buying." : product.liteUrl ? "Free Lite version available when you want to test the palette first." : "Dedicated audio demo is still on the content roadmap for this pack.",
   "Independent digital release with direct access through the linked store channel."
-];
+]);
 ---
 <BaseLayout
   title={product.title}

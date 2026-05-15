@@ -25,6 +25,7 @@ export type ProductPage = {
   liteNote?: string;
   valueLine?: string;
   ctaLine?: string;
+  proofPoints?: string[];
   heroNote: string;
   demoBlurb?: string;
   demoPlaceholder?: string;
@@ -62,49 +63,55 @@ const productOverrides: Record<string, ProductPageOverride> = {
     headline: "OPERATORS",
     description: "OPERATORS is a 64-preset soundset for Native Instruments FM8, focused on atmospheric motion, digital textures, and frequency-driven synthesis.",
     kicker: "New preset pack",
-    lead: "Atmos and motion presets for Native Instruments FM8.",
-    summary: "A compact FM8 soundset built around evolving pads, dark drones, synthetic basses, metallic bells, expressive leads, plucks, sweeps, strings, and experimental FM textures.",
-    heroNote: "OPERATORS is for producers who want cold digital edge, movement, depth, and atmosphere from FM8 without digging through a giant unfocused bank.",
-    valueLine: "64 FM8 presets · 4 MB download · Pay once",
-    ctaLine: "Ready to add a colder FM edge to your tracks? Get OPERATORS for Native Instruments FM8.",
+    lead: "64 presets for Native Instruments FM8.",
+    summary: "Digital FM material for pads, drones, basses, bells, leads, plucks, sweeps, strings, and FX.",
+    heroNote: "Requires Native Instruments FM8. Delivered as a small preset download with PayPal and Gumroad checkout options.",
+    valueLine: "64 FM8 presets | 4 MB download | PayPal or Gumroad",
+    ctaLine: "Get the 64-preset FM8 bank.",
     primaryUrl: "https://www.paypal.com/ncp/payment/TS44NMWAGW2DL",
     primaryLabel: "Pay with PayPal",
     purchaseAltUrl: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
     purchaseAltLabel: "Buy on Gumroad",
+    proofPoints: [
+      "Native Instruments FM8 preset bank.",
+      "64 presets in a 4 MB download.",
+      "Pads, drones, basses, bells, leads, plucks, sweeps, strings, and FX."
+    ],
     specs: [
-      { label: "Format", value: "Native Instruments FM8 presets" },
-      { label: "Included", value: "64 presets" },
-      { label: "Best for", value: "Ambient, cinematic scoring, electronic production, and sound design" }
+      { label: "Synth", value: "Native Instruments FM8" },
+      { label: "Format", value: "FM8 presets" },
+      { label: "Count", value: "64 presets" },
+      { label: "Download", value: "4 MB" }
     ],
     panels: [
       {
-        title: "Why this pack works",
-        body: "OPERATORS leans into FM8's digital character instead of trying to soften it into a generic synth bank. The presets focus on motion, frequency detail, and atmospheric tone that can become pads, drones, leads, transitions, or sound-design layers."
+        title: "At a glance",
+        body: "OPERATORS is a 64-preset FM8 bank in a 4 MB download. The sound set is focused on digital FM tone: motion, metal, bass, drones, and atmospheric keys."
       },
       {
-        title: "Inside the pack",
+        title: "Patch groups",
         items: [
-          "64 presets for Native Instruments FM8.",
           "Evolving pads and dark drones.",
-          "Synthetic basses, expressive leads, plucks, and sweeps.",
-          "Metallic bells, strings, and experimental FM textures."
+          "Synthetic basses and expressive leads.",
+          "Metallic bells, plucks, and sweeps.",
+          "Strings, FX, and experimental FM textures."
         ]
       },
       {
-        title: "Sound palette",
+        title: "Sound character",
         items: [
           "Cold digital atmosphere.",
           "Frequency-driven motion and harmonic shimmer.",
-          "Metallic and synthetic FM detail.",
-          "Ambient, cinematic, and electronic production material."
+          "Metallic FM detail.",
+          "Useful for ambient, cinematic, and electronic production."
         ]
       },
       {
         title: "Requirements",
         items: [
           "Native Instruments FM8.",
-          "A workflow that benefits from atmospheric FM presets rather than analog-style subtractive patches.",
-          "Good for layering, cue building, intros, transitions, and experimental electronic sketches."
+          "A host or workflow that can load FM8 preset banks.",
+          "Best treated as digital FM material, not analog-style subtractive patches."
         ]
       }
     ],
@@ -232,8 +239,6 @@ const productOverrides: Record<string, ProductPageOverride> = {
     liteLabel: "Download Lite",
     liteNote: "Try the free 32-preset Lite version first. Upgrade when you want the full 128-preset collection.",
     demoPlaceholder: "A dedicated audio demo is being prepared for BLACK ARCOLOGY. The free Lite version is the best way to test the Pigments sound palette right now.",
-    valueLine: "128 Pigments presets · Instant download · Pay once",
-    ctaLine: "Ready to build darker Pigments tracks? Get the full 128-preset BLACK ARCOLOGY collection.",
     specs: [
       { label: "Format", value: "Arturia Pigments presets" },
       { label: "Included", value: "128 presets" },
@@ -820,6 +825,9 @@ export const productPages: ProductPage[] = products
       liteUrl: override.liteUrl,
       liteLabel: override.liteLabel,
       liteNote: override.liteNote,
+      valueLine: override.valueLine,
+      ctaLine: override.ctaLine,
+      proofPoints: override.proofPoints,
       heroNote: override.heroNote || defaultHeroNote(product, name),
       demoBlurb: override.demoBlurb || (product.demo ? defaultDemoBlurb(product, name) : undefined),
       demoPlaceholder: override.demoPlaceholder || `Drop the ${name} demo file here next. This block is ready for an inline player.`,
