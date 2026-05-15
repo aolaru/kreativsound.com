@@ -25,12 +25,26 @@ const productSchema = {
     name: "Kreativ Sound"
   },
   category: product.kicker,
-  offers: product.primaryUrl ? {
-    "@type": "Offer",
-    url: product.primaryUrl,
-    availability: "https://schema.org/InStock",
-    priceCurrency: "USD"
-  } : undefined
+  offers: product.primaryUrl
+    ? [
+        {
+          "@type": "Offer",
+          url: product.primaryUrl,
+          availability: "https://schema.org/InStock",
+          priceCurrency: "USD"
+        },
+        ...(product.purchaseAltUrl
+          ? [
+              {
+                "@type": "Offer",
+                url: product.purchaseAltUrl,
+                availability: "https://schema.org/InStock",
+                priceCurrency: "USD"
+              }
+            ]
+          : [])
+      ]
+    : undefined
 };
 const breadcrumbSchema = {
   "@context": "https://schema.org",
@@ -110,6 +124,12 @@ const proofPoints = product.variant === "archive" ? [
             <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
               <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
               {product.primaryLabel}
+            </a>
+          ) : null}
+          {product.purchaseAltUrl && product.purchaseAltLabel ? (
+            <a class="button secondary" href={product.purchaseAltUrl} target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-paypal" aria-hidden="true"></i>
+              {product.purchaseAltLabel}
             </a>
           ) : null}
           {product.liteUrl ? (
@@ -228,6 +248,12 @@ const proofPoints = product.variant === "archive" ? [
             <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
               <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
               {product.primaryLabel}
+            </a>
+          ) : null}
+          {product.purchaseAltUrl && product.purchaseAltLabel ? (
+            <a class="button secondary" href={product.purchaseAltUrl} target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-paypal" aria-hidden="true"></i>
+              {product.purchaseAltLabel}
             </a>
           ) : null}
           {product.variant === "archive" ? (

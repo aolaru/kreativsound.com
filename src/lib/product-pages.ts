@@ -16,6 +16,8 @@ export type ProductPage = {
   variant: "flagship" | "standard" | "free" | "archive";
   primaryUrl?: string;
   primaryLabel?: string;
+  purchaseAltUrl?: string;
+  purchaseAltLabel?: string;
   secondaryUrl: string;
   secondaryLabel: string;
   liteUrl?: string;
@@ -32,7 +34,7 @@ export type ProductPage = {
   related: Array<{ label: string; url: string }>;
 };
 
-type ProductPageOverride = Partial<Omit<ProductPage, "slug" | "title" | "canonical" | "primaryUrl" | "ogImage" | "image">> & {
+type ProductPageOverride = Partial<Omit<ProductPage, "slug" | "title" | "canonical" | "ogImage" | "image">> & {
   headline?: string;
 };
 
@@ -65,6 +67,10 @@ const productOverrides: Record<string, ProductPageOverride> = {
     heroNote: "OPERATORS is for producers who want cold digital edge, movement, depth, and atmosphere from FM8 without digging through a giant unfocused bank.",
     valueLine: "64 FM8 presets · 4 MB download · Pay once",
     ctaLine: "Ready to add a colder FM edge to your tracks? Get OPERATORS for Native Instruments FM8.",
+    primaryUrl: "https://www.paypal.com/ncp/payment/TS44NMWAGW2DL",
+    primaryLabel: "Pay with PayPal",
+    purchaseAltUrl: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
+    purchaseAltLabel: "Buy on Gumroad",
     specs: [
       { label: "Format", value: "Native Instruments FM8 presets" },
       { label: "Included", value: "64 presets" },
@@ -800,8 +806,10 @@ export const productPages: ProductPage[] = products
       lead: override.lead || defaultLead(product),
       summary: override.summary || defaultSummary(product, name),
       variant: override.variant || productVariant(slug, product.category),
-      primaryUrl: product.url,
+      primaryUrl: override.primaryUrl || product.url,
       primaryLabel: override.primaryLabel || (product.category === "Free" ? "Get free download" : product.url ? "Buy on Gumroad" : undefined),
+      purchaseAltUrl: override.purchaseAltUrl,
+      purchaseAltLabel: override.purchaseAltLabel,
       secondaryUrl: override.secondaryUrl || "/learn/",
       secondaryLabel: override.secondaryLabel || "See workflow guides",
       liteUrl: override.liteUrl,
