@@ -14,6 +14,11 @@ const [primaryPanel, ...secondaryPanels] = product.panels;
 const hasDemo = Boolean(product.demo?.src);
 const showDemoPlaceholder = !hasDemo && product.variant === "flagship" && Boolean(product.demoPlaceholder);
 const productName = product.title.replace(" | Kreativ Sound", "");
+
+function purchaseIcon(url?: string) {
+  return url?.includes("paypal.com") ? "fa-brands fa-paypal" : "fa-solid fa-bag-shopping";
+}
+
 const productSchema = {
   "@context": "https://schema.org",
   "@type": "Product",
@@ -122,13 +127,13 @@ const proofPoints = product.variant === "archive" ? [
         <div class="product-media-actions">
           {product.primaryUrl && product.primaryLabel ? (
             <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
-              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+              <i class={purchaseIcon(product.primaryUrl)} aria-hidden="true"></i>
               {product.primaryLabel}
             </a>
           ) : null}
           {product.purchaseAltUrl && product.purchaseAltLabel ? (
             <a class="button secondary" href={product.purchaseAltUrl} target="_blank" rel="noopener noreferrer">
-              <i class="fa-brands fa-paypal" aria-hidden="true"></i>
+              <i class={purchaseIcon(product.purchaseAltUrl)} aria-hidden="true"></i>
               {product.purchaseAltLabel}
             </a>
           ) : null}
@@ -246,13 +251,13 @@ const proofPoints = product.variant === "archive" ? [
         <div class="product-actions">
           {product.primaryUrl && product.primaryLabel ? (
             <a class="button primary" href={product.primaryUrl} target="_blank" rel="noopener noreferrer">
-              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+              <i class={purchaseIcon(product.primaryUrl)} aria-hidden="true"></i>
               {product.primaryLabel}
             </a>
           ) : null}
           {product.purchaseAltUrl && product.purchaseAltLabel ? (
             <a class="button secondary" href={product.purchaseAltUrl} target="_blank" rel="noopener noreferrer">
-              <i class="fa-brands fa-paypal" aria-hidden="true"></i>
+              <i class={purchaseIcon(product.purchaseAltUrl)} aria-hidden="true"></i>
               {product.purchaseAltLabel}
             </a>
           ) : null}
