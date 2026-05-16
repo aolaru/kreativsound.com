@@ -30,9 +30,8 @@ export const products: Product[] = [
   {
     title: "Kreativ Kollection V1",
     category: "Bundle",
-    url: "https://kreativ.gumroad.com/l/kreativ-kollection-v1",
     detailsUrl: "/products/kreativ-kollection-v1",
-    badge: "Flagship",
+    badge: "Coming soon",
     thumbnail: "/assets/thumbs/kreativ-kollection-v1.svg",
     coverImage: "/assets/thumbs/kreativ-kollection-v1.svg",
     format: "Preset and sample bundle",

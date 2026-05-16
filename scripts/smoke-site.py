@@ -96,7 +96,7 @@ def main() -> int:
             "/music/": ["Music", "Olaru", "Rethyn", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
-            "/products/kreativ-kollection-v1": ["Buy on Gumroad", "Kreativ Kollection V1", "Description", "What's Included", "Product Specifications", "Requirements"],
+            "/products/kreativ-kollection-v1": ["Coming soon", "Kreativ Kollection V1", "Description", "What's Included", "Product Specifications", "Requirements"],
             "/products/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Description", "Product Specifications", "Requirements"],
             "/products/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Description", "Product Specifications", "Requirements"],
             "/products/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Description", "Product Specifications", "Requirements"],

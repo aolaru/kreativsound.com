@@ -183,18 +183,20 @@ const breadcrumbSchema = {
       </section>
     ) : null}
 
-    {purchaseActions.length ? (
+    {purchaseActions.length || product.finalCtaTitle || product.finalCtaText ? (
       <section class="product-final-cta" aria-labelledby="product-final-cta-title">
         <h2 id="product-final-cta-title">{product.finalCtaTitle || `Ready to download ${productName}?`}</h2>
         <p>{product.finalCtaText || product.ctaLine || product.heroNote}</p>
-        <div class="product-landing-actions">
-          {purchaseActions.map((action, index) => (
-            <a class={actionClass(index)} href={action.url} target="_blank" rel="noopener noreferrer">
-              <i class={action.icon} aria-hidden="true"></i>
-              {action.label}
-            </a>
-          ))}
-        </div>
+        {purchaseActions.length ? (
+          <div class="product-landing-actions">
+            {purchaseActions.map((action, index) => (
+              <a class={actionClass(index)} href={action.url} target="_blank" rel="noopener noreferrer">
+                <i class={action.icon} aria-hidden="true"></i>
+                {action.label}
+              </a>
+            ))}
+          </div>
+        ) : null}
       </section>
     ) : null}
   </article>

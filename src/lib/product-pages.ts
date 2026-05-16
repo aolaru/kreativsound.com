@@ -81,8 +81,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     title: "Kreativ Kollection V1 — Complete Kreativ Sound Preset & Sample Bundle",
     headline: "Kreativ Kollection V1",
     description: "Kreativ Kollection V1 is the complete Kreativ Sound bundle, collecting presets, samples, loops, textures, and experimental sound design packs for ambient, cinematic, electronic, and dark production.",
-    kicker: "Flagship bundle",
-    primaryLabel: "Buy on Gumroad"
+    kicker: "Flagship bundle"
   },
   "operators-fm8-presets": {
     headline: "OPERATORS",

@@ -13,10 +13,10 @@ export type ProductLandingCopy = {
 export const landingCopyOverrides = {
   "kreativ-kollection-v1": {
     subtitle: "The complete Kreativ Sound preset and sample collection.",
-    shortMeta: "Presets • Samples • Loops • Textures • Instant download",
-    ctaLine: "One download. The first wave of Kreativ Sound presets, samples, textures, and sound-design material in a single bundle.",
-    finalCtaTitle: "Get the complete Kreativ Sound V1 collection.",
-    finalCtaText: "One download. The first wave of Kreativ Sound presets, samples, textures, and sound-design material in a single bundle.",
+    shortMeta: "Coming soon • Presets • Samples • Loops • Textures",
+    ctaLine: "Kreativ Kollection V1 is being prepared as the first complete Kreativ Sound bundle.",
+    finalCtaTitle: "Kreativ Kollection V1 is coming soon.",
+    finalCtaText: "The first wave of Kreativ Sound presets, samples, textures, and sound-design material is being prepared as a single bundle.",
     includedProducts: [
       "bioforms-synplant-2-presets",
       "velvet-ruins-vital-presets",
@@ -25,7 +25,6 @@ export const landingCopyOverrides = {
       "dirty-model-moog-model-d-presets",
       "zephyr-animoog-z-presets",
       "monolush-fabfilter-one-presets",
-      "abyss-pro-53-presets",
       "operators-fm8-presets",
       "horror-2-cinematic-textures",
       "bleeps-2-percussion-sounds",
@@ -47,10 +46,10 @@ export const landingCopyOverrides = {
       { label: "Format", value: "Digital download" },
       { label: "Includes", value: "Preset banks, samples, loops, textures, and sound design packs" },
       { label: "Best for", value: "Ambient, cinematic, electronic, industrial, experimental, and darker production" },
-      { label: "Delivery", value: "Instant download" },
+      { label: "Delivery", value: "Digital download when released" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Updates", value: "V1 collection snapshot, with future versions released separately unless otherwise specified" },
-      { label: "Checkout", value: "Gumroad, with PayPal as optional alternative" }
+      { label: "Checkout", value: "Coming soon" }
     ],
     requirements: [
       "Some included preset banks require specific synths or plugins such as Synplant 2, Vital, Arturia Pigments, Native Instruments FM8, Native Instruments PRO-53, FabFilter One, Moog Model D, Animoog Z, or Softube Synth Models.",

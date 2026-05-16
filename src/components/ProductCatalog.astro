@@ -17,6 +17,12 @@ function ctaText(category: string) {
   if (category === "Legacy") return "View Archive";
   return "Get Pack";
 }
+
+function unavailableText(product: { badge?: string; category: string }) {
+  if (product.badge?.toLowerCase().includes("coming")) return "Coming soon";
+  if (product.category === "Bundle") return "Coming soon";
+  return "Archive only";
+}
 ---
 <div class="catalog-anchor-links" aria-label="Catalog sections" hidden={!showCategoryNav || categories.length === 0}>
   {categories.map((category) => (
@@ -71,7 +77,7 @@ function ctaText(category: string) {
                         {ctaText(item.category)}
                       </a>
                     ) : (
-                      <span class="product-action-link is-muted">Archive only</span>
+                      <span class="product-action-link is-muted">{unavailableText(item)}</span>
                     )}
                   </div>
                 </div>

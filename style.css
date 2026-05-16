@@ -1855,6 +1855,14 @@ a:focus-visible,
   background: rgba(153, 0, 0, 0.08);
 }
 
+.product-page-landing .button.is-disabled,
+.button.is-disabled {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.76;
+  filter: saturate(0.86);
+}
+
 .product-landing-meta {
   margin: 0;
   color: #76565a;
