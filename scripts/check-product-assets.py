@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+PUBLIC = ROOT / "public"
 PRODUCTS_TS = ROOT / "src/lib/products.ts"
 
 
@@ -21,12 +22,16 @@ def route_to_path(route: str) -> Path:
     return ROOT / route.lstrip("/")
 
 
+def public_asset_path(route: str) -> Path:
+    return PUBLIC / route.lstrip("/")
+
+
 def main() -> int:
     text = PRODUCTS_TS.read_text()
     errors: list[str] = []
 
     for thumb in re.findall(r'(?:thumbnail|coverImage):\s*"([^"]+)"', text):
-        path = ROOT / thumb.lstrip("/")
+        path = public_asset_path(thumb)
         if thumb.startswith(("http://", "https://")):
             continue
         if not path.exists():
@@ -35,7 +40,7 @@ def main() -> int:
     for demo in re.findall(r'src:\s*"([^"]+)"', text):
         if demo.startswith(("http://", "https://")):
             continue
-        path = ROOT / demo.lstrip("/")
+        path = public_asset_path(demo)
         if not path.exists():
             errors.append(f"Missing demo asset: {demo}")
 

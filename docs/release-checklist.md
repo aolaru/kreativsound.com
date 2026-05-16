@@ -12,7 +12,7 @@ Run this before pushing a release commit.
 
 ## 2) Product asset pass
 
-- Generate new pack thumbnails with `bash scripts/generate-thumbnail.sh <source> assets/thumbs/<name>.jpg`.
+- Generate new pack thumbnails with `bash scripts/generate-thumbnail.sh <source> public/assets/thumbs/<name>.jpg`.
 - Confirm new product cards use the local thumbnail, not a temporary source file.
 - Remove or ignore any intermediate images before commit.
 
@@ -43,5 +43,6 @@ Suggested thresholds:
 ## 5) Final ship steps
 
 - Update `changelog.md`.
+- Run `bash scripts/release-gate.sh`.
 - `git add . && git commit -m "..."`
 - Push when ready.

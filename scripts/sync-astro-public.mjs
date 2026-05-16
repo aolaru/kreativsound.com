@@ -4,7 +4,7 @@ import path from "node:path";
 const rootDir = process.cwd();
 const publicDir = path.join(rootDir, "public");
 
-const filesToCopy = [
+const requiredPublicEntries = [
   "favicon.svg",
   "favicon-16x16.png",
   "favicon-32x32.png",
@@ -19,62 +19,26 @@ const filesToCopy = [
   "site.js",
   "share.js",
   "robots.txt",
-  "sitemap.xml",
   "CNAME",
-  "404.html"
-];
-
-const directoriesToCopy = [
   "assets",
+  "apps"
 ];
 
-const appDirectoriesToCopy = [
-  "apps/preset-mutator",
-  "apps/wave-fracture",
-];
+const generatedFiles = ["sitemap.xml"];
 
-const appRedirectFilesToCopy = [
-  "apps/audio-alchemy/ui/index.html",
-  "apps/audio-alchemy/ui/service-worker.js",
-  "apps/presetmutator/index.html",
-  "apps/presetmutator/ui/index.html",
-];
-
-function resetDirectory(targetDir) {
-  fs.rmSync(targetDir, { recursive: true, force: true });
-  fs.mkdirSync(targetDir, { recursive: true });
+if (!fs.existsSync(publicDir)) {
+  throw new Error("Missing public/ directory. Static site assets should be committed under public/.");
 }
 
-function copyEntry(relativePath) {
-  const sourcePath = path.join(rootDir, relativePath);
-  const targetPath = path.join(publicDir, relativePath);
-  fs.cpSync(sourcePath, targetPath, { recursive: true });
+const missing = requiredPublicEntries.filter((entry) => !fs.existsSync(path.join(publicDir, entry)));
+if (missing.length) {
+  throw new Error(`Missing public assets: ${missing.join(", ")}`);
 }
 
-function copyIfExists(relativePath) {
-  const sourcePath = path.join(rootDir, relativePath);
+for (const filePath of generatedFiles) {
+  const sourcePath = path.join(rootDir, filePath);
   if (!fs.existsSync(sourcePath)) {
-    return;
+    continue;
   }
-  const targetPath = path.join(publicDir, relativePath);
-  fs.mkdirSync(path.dirname(targetPath), { recursive: true });
-  fs.cpSync(sourcePath, targetPath, { recursive: true });
-}
-
-resetDirectory(publicDir);
-
-for (const filePath of filesToCopy) {
-  copyEntry(filePath);
-}
-
-for (const directoryPath of directoriesToCopy) {
-  copyEntry(directoryPath);
-}
-
-for (const directoryPath of appDirectoriesToCopy) {
-  copyIfExists(directoryPath);
-}
-
-for (const filePath of appRedirectFilesToCopy) {
-  copyIfExists(filePath);
+  fs.copyFileSync(sourcePath, path.join(publicDir, filePath));
 }

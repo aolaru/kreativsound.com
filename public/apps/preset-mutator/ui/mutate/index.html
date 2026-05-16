@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Preset Mutator | Mutate Preset</title>
+    <meta name="theme-color" content="#0d1018" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <link rel="icon" type="image/svg+xml" href="../preset-mutator-mark.svg" />
+    <link rel="apple-touch-icon" href="../preset-mutator-mark.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRTJS1KZD9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-QRTJS1KZD9");
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="site-nav site-nav-split site-nav-home" aria-label="Primary">
+        <div class="nav-group nav-group-main">
+          <a class="nav-link" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer">Back to Kreativ Sound</a>
+        </div>
+        <a class="nav-brand nav-brand-wordmark" href="https://kreativsound.com/apps/preset-mutator/ui/mutate/" aria-label="Preset Mutator home">
+          <img class="nav-brand-mark-image" src="../preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
+          <span class="nav-brand-copy">
+            <strong>Preset Mutator</strong>
+          </span>
+        </a>
+        <div class="nav-group nav-group-utility">
+          <button class="nav-link share-button" id="share-button" type="button" aria-label="Share this page">
+            <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+            <span class="sr-only">Share this page</span>
+          </button>
+        </div>
+      </nav>
+
+      <section class="hero">
+        <h1>Turn one Vital preset into three new directions</h1>
+        <p class="lede">Load a preset you already like, bias the mutation, and export related Vital variations without losing the source identity.</p>
+        <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator source">
+          <a class="mode-tab" href="../">
+            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+            <span class="mode-copy">
+              <strong>Scratch</strong>
+              <small>Start from intent</small>
+            </span>
+          </a>
+          <button class="mode-tab is-active" type="button" aria-current="true">
+            <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+            <span class="mode-copy">
+              <strong>Preset</strong>
+              <small>Mutate one .vital file</small>
+            </span>
+          </button>
+          <a class="mode-tab" href="../audio/">
+            <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
+            <span class="mode-copy">
+              <strong>Audio</strong>
+              <small>Analyze one short sound</small>
+            </span>
+          </a>
+        </div>
+        <div class="mode-proof-grid" aria-label="Mutate Preset summary">
+          <div>
+            <span>Current source</span>
+            <strong>One .vital preset</strong>
+          </div>
+          <div>
+            <span>Free</span>
+            <strong>3 variations</strong>
+          </div>
+          <div>
+            <span>Pro output</span>
+            <strong>32 variations + ZIP</strong>
+          </div>
+        </div>
+        <div class="local-trust-strip" aria-label="Preset Mutator privacy promises">
+          <span>Runs locally in your browser</span>
+          <span>No AI generation</span>
+          <span>No uploads or stored presets</span>
+        </div>
+      </section>
+
+      <section class="panel upload-panel">
+        <div class="section-head">
+          <div>
+            <h2>Input Preset</h2>
+            <p class="muted">Use one `.vital` preset file. Free creates 3 related directions. Preset Mutator Pro creates a 32-preset mutation pack and ZIP download.</p>
+            <p class="input-note">Vital only for now. Serum 2 and Pigments 7 are planned future targets.</p>
+          </div>
+        </div>
+        <p class="upload-message" id="upload-message" hidden></p>
+
+        <section class="preset-drop-zone drop-zone" id="preset-drop-zone">
+          <div class="preset-drop-inner">
+            <div class="preset-drop-cta" id="preset-drop-cta">
+              <label class="upload">
+                <span>Choose .vital preset</span>
+                <input id="file-input" type="file" accept=".vital,application/json" />
+              </label>
+              <p class="drop-note">Drag and drop a `.vital` preset here.</p>
+            </div>
+            <div class="preset-summary" id="preset-summary">
+              <div>
+                <span class="meta-label">Preset</span>
+                <strong id="preset-name">No preset loaded</strong>
+              </div>
+              <div>
+                <span class="meta-label">Author</span>
+                <strong id="preset-author">-</strong>
+              </div>
+              <div>
+                <span class="meta-label">Sample</span>
+                <strong id="preset-sample">-</strong>
+              </div>
+              <div>
+                <span class="meta-label">Modulations</span>
+                <strong id="preset-modulations">-</strong>
+              </div>
+              <div>
+                <span class="meta-label">Wavetables</span>
+                <strong id="preset-wavetables">-</strong>
+              </div>
+              <div>
+                <span class="meta-label">File</span>
+                <strong id="preset-file">No file loaded</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel trust-panel">
+        <div class="section-head">
+          <h2>Privacy and Processing</h2>
+          <p class="muted">Everything stays local to your browser.</p>
+        </div>
+        <div class="trust-grid">
+          <div class="trust-item">
+            <span class="meta-label">Local Only</span>
+            <p>Your preset file stays in your browser.</p>
+          </div>
+          <div class="trust-item">
+            <span class="meta-label">No AI</span>
+            <p>No preset data is sent to AI models.</p>
+          </div>
+          <div class="trust-item">
+            <span class="meta-label">No Account</span>
+            <p>No signup is needed for the free version.</p>
+          </div>
+          <div class="trust-item">
+            <span class="meta-label">Royalty-Free</span>
+            <p>Use generated presets in your own productions.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <section class="panel controls-panel">
+          <div class="section-head">
+            <h2>Mutation Controls</h2>
+            <p class="muted">Bias the direction without destroying the source preset’s identity.</p>
+          </div>
+
+          <div class="control-grid">
+            <label class="control">
+              <span>Mutation Amount</span>
+              <output id="amount-value">Medium</output>
+              <input id="amount-range" type="range" min="0" max="100" step="1" value="45" />
+            </label>
+
+            <label class="control">
+              <span>Darker / Brighter</span>
+              <output id="brightness-value">0%</output>
+              <input id="brightness-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+
+            <label class="control">
+              <span>Steadier / More Motion</span>
+              <output id="motion-value">0%</output>
+              <input id="motion-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+
+            <label class="control">
+              <span>Cleaner / Dirtier</span>
+              <output id="dirt-value">0%</output>
+              <input id="dirt-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+          </div>
+
+          <div class="actions">
+            <button id="generate-button" type="button" disabled>
+              <span class="button-spinner" aria-hidden="true"></span>
+              <span class="button-label">Generate 3 Free Variations</span>
+            </button>
+          </div>
+
+          <div class="status" id="status">Load one Vital preset to generate 3 new directions.</div>
+          <p class="upgrade-hint">Preset Mutator Pro unlocks a 32-preset mutation pack, ZIP export, and future format updates.</p>
+        </section>
+
+        <section class="panel insight-panel">
+          <div class="section-head">
+            <h2>Tips for better results</h2>
+            <p class="muted">Preset mutation works best when the source already has a clear identity.</p>
+          </div>
+          <ul class="insights">
+            <li>Start with a preset you already like.</li>
+            <li>Use small bias moves before pushing the amount wide.</li>
+            <li>Treat the three results as directions, not final answers.</li>
+          </ul>
+        </section>
+      </section>
+
+      <section class="analysis-grid">
+        <section class="panel analysis-panel">
+          <div class="section-head">
+            <h2>Source Snapshot</h2>
+            <p class="muted">High-level preset details read from the uploaded file.</p>
+          </div>
+          <div class="metric-grid" id="source-metrics">
+            <p class="empty-state">Load a preset to inspect its current Vital structure.</p>
+          </div>
+        </section>
+
+        <section class="panel analysis-panel">
+          <div class="section-head">
+            <h2>Mutation Strategy</h2>
+            <p class="muted">The controls bias which Vital zones get pushed harder.</p>
+          </div>
+          <div class="metric-grid" id="strategy-metrics">
+            <p class="empty-state">Controls will summarize here once a preset is loaded.</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel presets-panel" id="presets-panel">
+        <div class="section-head">
+          <h2>Generated Preset Variants</h2>
+          <p class="muted">Each export is a real `.vital` preset built from your uploaded source file.</p>
+        </div>
+        <div class="preset-list" id="preset-list">
+          <p class="empty-state">Choose one `.vital` preset, then click <strong>Generate 3 Free Variations</strong>. Use Pro when you want a full 32-variation pack from the same source.</p>
+        </div>
+      </section>
+
+      <section class="panel suite-panel" id="suite-panel" aria-labelledby="suite-title">
+        <div class="suite-copy">
+          <p class="suite-kicker">Preset Mutator Pro</p>
+          <h2 id="suite-title">Unlock the full Preset Mutator workflow</h2>
+          <p class="suite-price">Launch price: $19</p>
+          <p class="suite-ownership">Pay once. Unlock Pro on this browser with your purchase code.</p>
+          <ul class="suite-list">
+            <li>3 free Vital preset variations</li>
+            <li>32-preset mutation pack</li>
+            <li>ZIP export for Pro packs</li>
+          </ul>
+        </div>
+        <div class="suite-actions" id="suite-actions">
+          <a class="button primary" href="https://kreativ.gumroad.com/l/preset-mutator-pro" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            Buy on Gumroad
+          </a>
+          <a class="button secondary" href="https://www.paypal.com/ncp/payment/RUGQ6S3NW7HE4" target="_blank" rel="noopener noreferrer">
+            <i class="fa-brands fa-paypal" aria-hidden="true"></i>
+            Pay with PayPal
+          </a>
+          <button class="button secondary suite-toggle" id="suite-toggle" type="button" aria-expanded="false" aria-controls="suite-unlock">
+            <i class="fa-solid fa-key" aria-hidden="true"></i>
+            Enter purchase code
+          </button>
+          <p class="suite-meta">One-time purchase. Gumroad is the default checkout; PayPal is available if you prefer it. Enter your purchase code after checkout.</p>
+        </div>
+        <div class="suite-unlock" id="suite-unlock" hidden>
+          <label class="sr-only" for="suite-key">Preset Mutator Pro purchase code</label>
+          <input id="suite-key" type="text" placeholder="Enter your Preset Mutator Pro purchase code" autocomplete="off" />
+          <button class="button secondary suite-unlock-button" id="suite-unlock-button" type="button">Unlock Pro</button>
+          <p class="suite-unlock-note" id="suite-unlock-note">After purchase, enter your code to unlock Pro generation on this browser. No account is required.</p>
+        </div>
+        <div class="suite-active" id="suite-active" hidden>
+          <p class="suite-active-badge">Preset Mutator Pro active</p>
+          <p class="suite-active-note">This browser is unlocked for 32-preset mutation packs and ZIP export.</p>
+          <div class="suite-active-actions">
+            <button class="button primary" id="generate-pack" type="button" disabled>
+              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+              Generate 32-Preset Pack
+            </button>
+            <button class="button secondary" id="download-pack" type="button" disabled>
+              <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
+              Download 32-Pack (.zip)
+            </button>
+          </div>
+          <p class="suite-active-meta">Builds 32 `.vital` files from the same source preset and downloads them as one ZIP.</p>
+        </div>
+      </section>
+
+      <footer class="app-footer">
+        <p>Kreativ Sound experimental tool surface for preset-driven mutation.</p>
+        <p class="app-version">Preset Mutator v0.3 mutate beta</p>
+      </footer>
+    </main>
+
+    <script src="./app.js" type="module"></script>
+    <script src="/share.js"></script>
+  </body>
+</html>

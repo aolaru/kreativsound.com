@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("/fonts/space-grotesk-latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #0d1018;
   --bg-alt: #131722;
@@ -429,26 +437,19 @@ a:focus-visible,
   transform: none;
 }
 
+.theme-toggle::before {
+  content: "Dark";
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.theme-toggle[data-icon="sun"]::before {
+  content: "Light";
+}
+
 .theme-icon {
-  width: 1rem;
-  height: 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.95rem;
-}
-
-.theme-icon-sun,
-.theme-icon-moon {
   display: none;
-}
-
-.theme-toggle[data-icon="sun"] .theme-icon-sun {
-  display: block;
-}
-
-.theme-toggle[data-icon="moon"] .theme-icon-moon {
-  display: block;
 }
 
 .logo-mark {
@@ -810,7 +811,7 @@ a:focus-visible,
   box-shadow: 0 22px 42px rgba(0, 0, 0, 0.24);
 }
 
-.featured-content h3 {
+.featured-content h2 {
   font-size: 1.28rem;
   line-height: 1.14;
   margin-bottom: 0.38rem;

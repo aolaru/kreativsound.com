@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-THUMB_DIR="assets/thumbs"
+THUMB_DIR="public/assets/thumbs"
 MAX_BYTES="${1:-250000}"
 MIN_EDGE="${2:-128}"
 STATUS=0
@@ -27,7 +27,7 @@ get_dimensions() {
   return 1
 }
 
-for image in "${THUMB_DIR}"/*.jpg; do
+for image in "${THUMB_DIR}"/*.{jpg,jpeg,png,webp}; do
   [ -e "${image}" ] || continue
   if ! dimensions="$(get_dimensions "${image}")"; then
     echo "Unable to inspect thumbnail: ${image}" >&2

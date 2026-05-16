@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="180" viewBox="0 0 720 180" role="img" aria-label="Kreativ Sound product badge">
+  <defs>
+    <linearGradient id="badge-bg" x1="0" y1="0" x2="720" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0d1018" stop-opacity="0.94" />
+      <stop offset="0.58" stop-color="#17101a" stop-opacity="0.9" />
+      <stop offset="1" stop-color="#2a1013" stop-opacity="0.84" />
+    </linearGradient>
+    <linearGradient id="badge-red" x1="34" y1="28" x2="126" y2="136" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#990000" />
+      <stop offset="0.48" stop-color="#c91818" />
+      <stop offset="1" stop-color="#e05b5b" />
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="708" height="168" rx="36" fill="url(#badge-bg)" stroke="#563035" stroke-opacity="0.75" stroke-width="2" />
+  <rect x="34" y="32" width="116" height="116" rx="30" fill="#090b12" stroke="#563035" stroke-opacity="0.72" />
+  <path fill="url(#badge-red)" d="M60 52h20v34l31-34h24l-37 40 39 42h-25L80 100v34H60z" />
+  <g font-family="Space Grotesk, Arial, sans-serif" font-weight="700">
+    <text x="180" y="78" fill="#f7ecec" font-size="42" letter-spacing="2">KREATIV SOUND</text>
+    <text x="182" y="118" fill="#f4b4b4" font-size="18" letter-spacing="5">ATMOSPHERIC AUDIO TOOLS AND PRESETS</text>
+  </g>
+  <path d="M182 136h438" stroke="#e05b5b" stroke-opacity="0.28" />
+</svg>

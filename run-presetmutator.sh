@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-APP_DIR="${ROOT_DIR}/apps/presetmutator"
+APP_DIR="${ROOT_DIR}/public/apps/preset-mutator/ui"
 HOST="${PRESETMUTATOR_HOST:-127.0.0.1}"
 PORT="${PRESETMUTATOR_PORT:-4185}"
 
@@ -12,5 +12,4 @@ if [[ ! -d "${APP_DIR}" ]]; then
 fi
 
 echo "PresetMutator UI running at http://${HOST}:${PORT}"
-cd "${APP_DIR}"
-PYTHONPATH="${APP_DIR}/src" exec python3 -m preset_mutator serve-ui --host "${HOST}" --port "${PORT}"
+exec python3 -m http.server "${PORT}" --bind "${HOST}" --directory "${APP_DIR}"

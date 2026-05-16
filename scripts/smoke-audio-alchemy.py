@@ -10,6 +10,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+DIST = ROOT / "dist"
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
@@ -67,7 +68,11 @@ def main() -> int:
         print("Chrome/Chromium is required for smoke-audio-alchemy.py.")
         return 1
 
-    handler = partial(QuietHandler, directory=str(ROOT))
+    if not DIST.exists():
+        print("dist/ is required for smoke-audio-alchemy.py. Run npm run build first.")
+        return 1
+
+    handler = partial(QuietHandler, directory=str(DIST))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -78,16 +83,13 @@ def main() -> int:
         dom = dump_dom(chrome, base_url + "/apps/preset-mutator/ui/?self_test=1")
         for needle in [
             "Preset Mutator",
-            "Audio to Preset",
-            "Mutate Preset",
-            "Live beta",
             "From Scratch",
-            "Self-test mode generated synthetic demo presets.",
+            "Create a Vital preset from intent",
+            "Preset Intent",
+            "Generate 3 Free Presets",
             "Generated Preset Variants",
-            "Download Preset",
-            "Closest",
-            "Brighter",
-            "3 guided Vital presets ready. Download the ones that feel closest to your track.",
+            "Preset Mutator Pro",
+            "Download 32-Pack",
         ]:
             require(dom, needle, "/apps/preset-mutator/ui/?self_test=1", errors)
 
@@ -95,8 +97,9 @@ def main() -> int:
         for needle in [
             "Preset Mutator",
             "Turn one Vital preset into three new directions",
-            "Audio to Preset",
-            "Mutate Preset",
+            "Scratch",
+            "Preset",
+            "Audio",
             "Generate 3 Free Variations",
             "Mutation Controls",
             "Preset Mutator Pro",
@@ -108,9 +111,10 @@ def main() -> int:
         for needle in [
             "Preset Mutator",
             "Create a Vital preset from intent",
-            "Audio to Preset",
-            "Mutate Preset",
             "From Scratch",
+            "Scratch",
+            "Preset",
+            "Audio",
             "Preset Intent",
             "Generate 3 Free Presets",
             "Preset Mutator Pro",

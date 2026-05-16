@@ -5,6 +5,7 @@ PORT="${1:-4173}"
 URL="http://127.0.0.1:${PORT}/"
 REPORT_DIR="reports/lighthouse"
 LOG_FILE="/tmp/kreativsound-http.log"
+DIST_DIR="dist"
 
 if ! command -v python3 >/dev/null 2>&1; then
   echo "python3 is required to run a local server."
@@ -17,7 +18,12 @@ if ! command -v npx >/dev/null 2>&1; then
 fi
 
 mkdir -p "${REPORT_DIR}"
-python3 -m http.server "${PORT}" --bind 127.0.0.1 >"${LOG_FILE}" 2>&1 &
+if [ ! -d "${DIST_DIR}" ]; then
+  echo "dist/ is required. Run npm run build first."
+  exit 1
+fi
+
+python3 -m http.server "${PORT}" --bind 127.0.0.1 --directory "${DIST_DIR}" >"${LOG_FILE}" 2>&1 &
 SERVER_PID=$!
 
 cleanup() {

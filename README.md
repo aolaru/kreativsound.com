@@ -6,8 +6,8 @@ Official static website for [kreativsound.com](https://kreativsound.com).
 
 - Astro (`src/`, `dist/`)
 - Shared CSS (`style.css`)
-- Lightweight client scripts (`site.js`, `share.js`)
-- Static assets (`assets/`, `apps/`, SVG files)
+- Lightweight client scripts (`public/site.js`, `public/share.js`)
+- Static assets and browser apps (`public/assets/`, `public/apps/`, SVG files)
 
 ## Local Preview
 
@@ -35,7 +35,7 @@ npm run preview
 
 The public browser app lives under:
 
-- `apps/preset-mutator`
+- `public/apps/preset-mutator`
 
 ```text
 http://127.0.0.1:4321/apps/preset-mutator/ui/
@@ -43,9 +43,9 @@ http://127.0.0.1:4321/apps/preset-mutator/ui/
 
 Notes:
 
-- `apps/preset-mutator/ui/` is the current public app.
-- `apps/audio-alchemy/ui/` is a legacy redirect to Audio to Preset.
-- `apps/presetmutator/` is retired and only kept as a redirect path.
+- `public/apps/preset-mutator/ui/` is the current public app.
+- `public/apps/audio-alchemy/ui/` is a legacy redirect to Audio to Preset.
+- `public/apps/presetmutator/` is retired and only kept as a redirect path.
 
 ## Editing Product Catalog
 
@@ -53,6 +53,7 @@ Product data is maintained in:
 
 - `src/lib/products.ts`
 - `src/lib/product-pages.ts`
+- `src/lib/product-content.ts`
 
 Catalog cards, featured product presentation, and product detail content all flow from those files.
 
@@ -83,14 +84,14 @@ That keeps `Music` and `News` aligned instead of drifting apart.
 
 Optimized local thumbnails are stored in:
 
-- `assets/thumbs/`
+- `public/assets/thumbs/`
 
 Using local files keeps page loads faster and avoids external image latency.
 
 Generate a new square thumbnail from a source image with:
 
 ```bash
-bash scripts/generate-thumbnail.sh path/to/source-image.png assets/thumbs/product-name.jpg
+bash scripts/generate-thumbnail.sh path/to/source-image.png public/assets/thumbs/product-name.jpg
 ```
 
 ## Deploy / Publish
@@ -119,9 +120,10 @@ bash scripts/lighthouse-check.sh
 ```
 
 - Run full release gate (thumbnails + Lighthouse + thresholds):
- - Run product asset validation:
+- Run product asset validation:
 
 ```bash
+npm run check:products
 python3 scripts/check-product-assets.py
 ```
 

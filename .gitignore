@@ -5,4 +5,4 @@ reports/lighthouse/
 node_modules/
 dist/
 .astro/
-public/
+public/sitemap.xml

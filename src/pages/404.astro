@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="Page Not Found | Kreativ Sound"
+  description="The page you are looking for does not exist."
+  canonical="https://kreativsound.com/404.html"
+  robots="noindex,follow"
+  activeNav=""
+>
+  <section class="card page-main" aria-labelledby="not-found-title">
+    <h1 class="page-title" id="not-found-title">Page Not Found</h1>
+    <p class="page-lead">The link may be outdated, moved, or mistyped.</p>
+    <p>
+      <a class="button primary" href="/">
+        <i class="fa-solid fa-house" aria-hidden="true"></i>
+        Return Home
+      </a>
+    </p>
+  </section>
+</BaseLayout>

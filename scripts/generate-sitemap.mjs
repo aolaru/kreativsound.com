@@ -67,35 +67,41 @@ function routeFromFile(filePath) {
   return `/${relative}`;
 }
 
-function sourcePathForRoute(route) {
+function sourcePathsForRoute(route) {
   if (route === "/") {
-    return "src/pages/index.astro";
+    return ["src/pages/index.astro"];
   }
   if (route.startsWith("/posts/") && route.endsWith(".html")) {
     const slug = route.slice("/posts/".length, -".html".length);
-    return `src/content/posts/${slug}.md`;
+    return [`src/content/posts/${slug}.md`];
   }
   if (route.startsWith("/products/")) {
-    return "src/lib/product-pages.ts";
+    return ["src/lib/products.ts", "src/lib/product-pages.ts", "src/lib/product-content.ts"];
   }
   if (route.endsWith("/")) {
-    return `src/pages/${route.slice(1)}index.astro`;
+    return [`src/pages/${route.slice(1)}index.astro`];
   }
-  return route.slice(1);
+  return [route.slice(1)];
 }
 
 function lastmodForRoute(route) {
-  const sourcePath = sourcePathForRoute(route);
-  const absoluteSource = path.join(rootDir, sourcePath);
-  if (!fs.existsSync(absoluteSource)) {
+  const sourcePaths = sourcePathsForRoute(route);
+  const existingSourcePaths = sourcePaths.filter((sourcePath) => fs.existsSync(path.join(rootDir, sourcePath)));
+  if (!existingSourcePaths.length) {
     return today();
   }
 
-  if (runGit(["status", "--porcelain", "--", sourcePath])) {
-    return today();
+  for (const sourcePath of existingSourcePaths) {
+    if (runGit(["status", "--porcelain", "--", sourcePath])) {
+      return today();
+    }
   }
 
-  return runGit(["log", "-1", "--format=%cs", "--", sourcePath]) || today();
+  return existingSourcePaths
+    .map((sourcePath) => runGit(["log", "-1", "--format=%cs", "--", sourcePath]))
+    .filter(Boolean)
+    .sort()
+    .at(-1) || today();
 }
 
 function priorityForRoute(route) {
