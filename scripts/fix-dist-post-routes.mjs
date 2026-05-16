@@ -27,3 +27,4 @@ function flattenHtmlRouteDirs(parentDir) {
 
 flattenHtmlRouteDirs(path.join(distDir, "posts"));
 flattenHtmlRouteDirs(path.join(distDir, "products"));
+flattenHtmlRouteDirs(path.join(distDir, "sounds"));

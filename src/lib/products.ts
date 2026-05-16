@@ -48,8 +48,8 @@ export const products: Product[] = [
       label: "Open Free",
       url: "/apps/preset-mutator/ui/"
     },
-    thumbnail: "/assets/thumbs/preset-mutator.svg",
-    coverImage: "/assets/thumbs/preset-mutator.svg",
+    thumbnail: "/assets/thumbs/preset-mutator.webp",
+    coverImage: "/assets/thumbs/preset-mutator.webp",
     format: "Browser tool",
     count: "Free + Pro",
     useCase: "Vital preset starts from scratch, preset mutation, and audio sources"
