@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Kreativ Kollection V1 cover</title>
+  <desc id="desc">A warm dark red and cream abstract cover for the Kreativ Sound flagship bundle.</desc>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="43%" r="68%">
+      <stop offset="0%" stop-color="#ffe7d6"/>
+      <stop offset="48%" stop-color="#8f1c19"/>
+      <stop offset="100%" stop-color="#16080a"/>
+    </radialGradient>
+    <linearGradient id="grain" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#fff4e9" stop-opacity="0.9"/>
+      <stop offset="36%" stop-color="#b93628" stop-opacity="0.74"/>
+      <stop offset="100%" stop-color="#23090b" stop-opacity="1"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="28" stdDeviation="34" flood-color="#140406" flood-opacity="0.36"/>
+    </filter>
+    <pattern id="linework" width="58" height="58" patternUnits="userSpaceOnUse">
+      <path d="M0 29H58M29 0V58" stroke="#fff1e7" stroke-opacity="0.07" stroke-width="1"/>
+      <circle cx="29" cy="29" r="2" fill="#fff1e7" fill-opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="1000" fill="#190809"/>
+  <rect width="1600" height="1000" fill="url(#glow)"/>
+  <rect width="1600" height="1000" fill="url(#linework)"/>
+  <g opacity="0.55">
+    <circle cx="260" cy="780" r="280" fill="#f2b07e" opacity="0.18"/>
+    <circle cx="1330" cy="190" r="260" fill="#fff0d8" opacity="0.16"/>
+    <path d="M-80 190C190 120 310 260 510 220C700 183 820 34 1050 100C1248 157 1360 322 1680 260V-80H-80Z" fill="#fff0dd" opacity="0.12"/>
+  </g>
+  <g filter="url(#softShadow)">
+    <rect x="184" y="140" width="1232" height="720" rx="54" fill="#fff4ec" opacity="0.94"/>
+    <rect x="214" y="170" width="1172" height="660" rx="38" fill="url(#grain)"/>
+    <path d="M214 665C394 610 548 632 706 688C896 768 1026 810 1386 682V830H214Z" fill="#16080a" opacity="0.62"/>
+    <path d="M214 238C470 314 686 302 858 240C1068 165 1202 175 1386 246V170H214Z" fill="#fff4ec" opacity="0.16"/>
+    <g fill="none" stroke="#fff4ec" stroke-opacity="0.28" stroke-width="2">
+      <path d="M372 680C512 582 676 568 812 636C965 712 1078 712 1228 624"/>
+      <path d="M326 360C498 456 680 458 834 370C986 282 1144 272 1306 358"/>
+      <path d="M446 756C596 678 720 688 858 744C1004 803 1136 782 1262 704"/>
+    </g>
+  </g>
+  <g font-family="'Space Grotesk', 'Arial', sans-serif" text-anchor="middle">
+    <text x="800" y="382" fill="#fff8f0" font-size="38" font-weight="700" letter-spacing="8">KREATIV SOUND</text>
+    <text x="800" y="498" fill="#fff8f0" font-size="104" font-weight="800" letter-spacing="-3">KOLLECTION</text>
+    <text x="800" y="590" fill="#fff8f0" font-size="92" font-weight="800" letter-spacing="10">V1</text>
+    <text x="800" y="678" fill="#ffe1d2" font-size="30" font-weight="650" letter-spacing="3">PRESETS / SAMPLES / LOOPS / TEXTURES</text>
+  </g>
+</svg>

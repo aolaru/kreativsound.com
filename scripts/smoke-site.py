@@ -96,9 +96,10 @@ def main() -> int:
             "/music/": ["Music", "Olaru", "Rethyn", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
-            "/products/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Product Description", "Product Specifications", "Requirements"],
-            "/products/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Product Description", "Product Specifications", "Requirements"],
-            "/products/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Product Description", "Product Specifications", "Requirements"],
+            "/products/kreativ-kollection-v1": ["Buy on Gumroad", "Kreativ Kollection V1", "Description", "What's Included", "Product Specifications", "Requirements"],
+            "/products/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Description", "Product Specifications", "Requirements"],
+            "/products/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Description", "Product Specifications", "Requirements"],
+            "/products/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Description", "Product Specifications", "Requirements"],
         }
 
         for route, needles in pages.items():
@@ -107,9 +108,11 @@ def main() -> int:
                 require(dom, needle, route, errors)
 
             if route == "/":
+                require(dom, 'href="/products/kreativ-kollection-v1"', route, errors)
                 require(dom, 'href="/products/velvet-ruins-vital-presets"', route, errors)
                 require(dom, 'href="/products/neolith-softube-models-presets"', route, errors)
                 require(dom, 'href="/products/bioforms-synplant-2-presets"', route, errors)
+                require(dom, "Flagship Bundle", route, errors)
                 require(dom, "Preset Packs", route, errors)
                 require(dom, "Free Packs", route, errors)
 

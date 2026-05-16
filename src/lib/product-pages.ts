@@ -1,6 +1,11 @@
 import { products, type Product, type ProductCategory } from "./products";
 import { landingCopyOverrides } from "./product-content";
 
+export type ProductIncludedGroup = {
+  title: string;
+  items: Array<{ name: string; detail: string; url?: string }>;
+};
+
 export type ProductPage = {
   slug: string;
   title: string;
@@ -15,7 +20,7 @@ export type ProductPage = {
   kicker: string;
   lead: string;
   summary: string;
-  variant: "flagship" | "standard" | "free" | "archive";
+  variant: "bundle" | "flagship" | "standard" | "free" | "archive";
   primaryUrl?: string;
   primaryLabel?: string;
   purchaseAltUrl?: string;
@@ -37,6 +42,9 @@ export type ProductPage = {
   specifications: Array<{ label: string; value: string }>;
   requirements: string[];
   longDescription: string[];
+  includedGroups: ProductIncludedGroup[];
+  finalCtaTitle?: string;
+  finalCtaText?: string;
   panels: Array<{ title: string; body?: string; items?: string[] }>;
   related: Array<{ label: string; url: string }>;
 };
@@ -46,6 +54,10 @@ type ProductPageOverride = Partial<Omit<ProductPage, "slug" | "title" | "canonic
 };
 
 const sharedRelatedByCategory: Record<ProductCategory, Array<{ label: string; url: string }>> = {
+  Bundle: [
+    { label: "Browse individual packs", url: "/sound/" },
+    { label: "Read workflow guides", url: "/learn/" }
+  ],
   Presets: [
     { label: "Browse workflow guides", url: "/learn/" },
     { label: "Back to the full sound catalog", url: "/" }
@@ -65,6 +77,13 @@ const sharedRelatedByCategory: Record<ProductCategory, Array<{ label: string; ur
 };
 
 const productOverrides: Record<string, ProductPageOverride> = {
+  "kreativ-kollection-v1": {
+    title: "Kreativ Kollection V1 — Complete Kreativ Sound Preset & Sample Bundle",
+    headline: "Kreativ Kollection V1",
+    description: "Kreativ Kollection V1 is the complete Kreativ Sound bundle, collecting presets, samples, loops, textures, and experimental sound design packs for ambient, cinematic, electronic, and dark production.",
+    kicker: "Flagship bundle",
+    primaryLabel: "Buy on Gumroad"
+  },
   "operators-fm8-presets": {
     headline: "OPERATORS",
     description: "OPERATORS is a 64-preset soundset for Native Instruments FM8, focused on atmospheric motion, digital textures, and frequency-driven synthesis.",
@@ -696,6 +715,8 @@ function productTitle(product: Product) {
 
 function categoryKicker(category: ProductCategory) {
   switch (category) {
+    case "Bundle":
+      return "Flagship bundle";
     case "Presets":
       return "Preset pack";
     case "Samples":
@@ -708,6 +729,9 @@ function categoryKicker(category: ProductCategory) {
 }
 
 function productVariant(slug: string, category: ProductCategory): ProductPage["variant"] {
+  if (category === "Bundle") {
+    return "bundle";
+  }
   if (
     slug === "black-arcology-pigments-presets" ||
     slug === "bioforms-synplant-2-presets" ||
@@ -727,6 +751,8 @@ function productVariant(slug: string, category: ProductCategory): ProductPage["v
 
 function defaultDescription(product: Product, name: string) {
   switch (product.category) {
+    case "Bundle":
+      return `${name} is a complete Kreativ Sound bundle built for ${product.useCase.toLowerCase()}.`;
     case "Presets":
       return `${name} is a preset release from Kreativ Sound built for ${product.useCase.toLowerCase()}.`;
     case "Samples":
@@ -744,6 +770,8 @@ function defaultLead(product: Product) {
 
 function defaultSummary(product: Product, name: string) {
   switch (product.category) {
+    case "Bundle":
+      return `${name} brings the current Kreativ Sound preset and sample catalog into one focused download.`;
     case "Presets":
       return `${name} is built for producers who want ${product.useCase.toLowerCase()} with a more direct preset workflow.`;
     case "Samples":
@@ -757,6 +785,8 @@ function defaultSummary(product: Product, name: string) {
 
 function defaultHeroNote(product: Product, name: string) {
   switch (product.category) {
+    case "Bundle":
+      return `${name} is the main entry point for producers who want the complete Kreativ Sound V1 sound-design palette in one place.`;
     case "Presets":
       return `${name} is built for musicians who want a faster preset starting point around ${product.useCase.toLowerCase()}.`;
     case "Samples":
@@ -786,7 +816,7 @@ function defaultShortMeta(product: Product) {
 
 function defaultSpecifications(product: Product, specs: ProductPage["specs"]) {
   return [
-    { label: "Product type", value: product.category === "Samples" ? "Sample collection" : product.category === "Free" ? "Free release" : product.category === "Legacy" ? "Legacy archive" : "Preset bank" },
+    { label: "Product type", value: product.category === "Bundle" ? "Complete sound bundle" : product.category === "Samples" ? "Sample collection" : product.category === "Free" ? "Free release" : product.category === "Legacy" ? "Legacy archive" : "Preset bank" },
     ...specs,
     { label: "Delivery", value: "Digital download" },
     { label: "Checkout", value: product.url ? "External checkout" : "See product notes" }
@@ -807,6 +837,13 @@ function defaultRequirements(product: Product, panels: ProductPage["panels"]) {
     return requirementPanel.items;
   }
 
+  if (product.category === "Bundle") {
+    return [
+      "Preset banks require the matching synth or plugin listed in the included product notes.",
+      "Audio samples, loops, drones, and textures can be used in any DAW or sampler that supports standard audio files."
+    ];
+  }
+
   if (product.category === "Presets") {
     return [
       `${product.format} support is required to use this release.`,
@@ -822,6 +859,47 @@ function defaultRequirements(product: Product, panels: ProductPage["panels"]) {
   }
 
   return ["See the product notes and linked checkout page for compatibility details."];
+}
+
+function includedGroupTitle(product: Product) {
+  if (product.category === "Samples") return "Samples / Audio Packs";
+  if (product.category === "Free") return "Free / Legacy";
+  if (product.category === "Legacy" && !product.format.toLowerCase().includes("preset")) return "Free / Legacy";
+  return "Preset Banks";
+}
+
+function includedItemDetail(product: Product) {
+  if (product.category === "Samples") return product.useCase.toLowerCase();
+  return product.format;
+}
+
+function buildIncludedGroups(includedProducts?: string[]): ProductIncludedGroup[] {
+  if (!includedProducts?.length) return [];
+
+  const productBySlug = new Map(
+    products
+      .filter((product) => product.detailsUrl)
+      .map((product) => [slugFromDetailsUrl(product.detailsUrl), product])
+  );
+  const groupMap = new Map<string, ProductIncludedGroup>();
+
+  for (const slug of includedProducts) {
+    const product = productBySlug.get(slug);
+    if (!product) continue;
+
+    const title = includedGroupTitle(product);
+    const group = groupMap.get(title) || { title, items: [] };
+    group.items.push({
+      name: productTitle(product),
+      detail: includedItemDetail(product),
+      url: product.detailsUrl
+    });
+    groupMap.set(title, group);
+  }
+
+  return ["Preset Banks", "Samples / Audio Packs", "Free / Legacy"]
+    .map((title) => groupMap.get(title))
+    .filter(Boolean) as ProductIncludedGroup[];
 }
 
 function defaultPanels(product: Product) {
@@ -875,6 +953,7 @@ export const productPages: ProductPage[] = products
       liteUrl: override.liteUrl,
       liteLabel: override.liteLabel,
       liteNote: override.liteNote,
+      shortMeta: override.shortMeta || defaultShortMeta(product),
       valueLine: override.valueLine,
       ctaLine: override.ctaLine,
       proofPoints: override.proofPoints,
@@ -886,6 +965,9 @@ export const productPages: ProductPage[] = products
       specifications: override.specifications || defaultSpecifications(product, override.specs || defaultSpecs(product)),
       requirements: override.requirements || defaultRequirements(product, override.panels || defaultPanels(product)),
       longDescription: override.longDescription || defaultLongDescription(product, override.description || defaultDescription(product, name), override.summary || defaultSummary(product, name), override.heroNote || defaultHeroNote(product, name)),
+      includedGroups: override.includedGroups || buildIncludedGroups(override.includedProducts),
+      finalCtaTitle: override.finalCtaTitle,
+      finalCtaText: override.finalCtaText,
       panels: override.panels || defaultPanels(product),
       related: override.related || sharedRelatedByCategory[product.category]
     };

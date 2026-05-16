@@ -1,4 +1,4 @@
-export type ProductCategory = "Presets" | "Samples" | "Free" | "Legacy";
+export type ProductCategory = "Bundle" | "Presets" | "Samples" | "Free" | "Legacy";
 
 export type ProductDemo = {
   label: string;
@@ -27,6 +27,18 @@ export type Product = {
 };
 
 export const products: Product[] = [
+  {
+    title: "Kreativ Kollection V1",
+    category: "Bundle",
+    url: "https://kreativ.gumroad.com/l/kreativ-kollection-v1",
+    detailsUrl: "/products/kreativ-kollection-v1",
+    badge: "Flagship",
+    thumbnail: "/assets/thumbs/kreativ-kollection-v1.svg",
+    coverImage: "/assets/thumbs/kreativ-kollection-v1.svg",
+    format: "Preset and sample bundle",
+    count: "V1 collection",
+    useCase: "Complete Kreativ Sound preset, sample, loop, and texture collection"
+  },
   {
     title: "OPERATORS - Atmos & Motion for Native Instruments FM8",
     category: "Presets",
@@ -283,9 +295,10 @@ export const products: Product[] = [
   }
 ];
 
-export const preferredCategoryOrder: ProductCategory[] = ["Presets", "Free", "Samples", "Legacy"];
+export const preferredCategoryOrder: ProductCategory[] = ["Bundle", "Presets", "Free", "Samples", "Legacy"];
 
 export const categoryLabels: Record<ProductCategory, string> = {
+  Bundle: "Flagship Bundle",
   Presets: "Preset Packs",
   Samples: "Sample Packs",
   Free: "Free Packs",
@@ -293,6 +306,7 @@ export const categoryLabels: Record<ProductCategory, string> = {
 };
 
 export const categoryIds: Record<ProductCategory, string> = {
+  Bundle: "catalog-bundle",
   Presets: "catalog-presets",
   Samples: "catalog-samples",
   Free: "catalog-free",

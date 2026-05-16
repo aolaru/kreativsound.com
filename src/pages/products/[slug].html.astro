@@ -11,7 +11,7 @@ export function getStaticPaths() {
 
 const { product } = Astro.props;
 const hasDemo = Boolean(product.demo?.src);
-const productName = product.title.replace(" | Kreativ Sound", "");
+const productName = product.headline;
 const purchaseActions = [
   product.primaryUrl && product.primaryLabel
     ? { url: product.primaryUrl, label: product.primaryLabel, icon: purchaseIcon(product.primaryUrl) }
@@ -23,6 +23,10 @@ const purchaseActions = [
 
 function purchaseIcon(url?: string) {
   return url?.includes("paypal.com") ? "fa-brands fa-paypal" : "fa-solid fa-bag-shopping";
+}
+
+function actionClass(index: number) {
+  return index === 0 ? "button primary" : "button secondary";
 }
 
 const productSchema = {
@@ -99,7 +103,7 @@ const breadcrumbSchema = {
       <p class="page-lead">{product.subtitle}</p>
 
       <figure class="product-landing-media">
-        <img class="product-landing-image" src={product.image} width="520" height="520" alt={product.imageAlt} />
+        <img class="product-landing-image" src={product.image} width="1040" alt={product.imageAlt} />
       </figure>
 
       {hasDemo ? (
@@ -114,8 +118,8 @@ const breadcrumbSchema = {
 
       {purchaseActions.length ? (
         <div class="product-landing-actions" aria-label="Purchase options">
-          {purchaseActions.map((action) => (
-            <a class={action.icon.includes("paypal") ? "button primary" : "button secondary"} href={action.url} target="_blank" rel="noopener noreferrer">
+          {purchaseActions.map((action, index) => (
+            <a class={actionClass(index)} href={action.url} target="_blank" rel="noopener noreferrer">
               <i class={action.icon} aria-hidden="true"></i>
               {action.label}
             </a>
@@ -128,9 +132,30 @@ const breadcrumbSchema = {
 
     {product.longDescription.length ? (
       <section class="product-landing-section product-description-section" aria-labelledby="product-description-title">
-        <h2 id="product-description-title">Product Description</h2>
+        <h2 id="product-description-title">Description</h2>
         <div class="product-long-description">
           {product.longDescription.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+      </section>
+    ) : null}
+
+    {product.includedGroups.length ? (
+      <section class="product-landing-section product-included-section" aria-labelledby="product-included-title">
+        <h2 id="product-included-title">What's Included</h2>
+        <div class="product-included-groups">
+          {product.includedGroups.map((group) => (
+            <section class="product-included-group" aria-label={group.title}>
+              <h3>{group.title}</h3>
+              <ul>
+                {group.items.map((item) => (
+                  <li>
+                    {item.url ? <a href={item.url}>{item.name}</a> : <strong>{item.name}</strong>}
+                    <span>{item.detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
         </div>
       </section>
     ) : null}
@@ -160,11 +185,11 @@ const breadcrumbSchema = {
 
     {purchaseActions.length ? (
       <section class="product-final-cta" aria-labelledby="product-final-cta-title">
-        <h2 id="product-final-cta-title">Ready to download {productName}?</h2>
-        <p>{product.ctaLine || product.heroNote}</p>
+        <h2 id="product-final-cta-title">{product.finalCtaTitle || `Ready to download ${productName}?`}</h2>
+        <p>{product.finalCtaText || product.ctaLine || product.heroNote}</p>
         <div class="product-landing-actions">
-          {purchaseActions.map((action) => (
-            <a class={action.icon.includes("paypal") ? "button primary" : "button secondary"} href={action.url} target="_blank" rel="noopener noreferrer">
+          {purchaseActions.map((action, index) => (
+            <a class={actionClass(index)} href={action.url} target="_blank" rel="noopener noreferrer">
               <i class={action.icon} aria-hidden="true"></i>
               {action.label}
             </a>

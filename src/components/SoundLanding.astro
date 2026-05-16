@@ -12,6 +12,12 @@ const isCurated = mode === "curated";
 
 const categoryOverview = [
   {
+    label: "Flagship Bundle",
+    route: "Best entry point",
+    href: "#catalog-bundle",
+    text: "The complete Kreativ Sound V1 collection in one focused download."
+  },
+  {
     label: "Preset Packs",
     route: "Start here for synth presets",
     href: "#catalog-presets",
@@ -46,13 +52,13 @@ const categoryOverview = [
     </p>
   </div>
   <div class="hero-actions">
-    <a class="button primary" data-track="hero_explore_click" href="#catalog-presets">
+    <a class="button primary" data-track="hero_explore_click" href="/products/kreativ-kollection-v1">
       <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-      Browse Preset Packs
+      Get Kreativ Kollection V1
     </a>
-    <a class="button secondary" data-track="hero_free_click" href="#catalog-free">
-      <i class="fa-solid fa-download" aria-hidden="true"></i>
-      Download Free Sounds
+    <a class="button secondary" data-track="hero_free_click" href="#catalog-presets">
+      <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+      Browse Individual Packs
     </a>
   </div>
 </header>
@@ -62,34 +68,34 @@ const categoryOverview = [
   <article class="featured-product" aria-label="Featured product">
     <img
       class="featured-thumb"
-      src="/assets/thumbs/operators-fm8-thumb.webp"
+      src="/assets/thumbs/kreativ-kollection-v1.svg"
       width="128"
       height="128"
-      alt="OPERATORS product artwork"
+      alt="Kreativ Kollection V1 product artwork"
       loading="eager"
       decoding="async"
       fetchpriority="high"
     />
     <div class="featured-content">
       <p class="featured-label">Featured</p>
-      <h2>OPERATORS - Atmos & Motion for Native Instruments FM8</h2>
-      <p>64 FM8 presets focused on atmospheric motion, digital texture, and frequency-driven synthesis.</p>
-      <p class="featured-supporting">Built for evolving pads, dark drones, metallic bells, synthetic basses, and experimental FM movement.</p>
+      <h2>Kreativ Kollection V1</h2>
+      <p>The complete Kreativ Sound preset and sample collection.</p>
+      <p class="featured-supporting">Presets, samples, loops, textures, and experimental sound design in one bundle.</p>
     </div>
     <div class="featured-actions">
-      <a class="button secondary" href="/products/operators-fm8-presets">
+      <a class="button secondary" href="/products/kreativ-kollection-v1">
         <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
         Details
       </a>
       <a
         class="button primary featured-cta"
         data-track="featured_product_click"
-        href="https://kreativ.gumroad.com/l/operators-fm8-sounds"
+        href="https://kreativ.gumroad.com/l/kreativ-kollection-v1"
         target="_blank"
         rel="noopener noreferrer"
       >
         <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-        Get Pack
+        Buy on Gumroad
       </a>
     </div>
   </article>
@@ -121,7 +127,7 @@ const categoryOverview = [
     </section>
   ) : null}
   <ProductCatalog
-    visibleCategories={isCurated ? ["Presets", "Free", "Samples"] : undefined}
+    visibleCategories={isCurated ? ["Bundle", "Presets", "Free", "Samples"] : undefined}
     showCategoryNav={isCurated}
   />
   <div class="catalog-overview" aria-label="Catalog overview">

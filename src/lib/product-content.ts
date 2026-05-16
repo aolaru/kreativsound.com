@@ -2,12 +2,62 @@ export type ProductLandingCopy = {
   subtitle: string;
   shortMeta: string;
   ctaLine?: string;
+  finalCtaTitle?: string;
+  finalCtaText?: string;
+  includedProducts?: string[];
   longDescription: string[];
   specifications: Array<{ label: string; value: string }>;
   requirements: string[];
 };
 
 export const landingCopyOverrides = {
+  "kreativ-kollection-v1": {
+    subtitle: "The complete Kreativ Sound preset and sample collection.",
+    shortMeta: "Presets • Samples • Loops • Textures • Instant download",
+    ctaLine: "One download. The first wave of Kreativ Sound presets, samples, textures, and sound-design material in a single bundle.",
+    finalCtaTitle: "Get the complete Kreativ Sound V1 collection.",
+    finalCtaText: "One download. The first wave of Kreativ Sound presets, samples, textures, and sound-design material in a single bundle.",
+    includedProducts: [
+      "bioforms-synplant-2-presets",
+      "velvet-ruins-vital-presets",
+      "black-arcology-pigments-presets",
+      "neolith-softube-models-presets",
+      "dirty-model-moog-model-d-presets",
+      "zephyr-animoog-z-presets",
+      "monolush-fabfilter-one-presets",
+      "abyss-pro-53-presets",
+      "operators-fm8-presets",
+      "horror-2-cinematic-textures",
+      "bleeps-2-percussion-sounds",
+      "sfxs-2-sound-effects",
+      "noize-2-noise-textures",
+      "enigma-2-cinematic-atmospheres",
+      "space-2-atmospheres-textures",
+      "tectonic-2-dark-subs-textures"
+    ],
+    longDescription: [
+      "Kreativ Kollection V1 brings together the first wave of Kreativ Sound products into one complete bundle — presets, samples, loops, drones, textures, and experimental sound design material for producers, composers, and creators.",
+      "Kreativ Kollection V1 is the first complete bundle from Kreativ Sound, collecting the core sound-design releases into one focused package.",
+      "It brings together preset banks, sample packs, loops, drones, textures, and experimental sound material designed for ambient, cinematic, electronic, industrial, and darker creative workflows.",
+      "Instead of buying individual packs one by one, Kreativ Kollection V1 gives you a single entry point into the Kreativ Sound universe — a compact but varied collection of playable presets, raw audio material, and atmospheric production tools.",
+      "The collection is built for creators who want mood, texture, movement, and usable sound design without bloated libraries or generic filler."
+    ],
+    specifications: [
+      { label: "Product type", value: "Complete sound bundle" },
+      { label: "Format", value: "Digital download" },
+      { label: "Includes", value: "Preset banks, samples, loops, textures, and sound design packs" },
+      { label: "Best for", value: "Ambient, cinematic, electronic, industrial, experimental, and darker production" },
+      { label: "Delivery", value: "Instant download" },
+      { label: "License", value: "Personal and commercial music production use" },
+      { label: "Updates", value: "V1 collection snapshot, with future versions released separately unless otherwise specified" },
+      { label: "Checkout", value: "Gumroad, with PayPal as optional alternative" }
+    ],
+    requirements: [
+      "Some included preset banks require specific synths or plugins such as Synplant 2, Vital, Arturia Pigments, Native Instruments FM8, Native Instruments PRO-53, FabFilter One, Moog Model D, Animoog Z, or Softube Synth Models.",
+      "Audio samples, loops, drones, and textures can be used in any DAW or sampler that supports standard audio files.",
+      "Please check the individual product notes inside the collection for exact plugin requirements."
+    ]
+  },
   "operators-fm8-presets": {
     subtitle: "64 FM8 Presets for Native Instruments FM8",
     shortMeta: "64 presets • 4 MB download • FM8 preset bank",
