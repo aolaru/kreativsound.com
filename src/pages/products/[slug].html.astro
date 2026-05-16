@@ -14,15 +14,20 @@ const hasDemo = Boolean(product.demo?.src);
 const productName = product.headline;
 const purchaseActions = [
   product.primaryUrl && product.primaryLabel
-    ? { url: product.primaryUrl, label: product.primaryLabel, icon: purchaseIcon(product.primaryUrl) }
+    ? { url: product.primaryUrl, label: product.primaryLabel, icon: purchaseIconClass(product.primaryUrl) }
     : null,
   product.purchaseAltUrl && product.purchaseAltLabel
-    ? { url: product.purchaseAltUrl, label: product.purchaseAltLabel, icon: purchaseIcon(product.purchaseAltUrl) }
+    ? { url: product.purchaseAltUrl, label: product.purchaseAltLabel, icon: purchaseIconClass(product.purchaseAltUrl) }
     : null
 ].filter(Boolean);
+const toolActions = product.slug === "preset-mutator" && product.secondaryUrl && product.secondaryLabel
+  ? [{ url: product.secondaryUrl, label: product.secondaryLabel, icon: "payment-icon payment-icon-app" }]
+  : [];
 
-function purchaseIcon(url?: string) {
-  return url?.includes("paypal.com") ? "fa-brands fa-paypal" : "fa-solid fa-bag-shopping";
+function purchaseIconClass(url?: string) {
+  if (url?.includes("paypal.com")) return "payment-icon payment-icon-paypal";
+  if (url?.includes("gumroad.com")) return "payment-icon payment-icon-gumroad";
+  return "payment-icon payment-icon-shop";
 }
 
 function actionClass(index: number) {
@@ -120,7 +125,13 @@ const breadcrumbSchema = {
         <div class="product-landing-actions" aria-label="Purchase options">
           {purchaseActions.map((action, index) => (
             <a class={actionClass(index)} href={action.url} target="_blank" rel="noopener noreferrer">
-              <i class={action.icon} aria-hidden="true"></i>
+              <span class={action.icon} aria-hidden="true"></span>
+              {action.label}
+            </a>
+          ))}
+          {toolActions.map((action) => (
+            <a class="button secondary" href={action.url}>
+              <span class={action.icon} aria-hidden="true"></span>
               {action.label}
             </a>
           ))}
@@ -191,7 +202,13 @@ const breadcrumbSchema = {
           <div class="product-landing-actions">
             {purchaseActions.map((action, index) => (
               <a class={actionClass(index)} href={action.url} target="_blank" rel="noopener noreferrer">
-                <i class={action.icon} aria-hidden="true"></i>
+                <span class={action.icon} aria-hidden="true"></span>
+                {action.label}
+              </a>
+            ))}
+            {toolActions.map((action) => (
+              <a class="button secondary" href={action.url}>
+                <span class={action.icon} aria-hidden="true"></span>
                 {action.label}
               </a>
             ))}

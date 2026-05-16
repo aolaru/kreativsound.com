@@ -32,8 +32,8 @@ export const products: Product[] = [
     category: "Bundle",
     detailsUrl: "/sounds/kreativ-kollection-v1",
     badge: "Coming soon",
-    thumbnail: "/assets/thumbs/kreativ-kollection-v1.svg",
-    coverImage: "/assets/thumbs/kreativ-kollection-v1.svg",
+    thumbnail: "/assets/thumbs/kreativ-kollection-v1.webp",
+    coverImage: "/assets/thumbs/kreativ-kollection-v1.webp",
     format: "Preset and sample bundle",
     count: "V1 collection",
     useCase: "Complete Kreativ Sound preset, sample, loop, and texture collection"

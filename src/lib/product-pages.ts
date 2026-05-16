@@ -97,7 +97,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     purchaseAltUrl: "https://www.paypal.com/ncp/payment/RUGQ6S3NW7HE4",
     purchaseAltLabel: "Pay with PayPal",
     secondaryUrl: "/apps/preset-mutator/ui/",
-    secondaryLabel: "Open free version",
+    secondaryLabel: "Open Preset Mutator",
     variant: "flagship"
   },
   "operators-fm8-presets": {
@@ -108,10 +108,10 @@ const productOverrides: Record<string, ProductPageOverride> = {
     summary: "Digital FM material for pads, drones, basses, bells, leads, plucks, sweeps, strings, and FX.",
     heroNote: "Requires Native Instruments FM8. Delivered as a small preset download with PayPal and Gumroad checkout options.",
     valueLine: "64 FM8 presets | 4 MB download | PayPal or Gumroad",
-    primaryUrl: "https://www.paypal.com/ncp/payment/TS44NMWAGW2DL",
-    primaryLabel: "Pay with PayPal",
-    purchaseAltUrl: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
-    purchaseAltLabel: "Buy on Gumroad",
+    primaryUrl: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
+    primaryLabel: "Buy on Gumroad",
+    purchaseAltUrl: "https://www.paypal.com/ncp/payment/TS44NMWAGW2DL",
+    purchaseAltLabel: "Pay with PayPal",
     proofPoints: [
       "Native Instruments FM8 preset bank.",
       "64 presets in a 4 MB download.",
