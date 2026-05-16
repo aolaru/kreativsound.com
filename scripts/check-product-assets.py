@@ -12,7 +12,7 @@ PRODUCTS_TS = ROOT / "src/lib/products.ts"
 
 
 def route_to_path(route: str) -> Path:
-    if route.startswith("/products/"):
+    if route.startswith(("/products/", "/sounds/")):
         return ROOT / "src/lib/product-pages.ts"
     if route == "/":
         return ROOT / "src/pages/index.astro"

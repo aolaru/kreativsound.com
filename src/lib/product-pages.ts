@@ -55,27 +55,27 @@ type ProductPageOverride = Partial<Omit<ProductPage, "slug" | "title" | "canonic
 
 const sharedRelatedByCategory: Record<ProductCategory, Array<{ label: string; url: string }>> = {
   Bundle: [
-    { label: "Browse individual packs", url: "/sound/" },
+    { label: "Browse individual packs", url: "/sounds/" },
     { label: "Read workflow guides", url: "/learn/" }
   ],
   Tools: [
     { label: "Open the tools page", url: "/tools/" },
-    { label: "Back to the full sound catalog", url: "/" }
+    { label: "Back to the full sound catalog", url: "/sounds/" }
   ],
   Presets: [
     { label: "Browse workflow guides", url: "/learn/" },
-    { label: "Back to the full sound catalog", url: "/" }
+    { label: "Back to the full sound catalog", url: "/sounds/" }
   ],
   Samples: [
     { label: "Browse workflow guides", url: "/learn/" },
-    { label: "Back to the full sound catalog", url: "/" }
+    { label: "Back to the full sound catalog", url: "/sounds/" }
   ],
   Free: [
     { label: "Browse workflow guides", url: "/learn/" },
-    { label: "Back to the full sound catalog", url: "/" }
+    { label: "Back to the full sound catalog", url: "/sounds/" }
   ],
   Legacy: [
-    { label: "Browse the full archive", url: "/" },
+    { label: "Browse the full archive", url: "/sounds/" },
     { label: "Read the latest news", url: "/news/" }
   ]
 };
@@ -157,7 +157,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     ],
     related: [
       { label: "Read the release note", url: "/posts/operators-fm8-release-2026-05-14.html" },
-      { label: "Back to the full sound catalog", url: "/" }
+      { label: "Back to the full sound catalog", url: "/sounds/" }
     ]
   },
   "bioforms-synplant-2-presets": {
@@ -240,7 +240,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     heroNote: "Shaped for musicians who want immediate mood, spectral movement, and darker melodic material without a polished preset-bank feel.",
     secondaryUrl: "/posts/velvet-ruins-release-2026-03-21.html",
     secondaryLabel: "Hear it in context",
-    liteUrl: "/products/velvet-ruins-lite-vital-presets",
+    liteUrl: "/sounds/velvet-ruins-lite-vital-presets",
     liteLabel: "Download Lite",
     liteNote: "Want to try the sound first? Start with the free Lite version, then come back for the full pack.",
     demoPlaceholder: "A dedicated audio demo is being prepared for VELVET RUINS. The free Lite version is the best way to test the sound palette right now.",
@@ -279,7 +279,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     primaryLabel: "Buy on Gumroad",
     purchaseAltUrl: "https://www.paypal.com/ncp/payment/MUN23XJLKABU8",
     purchaseAltLabel: "Pay with PayPal",
-    liteUrl: "/products/black-arcology-lite-pigments-presets",
+    liteUrl: "/sounds/black-arcology-lite-pigments-presets",
     liteLabel: "Download Lite",
     liteNote: "Try the free 32-preset Lite version first. Upgrade when you want the full 128-preset collection.",
     demoPlaceholder: "A dedicated audio demo is being prepared for BLACK ARCOLOGY. The free Lite version is the best way to test the Pigments sound palette right now.",
@@ -599,7 +599,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
         ]
       }
     ],
-    secondaryUrl: "/products/velvet-ruins-vital-presets",
+    secondaryUrl: "/sounds/velvet-ruins-vital-presets",
     secondaryLabel: "See the full pack"
   },
   "black-arcology-lite-pigments-presets": {
@@ -647,7 +647,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
         ]
       }
     ],
-    secondaryUrl: "/products/black-arcology-pigments-presets",
+    secondaryUrl: "/sounds/black-arcology-pigments-presets",
     secondaryLabel: "Upgrade to the full pack"
   },
   "abyss-pro-53-presets": {
@@ -725,7 +725,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
 };
 
 function slugFromDetailsUrl(url?: string) {
-  return url?.replace(/^\/products\//, "").replace(/\/$/, "") || "";
+  return url?.replace(/^\/(?:products|sounds)\//, "").replace(/\/$/, "") || "";
 }
 
 function productTitle(product: Product) {
@@ -970,7 +970,7 @@ export const productPages: ProductPage[] = products
       headline: override.headline || name,
       subtitle: override.subtitle || override.lead || defaultLead(product),
       description: override.description || defaultDescription(product, name),
-      canonical: `https://kreativsound.com/products/${slug}`,
+      canonical: `https://kreativsound.com/sounds/${slug}`,
       ogImage: `https://kreativsound.com${product.coverImage || product.thumbnail || "/logo-128.svg"}`,
       ogImageAlt: override.ogImageAlt || `${name} product cover`,
       image: product.coverImage || product.thumbnail || "/logo-128.svg",

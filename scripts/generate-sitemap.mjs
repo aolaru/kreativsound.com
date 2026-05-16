@@ -1,12 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-import { productRedirects } from "../src/lib/product-routes.ts";
 
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, "dist");
 const siteUrl = "https://kreativsound.com";
-const legacyProductRoutes = new Set(productRedirects.map(({ from }) => `/products/${from}/`));
 
 function runGit(args) {
   try {
@@ -59,9 +57,18 @@ function routeFromFile(filePath) {
   }
   if (relative.endsWith("/index.html")) {
     const route = `/${relative.replace(/\/index\.html$/, "/")}`;
-    return legacyProductRoutes.has(route) ? null : route;
+    if (route === "/sound/" || route.startsWith("/products/")) {
+      return null;
+    }
+    if (route.startsWith("/sounds/") && route !== "/sounds/") {
+      return route.replace(/\/$/, "");
+    }
+    return route;
   }
-  if (relative.startsWith("products/") && relative.endsWith(".html")) {
+  if (relative.startsWith("products/")) {
+    return null;
+  }
+  if (relative.startsWith("sounds/") && relative.endsWith(".html")) {
     return `/${relative.replace(/\.html$/, "")}`;
   }
   return `/${relative}`;
@@ -75,7 +82,7 @@ function sourcePathsForRoute(route) {
     const slug = route.slice("/posts/".length, -".html".length);
     return [`src/content/posts/${slug}.md`];
   }
-  if (route.startsWith("/products/")) {
+  if (route.startsWith("/sounds/")) {
     return ["src/lib/products.ts", "src/lib/product-pages.ts", "src/lib/product-content.ts"];
   }
   if (route.endsWith("/")) {
@@ -106,23 +113,23 @@ function lastmodForRoute(route) {
 
 function priorityForRoute(route) {
   if (route === "/") return "1.0";
-  if (route === "/sound/") return "0.9";
+  if (route === "/sounds/") return "0.9";
   if (route === "/news/" || route === "/learn/" || route === "/tools/") return "0.8";
   if (route.startsWith("/tools/")) return "0.8";
-  if (route.startsWith("/products/")) return "0.8";
+  if (route.startsWith("/sounds/")) return "0.8";
   if (route.startsWith("/posts/")) return "0.7";
   return "0.7";
 }
 
 function changefreqForRoute(route) {
-  if (route === "/" || route === "/sound/" || route === "/news/" || route === "/learn/" || route === "/tools/" || route.startsWith("/tools/")) {
+  if (route === "/" || route === "/sounds/" || route === "/news/" || route === "/learn/" || route === "/tools/" || route.startsWith("/tools/")) {
     return "weekly";
   }
   return "monthly";
 }
 
 function sortRoutes(a, b) {
-  const order = ["/", "/sound/", "/news/", "/learn/", "/tools/", "/music/", "/about/", "/contact/"];
+  const order = ["/", "/sounds/", "/news/", "/learn/", "/tools/", "/music/", "/about/", "/contact/"];
   const aIndex = order.indexOf(a);
   const bIndex = order.indexOf(b);
   if (aIndex !== -1 || bIndex !== -1) {

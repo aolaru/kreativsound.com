@@ -23,7 +23,7 @@ const flagshipProducts = flagshipSlugs
   .filter(Boolean) as Product[];
 
 function slugFromDetailsUrl(url?: string) {
-  return url?.replace(/^\/products\//, "").replace(/\/$/, "") || "";
+  return url?.replace(/^\/(?:products|sounds)\//, "").replace(/\/$/, "") || "";
 }
 
 function shortTitle(product: Product) {
@@ -58,7 +58,7 @@ function primaryActionLabel(product: Product) {
       <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
       Latest Product
     </a>
-    <a class="button secondary" href="/sound/">
+    <a class="button secondary" href="/sounds/">
       <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
       Full Catalog
     </a>
@@ -96,7 +96,7 @@ function primaryActionLabel(product: Product) {
         ) : null}
       </div>
     </div>
-    <a class="home-latest-art-link" href={latestProduct.detailsUrl || latestProduct.url || "/sound/"} aria-label={`View ${shortTitle(latestProduct)}`}>
+    <a class="home-latest-art-link" href={latestProduct.detailsUrl || latestProduct.url || "/sounds/"} aria-label={`View ${shortTitle(latestProduct)}`}>
       <img
         class="home-latest-art"
         src={productImage(latestProduct)}
@@ -120,7 +120,7 @@ function primaryActionLabel(product: Product) {
   <div class="home-flagship-grid">
     {flagshipProducts.map((product) => (
       <article class="home-flagship-card">
-        <a class="home-flagship-media" href={product.detailsUrl || product.url || "/sound/"} aria-label={`View ${shortTitle(product)}`}>
+        <a class="home-flagship-media" href={product.detailsUrl || product.url || "/sounds/"} aria-label={`View ${shortTitle(product)}`}>
           <img
             src={productImage(product)}
             width="420"
@@ -156,7 +156,7 @@ function primaryActionLabel(product: Product) {
     <h2>Browse the full sound catalog.</h2>
     <p>All presets, samples, free packs, legacy releases, and tools stay organized on the sound page.</p>
   </div>
-  <a class="button secondary" href="/sound/">
+  <a class="button secondary" href="/sounds/">
     <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
     Open Full Catalog
   </a>

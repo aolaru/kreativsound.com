@@ -9,7 +9,7 @@ published: "2026-04-30"
 featured: false
 draft: false
 ---
-<p>Kreativ Sound has released <a href="/products/black-arcology-pigments-presets">Black Arcology</a> and <a href="/products/black-arcology-lite-pigments-presets">Black Arcology Lite</a> for Arturia Pigments, introducing a darker preset line built around industrial drones, evolving keys, fractured FX, and cinematic machine tension.</p>
+<p>Kreativ Sound has released <a href="/sounds/black-arcology-pigments-presets">Black Arcology</a> and <a href="/sounds/black-arcology-lite-pigments-presets">Black Arcology Lite</a> for Arturia Pigments, introducing a darker preset line built around industrial drones, evolving keys, fractured FX, and cinematic machine tension.</p>
 
 <p><strong>Black Arcology</strong> is the full release, with 128 presets shaped for producers working in darker electronic, industrial, ambient, soundtrack, and experimental contexts. The collection focuses on usable movement, pressure, weight, and texture rather than generic preset-bank coverage.</p>
 

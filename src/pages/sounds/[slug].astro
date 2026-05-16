@@ -1,0 +1,6 @@
+---
+import ProductPage, { getStaticPaths } from "../products/[slug].html.astro";
+
+export { getStaticPaths };
+---
+<ProductPage {...Astro.props} />

@@ -96,10 +96,11 @@ def main() -> int:
             "/music/": ["Music", "Olaru", "Rethyn", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
-            "/products/kreativ-kollection-v1": ["Coming soon", "Kreativ Kollection V1", "Description", "What's Included", "Product Specifications", "Requirements"],
-            "/products/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Description", "Product Specifications", "Requirements"],
-            "/products/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Description", "Product Specifications", "Requirements"],
-            "/products/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Description", "Product Specifications", "Requirements"],
+            "/sounds/": ["Browse Sound", "Kreativ Kollection V1", "Creative Tools", "Preset Packs"],
+            "/sounds/kreativ-kollection-v1": ["Coming soon", "Kreativ Kollection V1", "Description", "What's Included", "Product Specifications", "Requirements"],
+            "/sounds/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Description", "Product Specifications", "Requirements"],
+            "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Description", "Product Specifications", "Requirements"],
+            "/sounds/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Description", "Product Specifications", "Requirements"],
         }
 
         for route, needles in pages.items():
@@ -108,12 +109,13 @@ def main() -> int:
                 require(dom, needle, route, errors)
 
             if route == "/":
-                require(dom, 'href="/products/operators-fm8-presets"', route, errors)
-                require(dom, 'href="/products/kreativ-kollection-v1"', route, errors)
-                require(dom, 'href="/products/velvet-ruins-vital-presets"', route, errors)
-                require(dom, 'href="/products/neolith-softube-models-presets"', route, errors)
-                require(dom, 'href="/products/bioforms-synplant-2-presets"', route, errors)
-                require(dom, 'href="/products/preset-mutator"', route, errors)
+                require(dom, 'href="/sounds/"', route, errors)
+                require(dom, 'href="/sounds/operators-fm8-presets"', route, errors)
+                require(dom, 'href="/sounds/kreativ-kollection-v1"', route, errors)
+                require(dom, 'href="/sounds/velvet-ruins-vital-presets"', route, errors)
+                require(dom, 'href="/sounds/neolith-softube-models-presets"', route, errors)
+                require(dom, 'href="/sounds/bioforms-synplant-2-presets"', route, errors)
+                require(dom, 'href="/sounds/preset-mutator"', route, errors)
                 require(dom, 'href="/apps/preset-mutator/ui/"', route, errors)
                 require(dom, "Flagship bundle", route, errors)
                 require(dom, "Creative tool", route, errors)

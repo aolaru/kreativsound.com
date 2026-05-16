@@ -4,7 +4,7 @@ import { productRedirects } from "../../../lib/product-routes";
 export function getStaticPaths() {
   return productRedirects.map(({ from, to }) => ({
     params: { legacySlug: from },
-    props: { target: `/products/${to}` }
+    props: { target: `/sounds/${to}` }
   }));
 }
 

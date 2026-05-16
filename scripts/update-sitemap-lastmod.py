@@ -38,7 +38,7 @@ def loc_to_path(loc: str) -> Path | None:
         slug = route.split("/posts/", 1)[1][:-5]
         return ROOT / "src/content/posts" / f"{slug}.md"
 
-    if route.startswith("/products/"):
+    if route.startswith(("/products/", "/sounds/")):
         return ROOT / "src/lib/product-pages.ts"
 
     if route == "/":

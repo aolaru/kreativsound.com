@@ -8,7 +8,7 @@ const rootDir = process.cwd();
 const publicDir = path.join(rootDir, "public");
 
 function slugFromDetailsUrl(url) {
-  return url?.replace(/^\/products\//, "").replace(/\/$/, "") || "";
+  return url?.replace(/^\/(?:products|sounds)\//, "").replace(/\/$/, "") || "";
 }
 
 function publicAssetExists(url) {
