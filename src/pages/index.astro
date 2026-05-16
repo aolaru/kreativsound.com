@@ -1,19 +1,15 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import SoundLanding from "../components/SoundLanding.astro";
+import HomeLanding from "../components/HomeLanding.astro";
 ---
 <BaseLayout
-  title="Kreativ Sound | Sounds"
-  description="Atmospheric sound packs and audio textures for filmmakers, designers, and creators. Crafted for focus, mood, and creative flow."
+  title="Kreativ Sound | Boutique Presets, Samples & Creative Tools"
+  description="Latest Kreativ Sound releases and flagship products for darker electronic, ambient, cinematic, and experimental production."
   canonical="https://kreativsound.com/"
   activeNav="sound"
   bodyClass="home-page"
-  skipLinkTarget="#catalog-title"
-  skipLinkLabel="Skip to product catalog"
+  skipLinkTarget="#latest-featured"
+  skipLinkLabel="Skip to latest product"
 >
-  <SoundLanding
-    mode="curated"
-    intro=""
-    showGuide={false}
-  />
+  <HomeLanding />
 </BaseLayout>

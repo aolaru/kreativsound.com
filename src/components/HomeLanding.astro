@@ -1,0 +1,163 @@
+---
+import { products, type Product } from "../lib/products";
+
+const latestProduct = products.find((product) => product.badge?.toLowerCase() === "new") || products.find((product) => product.category === "Presets") || products[0];
+
+const flagshipSlugs = [
+  "kreativ-kollection-v1",
+  "preset-mutator",
+  "black-arcology-pigments-presets",
+  "velvet-ruins-vital-presets",
+  "neolith-softube-models-presets",
+  "bioforms-synplant-2-presets"
+];
+
+const productsBySlug = new Map(
+  products
+    .filter((product) => product.detailsUrl)
+    .map((product) => [slugFromDetailsUrl(product.detailsUrl), product])
+);
+
+const flagshipProducts = flagshipSlugs
+  .map((slug) => productsBySlug.get(slug))
+  .filter(Boolean) as Product[];
+
+function slugFromDetailsUrl(url?: string) {
+  return url?.replace(/^\/products\//, "").replace(/\/$/, "") || "";
+}
+
+function shortTitle(product: Product) {
+  return product.title.split(" - ")[0];
+}
+
+function productImage(product: Product) {
+  return product.coverImage || product.thumbnail || "/logo-128.svg";
+}
+
+function productKicker(product: Product) {
+  if (product.category === "Bundle") return "Flagship bundle";
+  if (product.category === "Tools") return "Creative tool";
+  if (product.badge?.toLowerCase() === "new") return "Latest release";
+  return product.category === "Presets" ? "Flagship preset bank" : product.category;
+}
+
+function primaryActionLabel(product: Product) {
+  if (!product.url) return product.badge?.toLowerCase().includes("coming") ? "Coming Soon" : "Details";
+  if (product.category === "Tools") return "Get Tool";
+  return "Buy on Gumroad";
+}
+---
+<header class="home-hero" aria-labelledby="home-title">
+  <p class="eyebrow">Kreativ Sound</p>
+  <h1 id="home-title">Boutique sounds for darker electronic and cinematic work.</h1>
+  <p class="tagline">
+    Focused preset banks, sample packs, and creative tools built around atmosphere, movement, texture, and usable sound design.
+  </p>
+  <div class="hero-actions">
+    <a class="button primary" href="#latest-featured">
+      <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
+      Latest Product
+    </a>
+    <a class="button secondary" href="/sound/">
+      <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+      Full Catalog
+    </a>
+  </div>
+</header>
+
+{latestProduct ? (
+  <section class="home-latest card" id="latest-featured" aria-labelledby="latest-title">
+    <div class="home-latest-copy">
+      <p class="featured-label">{productKicker(latestProduct)}</p>
+      <h2 id="latest-title">{shortTitle(latestProduct)}</h2>
+      <p>{latestProduct.useCase}</p>
+      <dl class="home-product-meta">
+        <div>
+          <dt>Format</dt>
+          <dd>{latestProduct.format}</dd>
+        </div>
+        <div>
+          <dt>Included</dt>
+          <dd>{latestProduct.count}</dd>
+        </div>
+      </dl>
+      <div class="home-product-actions">
+        {latestProduct.detailsUrl ? (
+          <a class="button secondary" href={latestProduct.detailsUrl}>
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            View Product
+          </a>
+        ) : null}
+        {latestProduct.url ? (
+          <a class="button primary" href={latestProduct.url} target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            {primaryActionLabel(latestProduct)}
+          </a>
+        ) : null}
+      </div>
+    </div>
+    <a class="home-latest-art-link" href={latestProduct.detailsUrl || latestProduct.url || "/sound/"} aria-label={`View ${shortTitle(latestProduct)}`}>
+      <img
+        class="home-latest-art"
+        src={productImage(latestProduct)}
+        width="720"
+        height="450"
+        alt={`${shortTitle(latestProduct)} product artwork`}
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </a>
+  </section>
+) : null}
+
+<section class="home-flagships" aria-labelledby="flagships-title">
+  <div class="home-section-head">
+    <p class="featured-label">Flagships</p>
+    <h2 id="flagships-title">The main Kreativ Sound entry points.</h2>
+    <p>Start with the complete collection, the browser tool, or the core preset banks that define the current catalog.</p>
+  </div>
+  <div class="home-flagship-grid">
+    {flagshipProducts.map((product) => (
+      <article class="home-flagship-card">
+        <a class="home-flagship-media" href={product.detailsUrl || product.url || "/sound/"} aria-label={`View ${shortTitle(product)}`}>
+          <img
+            src={productImage(product)}
+            width="420"
+            height="262"
+            alt={`${shortTitle(product)} product artwork`}
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+        <div class="home-flagship-copy">
+          <p class="featured-label">{productKicker(product)}</p>
+          <h3>{shortTitle(product)}</h3>
+          <p>{product.useCase}</p>
+          <span>{product.format} • {product.count}</span>
+        </div>
+        <div class="home-flagship-actions">
+          {product.detailsUrl ? <a class="product-action-link" href={product.detailsUrl}>Details</a> : null}
+          {product.extraAction?.url ? <a class="product-action-link" href={product.extraAction.url}>{product.extraAction.label}</a> : null}
+          {product.url ? (
+            <a class="product-action-link is-primary" href={product.url} target="_blank" rel="noopener noreferrer">{primaryActionLabel(product)}</a>
+          ) : (
+            <span class="product-action-link is-muted">{primaryActionLabel(product)}</span>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<section class="home-catalog-link card" aria-label="Full catalog link">
+  <div>
+    <p class="featured-label">Need everything?</p>
+    <h2>Browse the full sound catalog.</h2>
+    <p>All presets, samples, free packs, legacy releases, and tools stay organized on the sound page.</p>
+  </div>
+  <a class="button secondary" href="/sound/">
+    <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+    Open Full Catalog
+  </a>
+</section>

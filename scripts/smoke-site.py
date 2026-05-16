@@ -90,7 +90,7 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "News", "Learn", "About", "Contact", "Preset Mutator"],
+            "/": ["Sounds", "News", "Learn", "About", "Contact", "Latest release", "Flagships", "Preset Mutator"],
             "/news/": ["Sounds", "Latest Sound Releases"],
             "/learn/": ["Sounds", "Latest Guides"],
             "/music/": ["Music", "Olaru", "Rethyn", "Memories"],
@@ -108,16 +108,16 @@ def main() -> int:
                 require(dom, needle, route, errors)
 
             if route == "/":
+                require(dom, 'href="/products/operators-fm8-presets"', route, errors)
                 require(dom, 'href="/products/kreativ-kollection-v1"', route, errors)
                 require(dom, 'href="/products/velvet-ruins-vital-presets"', route, errors)
                 require(dom, 'href="/products/neolith-softube-models-presets"', route, errors)
                 require(dom, 'href="/products/bioforms-synplant-2-presets"', route, errors)
                 require(dom, 'href="/products/preset-mutator"', route, errors)
                 require(dom, 'href="/apps/preset-mutator/ui/"', route, errors)
-                require(dom, "Flagship Bundle", route, errors)
-                require(dom, "Creative Tools", route, errors)
-                require(dom, "Preset Packs", route, errors)
-                require(dom, "Free Packs", route, errors)
+                require(dom, "Flagship bundle", route, errors)
+                require(dom, "Creative tool", route, errors)
+                require(dom, "Open Full Catalog", route, errors)
 
         if errors:
             print("Smoke test failed:")

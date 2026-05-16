@@ -9,45 +9,6 @@ const {
 } = Astro.props;
 
 const isCurated = mode === "curated";
-
-const categoryOverview = [
-  {
-    label: "Flagship Bundle",
-    route: "Best entry point",
-    href: "#catalog-bundle",
-    text: "The complete Kreativ Sound V1 collection in one focused download."
-  },
-  {
-    label: "Preset Packs",
-    route: "Start here for synth presets",
-    href: "#catalog-presets",
-    text: "Current releases for FM8, Pigments, Vital, Synplant, Moog, Softube, and FabFilter."
-  },
-  {
-    label: "Creative Tools",
-    route: "Build preset starts",
-    href: "#catalog-tools",
-    text: "Browser tools for sketching presets and sound-design directions."
-  },
-  {
-    label: "Free Packs",
-    route: "Try the palette first",
-    href: "#catalog-free",
-    text: "Lite versions and no-cost entry points before buying a full release."
-  },
-  {
-    label: "Sample Packs",
-    route: "Build cues and transitions",
-    href: "#catalog-samples",
-    text: "Focused WAV textures, effects, atmospheres, percussion, subs, and beds."
-  },
-  {
-    label: "Archive",
-    route: "Older material lives here",
-    href: isCurated ? "/sound/#catalog-legacy" : "#catalog-legacy",
-    text: "Older legacy material kept available without mixing it into the current catalog."
-  }
-];
 ---
 <header class="hero">
   <div class="hero-copy">
@@ -130,15 +91,6 @@ const categoryOverview = [
     visibleCategories={isCurated ? ["Bundle", "Tools", "Presets", "Free", "Samples"] : undefined}
     showCategoryNav={isCurated}
   />
-  <div class="catalog-overview" aria-label="Catalog overview">
-    {categoryOverview.map((item) => (
-      <a class="catalog-overview-card" href={item.href}>
-        <small>{item.route}</small>
-        <span>{item.label}</span>
-        <small>{item.text}</small>
-      </a>
-    ))}
-  </div>
   <section class="catalog-proof" aria-label="Kreativ Sound proof points">
     <article>
       <span>Used in real releases</span>
