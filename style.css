@@ -3116,6 +3116,95 @@ a:focus-visible,
   font-size: 1rem;
 }
 
+.tools-feature-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(320px, 1.12fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  align-items: center;
+  padding: clamp(1rem, 3vw, 1.65rem);
+  border: 1px solid rgba(153, 0, 0, 0.2);
+  border-radius: 30px;
+  background:
+    radial-gradient(420px 260px at 90% 12%, rgba(153, 0, 0, 0.14), transparent 64%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 48%),
+    rgba(153, 0, 0, 0.045);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.tools-feature-copy {
+  display: grid;
+  gap: 0.75rem;
+  align-content: center;
+}
+
+.tools-feature-copy .page-title,
+.tools-feature-copy .page-lead,
+.tools-feature-copy .product-summary {
+  text-align: left;
+  margin-inline: 0;
+}
+
+.tools-feature-copy .page-title {
+  max-width: 9ch;
+}
+
+.tools-feature-copy .page-lead {
+  max-width: 34rem;
+}
+
+.tools-feature-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0.25rem 0 0;
+}
+
+.tools-feature-meta div {
+  padding: 0.78rem 0.85rem;
+  border: 1px solid rgba(153, 0, 0, 0.16);
+  border-radius: 18px;
+  background: rgba(255, 245, 245, 0.4);
+}
+
+.tools-feature-meta dt {
+  margin-bottom: 0.14rem;
+  color: var(--accent-strong);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.tools-feature-meta dd {
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.tools-feature-actions {
+  margin-top: 0.35rem;
+}
+
+.tools-feature-media {
+  display: block;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 28px 58px rgba(69, 22, 22, 0.18);
+}
+
+.tools-feature-media:hover {
+  text-decoration: none;
+}
+
+.tools-feature-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
 .tools-launch {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.72fr);
@@ -3346,6 +3435,7 @@ a:focus-visible,
   .news-hero,
   .news-featured,
   .tools-hero-grid,
+  .tools-feature-card,
   .tools-launch,
   .tools-trust-grid,
   .music-hero,

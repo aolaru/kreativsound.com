@@ -9,55 +9,48 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 >
   <section class="card page-main product-page tools-page">
     <div class="stack">
-      <section class="tools-launch">
-        <div class="tools-launch-copy">
-          <p class="product-kicker">Tools lab</p>
-          <h1 class="page-title">Preset Mutator</h1>
-          <p class="page-lead">One browser tool for creating Vital preset starts from scratch, from one preset, or from one short audio source.</p>
-          <p class="product-summary">The current focus is narrow on purpose: finish the Vital workflow, prove the Pro value, then expand toward Serum 2 and Pigments 7.</p>
-          <div class="product-actions tools-launch-actions">
-            <a class="button primary" href="/tools/preset-mutator/">
-              <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-              View Product Page
-            </a>
-            <a class="button secondary" href="/apps/preset-mutator/ui/">
+      <section class="tools-feature-card" aria-labelledby="tools-title">
+        <div class="tools-feature-copy">
+          <p class="product-kicker">Current tool</p>
+          <h1 id="tools-title" class="page-title">Preset Mutator</h1>
+          <p class="page-lead">Create Vital preset starts from scratch ideas, existing presets, or one short audio source.</p>
+          <p class="product-summary">Preset Mutator is a local-first browser tool for fast sound-design sketching. Free mode stays useful; Pro focuses on larger batches and ZIP export.</p>
+          <dl class="tools-feature-meta" aria-label="Preset Mutator facts">
+            <div>
+              <dt>Format</dt>
+              <dd>Browser tool</dd>
+            </div>
+            <div>
+              <dt>Synth</dt>
+              <dd>Vital</dd>
+            </div>
+            <div>
+              <dt>Free</dt>
+              <dd>3 starts</dd>
+            </div>
+            <div>
+              <dt>Pro</dt>
+              <dd>32 + ZIP</dd>
+            </div>
+          </dl>
+          <div class="product-actions tools-feature-actions">
+            <a class="button primary" href="/apps/preset-mutator/ui/">
               <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
-              Open Free Version
+              Open Preset Mutator
+            </a>
+            <a class="button secondary" href="/tools/preset-mutator/">
+              <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+              Product Details
+            </a>
+            <a class="button secondary" href="https://kreativ.gumroad.com/l/preset-mutator-pro" target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+              Buy Pro
             </a>
           </div>
         </div>
-
-        <aside class="tools-launch-card" aria-label="Preset Mutator summary">
-          <img class="product-tool-mark" src="/apps/preset-mutator/ui/preset-mutator-mark.svg" width="128" height="128" alt="Preset Mutator logo" />
-          <div>
-            <p class="product-section-kicker">Current release</p>
-            <h2>Vital first. Pro later by depth, not noise.</h2>
-            <p>Free mode stays useful. Pro unlocks 32-preset generation and ZIP export when the workflow is ready.</p>
-          </div>
-        </aside>
-      </section>
-
-      <section class="tools-trust-grid" aria-label="Preset Mutator positioning">
-        <article class="product-panel product-panel-modern product-panel-accent">
-          <p class="product-section-kicker">Privacy</p>
-          <h2>Local-first</h2>
-          <p>Preset generation runs in the browser. Source presets and audio do not need to be uploaded.</p>
-        </article>
-        <article class="product-panel product-panel-modern">
-          <p class="product-section-kicker">Free path</p>
-          <h2>3 starts</h2>
-          <p>Each workflow can generate a small set of Vital starts so users can test the idea before paying.</p>
-        </article>
-        <article class="product-panel product-panel-modern">
-          <p class="product-section-kicker">Pro path</p>
-          <h2>32 + ZIP</h2>
-          <p>The paid version should focus on bigger preset batches and faster export, not extra confusion.</p>
-        </article>
-        <article class="product-panel product-panel-modern">
-          <p class="product-section-kicker">Roadmap</p>
-          <h2>Vital, then Serum 2 and Pigments 7</h2>
-          <p>Expansion comes after the Vital workflow is solid enough to support properly.</p>
-        </article>
+        <a class="tools-feature-media" href="/apps/preset-mutator/ui/" aria-label="Open Preset Mutator">
+          <img src="/assets/thumbs/preset-mutator.webp" width="720" height="405" alt="Preset Mutator cover artwork" loading="eager" decoding="async" />
+        </a>
       </section>
 
       <section class="product-panel-grid tools-mode-grid" aria-label="Preset Mutator modes">
