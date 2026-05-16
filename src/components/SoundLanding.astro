@@ -24,6 +24,12 @@ const categoryOverview = [
     text: "Current releases for FM8, Pigments, Vital, Synplant, Moog, Softube, and FabFilter."
   },
   {
+    label: "Creative Tools",
+    route: "Build preset starts",
+    href: "#catalog-tools",
+    text: "Browser tools for sketching presets and sound-design directions."
+  },
+  {
     label: "Free Packs",
     route: "Try the palette first",
     href: "#catalog-free",
@@ -93,47 +99,6 @@ const categoryOverview = [
       </span>
     </div>
   </article>
-  <section class="home-tools" aria-labelledby="home-tools-title">
-    <div class="home-tools-head">
-      <div>
-        <p class="featured-label">Featured tool</p>
-        <h2 id="home-tools-title">Preset Mutator</h2>
-        <p>Create Vital preset starts from scratch, from one preset, or from one short audio source.</p>
-      </div>
-      <a class="button secondary" href="/tools/">
-        <i class="fa-solid fa-wrench" aria-hidden="true"></i>
-        View Tools
-      </a>
-    </div>
-    <div class="home-tools-grid">
-      <article class="home-tool-card home-tool-card-featured">
-        <img class="home-tool-mark" src="/apps/preset-mutator/ui/preset-mutator-mark.svg" width="128" height="128" alt="Preset Mutator logo" loading="lazy" decoding="async" />
-        <div class="home-tool-copy">
-          <span class="home-tool-flow">Browser tool</span>
-          <h3>Fast preset sketching for Vital.</h3>
-          <p>Preset Mutator is a local-first browser tool for making usable Vital starting points without uploads, accounts, or AI generation.</p>
-        </div>
-        <div class="product-action-row">
-          <a class="product-action-link is-primary" href="/tools/preset-mutator/">Details</a>
-          <a class="product-action-link" href="/apps/preset-mutator/ui/">Open Free Version</a>
-        </div>
-      </article>
-      <article class="home-tool-card">
-        <div class="home-tool-copy">
-          <span class="home-tool-flow">From Scratch</span>
-          <h3>Start from intent.</h3>
-          <p>Choose mood, shape, register, and motion, then export a small set of Vital preset starts.</p>
-        </div>
-      </article>
-      <article class="home-tool-card">
-        <div class="home-tool-copy">
-          <span class="home-tool-flow">Audio to Preset</span>
-          <h3>Use one short source.</h3>
-          <p>Analyze a simple tone, drone, texture, or one-shot locally and turn it into a playable direction.</p>
-        </div>
-      </article>
-    </div>
-  </section>
   {showGuide ? (
     <section class="catalog-guide" aria-label="How to choose a Kreativ Sound pack">
       <div>
@@ -162,7 +127,7 @@ const categoryOverview = [
     </section>
   ) : null}
   <ProductCatalog
-    visibleCategories={isCurated ? ["Bundle", "Presets", "Free", "Samples"] : undefined}
+    visibleCategories={isCurated ? ["Bundle", "Tools", "Presets", "Free", "Samples"] : undefined}
     showCategoryNav={isCurated}
   />
   <div class="catalog-overview" aria-label="Catalog overview">

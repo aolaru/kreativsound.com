@@ -1,4 +1,4 @@
-export type ProductCategory = "Bundle" | "Presets" | "Samples" | "Free" | "Legacy";
+export type ProductCategory = "Bundle" | "Tools" | "Presets" | "Samples" | "Free" | "Legacy";
 
 export type ProductDemo = {
   label: string;
@@ -37,6 +37,22 @@ export const products: Product[] = [
     format: "Preset and sample bundle",
     count: "V1 collection",
     useCase: "Complete Kreativ Sound preset, sample, loop, and texture collection"
+  },
+  {
+    title: "Preset Mutator - Vital Preset Generator",
+    category: "Tools",
+    url: "https://kreativ.gumroad.com/l/preset-mutator-pro",
+    detailsUrl: "/products/preset-mutator",
+    badge: "Tool",
+    extraAction: {
+      label: "Open Free",
+      url: "/apps/preset-mutator/ui/"
+    },
+    thumbnail: "/assets/thumbs/preset-mutator.svg",
+    coverImage: "/assets/thumbs/preset-mutator.svg",
+    format: "Browser tool",
+    count: "Free + Pro",
+    useCase: "Vital preset starts from scratch, preset mutation, and audio sources"
   },
   {
     title: "OPERATORS - Atmos & Motion for Native Instruments FM8",
@@ -294,10 +310,11 @@ export const products: Product[] = [
   }
 ];
 
-export const preferredCategoryOrder: ProductCategory[] = ["Bundle", "Presets", "Free", "Samples", "Legacy"];
+export const preferredCategoryOrder: ProductCategory[] = ["Bundle", "Tools", "Presets", "Free", "Samples", "Legacy"];
 
 export const categoryLabels: Record<ProductCategory, string> = {
   Bundle: "Flagship Bundle",
+  Tools: "Creative Tools",
   Presets: "Preset Packs",
   Samples: "Sample Packs",
   Free: "Free Packs",
@@ -306,6 +323,7 @@ export const categoryLabels: Record<ProductCategory, string> = {
 
 export const categoryIds: Record<ProductCategory, string> = {
   Bundle: "catalog-bundle",
+  Tools: "catalog-tools",
   Presets: "catalog-presets",
   Samples: "catalog-samples",
   Free: "catalog-free",

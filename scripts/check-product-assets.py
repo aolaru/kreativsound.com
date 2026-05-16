@@ -16,6 +16,9 @@ def route_to_path(route: str) -> Path:
         return ROOT / "src/lib/product-pages.ts"
     if route == "/":
         return ROOT / "src/pages/index.astro"
+    public_target = PUBLIC / route.lstrip("/")
+    if public_target.exists():
+        return public_target
     if route.startswith("/") and route.endswith("/"):
         direct = ROOT / "src/pages" / route.strip("/") / "index.astro"
         return direct

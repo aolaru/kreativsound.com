@@ -58,6 +58,10 @@ const sharedRelatedByCategory: Record<ProductCategory, Array<{ label: string; ur
     { label: "Browse individual packs", url: "/sound/" },
     { label: "Read workflow guides", url: "/learn/" }
   ],
+  Tools: [
+    { label: "Open the tools page", url: "/tools/" },
+    { label: "Back to the full sound catalog", url: "/" }
+  ],
   Presets: [
     { label: "Browse workflow guides", url: "/learn/" },
     { label: "Back to the full sound catalog", url: "/" }
@@ -82,6 +86,19 @@ const productOverrides: Record<string, ProductPageOverride> = {
     headline: "Kreativ Kollection V1",
     description: "Kreativ Kollection V1 is the complete Kreativ Sound bundle, collecting presets, samples, loops, textures, and experimental sound design packs for ambient, cinematic, electronic, and dark production.",
     kicker: "Flagship bundle"
+  },
+  "preset-mutator": {
+    title: "Preset Mutator | Vital Preset Generator",
+    headline: "Preset Mutator",
+    description: "Preset Mutator is a browser-based Vital preset generator for creating preset starts from scratch ideas, existing presets, or short audio sources.",
+    kicker: "Browser tool",
+    primaryUrl: "https://kreativ.gumroad.com/l/preset-mutator-pro",
+    primaryLabel: "Buy on Gumroad",
+    purchaseAltUrl: "https://www.paypal.com/ncp/payment/RUGQ6S3NW7HE4",
+    purchaseAltLabel: "Pay with PayPal",
+    secondaryUrl: "/apps/preset-mutator/ui/",
+    secondaryLabel: "Open free version",
+    variant: "flagship"
   },
   "operators-fm8-presets": {
     headline: "OPERATORS",
@@ -720,6 +737,8 @@ function categoryKicker(category: ProductCategory) {
   switch (category) {
     case "Bundle":
       return "Flagship bundle";
+    case "Tools":
+      return "Creative tool";
     case "Presets":
       return "Preset pack";
     case "Samples":
@@ -756,6 +775,8 @@ function defaultDescription(product: Product, name: string) {
   switch (product.category) {
     case "Bundle":
       return `${name} is a complete Kreativ Sound bundle built for ${product.useCase.toLowerCase()}.`;
+    case "Tools":
+      return `${name} is a Kreativ Sound browser tool built for ${product.useCase.toLowerCase()}.`;
     case "Presets":
       return `${name} is a preset release from Kreativ Sound built for ${product.useCase.toLowerCase()}.`;
     case "Samples":
@@ -775,6 +796,8 @@ function defaultSummary(product: Product, name: string) {
   switch (product.category) {
     case "Bundle":
       return `${name} brings the current Kreativ Sound preset and sample catalog into one focused download.`;
+    case "Tools":
+      return `${name} is built for producers who want ${product.useCase.toLowerCase()} without leaving the browser.`;
     case "Presets":
       return `${name} is built for producers who want ${product.useCase.toLowerCase()} with a more direct preset workflow.`;
     case "Samples":
@@ -790,6 +813,8 @@ function defaultHeroNote(product: Product, name: string) {
   switch (product.category) {
     case "Bundle":
       return `${name} is the main entry point for producers who want the complete Kreativ Sound V1 sound-design palette in one place.`;
+    case "Tools":
+      return `${name} is built for fast sound-design sketching and practical preset generation workflows.`;
     case "Presets":
       return `${name} is built for musicians who want a faster preset starting point around ${product.useCase.toLowerCase()}.`;
     case "Samples":
@@ -819,7 +844,7 @@ function defaultShortMeta(product: Product) {
 
 function defaultSpecifications(product: Product, specs: ProductPage["specs"]) {
   return [
-    { label: "Product type", value: product.category === "Bundle" ? "Complete sound bundle" : product.category === "Samples" ? "Sample collection" : product.category === "Free" ? "Free release" : product.category === "Legacy" ? "Legacy archive" : "Preset bank" },
+    { label: "Product type", value: product.category === "Bundle" ? "Complete sound bundle" : product.category === "Tools" ? "Creative tool" : product.category === "Samples" ? "Sample collection" : product.category === "Free" ? "Free release" : product.category === "Legacy" ? "Legacy archive" : "Preset bank" },
     ...specs,
     { label: "Delivery", value: "Digital download" },
     { label: "Checkout", value: product.url ? "External checkout" : "See product notes" }
@@ -844,6 +869,13 @@ function defaultRequirements(product: Product, panels: ProductPage["panels"]) {
     return [
       "Preset banks require the matching synth or plugin listed in the included product notes.",
       "Audio samples, loops, drones, and textures can be used in any DAW or sampler that supports standard audio files."
+    ];
+  }
+
+  if (product.category === "Tools") {
+    return [
+      "A modern web browser is required to run this tool.",
+      "Use the target synth or plugin to load generated presets where applicable."
     ];
   }
 

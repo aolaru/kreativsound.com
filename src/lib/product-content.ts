@@ -57,6 +57,32 @@ export const landingCopyOverrides = {
       "Please check the individual product notes inside the collection for exact plugin requirements."
     ]
   },
+  "preset-mutator": {
+    subtitle: "Browser-Based Vital Preset Generator",
+    shortMeta: "Browser tool • Free mode + Pro export • Vital presets",
+    ctaLine: "Open the free version or unlock Pro for larger preset batches and ZIP export.",
+    finalCtaTitle: "Unlock Preset Mutator Pro.",
+    finalCtaText: "Use the free browser version to test the workflow, or unlock Pro for larger preset batches and ZIP export.",
+    longDescription: [
+      "Preset Mutator is a browser-based preset generation tool for Vital, built for fast sound-design sketching rather than finished automated production.",
+      "It creates useful preset starting points from scratch ideas, existing Vital presets, or short audio sources. The goal is speed: get a playable direction quickly, then finish the sound inside Vital.",
+      "The tool runs locally in your browser, with no uploads and no AI preset generation. Free mode is useful for testing the workflow, while Pro unlocks larger 32-preset batches and ZIP export."
+    ],
+    specifications: [
+      { label: "Product type", value: "Browser sound-design tool" },
+      { label: "Format", value: "Vital preset generation and export" },
+      { label: "Free mode", value: "3 Vital preset starts per workflow" },
+      { label: "Pro mode", value: "32-preset pack generation and ZIP export" },
+      { label: "Best for", value: "Fast Vital preset starts, preset mutation, audio-to-preset experiments, and sound-design sketching" },
+      { label: "Processing", value: "Local browser processing" },
+      { label: "Checkout", value: "Gumroad or PayPal" }
+    ],
+    requirements: [
+      "A modern web browser is required to run Preset Mutator.",
+      "Vital is required to load and edit the generated preset files.",
+      "Generated presets are best treated as starting points for sound design, not final mix-ready presets."
+    ]
+  },
   "operators-fm8-presets": {
     subtitle: "64 FM8 Presets for Native Instruments FM8",
     shortMeta: "64 presets • 4 MB download • FM8 preset bank",

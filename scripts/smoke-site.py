@@ -112,9 +112,10 @@ def main() -> int:
                 require(dom, 'href="/products/velvet-ruins-vital-presets"', route, errors)
                 require(dom, 'href="/products/neolith-softube-models-presets"', route, errors)
                 require(dom, 'href="/products/bioforms-synplant-2-presets"', route, errors)
-                require(dom, 'href="/tools/preset-mutator/"', route, errors)
+                require(dom, 'href="/products/preset-mutator"', route, errors)
                 require(dom, 'href="/apps/preset-mutator/ui/"', route, errors)
                 require(dom, "Flagship Bundle", route, errors)
+                require(dom, "Creative Tools", route, errors)
                 require(dom, "Preset Packs", route, errors)
                 require(dom, "Free Packs", route, errors)
 
