@@ -175,7 +175,7 @@ export const landingCopyOverrides = {
       { label: "Categories", value: "Drones, industrial textures, melodic keys, FX and noise" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
-      { label: "Checkout", value: "PayPal or Gumroad" }
+      { label: "Checkout", value: "Gumroad or PayPal" }
     ],
     requirements: [
       "Arturia Pigments is required to use these presets.",
