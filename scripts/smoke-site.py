@@ -96,7 +96,7 @@ def main() -> int:
             "/music/": ["Music", "Olaru", "Rethyn", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
-            "/sounds/": ["Browse Sound", "Kreativ Kollection V1", "Creative Tools", "Preset Packs"],
+            "/sounds/": ["Browse Sound", "OPERATORS", "Preset Packs", "Sample Packs", "Free Packs"],
             "/sounds/kreativ-kollection-v1": ["Coming soon", "Kreativ Kollection V1", "Description", "What's Included", "Product Specifications", "Requirements"],
             "/sounds/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Description", "Product Specifications", "Requirements"],
             "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Description", "Product Specifications", "Requirements"],

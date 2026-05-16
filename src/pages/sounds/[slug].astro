@@ -1,6 +1,203 @@
 ---
-import ProductPage, { getStaticPaths } from "../products/[slug].html.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { productPages } from "../../lib/product-pages";
 
-export { getStaticPaths };
+export function getStaticPaths() {
+  return productPages.map((product) => ({
+    params: { slug: product.slug },
+    props: { product }
+  }));
+}
+
+const { product } = Astro.props;
+const hasDemo = Boolean(product.demo?.src);
+const productName = product.headline;
+const purchaseActions = [
+  product.primaryUrl && product.primaryLabel
+    ? { url: product.primaryUrl, label: product.primaryLabel, icon: purchaseIcon(product.primaryUrl) }
+    : null,
+  product.purchaseAltUrl && product.purchaseAltLabel
+    ? { url: product.purchaseAltUrl, label: product.purchaseAltLabel, icon: purchaseIcon(product.purchaseAltUrl) }
+    : null
+].filter(Boolean);
+
+function purchaseIcon(url?: string) {
+  return url?.includes("paypal.com") ? "fa-brands fa-paypal" : "fa-solid fa-bag-shopping";
+}
+
+function actionClass(index: number) {
+  return index === 0 ? "button primary" : "button secondary";
+}
+
+const productSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  name: productName,
+  description: product.description,
+  image: product.ogImage,
+  brand: {
+    "@type": "Brand",
+    name: "Kreativ Sound"
+  },
+  category: product.kicker,
+  offers: product.primaryUrl
+    ? [
+        {
+          "@type": "Offer",
+          url: product.primaryUrl,
+          availability: "https://schema.org/InStock",
+          priceCurrency: "USD"
+        },
+        ...(product.purchaseAltUrl
+          ? [
+              {
+                "@type": "Offer",
+                url: product.purchaseAltUrl,
+                availability: "https://schema.org/InStock",
+                priceCurrency: "USD"
+              }
+            ]
+          : [])
+      ]
+    : undefined
+};
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Kreativ Sound",
+      item: "https://kreativsound.com/"
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Sounds",
+      item: "https://kreativsound.com/sounds/"
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: productName,
+      item: product.canonical
+    }
+  ]
+};
 ---
-<ProductPage {...Astro.props} />
+<BaseLayout
+  title={product.title}
+  description={product.description}
+  canonical={product.canonical}
+  ogImage={product.ogImage}
+  ogImageAlt={product.ogImageAlt}
+  activeNav="sound"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+  <article class={`card page-main product-page product-page-landing product-page-${product.variant}`}>
+    <header class="product-landing-hero">
+      <p class="product-kicker">{product.kicker}</p>
+      <h1 class="page-title">{productName}</h1>
+      <p class="page-lead">{product.subtitle}</p>
+
+      <figure class="product-landing-media">
+        <img class="product-landing-image" src={product.image} width="1040" alt={product.imageAlt} />
+      </figure>
+
+      {hasDemo ? (
+        <section class="product-landing-demo" aria-label="Audio demo">
+          <h2>{product.demo.label || "Audio demo"}</h2>
+          {product.demoBlurb ? <p>{product.demoBlurb}</p> : null}
+          <audio class="product-card-demo-player" controls preload="metadata">
+            <source src={product.demo.src} type={product.demo.type} />
+          </audio>
+        </section>
+      ) : null}
+
+      {purchaseActions.length ? (
+        <div class="product-landing-actions" aria-label="Purchase options">
+          {purchaseActions.map((action, index) => (
+            <a class={actionClass(index)} href={action.url} target="_blank" rel="noopener noreferrer">
+              <i class={action.icon} aria-hidden="true"></i>
+              {action.label}
+            </a>
+          ))}
+        </div>
+      ) : null}
+
+      {product.shortMeta ? <p class="product-landing-meta">{product.shortMeta}</p> : null}
+    </header>
+
+    {product.longDescription.length ? (
+      <section class="product-landing-section product-description-section" aria-labelledby="product-description-title">
+        <h2 id="product-description-title">Description</h2>
+        <div class="product-long-description">
+          {product.longDescription.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+      </section>
+    ) : null}
+
+    {product.includedGroups.length ? (
+      <section class="product-landing-section product-included-section" aria-labelledby="product-included-title">
+        <h2 id="product-included-title">What's Included</h2>
+        <div class="product-included-groups">
+          {product.includedGroups.map((group) => (
+            <section class="product-included-group" aria-label={group.title}>
+              <h3>{group.title}</h3>
+              <ul>
+                {group.items.map((item) => (
+                  <li>
+                    {item.url ? <a href={item.url}>{item.name}</a> : <strong>{item.name}</strong>}
+                    <span>{item.detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      </section>
+    ) : null}
+
+    {product.specifications.length ? (
+      <section class="product-landing-section" aria-labelledby="product-specifications-title">
+        <h2 id="product-specifications-title">Product Specifications</h2>
+        <dl class="product-specification-list">
+          {product.specifications.map((spec) => (
+            <div>
+              <dt>{spec.label}</dt>
+              <dd>{spec.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    ) : null}
+
+    {product.requirements.length ? (
+      <section class="product-landing-section" aria-labelledby="product-requirements-title">
+        <h2 id="product-requirements-title">Requirements</h2>
+        <div class="product-requirements-copy">
+          {product.requirements.map((requirement) => <p>{requirement}</p>)}
+        </div>
+      </section>
+    ) : null}
+
+    {purchaseActions.length || product.finalCtaTitle || product.finalCtaText ? (
+      <section class="product-final-cta" aria-labelledby="product-final-cta-title">
+        <h2 id="product-final-cta-title">{product.finalCtaTitle || `Ready to download ${productName}?`}</h2>
+        <p>{product.finalCtaText || product.ctaLine || product.heroNote}</p>
+        {purchaseActions.length ? (
+          <div class="product-landing-actions">
+            {purchaseActions.map((action, index) => (
+              <a class={actionClass(index)} href={action.url} target="_blank" rel="noopener noreferrer">
+                <i class={action.icon} aria-hidden="true"></i>
+                {action.label}
+              </a>
+            ))}
+          </div>
+        ) : null}
+      </section>
+    ) : null}
+  </article>
+</BaseLayout>

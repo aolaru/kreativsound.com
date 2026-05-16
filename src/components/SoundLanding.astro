@@ -6,9 +6,14 @@ const {
   mode = "full",
   intro = "Start with the featured release, then move through presets, sample packs, free sounds, and archive material.",
   showGuide = true,
+  showFeatured = true,
+  showHeroActions = true,
+  showProof = true,
+  visibleCategories,
 } = Astro.props;
 
 const isCurated = mode === "curated";
+const catalogCategories = visibleCategories || (isCurated ? ["Bundle", "Tools", "Presets", "Free", "Samples"] : undefined);
 ---
 <header class="hero">
   <div class="hero-copy">
@@ -18,48 +23,52 @@ const isCurated = mode === "curated";
       Dark sound packs for tension, melody, and cinematic motion.
     </p>
   </div>
-  <div class="hero-actions">
-    <a class="button primary" data-track="hero_explore_click" href="/sounds/kreativ-kollection-v1">
-      <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-      Get Kreativ Kollection V1
-    </a>
-    <a class="button secondary" data-track="hero_free_click" href="#catalog-presets">
-      <i class="fa-solid fa-sliders" aria-hidden="true"></i>
-      Browse Individual Packs
-    </a>
-  </div>
+  {showHeroActions ? (
+    <div class="hero-actions">
+      <a class="button primary" data-track="hero_explore_click" href="/sounds/kreativ-kollection-v1">
+        <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+        Get Kreativ Kollection V1
+      </a>
+      <a class="button secondary" data-track="hero_free_click" href="#catalog-presets">
+        <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+        Browse Individual Packs
+      </a>
+    </div>
+  ) : null}
 </header>
 
 <section class="catalog card" aria-labelledby={titleId}>
   {intro ? <p class="catalog-intro" id={titleId}>{intro}</p> : <span class="sr-only" id={titleId}>Sound catalog</span>}
-  <article class="featured-product" aria-label="Featured product">
-    <img
-      class="featured-thumb"
-      src="/assets/thumbs/kreativ-kollection-v1.svg"
-      width="128"
-      height="128"
-      alt="Kreativ Kollection V1 product artwork"
-      loading="eager"
-      decoding="async"
-      fetchpriority="high"
-    />
-    <div class="featured-content">
-      <p class="featured-label">Featured</p>
-      <h2>Kreativ Kollection V1</h2>
-      <p>The complete Kreativ Sound preset and sample collection.</p>
-      <p class="featured-supporting">Coming soon: presets, samples, loops, textures, and experimental sound design in one bundle.</p>
-    </div>
-    <div class="featured-actions">
-      <a class="button secondary" href="/sounds/kreativ-kollection-v1">
-        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-        Details
-      </a>
-      <span class="button primary featured-cta is-disabled" aria-disabled="true">
-        <i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>
-        Coming Soon
-      </span>
-    </div>
-  </article>
+  {showFeatured ? (
+    <article class="featured-product" aria-label="Featured product">
+      <img
+        class="featured-thumb"
+        src="/assets/thumbs/kreativ-kollection-v1.svg"
+        width="128"
+        height="128"
+        alt="Kreativ Kollection V1 product artwork"
+        loading="eager"
+        decoding="async"
+        fetchpriority="high"
+      />
+      <div class="featured-content">
+        <p class="featured-label">Featured</p>
+        <h2>Kreativ Kollection V1</h2>
+        <p>The complete Kreativ Sound preset and sample collection.</p>
+        <p class="featured-supporting">Coming soon: presets, samples, loops, textures, and experimental sound design in one bundle.</p>
+      </div>
+      <div class="featured-actions">
+        <a class="button secondary" href="/sounds/kreativ-kollection-v1">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          Details
+        </a>
+        <span class="button primary featured-cta is-disabled" aria-disabled="true">
+          <i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>
+          Coming Soon
+        </span>
+      </div>
+    </article>
+  ) : null}
   {showGuide ? (
     <section class="catalog-guide" aria-label="How to choose a Kreativ Sound pack">
       <div>
@@ -88,23 +97,25 @@ const isCurated = mode === "curated";
     </section>
   ) : null}
   <ProductCatalog
-    visibleCategories={isCurated ? ["Bundle", "Tools", "Presets", "Free", "Samples"] : undefined}
+    visibleCategories={catalogCategories}
     showCategoryNav={isCurated}
   />
-  <section class="catalog-proof" aria-label="Kreativ Sound proof points">
-    <article>
-      <span>Used in real releases</span>
-      <p>Olaru and Rethyn music projects use the same samples, presets, and sound-design palette.</p>
-    </article>
-    <article>
-      <span>Try before buying</span>
-      <p>Free Lite packs exist for the newest flagship directions, including Black Arcology and Velvet Ruins.</p>
-    </article>
-    <article>
-      <span>Independent catalog</span>
-      <p>Available through Kreativ Sound channels including Gumroad, Patreon, and KVR Marketplace.</p>
-    </article>
-  </section>
+  {showProof ? (
+    <section class="catalog-proof" aria-label="Kreativ Sound proof points">
+      <article>
+        <span>Used in real releases</span>
+        <p>Olaru and Rethyn music projects use the same samples, presets, and sound-design palette.</p>
+      </article>
+      <article>
+        <span>Try before buying</span>
+        <p>Free Lite packs exist for the newest flagship directions, including Black Arcology and Velvet Ruins.</p>
+      </article>
+      <article>
+        <span>Independent catalog</span>
+        <p>Available through Kreativ Sound channels including Gumroad, Patreon, and KVR Marketplace.</p>
+      </article>
+    </section>
+  ) : null}
   {isCurated ? (
     <div class="catalog-secondary-links" aria-label="More sound categories">
       <p>Looking for archive releases?</p>
