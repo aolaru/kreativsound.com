@@ -431,10 +431,10 @@ a:focus-visible,
 
 .home-latest {
   display: grid;
-  grid-template-columns: minmax(260px, 0.78fr) minmax(360px, 1.22fr);
+  grid-template-columns: minmax(300px, 0.82fr) minmax(360px, 1.18fr);
   align-items: center;
   gap: clamp(1.35rem, 3vw, 2.3rem);
-  margin-bottom: 2.1rem;
+  margin-bottom: 1.15rem;
   padding: clamp(1.2rem, 4vw, 2.2rem);
   border-radius: 30px;
   background:
@@ -453,7 +453,8 @@ a:focus-visible,
   font-size: clamp(2.35rem, 5.1vw, 4.15rem);
   line-height: 0.95;
   letter-spacing: -0.06em;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .home-latest-copy > p:not(.featured-label) {

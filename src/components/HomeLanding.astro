@@ -3,14 +3,7 @@ import { products, type Product } from "../lib/products";
 
 const latestProduct = products.find((product) => product.badge?.toLowerCase() === "new") || products.find((product) => product.category === "Presets") || products[0];
 
-const flagshipSlugs = [
-  "kreativ-kollection-v1",
-  "preset-mutator",
-  "black-arcology-pigments-presets",
-  "velvet-ruins-vital-presets",
-  "neolith-softube-models-presets",
-  "bioforms-synplant-2-presets"
-];
+const wideFeatureSlugs = ["preset-mutator", "kreativ-kollection-v1"];
 
 const productsBySlug = new Map(
   products
@@ -18,7 +11,7 @@ const productsBySlug = new Map(
     .map((product) => [slugFromDetailsUrl(product.detailsUrl), product])
 );
 
-const flagshipProducts = flagshipSlugs
+const wideFeatureProducts = wideFeatureSlugs
   .map((slug) => productsBySlug.get(slug))
   .filter(Boolean) as Product[];
 
@@ -43,8 +36,25 @@ function productKicker(product: Product) {
 
 function primaryActionLabel(product: Product) {
   if (!product.url) return product.badge?.toLowerCase().includes("coming") ? "Coming Soon" : "Details";
-  if (product.category === "Tools") return "Get Tool";
+  if (product.category === "Tools") return "Buy Pro";
   return "Buy on Gumroad";
+}
+
+function cardTitle(product: Product) {
+  if (product.category === "Tools") return "Preset Mutator";
+  if (product.category === "Bundle") return "Kreativ Kollection V1";
+  return shortTitle(product);
+}
+
+function cardPrimaryText(product: Product) {
+  if (product.category === "Tools") return "Product Details";
+  if (product.category === "Bundle") return "View Bundle";
+  return "View Product";
+}
+
+function extraActionLabel(product: Product) {
+  if (product.category === "Tools") return "Open Preset Mutator";
+  return product.extraAction?.label;
 }
 ---
 <header class="home-hero" aria-labelledby="home-title">
@@ -69,7 +79,7 @@ function primaryActionLabel(product: Product) {
   <section class="home-latest card" id="latest-featured" aria-labelledby="latest-title">
     <div class="home-latest-copy">
       <p class="featured-label">{productKicker(latestProduct)}</p>
-      <h2 id="latest-title">{shortTitle(latestProduct)}</h2>
+      <h2 id="latest-title">{cardTitle(latestProduct)}</h2>
       <p>{latestProduct.useCase}</p>
       <dl class="home-product-meta">
         <div>
@@ -85,7 +95,7 @@ function primaryActionLabel(product: Product) {
         {latestProduct.detailsUrl ? (
           <a class="button secondary" href={latestProduct.detailsUrl}>
             <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-            View Product
+            {cardPrimaryText(latestProduct)}
           </a>
         ) : null}
         {latestProduct.url ? (
@@ -111,53 +121,58 @@ function primaryActionLabel(product: Product) {
   </section>
 ) : null}
 
-<section class="home-flagships" aria-labelledby="flagships-title">
-  <div class="home-section-head">
-    <p class="featured-label">Flagships</p>
-    <h2 id="flagships-title">The main Kreativ Sound entry points.</h2>
-    <p>Start with the complete collection, the browser tool, or the core preset banks that define the current catalog.</p>
-  </div>
-  <div class="home-flagship-grid">
-    {flagshipProducts.map((product) => (
-      <article class="home-flagship-card">
-        <a class="home-flagship-media" href={product.detailsUrl || product.url || "/sounds/"} aria-label={`View ${shortTitle(product)}`}>
-          <img
-            src={productImage(product)}
-            width="420"
-            height="262"
-            alt={`${shortTitle(product)} product artwork`}
-            loading="lazy"
-            decoding="async"
-          />
-        </a>
-        <div class="home-flagship-copy">
-          <p class="featured-label">{productKicker(product)}</p>
-          <h3>{shortTitle(product)}</h3>
-          <p>{product.useCase}</p>
-          <span>{product.format} • {product.count}</span>
+{wideFeatureProducts.map((product, index) => (
+  <section class="home-latest card home-feature-card" aria-labelledby={`home-feature-title-${index}`}>
+    <div class="home-latest-copy">
+      <p class="featured-label">{productKicker(product)}</p>
+      <h2 id={`home-feature-title-${index}`}>{cardTitle(product)}</h2>
+      <p>{product.useCase}</p>
+      <dl class="home-product-meta">
+        <div>
+          <dt>Format</dt>
+          <dd>{product.format}</dd>
         </div>
-        <div class="home-flagship-actions">
-          {product.detailsUrl ? <a class="product-action-link" href={product.detailsUrl}>Details</a> : null}
-          {product.extraAction?.url ? <a class="product-action-link" href={product.extraAction.url}>{product.extraAction.label}</a> : null}
-          {product.url ? (
-            <a class="product-action-link is-primary" href={product.url} target="_blank" rel="noopener noreferrer">{primaryActionLabel(product)}</a>
-          ) : (
-            <span class="product-action-link is-muted">{primaryActionLabel(product)}</span>
-          )}
+        <div>
+          <dt>Included</dt>
+          <dd>{product.count}</dd>
         </div>
-      </article>
-    ))}
-  </div>
-</section>
-
-<section class="home-catalog-link card" aria-label="Full catalog link">
-  <div>
-    <p class="featured-label">Need everything?</p>
-    <h2>Browse the full sound catalog.</h2>
-    <p>All presets, samples, free packs, legacy releases, and tools stay organized on the sound page.</p>
-  </div>
-  <a class="button secondary" href="/sounds/">
-    <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-    Open Full Catalog
-  </a>
-</section>
+      </dl>
+      <div class="home-product-actions">
+        {product.extraAction?.url ? (
+          <a class="button primary" href={product.extraAction.url}>
+            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+            {extraActionLabel(product)}
+          </a>
+        ) : null}
+        {product.detailsUrl ? (
+          <a class="button secondary" href={product.detailsUrl}>
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            {cardPrimaryText(product)}
+          </a>
+        ) : null}
+        {product.url ? (
+          <a class={product.extraAction?.url ? "button secondary" : "button primary"} href={product.url} target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            {primaryActionLabel(product)}
+          </a>
+        ) : (
+          <span class="button secondary is-disabled" aria-disabled="true">
+            <i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>
+            {primaryActionLabel(product)}
+          </span>
+        )}
+      </div>
+    </div>
+    <a class="home-latest-art-link" href={product.detailsUrl || product.extraAction?.url || product.url || "/sounds/"} aria-label={`View ${cardTitle(product)}`}>
+      <img
+        class="home-latest-art"
+        src={productImage(product)}
+        width="720"
+        height="450"
+        alt={`${cardTitle(product)} product artwork`}
+        loading="lazy"
+        decoding="async"
+      />
+    </a>
+  </section>
+))}
