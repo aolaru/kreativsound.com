@@ -1,3 +1,5 @@
+import { PresetMutatorKnob } from "../preset-mutator-knob.js";
+
 const FREE_VARIANT_ROLES = [
   { key: "closest", label: "Closest", multiplier: 0.7, nameSuffix: "Closest" },
   { key: "bolder", label: "Bolder", multiplier: 1.0, nameSuffix: "Bolder" },
@@ -129,6 +131,8 @@ const elements = {
   presetModulations: document.querySelector("#preset-modulations"),
   presetWavetables: document.querySelector("#preset-wavetables"),
   presetFile: document.querySelector("#preset-file"),
+  mutationKnob: document.querySelector("#mutation-knob"),
+  mutationMicroControls: document.querySelectorAll("[data-macro-control]"),
   amountRange: document.querySelector("#amount-range"),
   amountValue: document.querySelector("#amount-value"),
   brightnessRange: document.querySelector("#brightness-range"),
@@ -314,9 +318,29 @@ function currentActionLabel() {
 
 function updateControlLabels() {
   elements.amountValue.textContent = amountLabel(elements.amountRange.value);
+  updateMutationMicroControls(elements.amountRange.value);
   elements.brightnessValue.textContent = toPercent(elements.brightnessRange.value);
   elements.motionValue.textContent = toPercent(elements.motionRange.value);
   elements.dirtValue.textContent = toPercent(elements.dirtRange.value);
+}
+
+function updateMutationMicroControls(value) {
+  const amount = Number(value);
+  const microValues = {
+    randomize: Math.round(34 + amount * 0.62),
+    morph: Math.round(22 + amount * 0.7),
+    evolve: Math.round(18 + amount * 0.78),
+    shape: Math.round(44 + Math.abs(amount - 50) * 0.52),
+    variation: amount,
+  };
+
+  for (const control of elements.mutationMicroControls) {
+    const key = control.dataset.macroControl;
+    const valueNode = control.querySelector("strong");
+    if (valueNode && key in microValues) {
+      valueNode.textContent = `${Math.min(100, Math.max(0, microValues[key]))}%`;
+    }
+  }
 }
 
 function setUploadMessage(message = "") {
@@ -993,6 +1017,17 @@ elements.suiteActions?.addEventListener("click", (event) => {
   analyticsEvent("pro_cta_click", {
     checkout: link.href.includes("paypal.com") ? "paypal" : "gumroad",
   });
+});
+
+new PresetMutatorKnob(elements.mutationKnob, {
+  value: Number(elements.amountRange.value),
+  min: 0,
+  max: 100,
+  onChange(value) {
+    elements.amountRange.value = String(value);
+    updateControlLabels();
+    renderStrategyMetrics();
+  },
 });
 
 updateControlLabels();

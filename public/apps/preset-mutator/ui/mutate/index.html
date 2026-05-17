@@ -183,8 +183,39 @@
             <p class="muted">Bias the direction without destroying the source preset’s identity.</p>
           </div>
 
+          <div class="mutation-macro" aria-labelledby="mutation-amount-heading">
+            <div class="mutation-macro-copy">
+              <span class="meta-label">Macro Control</span>
+              <h3 id="mutation-amount-heading">Mutation Amount</h3>
+              <p>Set how far the variants can move from the loaded Vital preset.</p>
+            </div>
+            <div id="mutation-knob" class="mutation-knob-mount"></div>
+            <div class="mutation-micro-controls" aria-label="Mutation amount detail">
+              <div class="mutation-micro-control" data-macro-control="randomize">
+                <span>Randomize</span>
+                <strong>45%</strong>
+              </div>
+              <div class="mutation-micro-control" data-macro-control="morph">
+                <span>Morph</span>
+                <strong>45%</strong>
+              </div>
+              <div class="mutation-micro-control" data-macro-control="evolve">
+                <span>Evolve</span>
+                <strong>45%</strong>
+              </div>
+              <div class="mutation-micro-control" data-macro-control="shape">
+                <span>Shape</span>
+                <strong>45%</strong>
+              </div>
+              <div class="mutation-micro-control" data-macro-control="variation">
+                <span>Variation Amount</span>
+                <strong>45%</strong>
+              </div>
+            </div>
+          </div>
+
           <div class="control-grid">
-            <label class="control">
+            <label class="control is-hidden">
               <span>Mutation Amount</span>
               <output id="amount-value">Medium</output>
               <input id="amount-range" type="range" min="0" max="100" step="1" value="45" />

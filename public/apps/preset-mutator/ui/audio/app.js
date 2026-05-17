@@ -1,3 +1,5 @@
+import { PresetMutatorKnob } from "../preset-mutator-knob.js";
+
 const state = {
   audioContext: null,
   originalBuffer: null,
@@ -29,6 +31,9 @@ const elements = {
   uploadMessage: document.querySelector("#upload-message"),
   status: document.querySelector("#status"),
   inputMode: document.querySelector("#input-mode"),
+  mutationKnob: document.querySelector("#mutation-knob"),
+  mutationAmount: document.querySelector("#mutation-amount"),
+  mutationMicroControls: document.querySelectorAll("[data-macro-control]"),
   brightnessBias: document.querySelector("#brightness-bias"),
   movementBias: document.querySelector("#movement-bias"),
   attackBias: document.querySelector("#attack-bias"),
@@ -174,6 +179,17 @@ function signedBucket(value, negativeLabel, positiveLabel) {
   return "neutral";
 }
 
+function mutationBucket(value) {
+  const number = Number(value);
+  if (number <= 30) {
+    return "subtle";
+  }
+  if (number >= 70) {
+    return "extreme";
+  }
+  return "medium";
+}
+
 function durationBucket(seconds) {
   if (seconds <= 2) {
     return "short";
@@ -197,6 +213,8 @@ function sizeBucket(bytes) {
 function currentAnalyticsSelection() {
   return {
     input_mode: elements.inputMode?.value || "auto",
+    mutation_amount: Number(elements.mutationAmount.value),
+    mutation_bucket: mutationBucket(elements.mutationAmount.value),
     brightness_bucket: signedBucket(elements.brightnessBias.value, "darker", "brighter"),
     movement_bucket: signedBucket(elements.movementBias.value, "steadier", "more_motion"),
     attack_bucket: signedBucket(elements.attackBias.value, "softer", "harder"),
@@ -266,6 +284,7 @@ function sanitizeFileName(value) {
 }
 
 function updateControlLabels() {
+  updateMutationMicroControls(elements.mutationAmount.value);
   elements.brightnessBiasValue.textContent = `${elements.brightnessBias.value}%`;
   elements.movementBiasValue.textContent = `${elements.movementBias.value}%`;
   elements.attackBiasValue.textContent = `${elements.attackBias.value}%`;
@@ -276,6 +295,25 @@ function updateControlLabels() {
   elements.wetBiasValue.textContent = `${elements.wetBias.value}%`;
   elements.washBiasValue.textContent = `${elements.washBias.value}%`;
   elements.driveBiasValue.textContent = `${elements.driveBias.value}%`;
+}
+
+function updateMutationMicroControls(value) {
+  const amount = Number(value);
+  const microValues = {
+    randomize: Math.round(34 + amount * 0.62),
+    morph: Math.round(22 + amount * 0.7),
+    evolve: Math.round(18 + amount * 0.78),
+    shape: Math.round(44 + Math.abs(amount - 50) * 0.52),
+    variation: amount,
+  };
+
+  for (const control of elements.mutationMicroControls) {
+    const key = control.dataset.macroControl;
+    const valueNode = control.querySelector("strong");
+    if (valueNode && key in microValues) {
+      valueNode.textContent = `${Math.min(100, Math.max(0, microValues[key]))}%`;
+    }
+  }
 }
 
 function setProControlsEnabled(enabled) {
@@ -653,6 +691,7 @@ function buildProfile(analysis) {
   const brightnessBias = Number(elements.brightnessBias.value) / 100;
   const movementBias = Number(elements.movementBias.value) / 100;
   const attackBias = Number(elements.attackBias.value) / 100;
+  const mutationAmount = Number(elements.mutationAmount.value) / 100;
   const family = determineFamily(analysis);
 
   const brightness = clamp(analysis.centroidHz / 6000 + brightnessBias * 0.35);
@@ -672,6 +711,7 @@ function buildProfile(analysis) {
     movement,
     noise,
     width,
+    mutationAmount,
     pitchHz: analysis.pitchHz,
   };
 }
@@ -819,21 +859,24 @@ function shapeProfile(baseProfile, recipe, index) {
   const wetBias = Number(elements.wetBias.value) / 100;
   const washBias = Number(elements.washBias.value) / 100;
   const driveBias = Number(elements.driveBias.value) / 100;
+  const mutationScale = 0.55 + (baseProfile.mutationAmount ?? 0.5) * 1.15;
   const spreadBoost = Math.max(0, wildBias) * 0.06;
+
+  const spread = (fallback) => fallback * mutationScale + spreadBoost;
 
   return {
     ...baseProfile,
     family: recipe.family || baseProfile.family,
-    brightness: vary(clamp(baseProfile.brightness + (recipe.brightness ?? 0)), (recipe.spread ?? 0.07) + spreadBoost, index, 21),
-    body: vary(clamp(baseProfile.body + (recipe.body ?? 0)), (recipe.spread ?? 0.06) + spreadBoost, index, 22),
-    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0) - lengthBias * 0.12), (recipe.spread ?? 0.08) + spreadBoost, index, 23),
-    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0) + lengthBias * 0.14), (recipe.spread ?? 0.07) + spreadBoost, index, 24),
-    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0) + wildBias * 0.08), (recipe.spread ?? 0.09) + spreadBoost, index, 25),
-    noise: vary(clamp(baseProfile.noise + (recipe.noise ?? 0) + dirtBias * 0.18), (recipe.spread ?? 0.07) + spreadBoost, index, 26),
-    width: vary(clamp(baseProfile.width + (recipe.width ?? 0) + widthBias * 0.18), (recipe.spread ?? 0.08) + spreadBoost, index, 27),
-    wetness: vary(clamp((baseProfile.wetness ?? 0.18) + wetBias * 0.22 + (recipe.wetness ?? 0)), (recipe.spread ?? 0.05) + spreadBoost, index, 28),
-    wash: vary(clamp((baseProfile.wash ?? 0.12) + washBias * 0.22 + (recipe.wash ?? 0)), (recipe.spread ?? 0.05) + spreadBoost, index, 29),
-    drive: vary(clamp((baseProfile.drive ?? 0.08) + driveBias * 0.22 + (recipe.drive ?? 0)), (recipe.spread ?? 0.05) + spreadBoost, index, 30),
+    brightness: vary(clamp(baseProfile.brightness + (recipe.brightness ?? 0)), spread(recipe.spread ?? 0.07), index, 21),
+    body: vary(clamp(baseProfile.body + (recipe.body ?? 0)), spread(recipe.spread ?? 0.06), index, 22),
+    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0) - lengthBias * 0.12), spread(recipe.spread ?? 0.08), index, 23),
+    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0) + lengthBias * 0.14), spread(recipe.spread ?? 0.07), index, 24),
+    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0) + wildBias * 0.08), spread(recipe.spread ?? 0.09), index, 25),
+    noise: vary(clamp(baseProfile.noise + (recipe.noise ?? 0) + dirtBias * 0.18), spread(recipe.spread ?? 0.07), index, 26),
+    width: vary(clamp(baseProfile.width + (recipe.width ?? 0) + widthBias * 0.18), spread(recipe.spread ?? 0.08), index, 27),
+    wetness: vary(clamp((baseProfile.wetness ?? 0.18) + wetBias * 0.22 + (recipe.wetness ?? 0)), spread(recipe.spread ?? 0.05), index, 28),
+    wash: vary(clamp((baseProfile.wash ?? 0.12) + washBias * 0.22 + (recipe.wash ?? 0)), spread(recipe.spread ?? 0.05), index, 29),
+    drive: vary(clamp((baseProfile.drive ?? 0.08) + driveBias * 0.22 + (recipe.drive ?? 0)), spread(recipe.spread ?? 0.05), index, 30),
   };
 }
 
@@ -1535,6 +1578,7 @@ function generatePresets() {
 
   renderMetricGrid(elements.profileMetrics, [
     ["Detected Family", familyLabel(state.profile.family)],
+    ["Mutation", formatPercent(state.profile.mutationAmount)],
     ["Brightness", formatPercent(state.profile.brightness)],
     ["Body", formatPercent(state.profile.body)],
     ["Attack", formatPercent(state.profile.attack)],
@@ -1579,6 +1623,7 @@ function generatePresetPack() {
 
   renderMetricGrid(elements.profileMetrics, [
     ["Detected Family", familyLabel(state.profile.family)],
+    ["Mutation", formatPercent(state.profile.mutationAmount)],
     ["Brightness", formatPercent(state.profile.brightness)],
     ["Body", formatPercent(state.profile.body)],
     ["Attack", formatPercent(state.profile.attack)],
@@ -1717,6 +1762,16 @@ elements.paidFeatureActions?.addEventListener("click", (event) => {
   analyticsEvent("pro_cta_click", {
     checkout: link.href.includes("paypal.com") ? "paypal" : "gumroad",
   });
+});
+
+new PresetMutatorKnob(elements.mutationKnob, {
+  value: Number(elements.mutationAmount.value),
+  min: 0,
+  max: 100,
+  onChange(value) {
+    elements.mutationAmount.value = String(value);
+    updateControlLabels();
+  },
 });
 
 for (const control of [
