@@ -158,9 +158,65 @@ const elements = {
 const SUITE_UNLOCK_STORAGE_KEY = "kreativ-sound-tools-unlocked";
 const SUITE_PURCHASE_CODE = "AA-PRO-32-DGTW9930";
 const PRO_PACK_COUNT = PRO_PACK_ROLES.length;
+const ANALYTICS_MODE = "preset";
 
 function clamp(value, low, high) {
   return Math.max(low, Math.min(high, value));
+}
+
+function analyticsEvent(name, params = {}) {
+  if (typeof window.gtag !== "function") {
+    return;
+  }
+
+  window.gtag("event", `preset_mutator_${name}`, {
+    app_mode: ANALYTICS_MODE,
+    ...params,
+  });
+}
+
+function signedBucket(value, negativeLabel, positiveLabel) {
+  const number = Number(value);
+  if (number <= -34) {
+    return negativeLabel;
+  }
+  if (number >= 34) {
+    return positiveLabel;
+  }
+  return "neutral";
+}
+
+function amountBucket(value) {
+  const number = Number(value);
+  if (number < 28) {
+    return "subtle";
+  }
+  if (number < 62) {
+    return "medium";
+  }
+  return "wild";
+}
+
+function countBucket(count) {
+  if (count <= 8) {
+    return "small";
+  }
+  if (count <= 24) {
+    return "medium";
+  }
+  return "large";
+}
+
+function currentAnalyticsSelection() {
+  return {
+    amount_bucket: amountBucket(elements.amountRange.value),
+    brightness_bucket: signedBucket(elements.brightnessRange.value, "darker", "brighter"),
+    motion_bucket: signedBucket(elements.motionRange.value, "steadier", "more_motion"),
+    dirt_bucket: signedBucket(elements.dirtRange.value, "cleaner", "dirtier"),
+    source_wavetables_bucket: countBucket(state.sourcePreset?.summary?.wavetableCount || 0),
+    source_modulations_bucket: countBucket(state.sourcePreset?.summary?.modulationCount || 0),
+    safe_parameter_bucket: countBucket(state.sourcePreset?.summary?.scalarKeys?.length || 0),
+  };
 }
 
 function toPercent(value) {
@@ -551,6 +607,13 @@ function downloadVariant(variant) {
   anchor.click();
   anchor.remove();
   URL.revokeObjectURL(url);
+  analyticsEvent("download_preset", {
+    generation_mode: state.lastGenerationMode,
+    preset_role: variant.role.label,
+    preset_group: variant.groupKey,
+    changed_parameters_bucket: countBucket(variant.changedParameters.length),
+    ...currentAnalyticsSelection(),
+  });
 }
 
 async function downloadVariantPack() {
@@ -573,6 +636,11 @@ async function downloadVariantPack() {
   anchor.click();
   anchor.remove();
   URL.revokeObjectURL(url);
+  analyticsEvent("download_pack", {
+    generation_mode: "pro",
+    preset_count: state.generatedVariants.length,
+    ...currentAnalyticsSelection(),
+  });
 }
 
 function renderVariants() {
@@ -743,6 +811,13 @@ async function loadPreset(file) {
     setUploadMessage("");
     updateSourceUi();
     renderVariants();
+    analyticsEvent("source_loaded", {
+      source_type: "vital_preset",
+      source_wavetables_bucket: countBucket(summary.wavetableCount),
+      source_modulations_bucket: countBucket(summary.modulationCount),
+      safe_parameter_bucket: countBucket(summary.scalarKeys.length),
+      macro_count: summary.macroCount,
+    });
     elements.status.textContent = state.suiteUnlocked
       ? `Loaded ${summary.name}. Generate 3 free variants or build the 32-preset pack.`
       : `Loaded ${summary.name}. Generate 3 new preset directions when ready.`;
@@ -791,6 +866,10 @@ async function handleGenerate(mode = "free") {
     elements.status.textContent = mode === "pro"
       ? "32-preset mutation pack ready. Expand each group and download individual presets or the full ZIP."
       : "3 preset variations generated. Download the one that feels closest.";
+    analyticsEvent(mode === "pro" ? "generate_pro" : "generate_free", {
+      preset_count: state.generatedVariants.length,
+      ...currentAnalyticsSelection(),
+    });
   } finally {
     setGenerationLoadingState(false, mode);
   }
@@ -846,6 +925,11 @@ function toggleSuiteUnlock() {
   const isOpen = !elements.suiteUnlock.hidden;
   elements.suiteUnlock.hidden = isOpen;
   elements.suiteToggle.setAttribute("aria-expanded", String(!isOpen));
+  if (isOpen) {
+    analyticsEvent("unlock_panel_close");
+  } else {
+    analyticsEvent("unlock_panel_open");
+  }
   if (!isOpen) {
     elements.suiteKey.focus();
   }
@@ -855,10 +939,12 @@ function handleSuiteUnlock() {
   const key = elements.suiteKey.value.trim();
   if (!key) {
     elements.suiteUnlockNote.textContent = "Enter your purchase code to unlock this browser.";
+    analyticsEvent("unlock_attempt", { result: "empty" });
     return;
   }
   if (key !== SUITE_PURCHASE_CODE) {
     elements.suiteUnlockNote.textContent = "Invalid purchase code. Check the code and try again.";
+    analyticsEvent("unlock_attempt", { result: "invalid" });
     return;
   }
 
@@ -868,6 +954,7 @@ function handleSuiteUnlock() {
   elements.status.textContent = state.sourcePreset
     ? "Preset Mutator Pro is active in this browser. Generate the 32-preset pack when ready."
     : "Preset Mutator Pro is active in this browser.";
+  analyticsEvent("unlock_attempt", { result: "success" });
 }
 
 elements.fileInput.addEventListener("change", (event) => {
@@ -898,6 +985,15 @@ elements.generatePack?.addEventListener("click", () => handleGenerate("pro"));
 elements.downloadPack?.addEventListener("click", downloadVariantPack);
 elements.suiteToggle?.addEventListener("click", toggleSuiteUnlock);
 elements.suiteUnlockButton?.addEventListener("click", handleSuiteUnlock);
+elements.suiteActions?.addEventListener("click", (event) => {
+  const link = event.target.closest("a");
+  if (!link) {
+    return;
+  }
+  analyticsEvent("pro_cta_click", {
+    checkout: link.href.includes("paypal.com") ? "paypal" : "gumroad",
+  });
+});
 
 updateControlLabels();
 updateSourceUi();

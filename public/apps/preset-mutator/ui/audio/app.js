@@ -90,6 +90,7 @@ const SUITE_UNLOCK_STORAGE_KEY = "kreativ-sound-tools-unlocked";
 const LEGACY_AUDIO_ALCHEMY_STORAGE_KEY = "preset-mutator-pro-preview-unlocked";
 const PRO_PURCHASE_CODE = "AA-PRO-32-DGTW9930";
 const SUPPORTED_AUDIO_EXTENSIONS = [".wav", ".mp3", ".aiff", ".aif", ".m4a", ".aac", ".ogg", ".flac"];
+const ANALYTICS_MODE = "audio";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -149,6 +150,64 @@ function formatTime(seconds) {
 
 function updateStatus(message) {
   elements.status.textContent = message;
+}
+
+function analyticsEvent(name, params = {}) {
+  if (typeof window.gtag !== "function") {
+    return;
+  }
+
+  window.gtag("event", `preset_mutator_${name}`, {
+    app_mode: ANALYTICS_MODE,
+    ...params,
+  });
+}
+
+function signedBucket(value, negativeLabel, positiveLabel) {
+  const number = Number(value);
+  if (number <= -34) {
+    return negativeLabel;
+  }
+  if (number >= 34) {
+    return positiveLabel;
+  }
+  return "neutral";
+}
+
+function durationBucket(seconds) {
+  if (seconds <= 2) {
+    return "short";
+  }
+  if (seconds <= 8) {
+    return "medium";
+  }
+  return "long";
+}
+
+function sizeBucket(bytes) {
+  if (bytes < 1024 * 1024) {
+    return "under_1mb";
+  }
+  if (bytes < 5 * 1024 * 1024) {
+    return "1mb_to_5mb";
+  }
+  return "5mb_to_10mb";
+}
+
+function currentAnalyticsSelection() {
+  return {
+    input_mode: elements.inputMode?.value || "auto",
+    brightness_bucket: signedBucket(elements.brightnessBias.value, "darker", "brighter"),
+    movement_bucket: signedBucket(elements.movementBias.value, "steadier", "more_motion"),
+    attack_bucket: signedBucket(elements.attackBias.value, "softer", "harder"),
+    dirt_bucket: signedBucket(elements.dirtBias.value, "cleaner", "dirtier"),
+    width_bucket: signedBucket(elements.widthBias.value, "narrower", "wider"),
+    length_bucket: signedBucket(elements.lengthBias.value, "shorter", "longer"),
+    wild_bucket: signedBucket(elements.wildBias.value, "safer", "wilder"),
+    wet_bucket: signedBucket(elements.wetBias.value, "drier", "wetter"),
+    wash_bucket: signedBucket(elements.washBias.value, "tighter", "washier"),
+    drive_bucket: signedBucket(elements.driveBias.value, "cleaner", "more_drive"),
+  };
 }
 
 function showUploadMessage(message) {
@@ -1233,6 +1292,12 @@ async function downloadPreset(preset) {
     link.click();
     URL.revokeObjectURL(url);
     updateStatus(`${preset.name} is ready.`);
+    analyticsEvent("download_preset", {
+      generation_mode: state.lastGenerationMode,
+      preset_role: preset.roleLabel,
+      detected_family: preset.familyKey,
+      ...currentAnalyticsSelection(),
+    });
   } catch (error) {
     updateStatus(error.message || "Could not download preset.");
   }
@@ -1267,6 +1332,12 @@ async function downloadPresetPack() {
     link.click();
     URL.revokeObjectURL(url);
     updateStatus("32-pack ZIP ready.");
+    analyticsEvent("download_pack", {
+      generation_mode: "pro",
+      preset_count: state.presets.length,
+      detected_family: state.profile?.family || "unknown",
+      ...currentAnalyticsSelection(),
+    });
   } catch (error) {
     updateStatus(error.message || "Could not build the 32-pack ZIP.");
   }
@@ -1336,6 +1407,13 @@ async function loadAudioFile(file, resetInput = false) {
     setReady(true);
 
     updateStatus("Source ready. Generate 3 free presets or unlock the 32-pack.");
+    analyticsEvent("source_loaded", {
+      source_type: "audio",
+      duration_bucket: durationBucket(state.originalBuffer.duration),
+      file_size_bucket: sizeBucket(file.size),
+      channels: state.originalBuffer.numberOfChannels,
+      sample_rate_bucket: state.originalBuffer.sampleRate >= 48000 ? "48k_or_higher" : "under_48k",
+    });
   } catch (error) {
     resetLoadedState();
     const message = "Unsupported or unreadable audio file. Please use a supported audio file under 10 MB.";
@@ -1468,6 +1546,12 @@ function generatePresets() {
 
   renderPresets(state.presets);
   updateStatus("3 guided Vital presets ready. Download the ones that feel closest to your track.");
+  analyticsEvent("generate_free", {
+    preset_count: state.presets.length,
+    detected_family: state.profile.family,
+    duration_bucket: durationBucket(state.originalBuffer.duration),
+    ...currentAnalyticsSelection(),
+  });
   setReady(Boolean(state.originalBuffer));
 }
 
@@ -1506,6 +1590,12 @@ function generatePresetPack() {
 
   renderPresets(state.presets);
   updateStatus("32-preset Vital pack ready.");
+  analyticsEvent("generate_pro", {
+    preset_count: state.presets.length,
+    detected_family: state.profile.family,
+    duration_bucket: durationBucket(state.originalBuffer.duration),
+    ...currentAnalyticsSelection(),
+  });
   setReady(Boolean(state.originalBuffer));
 }
 
@@ -1575,6 +1665,11 @@ function togglePaidFeatureUnlock() {
   const isOpen = !elements.paidFeatureUnlock.hidden;
   elements.paidFeatureUnlock.hidden = isOpen;
   elements.paidFeatureToggle.setAttribute("aria-expanded", String(!isOpen));
+  if (isOpen) {
+    analyticsEvent("unlock_panel_close");
+  } else {
+    analyticsEvent("unlock_panel_open");
+  }
   if (!isOpen) {
     elements.paidFeatureKey.focus();
   }
@@ -1584,10 +1679,12 @@ function handlePaidFeatureUnlock() {
   const key = elements.paidFeatureKey.value.trim();
   if (!key) {
     elements.paidFeatureUnlockNote.textContent = "Enter your purchase code to unlock this browser.";
+    analyticsEvent("unlock_attempt", { result: "empty" });
     return;
   }
   if (key !== PRO_PURCHASE_CODE) {
     elements.paidFeatureUnlockNote.textContent = "Invalid purchase code. Check the code and try again.";
+    analyticsEvent("unlock_attempt", { result: "invalid" });
     return;
   }
 
@@ -1596,6 +1693,7 @@ function handlePaidFeatureUnlock() {
   renderPaidFeatureState();
   updateStatus("Preset Mutator Pro is active in this browser.");
   setReady(Boolean(state.originalBuffer));
+  analyticsEvent("unlock_attempt", { result: "success" });
 }
 
 elements.fileInput.addEventListener("change", handleFileChange);
@@ -1611,6 +1709,15 @@ elements.paidFeatureToggle.addEventListener("click", togglePaidFeatureUnlock);
 elements.paidFeatureUnlockButton.addEventListener("click", handlePaidFeatureUnlock);
   elements.generatePack?.addEventListener("click", handleGeneratePresetPack);
   elements.downloadPack?.addEventListener("click", downloadPresetPack);
+elements.paidFeatureActions?.addEventListener("click", (event) => {
+  const link = event.target.closest("a");
+  if (!link) {
+    return;
+  }
+  analyticsEvent("pro_cta_click", {
+    checkout: link.href.includes("paypal.com") ? "paypal" : "gumroad",
+  });
+});
 
 for (const control of [
   elements.brightnessBias,

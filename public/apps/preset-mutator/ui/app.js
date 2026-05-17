@@ -48,6 +48,7 @@ const PRO_PACK_COUNT = 32;
 const UNLOCK_STORAGE_KEY = "kreativ-sound-tools-unlocked";
 const LEGACY_UNLOCK_STORAGE_KEY = "preset-mutator-pro-preview-unlocked";
 const PRO_PURCHASE_CODE = "AA-PRO-32-DGTW9930";
+const ANALYTICS_MODE = "scratch";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -102,6 +103,56 @@ function percentRangeValue(input) {
 
 function updateStatus(message) {
   elements.status.textContent = message;
+}
+
+function analyticsEvent(name, params = {}) {
+  if (typeof window.gtag !== "function") {
+    return;
+  }
+
+  window.gtag("event", `preset_mutator_${name}`, {
+    app_mode: ANALYTICS_MODE,
+    ...params,
+  });
+}
+
+function signedBucket(value, negativeLabel, positiveLabel) {
+  const number = Number(value);
+  if (number <= -34) {
+    return negativeLabel;
+  }
+  if (number >= 34) {
+    return positiveLabel;
+  }
+  return "neutral";
+}
+
+function intentLengthBucket(value) {
+  const length = value.trim().length;
+  if (length === 0) {
+    return "none";
+  }
+  if (length <= 40) {
+    return "short";
+  }
+  if (length <= 100) {
+    return "medium";
+  }
+  return "long";
+}
+
+function currentAnalyticsSelection() {
+  return {
+    sound_type: elements.familySelect.value,
+    mood: elements.moodSelect.value,
+    register: elements.registerSelect.value,
+    intent_used: elements.intentText.value.trim().length > 0,
+    intent_length: intentLengthBucket(elements.intentText.value),
+    brightness_bucket: signedBucket(elements.brightnessRange.value, "darker", "brighter"),
+    motion_bucket: signedBucket(elements.motionRange.value, "steadier", "more_motion"),
+    attack_bucket: signedBucket(elements.attackRange.value, "softer", "harder"),
+    width_bucket: signedBucket(elements.widthRange.value, "narrower", "wider"),
+  };
 }
 
 function sanitizeFileName(value) {
@@ -472,6 +523,12 @@ async function downloadPreset(preset) {
     link.click();
     URL.revokeObjectURL(url);
     updateStatus(`${preset.name} is ready.`);
+    analyticsEvent("download_preset", {
+      generation_mode: state.lastGenerationMode,
+      preset_role: preset.roleLabel,
+      sound_type: preset.familyKey,
+      ...currentAnalyticsSelection(),
+    });
   } catch (error) {
     updateStatus(error.message || "Could not download preset.");
   }
@@ -499,6 +556,11 @@ async function downloadPack() {
     link.click();
     URL.revokeObjectURL(url);
     updateStatus("32-pack ZIP ready.");
+    analyticsEvent("download_pack", {
+      generation_mode: "pro",
+      preset_count: state.presets.length,
+      ...currentAnalyticsSelection(),
+    });
   } catch (error) {
     updateStatus(error.message || "Could not build the 32-pack ZIP.");
   }
@@ -524,6 +586,10 @@ function generate(mode = "free") {
     renderPresets(state.presets);
     elements.downloadPack.disabled = mode !== "pro";
     updateStatus(mode === "pro" ? "32 from-scratch Vital presets ready." : "3 from-scratch Vital presets ready.");
+    analyticsEvent(mode === "pro" ? "generate_pro" : "generate_free", {
+      preset_count: state.presets.length,
+      ...currentAnalyticsSelection(),
+    });
     setLoading(false);
   }, 300);
 }
@@ -543,6 +609,11 @@ function toggleUnlock() {
   const isOpen = !elements.paidFeatureUnlock.hidden;
   elements.paidFeatureUnlock.hidden = isOpen;
   elements.paidFeatureToggle.setAttribute("aria-expanded", String(!isOpen));
+  if (isOpen) {
+    analyticsEvent("unlock_panel_close");
+  } else {
+    analyticsEvent("unlock_panel_open");
+  }
   if (!isOpen) {
     elements.paidFeatureKey.focus();
   }
@@ -552,16 +623,19 @@ function unlockPro() {
   const code = elements.paidFeatureKey.value.trim();
   if (!code) {
     elements.paidFeatureUnlockNote.textContent = "Enter your purchase code to unlock this browser.";
+    analyticsEvent("unlock_attempt", { result: "empty" });
     return;
   }
   if (code !== PRO_PURCHASE_CODE) {
     elements.paidFeatureUnlockNote.textContent = "Invalid purchase code. Check the code and try again.";
+    analyticsEvent("unlock_attempt", { result: "invalid" });
     return;
   }
   state.proUnlocked = true;
   window.localStorage.setItem(UNLOCK_STORAGE_KEY, "1");
   renderUnlockState();
   updateStatus("Preset Mutator Pro is active in this browser.");
+  analyticsEvent("unlock_attempt", { result: "success" });
 }
 
 function refreshProfile() {
@@ -588,6 +662,15 @@ elements.generatePack?.addEventListener("click", () => generate("pro"));
 elements.downloadPack?.addEventListener("click", downloadPack);
 elements.paidFeatureToggle?.addEventListener("click", toggleUnlock);
 elements.paidFeatureUnlockButton?.addEventListener("click", unlockPro);
+elements.paidFeatureActions?.addEventListener("click", (event) => {
+  const link = event.target.closest("a");
+  if (!link) {
+    return;
+  }
+  analyticsEvent("pro_cta_click", {
+    checkout: link.href.includes("paypal.com") ? "paypal" : "gumroad",
+  });
+});
 
 state.proUnlocked = window.localStorage.getItem(UNLOCK_STORAGE_KEY) === "1" || window.localStorage.getItem(LEGACY_UNLOCK_STORAGE_KEY) === "1";
 refreshProfile();
