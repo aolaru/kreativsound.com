@@ -1,11 +1,18 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preset Mutator | Mutate Preset</title>
     <meta name="theme-color" content="#f8e9e9" />
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <script>
+      (() => {
+        const storedTheme = localStorage.getItem("theme");
+        const theme = storedTheme === "dark" || storedTheme === "light" ? storedTheme : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
     <link rel="icon" type="image/svg+xml" href="../preset-mutator-mark.svg" />
     <link rel="apple-touch-icon" href="../preset-mutator-mark.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -37,9 +44,10 @@
           </span>
         </a>
         <div class="nav-group nav-group-utility">
-          <button class="nav-link share-button" id="share-button" type="button" aria-label="Share this page">
-            <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
-            <span class="sr-only">Share this page</span>
+          <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
+            <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
+            <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>
+            <span class="sr-only">Toggle theme</span>
           </button>
         </div>
       </nav>
@@ -261,7 +269,7 @@
         <div class="suite-copy">
           <p class="suite-kicker">Preset Mutator Pro</p>
           <h2 id="suite-title">Unlock more variations and faster export</h2>
-          <p class="suite-price">Launch price: $19</p>
+          <p class="suite-price">Launch price: 19 EUR</p>
           <p class="suite-ownership">Pay once. Unlock Pro on this browser with your purchase code.</p>
           <div class="suite-benefit-grid" aria-label="Preset Mutator Pro benefits">
             <div>
@@ -332,6 +340,35 @@
     </main>
 
     <script src="./app.js" type="module"></script>
-    <script src="/share.js"></script>
+    <script>
+      const themeToggle = document.getElementById("theme-toggle");
+      const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+
+      function getCurrentTheme() {
+        return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+      }
+
+      function syncThemeUi(theme) {
+        if (themeColorMeta) {
+          themeColorMeta.setAttribute("content", theme === "dark" ? "#0d1018" : "#f8e9e9");
+        }
+
+        if (themeToggle) {
+          const isDark = theme === "dark";
+          themeToggle.dataset.icon = isDark ? "sun" : "moon";
+          themeToggle.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
+          themeToggle.setAttribute("aria-pressed", String(isDark));
+        }
+      }
+
+      syncThemeUi(getCurrentTheme());
+
+      themeToggle?.addEventListener("click", () => {
+        const nextTheme = getCurrentTheme() === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", nextTheme);
+        localStorage.setItem("theme", nextTheme);
+        syncThemeUi(nextTheme);
+      });
+    </script>
   </body>
 </html>

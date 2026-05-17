@@ -50,10 +50,6 @@ textarea {
   line-height: 1.45;
 }
 
-.scratch-trust-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
 .paid-feature-preview-actions {
   display: flex;
   flex-wrap: wrap;
@@ -61,8 +57,7 @@ textarea {
 }
 
 @media (max-width: 780px) {
-  .intent-grid,
-  .scratch-trust-grid {
+  .intent-grid {
     grid-template-columns: 1fr;
   }
 }
