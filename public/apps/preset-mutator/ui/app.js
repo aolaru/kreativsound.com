@@ -1,3 +1,5 @@
+import { PresetMutatorKnob } from "./preset-mutator-knob.js";
+
 const state = {
   presets: [],
   seedCache: new Map(),
@@ -15,6 +17,9 @@ const elements = {
   motionRange: document.querySelector("#motion-range"),
   attackRange: document.querySelector("#attack-range"),
   widthRange: document.querySelector("#width-range"),
+  mutationKnob: document.querySelector("#mutation-knob"),
+  mutationAmount: document.querySelector("#mutation-amount"),
+  mutationMicroControls: document.querySelectorAll("[data-macro-control]"),
   brightnessValue: document.querySelector("#brightness-value"),
   motionValue: document.querySelector("#motion-value"),
   attackValue: document.querySelector("#attack-value"),
@@ -127,6 +132,17 @@ function signedBucket(value, negativeLabel, positiveLabel) {
   return "neutral";
 }
 
+function mutationBucket(value) {
+  const number = Number(value);
+  if (number <= 30) {
+    return "subtle";
+  }
+  if (number >= 70) {
+    return "extreme";
+  }
+  return "medium";
+}
+
 function intentLengthBucket(value) {
   const length = value.trim().length;
   if (length === 0) {
@@ -148,6 +164,8 @@ function currentAnalyticsSelection() {
     register: elements.registerSelect.value,
     intent_used: elements.intentText.value.trim().length > 0,
     intent_length: intentLengthBucket(elements.intentText.value),
+    mutation_amount: Number(elements.mutationAmount.value),
+    mutation_bucket: mutationBucket(elements.mutationAmount.value),
     brightness_bucket: signedBucket(elements.brightnessRange.value, "darker", "brighter"),
     motion_bucket: signedBucket(elements.motionRange.value, "steadier", "more_motion"),
     attack_bucket: signedBucket(elements.attackRange.value, "softer", "harder"),
@@ -174,6 +192,26 @@ function updateControlLabels() {
   elements.motionValue.textContent = `${elements.motionRange.value}%`;
   elements.attackValue.textContent = `${elements.attackRange.value}%`;
   elements.widthValue.textContent = `${elements.widthRange.value}%`;
+  updateMutationMicroControls(elements.mutationAmount.value);
+}
+
+function updateMutationMicroControls(value) {
+  const amount = Number(value);
+  const microValues = {
+    randomize: Math.round(34 + amount * 0.62),
+    morph: Math.round(22 + amount * 0.7),
+    evolve: Math.round(18 + amount * 0.78),
+    shape: Math.round(44 + Math.abs(amount - 50) * 0.52),
+    variation: amount,
+  };
+
+  for (const control of elements.mutationMicroControls) {
+    const key = control.dataset.macroControl;
+    const valueNode = control.querySelector("strong");
+    if (valueNode && key in microValues) {
+      valueNode.textContent = `${Math.min(100, Math.max(0, microValues[key]))}%`;
+    }
+  }
 }
 
 function variantSeed(index) {
@@ -203,6 +241,7 @@ function currentProfile() {
     mood,
     register,
     intent,
+    mutationAmount: Number(elements.mutationAmount.value) / 100,
     brightness: clamp(moodBase.brightness + percentRangeValue(elements.brightnessRange) * 0.26 + textBrightness),
     body: clamp(moodBase.body),
     attack: clamp(familyBase.attack + percentRangeValue(elements.attackRange) * 0.24),
@@ -339,17 +378,20 @@ function buildPresetSummary({ family, brightness, movement, width, sustain, atta
 }
 
 function shapeProfile(base, recipe, index) {
+  const mutationScale = 0.55 + (base.mutationAmount ?? 0.5) * 1.15;
+  const spread = (recipe.spread ?? 0.06) * mutationScale;
+
   return {
     ...base,
-    brightness: vary(clamp(base.brightness + (recipe.brightness ?? 0)), recipe.spread ?? 0.06, index, 11),
-    body: vary(clamp(base.body + (recipe.body ?? 0)), recipe.spread ?? 0.06, index, 12),
-    attack: vary(clamp(base.attack + (recipe.attack ?? 0)), recipe.spread ?? 0.06, index, 13),
-    sustain: vary(clamp(base.sustain + (recipe.sustain ?? 0)), recipe.spread ?? 0.06, index, 14),
-    movement: vary(clamp(base.movement + (recipe.movement ?? 0)), recipe.spread ?? 0.06, index, 15),
-    noise: vary(clamp(base.noise + (recipe.noise ?? 0)), recipe.spread ?? 0.06, index, 16),
-    width: vary(clamp(base.width + (recipe.width ?? 0)), recipe.spread ?? 0.06, index, 17),
-    wetness: vary(clamp(base.wetness + (recipe.wetness ?? 0)), recipe.spread ?? 0.06, index, 18),
-    drive: vary(clamp(base.drive + (recipe.drive ?? 0)), recipe.spread ?? 0.06, index, 19),
+    brightness: vary(clamp(base.brightness + (recipe.brightness ?? 0)), spread, index, 11),
+    body: vary(clamp(base.body + (recipe.body ?? 0)), spread, index, 12),
+    attack: vary(clamp(base.attack + (recipe.attack ?? 0)), spread, index, 13),
+    sustain: vary(clamp(base.sustain + (recipe.sustain ?? 0)), spread, index, 14),
+    movement: vary(clamp(base.movement + (recipe.movement ?? 0)), spread, index, 15),
+    noise: vary(clamp(base.noise + (recipe.noise ?? 0)), spread, index, 16),
+    width: vary(clamp(base.width + (recipe.width ?? 0)), spread, index, 17),
+    wetness: vary(clamp(base.wetness + (recipe.wetness ?? 0)), spread, index, 18),
+    drive: vary(clamp(base.drive + (recipe.drive ?? 0)), spread, index, 19),
   };
 }
 
@@ -373,6 +415,7 @@ function renderProfile(profile) {
     ["Type", familyLabel(profile.family)],
     ["Mood", elements.moodSelect.options[elements.moodSelect.selectedIndex].text],
     ["Register", noteName(profile.pitchHz)],
+    ["Mutation", `${Math.round(profile.mutationAmount * 100)}%`],
     ["Brightness", `${Math.round(profile.brightness * 100)}%`],
     ["Motion", `${Math.round(profile.movement * 100)}%`],
     ["Width", `${Math.round(profile.width * 100)}%`],
@@ -642,6 +685,16 @@ function refreshProfile() {
   updateControlLabels();
   renderProfile(currentProfile());
 }
+
+new PresetMutatorKnob(elements.mutationKnob, {
+  value: Number(elements.mutationAmount.value),
+  min: 0,
+  max: 100,
+  onChange(value) {
+    elements.mutationAmount.value = String(value);
+    refreshProfile();
+  },
+});
 
 for (const element of [
   elements.familySelect,
