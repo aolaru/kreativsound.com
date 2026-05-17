@@ -1195,6 +1195,22 @@ a:focus-visible,
   box-shadow: 0 14px 24px rgba(0, 0, 0, 0.12);
 }
 
+.product-thumb-link {
+  display: block;
+  border-radius: 14px;
+  text-decoration: none;
+}
+
+.product-thumb-link:hover,
+.product-thumb-link:focus-visible {
+  text-decoration: none;
+}
+
+.product-thumb-link:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 3px;
+}
+
 .product-card-legacy .product-thumb {
   opacity: 0.88;
   filter: saturate(0.82) brightness(0.94);

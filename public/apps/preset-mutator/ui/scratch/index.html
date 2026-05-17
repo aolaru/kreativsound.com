@@ -42,7 +42,7 @@
       <section class="hero">
         <p class="eyebrow">From Scratch beta</p>
         <h1>Create a Vital preset from intent</h1>
-        <p class="lede">Start without audio or presets: choose a musical direction, shape the feel, and export playable Vital starting points.</p>
+        <p class="lede">Choose a direction, shape the feel, and export playable Vital starting points.</p>
         <figure class="hero-cover" aria-label="Preset Mutator product artwork">
           <img src="/assets/thumbs/preset-mutator.webp" width="1672" height="941" alt="Preset Mutator cover artwork" />
         </figure>
@@ -94,8 +94,8 @@
         <div class="section-head">
           <div>
             <h2>Preset Intent</h2>
-            <p class="muted">No audio or source preset needed. This mode builds a starter profile from sound type, mood, register, and a short intent.</p>
-            <p class="input-note">Vital only for now. Serum 2 and Pigments 7 are planned future targets.</p>
+            <p class="muted">Set the sound type, mood, register, and a short intent.</p>
+            <p class="input-note">Vital is live now. Serum 2 and Pigments 7 are planned.</p>
           </div>
         </div>
 
@@ -141,7 +141,7 @@
           <div class="section-head">
             <div>
               <h2>Shape the Starting Point</h2>
-              <p class="muted">These controls bias the generated preset profile before export.</p>
+              <p class="muted">Bias the generated profile before export.</p>
             </div>
           </div>
 
@@ -181,13 +181,13 @@
 
         <section class="panel insight-panel">
           <div class="section-head">
-            <h2>Best Use</h2>
+            <h2>Use It For</h2>
             <p class="muted">Treat these as fast musical starting points.</p>
           </div>
           <ul class="insights">
-            <li>Use the short intent to name and bias the result.</li>
+            <li>Name and bias the result with a short intent.</li>
             <li>Generate a few starts, then refine the best one in Vital.</li>
-            <li>Use Audio to Preset when you need the tool to follow a real source sound.</li>
+            <li>Use Audio mode when the tool should follow a source sound.</li>
           </ul>
         </section>
       </section>
@@ -196,28 +196,28 @@
         <section class="panel analysis-panel">
           <div class="section-head">
             <h2>Intent Profile</h2>
-            <p class="muted">The current normalized profile before preset export.</p>
+            <p class="muted">Current profile before export.</p>
           </div>
           <div class="metric-grid" id="profile-metrics"></div>
         </section>
 
         <section class="panel analysis-panel">
           <div class="section-head">
-            <h2>Privacy and Processing</h2>
+            <h2>Local Processing</h2>
             <p class="muted">Everything stays local to your browser.</p>
           </div>
           <div class="trust-grid scratch-trust-grid">
             <div class="trust-item">
               <span class="meta-label">No Upload</span>
-              <p>No audio or preset file is needed.</p>
+              <p>No source file needed.</p>
             </div>
             <div class="trust-item">
               <span class="meta-label">Local Export</span>
-              <p>Vital files are generated in your browser.</p>
+              <p>Vital files generate locally.</p>
             </div>
             <div class="trust-item">
               <span class="meta-label">No AI</span>
-              <p>Preset starts come from local rules and curated Vital seed data.</p>
+              <p>Rule-based seed data only.</p>
             </div>
           </div>
         </section>
@@ -226,19 +226,37 @@
       <section class="panel presets-panel" id="presets-panel">
         <div class="section-head">
           <h2>Generated Preset Variants</h2>
-          <p class="muted">Each result exports as a real `.vital` file built from curated Vital seeds.</p>
+          <p class="muted">Exportable `.vital` starts from curated seeds.</p>
         </div>
         <div class="preset-list" id="preset-list">
-          <p class="empty-state">Choose a sound type and mood, then click <strong>Generate 3 Free Presets</strong>. Use Pro when you want a complete 32-preset pack from the same intent.</p>
+          <p class="empty-state">Choose a sound type and mood, then click <strong>Generate 3 Free Presets</strong>. Pro creates a full 32-preset pack.</p>
         </div>
       </section>
 
       <section class="panel paid-feature-panel" id="paid-feature-panel" aria-labelledby="paid-feature-title">
         <div class="paid-feature-copy">
           <p class="paid-feature-kicker">Preset Mutator Pro</p>
-          <h2 id="paid-feature-title">Unlock the full from-scratch workflow</h2>
+          <h2 id="paid-feature-title">Unlock more variations and faster export</h2>
           <p class="paid-feature-price">Launch price: $19</p>
           <p class="paid-feature-ownership">Pay once. Unlock Pro on this browser with your purchase code.</p>
+          <div class="paid-benefit-grid" aria-label="Preset Mutator Pro benefits">
+            <div>
+              <strong>More variations</strong>
+              <span>Explore 32 starts from one idea.</span>
+            </div>
+            <div>
+              <strong>Faster exploration</strong>
+              <span>Move through directions quickly.</span>
+            </div>
+            <div>
+              <strong>Export-ready</strong>
+              <span>Download Pro packs as ZIP.</span>
+            </div>
+            <div>
+              <strong>Serious design</strong>
+              <span>Better for focused preset sessions.</span>
+            </div>
+          </div>
           <ul class="paid-feature-list">
             <li>3 free Vital preset starts</li>
             <li>32-preset from-scratch pack</li>
@@ -258,13 +276,13 @@
             <i class="fa-solid fa-key" aria-hidden="true"></i>
             Enter purchase code
           </button>
-          <p class="paid-feature-meta">One-time purchase. Gumroad is the default checkout; PayPal is available if you prefer it. Enter your purchase code after checkout.</p>
+          <p class="paid-feature-meta">Gumroad is default checkout. PayPal is available if preferred.</p>
         </div>
         <div class="paid-feature-unlock" id="paid-feature-unlock" hidden>
           <label class="sr-only" for="paid-feature-key">Preset Mutator purchase code</label>
           <input id="paid-feature-key" type="text" placeholder="Enter your Preset Mutator purchase code" autocomplete="off" />
           <button class="button secondary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Unlock Pro</button>
-          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">After purchase, enter your code to unlock Pro generation on this browser. No account is required.</p>
+          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Enter your code after purchase. No account required.</p>
         </div>
         <div class="paid-feature-preview" id="paid-feature-preview" hidden>
           <p class="paid-feature-preview-badge">Preset Mutator Pro active</p>

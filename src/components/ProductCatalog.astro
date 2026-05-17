@@ -49,16 +49,31 @@ function unavailableText(product: { badge?: string; category: string }) {
                       {item.badge}
                     </span>
                   ) : null}
-                  <img
-                    class="product-thumb"
-                    src={item.thumbnail || "/logo-128.svg"}
-                    alt={`${item.title} thumbnail`}
-                    width="128"
-                    height="128"
-                    loading="eager"
-                    decoding="async"
-                    fetchpriority={fetchPriority}
-                  />
+                  {item.detailsUrl ? (
+                    <a class="product-thumb-link" href={item.detailsUrl} aria-label={`View ${item.title} details`}>
+                      <img
+                        class="product-thumb"
+                        src={item.thumbnail || "/logo-128.svg"}
+                        alt={`${item.title} thumbnail`}
+                        width="128"
+                        height="128"
+                        loading="eager"
+                        decoding="async"
+                        fetchpriority={fetchPriority}
+                      />
+                    </a>
+                  ) : (
+                    <img
+                      class="product-thumb"
+                      src={item.thumbnail || "/logo-128.svg"}
+                      alt={`${item.title} thumbnail`}
+                      width="128"
+                      height="128"
+                      loading="eager"
+                      decoding="async"
+                      fetchpriority={fetchPriority}
+                    />
+                  )}
                   <span class="product-title">{item.title}</span>
                   <span class="product-meta">{item.format} | {item.count}</span>
                   <span class="product-use">{item.useCase}</span>
