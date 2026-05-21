@@ -653,6 +653,7 @@ h2 {
   justify-items: center;
   gap: 0.6rem;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .preset-knob-shell {
@@ -661,6 +662,7 @@ h2 {
   aspect-ratio: 1;
   display: grid;
   place-items: center;
+  transform: translateZ(0);
 }
 
 .preset-knob-ring {
@@ -723,7 +725,8 @@ h2 {
     repeating-conic-gradient(from 14deg, rgba(255, 255, 255, 0.045) 0deg 3deg, transparent 3deg 8deg),
     radial-gradient(circle, #34363a 0%, #181a1f 58%, #090a0d 100%);
   box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.24), inset 0 -18px 32px rgba(0, 0, 0, 0.55), inset 14px 10px 28px rgba(255, 255, 255, 0.06), 0 18px 38px rgba(0, 0, 0, 0.28);
-  transform: rotate(var(--knob-angle));
+  backface-visibility: hidden;
+  transform: translateZ(0) rotate(var(--knob-angle));
   will-change: transform;
   z-index: 3;
 }
@@ -769,6 +772,8 @@ h2 {
   border-radius: 999px;
   cursor: ns-resize;
   touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .preset-knob-control:focus-visible {
@@ -807,38 +812,6 @@ h2 {
   font-weight: 800;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-}
-
-.mutation-micro-controls {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.6rem;
-}
-
-.mutation-micro-control {
-  display: grid;
-  gap: 0.3rem;
-  min-height: 4.4rem;
-  padding: 0.78rem 0.8rem;
-  border: 1px solid rgba(153, 0, 0, 0.13);
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent), rgba(255, 250, 250, 0.52);
-}
-
-.mutation-micro-control span {
-  color: var(--muted);
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1.1;
-  text-transform: uppercase;
-}
-
-.mutation-micro-control strong {
-  color: var(--accent-strong);
-  font-size: 1.1rem;
-  line-height: 1;
 }
 
 .control output,
@@ -1437,16 +1410,9 @@ button.is-loading .button-spinner {
     max-width: 100%;
   }
 
-  .mutation-micro-controls {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 560px) {
-  .mutation-micro-controls {
-    grid-template-columns: 1fr;
-  }
-
   .preset-knob-shell {
     width: min(100%, 15.5rem);
   }
@@ -1517,11 +1483,10 @@ textarea::placeholder {
 [data-theme="dark"] .suite-card,
 [data-theme="dark"] .suite-panel,
 [data-theme="dark"] .preset-summary > div,
-[data-theme="dark"] .preset-metrics > div,
-[data-theme="dark"] .mode-proof-grid > div,
-[data-theme="dark"] .mutation-macro,
-[data-theme="dark"] .mutation-micro-control,
-[data-theme="dark"] .suite-benefit-grid div,
+  [data-theme="dark"] .preset-metrics > div,
+  [data-theme="dark"] .mode-proof-grid > div,
+  [data-theme="dark"] .mutation-macro,
+  [data-theme="dark"] .suite-benefit-grid div,
 [data-theme="dark"] .suite-actions,
 [data-theme="dark"] .suite-unlock,
 [data-theme="dark"] .local-trust-strip span {

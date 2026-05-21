@@ -178,28 +178,6 @@
               </div>
               <div id="mutation-knob" class="mutation-knob-mount"></div>
               <input id="mutation-amount" type="hidden" value="50" />
-              <div class="mutation-micro-controls" aria-label="Mutation amount detail">
-                <div class="mutation-micro-control" data-macro-control="randomize">
-                  <span>Randomize</span>
-                  <strong>50%</strong>
-                </div>
-                <div class="mutation-micro-control" data-macro-control="morph">
-                  <span>Morph</span>
-                  <strong>50%</strong>
-                </div>
-                <div class="mutation-micro-control" data-macro-control="evolve">
-                  <span>Evolve</span>
-                  <strong>50%</strong>
-                </div>
-                <div class="mutation-micro-control" data-macro-control="shape">
-                  <span>Shape</span>
-                  <strong>50%</strong>
-                </div>
-                <div class="mutation-micro-control" data-macro-control="variation">
-                  <span>Variation Amount</span>
-                  <strong>50%</strong>
-                </div>
-              </div>
             </div>
 
             <div class="control-grid">
@@ -247,101 +225,32 @@
                 <output id="attack-bias-value">0%</output>
                 <input id="attack-bias" type="range" min="-100" max="100" step="1" value="0" />
               </label>
+
+              <label class="control">
+                <span class="control-label">Narrower / Wider
+                  <button class="info-tooltip" type="button" aria-label="Explain Narrower / Wider" data-tooltip="Changes how wide the generated presets feel by biasing stereo spread, unison width, and spaciousness.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="width-bias-value">0%</output>
+                <input id="width-bias" type="range" min="-100" max="100" step="1" value="0" />
+              </label>
+
+              <label class="control">
+                <span class="control-label">Cleaner / Dirtier
+                  <button class="info-tooltip" type="button" aria-label="Explain Cleaner / Dirtier" data-tooltip="Adjusts grit and roughness by biasing noise level and distortion.">
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                  </button>
+                </span>
+                <output id="dirt-bias-value">0%</output>
+                <input id="dirt-bias" type="range" min="-100" max="100" step="1" value="0" />
+              </label>
             </div>
 
             <div class="actions section-actions">
               <button id="analyze-generate" type="button" disabled>
                 <span class="button-spinner" aria-hidden="true"></span>
                 <span class="button-label">Generate 3 Free Presets</span>
-              </button>
-            </div>
-          </section>
-
-          <section class="pro-control-panel control-section control-section-pro" id="pro-control-panel" aria-labelledby="pro-control-title">
-            <div class="control-section-head">
-              <p class="control-section-kicker">Pro</p>
-              <div>
-                <h3 id="pro-control-title">32-pack shaping</h3>
-                <p class="muted">These extra controls only affect the 32-preset Pro pack.</p>
-              </div>
-            </div>
-
-            <div class="control-grid pro-control-grid">
-              <label class="control">
-                <span class="control-label">Cleaner / Dirtier
-                  <button class="info-tooltip" type="button" aria-label="Explain Cleaner / Dirtier" data-tooltip="Adjusts grit and roughness in the Pro pack. It pushes noise level and distortion for cleaner or dirtier results.">
-                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                  </button>
-                </span>
-                <output id="dirt-bias-value">0%</output>
-                <input id="dirt-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
-              </label>
-
-              <label class="control">
-                <span class="control-label">Narrower / Wider
-                  <button class="info-tooltip" type="button" aria-label="Explain Narrower / Wider" data-tooltip="Changes how wide the Pro pack feels by biasing stereo spread, unison width, and spaciousness.">
-                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                  </button>
-                </span>
-                <output id="width-bias-value">0%</output>
-                <input id="width-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
-              </label>
-
-              <label class="control">
-                <span class="control-label">Shorter / Longer
-                  <button class="info-tooltip" type="button" aria-label="Explain Shorter / Longer" data-tooltip="Biases envelope timing in the Pro pack. Shorter tightens attacks and releases, while longer adds bloom and tail.">
-                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                  </button>
-                </span>
-                <output id="length-bias-value">0%</output>
-                <input id="length-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
-              </label>
-
-              <label class="control">
-                <span class="control-label">Safer / Wilder
-                  <button class="info-tooltip" type="button" aria-label="Explain Safer / Wilder" data-tooltip="Controls how far the 32-pack can drift from the source profile. Wilder increases spread and exploratory variation.">
-                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                  </button>
-                </span>
-                <output id="wild-bias-value">0%</output>
-                <input id="wild-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
-              </label>
-
-              <label class="control">
-                <span class="control-label">Drier / Wetter
-                  <button class="info-tooltip" type="button" aria-label="Explain Drier / Wetter" data-tooltip="Biases the Pro pack toward less or more overall FX mix, especially reverb, chorus, and a touch of delay.">
-                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                  </button>
-                </span>
-                <output id="wet-bias-value">0%</output>
-                <input id="wet-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
-              </label>
-
-              <label class="control">
-                <span class="control-label">Tighter / More Washed
-                  <button class="info-tooltip" type="button" aria-label="Explain Tighter / More Washed" data-tooltip="Biases the tail shape of the Pro pack. Higher values create larger, longer ambient washes and softer spatial tails.">
-                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                  </button>
-                </span>
-                <output id="wash-bias-value">0%</output>
-                <input id="wash-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
-              </label>
-
-              <label class="control">
-                <span class="control-label">Smoother / More Driven
-                  <button class="info-tooltip" type="button" aria-label="Explain Smoother / More Driven" data-tooltip="Biases the Pro pack toward softer, smoother tone or more saturation, edge, and driven filter behavior.">
-                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                  </button>
-                </span>
-                <output id="drive-bias-value">0%</output>
-                <input id="drive-bias" type="range" min="-100" max="100" step="1" value="0" disabled />
-              </label>
-            </div>
-
-            <div class="actions section-actions">
-              <button class="button primary" id="generate-pack" type="button" disabled>
-                <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-                Generate 32 Pro Presets
               </button>
             </div>
           </section>
@@ -448,6 +357,10 @@
           <p class="paid-feature-preview-badge">Preset Mutator Pro active</p>
           <p class="paid-feature-preview-note">This browser is unlocked for Preset Mutator Pro.</p>
           <div class="paid-feature-preview-actions">
+            <button class="button primary" id="generate-pack" type="button" disabled>
+              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+              Generate 32 Pro Presets
+            </button>
             <button class="button secondary" id="download-pack" type="button" disabled>
               <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
               Download 32-Pack (.zip)

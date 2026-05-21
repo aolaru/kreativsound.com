@@ -190,28 +190,6 @@
               <p>Set how far the variants can move from the loaded Vital preset.</p>
             </div>
             <div id="mutation-knob" class="mutation-knob-mount"></div>
-            <div class="mutation-micro-controls" aria-label="Mutation amount detail">
-              <div class="mutation-micro-control" data-macro-control="randomize">
-                <span>Randomize</span>
-                <strong>45%</strong>
-              </div>
-              <div class="mutation-micro-control" data-macro-control="morph">
-                <span>Morph</span>
-                <strong>45%</strong>
-              </div>
-              <div class="mutation-micro-control" data-macro-control="evolve">
-                <span>Evolve</span>
-                <strong>45%</strong>
-              </div>
-              <div class="mutation-micro-control" data-macro-control="shape">
-                <span>Shape</span>
-                <strong>45%</strong>
-              </div>
-              <div class="mutation-micro-control" data-macro-control="variation">
-                <span>Variation Amount</span>
-                <strong>45%</strong>
-              </div>
-            </div>
           </div>
 
           <div class="control-grid">
@@ -231,6 +209,18 @@
               <span>Steadier / More Motion</span>
               <output id="motion-value">0%</output>
               <input id="motion-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+
+            <label class="control">
+              <span>Softer / Harder Attack</span>
+              <output id="attack-value">0%</output>
+              <input id="attack-range" type="range" min="-100" max="100" step="1" value="0" />
+            </label>
+
+            <label class="control">
+              <span>Narrower / Wider</span>
+              <output id="width-value">0%</output>
+              <input id="width-range" type="range" min="-100" max="100" step="1" value="0" />
             </label>
 
             <label class="control">

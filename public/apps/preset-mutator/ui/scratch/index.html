@@ -167,28 +167,6 @@
             </div>
             <div id="mutation-knob" class="mutation-knob-mount"></div>
             <input id="mutation-amount" type="hidden" value="50" />
-            <div class="mutation-micro-controls" aria-label="Mutation amount detail">
-              <div class="mutation-micro-control" data-macro-control="randomize">
-                <span>Randomize</span>
-                <strong>50%</strong>
-              </div>
-              <div class="mutation-micro-control" data-macro-control="morph">
-                <span>Morph</span>
-                <strong>50%</strong>
-              </div>
-              <div class="mutation-micro-control" data-macro-control="evolve">
-                <span>Evolve</span>
-                <strong>50%</strong>
-              </div>
-              <div class="mutation-micro-control" data-macro-control="shape">
-                <span>Shape</span>
-                <strong>50%</strong>
-              </div>
-              <div class="mutation-micro-control" data-macro-control="variation">
-                <span>Variation Amount</span>
-                <strong>50%</strong>
-              </div>
-            </div>
           </div>
 
           <div class="control-grid">
@@ -211,6 +189,11 @@
               <span class="control-label">Narrower / Wider</span>
               <output id="width-value">0%</output>
               <input id="width-range" type="range" min="-100" max="100" step="1" value="12" />
+            </label>
+            <label class="control">
+              <span class="control-label">Cleaner / Dirtier</span>
+              <output id="texture-value">0%</output>
+              <input id="texture-range" type="range" min="-100" max="100" step="1" value="0" />
             </label>
           </div>
 

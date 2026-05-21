@@ -85,7 +85,7 @@ const SAFE_PARAMETER_BOUNDS = {
   drive: { low: 0, high: 4, integral: false, zone: "dirt" },
   keytrack: { low: 0, high: 1, integral: false, zone: "tone" },
   mix: { low: 0, high: 1, integral: false, zone: "space" },
-  attack: { low: 0, high: 1, integral: false, zone: "motion" },
+  attack: { low: 0, high: 1, integral: false, zone: "attack" },
   decay: { low: 0, high: 1, integral: false, zone: "motion" },
   sustain: { low: 0, high: 1, integral: false, zone: "tone" },
   release: { low: 0, high: 1, integral: false, zone: "motion" },
@@ -132,13 +132,16 @@ const elements = {
   presetWavetables: document.querySelector("#preset-wavetables"),
   presetFile: document.querySelector("#preset-file"),
   mutationKnob: document.querySelector("#mutation-knob"),
-  mutationMicroControls: document.querySelectorAll("[data-macro-control]"),
   amountRange: document.querySelector("#amount-range"),
   amountValue: document.querySelector("#amount-value"),
   brightnessRange: document.querySelector("#brightness-range"),
   brightnessValue: document.querySelector("#brightness-value"),
   motionRange: document.querySelector("#motion-range"),
   motionValue: document.querySelector("#motion-value"),
+  attackRange: document.querySelector("#attack-range"),
+  attackValue: document.querySelector("#attack-value"),
+  widthRange: document.querySelector("#width-range"),
+  widthValue: document.querySelector("#width-value"),
   dirtRange: document.querySelector("#dirt-range"),
   dirtValue: document.querySelector("#dirt-value"),
   generateButton: document.querySelector("#generate-button"),
@@ -192,13 +195,13 @@ function signedBucket(value, negativeLabel, positiveLabel) {
 
 function amountBucket(value) {
   const number = Number(value);
-  if (number < 28) {
+  if (number <= 30) {
     return "subtle";
   }
-  if (number < 62) {
-    return "medium";
+  if (number >= 70) {
+    return "extreme";
   }
-  return "wild";
+  return "medium";
 }
 
 function countBucket(count) {
@@ -213,9 +216,12 @@ function countBucket(count) {
 
 function currentAnalyticsSelection() {
   return {
-    amount_bucket: amountBucket(elements.amountRange.value),
+    mutation_amount: Number(elements.amountRange.value),
+    mutation_bucket: amountBucket(elements.amountRange.value),
     brightness_bucket: signedBucket(elements.brightnessRange.value, "darker", "brighter"),
     motion_bucket: signedBucket(elements.motionRange.value, "steadier", "more_motion"),
+    attack_bucket: signedBucket(elements.attackRange.value, "softer", "harder"),
+    width_bucket: signedBucket(elements.widthRange.value, "narrower", "wider"),
     dirt_bucket: signedBucket(elements.dirtRange.value, "cleaner", "dirtier"),
     source_wavetables_bucket: countBucket(state.sourcePreset?.summary?.wavetableCount || 0),
     source_modulations_bucket: countBucket(state.sourcePreset?.summary?.modulationCount || 0),
@@ -236,7 +242,7 @@ function amountLabel(value) {
   if (numeric < 62) {
     return "Medium";
   }
-  return "Wild";
+  return "Extreme";
 }
 
 function clone(value) {
@@ -318,29 +324,11 @@ function currentActionLabel() {
 
 function updateControlLabels() {
   elements.amountValue.textContent = amountLabel(elements.amountRange.value);
-  updateMutationMicroControls(elements.amountRange.value);
   elements.brightnessValue.textContent = toPercent(elements.brightnessRange.value);
   elements.motionValue.textContent = toPercent(elements.motionRange.value);
+  elements.attackValue.textContent = toPercent(elements.attackRange.value);
+  elements.widthValue.textContent = toPercent(elements.widthRange.value);
   elements.dirtValue.textContent = toPercent(elements.dirtRange.value);
-}
-
-function updateMutationMicroControls(value) {
-  const amount = Number(value);
-  const microValues = {
-    randomize: Math.round(34 + amount * 0.62),
-    morph: Math.round(22 + amount * 0.7),
-    evolve: Math.round(18 + amount * 0.78),
-    shape: Math.round(44 + Math.abs(amount - 50) * 0.52),
-    variation: amount,
-  };
-
-  for (const control of elements.mutationMicroControls) {
-    const key = control.dataset.macroControl;
-    const valueNode = control.querySelector("strong");
-    if (valueNode && key in microValues) {
-      valueNode.textContent = `${Math.min(100, Math.max(0, microValues[key]))}%`;
-    }
-  }
 }
 
 function setUploadMessage(message = "") {
@@ -392,6 +380,8 @@ function renderStrategyMetrics() {
     ["Amount", amountLabel(elements.amountRange.value)],
     ["Tone", toPercent(elements.brightnessRange.value)],
     ["Motion", toPercent(elements.motionRange.value)],
+    ["Attack", toPercent(elements.attackRange.value)],
+    ["Space", toPercent(elements.widthRange.value)],
     ["Dirt", toPercent(elements.dirtRange.value)],
   ];
 
@@ -476,6 +466,8 @@ function buildStrategyWeights() {
   return {
     tone: Number(elements.brightnessRange.value) / 100,
     motion: Number(elements.motionRange.value) / 100,
+    attack: Number(elements.attackRange.value) / 100,
+    space: Number(elements.widthRange.value) / 100,
     dirt: Number(elements.dirtRange.value) / 100,
     amount: Number(elements.amountRange.value) / 100,
   };
@@ -491,10 +483,12 @@ function mutateValue(key, value, config, rng, strategy, intensity, role) {
     directedOffset = span * strategy.tone * 0.12 * intensity;
   } else if (config.zone === "motion") {
     directedOffset = span * strategy.motion * 0.12 * intensity;
+  } else if (config.zone === "attack") {
+    directedOffset = span * strategy.attack * -0.12 * intensity;
   } else if (config.zone === "dirt") {
     directedOffset = span * strategy.dirt * 0.14 * intensity;
   } else if (config.zone === "space") {
-    directedOffset = span * ((strategy.motion * 0.35) + (strategy.tone * 0.15)) * 0.08 * intensity;
+    directedOffset = span * strategy.space * 0.1 * intensity;
   }
 
   let roleOffset = 0;
@@ -524,11 +518,14 @@ function chooseParameterPool(keys, strategy) {
     if (config?.zone === "motion") {
       score += Math.abs(strategy.motion) * 1.5;
     }
+    if (config?.zone === "attack") {
+      score += Math.abs(strategy.attack) * 1.5;
+    }
     if (config?.zone === "dirt") {
       score += Math.abs(strategy.dirt) * 1.8;
     }
     if (config?.zone === "space") {
-      score += Math.abs(strategy.motion) * 0.5;
+      score += Math.abs(strategy.space) * 1.5;
     }
     return { key, score };
   });
@@ -548,6 +545,18 @@ function buildVariantDescription(role, strategy, mode) {
     descriptors.push("steadier");
   } else if (strategy.motion > 0.2) {
     descriptors.push("more animated");
+  }
+
+  if (strategy.attack < -0.2) {
+    descriptors.push("softer attack");
+  } else if (strategy.attack > 0.2) {
+    descriptors.push("harder attack");
+  }
+
+  if (strategy.space < -0.2) {
+    descriptors.push("narrower");
+  } else if (strategy.space > 0.2) {
+    descriptors.push("wider");
   }
 
   if (strategy.dirt > 0.25) {
@@ -574,7 +583,7 @@ function generateVariants(mode = "free") {
   const roles = mode === "pro" ? PRO_PACK_ROLES : FREE_VARIANT_ROLES;
 
   return roles.map((role, index) => {
-    const rng = createRng(hashString(`${mode}:${source.fileName}:${role.key}:${elements.amountRange.value}:${elements.brightnessRange.value}:${elements.motionRange.value}:${elements.dirtRange.value}`));
+    const rng = createRng(hashString(`${mode}:${source.fileName}:${role.key}:${elements.amountRange.value}:${elements.brightnessRange.value}:${elements.motionRange.value}:${elements.attackRange.value}:${elements.widthRange.value}:${elements.dirtRange.value}`));
     const data = clone(source.data);
     const settings = data.settings;
     const baseChanges = mode === "pro" ? 10 : 8;
@@ -997,6 +1006,14 @@ elements.brightnessRange.addEventListener("input", () => {
   renderStrategyMetrics();
 });
 elements.motionRange.addEventListener("input", () => {
+  updateControlLabels();
+  renderStrategyMetrics();
+});
+elements.attackRange.addEventListener("input", () => {
+  updateControlLabels();
+  renderStrategyMetrics();
+});
+elements.widthRange.addEventListener("input", () => {
   updateControlLabels();
   renderStrategyMetrics();
 });

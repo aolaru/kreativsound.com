@@ -17,13 +17,14 @@ const elements = {
   motionRange: document.querySelector("#motion-range"),
   attackRange: document.querySelector("#attack-range"),
   widthRange: document.querySelector("#width-range"),
+  textureRange: document.querySelector("#texture-range"),
   mutationKnob: document.querySelector("#mutation-knob"),
   mutationAmount: document.querySelector("#mutation-amount"),
-  mutationMicroControls: document.querySelectorAll("[data-macro-control]"),
   brightnessValue: document.querySelector("#brightness-value"),
   motionValue: document.querySelector("#motion-value"),
   attackValue: document.querySelector("#attack-value"),
   widthValue: document.querySelector("#width-value"),
+  textureValue: document.querySelector("#texture-value"),
   generateButton: document.querySelector("#generate-button"),
   generatePack: document.querySelector("#generate-pack"),
   downloadPack: document.querySelector("#download-pack"),
@@ -170,6 +171,7 @@ function currentAnalyticsSelection() {
     motion_bucket: signedBucket(elements.motionRange.value, "steadier", "more_motion"),
     attack_bucket: signedBucket(elements.attackRange.value, "softer", "harder"),
     width_bucket: signedBucket(elements.widthRange.value, "narrower", "wider"),
+    dirt_bucket: signedBucket(elements.textureRange.value, "cleaner", "dirtier"),
   };
 }
 
@@ -192,26 +194,7 @@ function updateControlLabels() {
   elements.motionValue.textContent = `${elements.motionRange.value}%`;
   elements.attackValue.textContent = `${elements.attackRange.value}%`;
   elements.widthValue.textContent = `${elements.widthRange.value}%`;
-  updateMutationMicroControls(elements.mutationAmount.value);
-}
-
-function updateMutationMicroControls(value) {
-  const amount = Number(value);
-  const microValues = {
-    randomize: Math.round(34 + amount * 0.62),
-    morph: Math.round(22 + amount * 0.7),
-    evolve: Math.round(18 + amount * 0.78),
-    shape: Math.round(44 + Math.abs(amount - 50) * 0.52),
-    variation: amount,
-  };
-
-  for (const control of elements.mutationMicroControls) {
-    const key = control.dataset.macroControl;
-    const valueNode = control.querySelector("strong");
-    if (valueNode && key in microValues) {
-      valueNode.textContent = `${Math.min(100, Math.max(0, microValues[key]))}%`;
-    }
-  }
+  elements.textureValue.textContent = `${elements.textureRange.value}%`;
 }
 
 function variantSeed(index) {
@@ -235,6 +218,7 @@ function currentProfile() {
   const textBrightness = /\b(bright|glass|clear|shimmer|open|air)\b/.test(intentLower) ? 0.08 : /\b(dark|deep|noir|shadow|black)\b/.test(intentLower) ? -0.08 : 0;
   const textMotion = /\b(evolving|moving|pulsing|motion|animated)\b/.test(intentLower) ? 0.1 : /\b(static|still|steady|simple)\b/.test(intentLower) ? -0.08 : 0;
   const textNoise = /\b(broken|industrial|dirty|noise|fractured|grit)\b/.test(intentLower) ? 0.12 : 0;
+  const textureBias = percentRangeValue(elements.textureRange);
 
   return {
     family,
@@ -247,10 +231,10 @@ function currentProfile() {
     attack: clamp(familyBase.attack + percentRangeValue(elements.attackRange) * 0.24),
     sustain: clamp((moodBase.sustain + familyBase.sustain) / 2),
     movement: clamp((moodBase.movement + familyBase.movement) / 2 + percentRangeValue(elements.motionRange) * 0.28 + textMotion),
-    noise: clamp(moodBase.noise + textNoise),
+    noise: clamp(moodBase.noise + textNoise + textureBias * 0.18),
     width: clamp((moodBase.width + familyBase.width) / 2 + percentRangeValue(elements.widthRange) * 0.28),
     wetness: clamp(moodBase.wetness),
-    drive: clamp(moodBase.drive),
+    drive: clamp(moodBase.drive + textureBias * 0.12),
     pitchHz: REGISTER_PITCH[register][family],
   };
 }
@@ -418,7 +402,9 @@ function renderProfile(profile) {
     ["Mutation", `${Math.round(profile.mutationAmount * 100)}%`],
     ["Brightness", `${Math.round(profile.brightness * 100)}%`],
     ["Motion", `${Math.round(profile.movement * 100)}%`],
+    ["Attack", `${Math.round(profile.attack * 100)}%`],
     ["Width", `${Math.round(profile.width * 100)}%`],
+    ["Texture", `${Math.round(profile.noise * 100)}%`],
   ];
   elements.profileMetrics.innerHTML = rows.map(([label, value]) => `
     <div class="metric">
@@ -705,6 +691,7 @@ for (const element of [
   elements.motionRange,
   elements.attackRange,
   elements.widthRange,
+  elements.textureRange,
 ]) {
   element.addEventListener("input", refreshProfile);
   element.addEventListener("change", refreshProfile);

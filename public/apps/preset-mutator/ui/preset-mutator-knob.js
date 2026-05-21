@@ -11,10 +11,14 @@ export class PresetMutatorKnob {
     this.value = this.clamp(Number(value));
     this.visualValue = this.value;
     this.animationFrame = null;
+    this.pointerFrame = null;
+    this.pendingClientY = null;
+    this.lastNotifiedValue = Math.round(this.value);
     this.isDragging = false;
     this.dragStartY = 0;
     this.dragStartValue = this.value;
-    this.dragSensitivity = 2.2;
+    this.dragSensitivity = 3.1;
+    this.visualSmoothing = 0.22;
 
     this.render();
     this.bind();
@@ -79,6 +83,7 @@ export class PresetMutatorKnob {
   bind() {
     this.control.addEventListener("pointerdown", (event) => {
       event.preventDefault();
+      this.control.focus({ preventScroll: true });
       this.isDragging = true;
       this.dragStartY = event.clientY;
       this.dragStartValue = this.value;
@@ -89,17 +94,19 @@ export class PresetMutatorKnob {
     this.control.addEventListener("pointermove", (event) => {
       if (this.isDragging) {
         event.preventDefault();
-        this.updateFromDrag(event);
+        this.scheduleDragUpdate(event.clientY);
       }
     });
 
     this.control.addEventListener("pointerup", (event) => {
+      this.flushDragUpdate();
       this.isDragging = false;
       this.target.classList.remove("is-dragging");
       this.control.releasePointerCapture(event.pointerId);
     });
 
     this.control.addEventListener("pointercancel", () => {
+      this.cancelDragUpdate();
       this.isDragging = false;
       this.target.classList.remove("is-dragging");
     });
@@ -124,8 +131,39 @@ export class PresetMutatorKnob {
     });
   }
 
-  updateFromDrag(event) {
-    const verticalDelta = this.dragStartY - event.clientY;
+  scheduleDragUpdate(clientY) {
+    this.pendingClientY = clientY;
+
+    if (!this.pointerFrame) {
+      this.pointerFrame = window.requestAnimationFrame(() => this.flushDragUpdate());
+    }
+  }
+
+  flushDragUpdate() {
+    if (this.pointerFrame) {
+      window.cancelAnimationFrame(this.pointerFrame);
+      this.pointerFrame = null;
+    }
+
+    if (this.pendingClientY === null) {
+      return;
+    }
+
+    this.updateFromClientY(this.pendingClientY);
+    this.pendingClientY = null;
+  }
+
+  cancelDragUpdate() {
+    if (this.pointerFrame) {
+      window.cancelAnimationFrame(this.pointerFrame);
+      this.pointerFrame = null;
+    }
+
+    this.pendingClientY = null;
+  }
+
+  updateFromClientY(clientY) {
+    const verticalDelta = this.dragStartY - clientY;
     const nextValue = this.dragStartValue + verticalDelta / this.dragSensitivity;
     this.update(nextValue);
   }
@@ -135,9 +173,9 @@ export class PresetMutatorKnob {
       this.visualValue = this.value;
     } else {
       const distance = this.value - this.visualValue;
-      this.visualValue += distance * 0.34;
+      this.visualValue += distance * this.visualSmoothing;
 
-      if (Math.abs(distance) < 0.08) {
+      if (Math.abs(distance) < 0.035) {
         this.visualValue = this.value;
       }
     }
@@ -176,7 +214,8 @@ export class PresetMutatorKnob {
     this.control.setAttribute("aria-valuetext", `${rounded}% mutation`);
     this.valueNode.textContent = String(rounded);
 
-    if (notify) {
+    if (notify && rounded !== this.lastNotifiedValue) {
+      this.lastNotifiedValue = rounded;
       this.onChange(rounded);
     }
   }

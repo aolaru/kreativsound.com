@@ -33,28 +33,16 @@ const elements = {
   inputMode: document.querySelector("#input-mode"),
   mutationKnob: document.querySelector("#mutation-knob"),
   mutationAmount: document.querySelector("#mutation-amount"),
-  mutationMicroControls: document.querySelectorAll("[data-macro-control]"),
   brightnessBias: document.querySelector("#brightness-bias"),
   movementBias: document.querySelector("#movement-bias"),
   attackBias: document.querySelector("#attack-bias"),
+  dirtBias: document.querySelector("#dirt-bias"),
+  widthBias: document.querySelector("#width-bias"),
   brightnessBiasValue: document.querySelector("#brightness-bias-value"),
   movementBiasValue: document.querySelector("#movement-bias-value"),
   attackBiasValue: document.querySelector("#attack-bias-value"),
-  proControlPanel: document.querySelector("#pro-control-panel"),
-  dirtBias: document.querySelector("#dirt-bias"),
-  widthBias: document.querySelector("#width-bias"),
-  lengthBias: document.querySelector("#length-bias"),
-  wildBias: document.querySelector("#wild-bias"),
-  wetBias: document.querySelector("#wet-bias"),
-  washBias: document.querySelector("#wash-bias"),
-  driveBias: document.querySelector("#drive-bias"),
   dirtBiasValue: document.querySelector("#dirt-bias-value"),
   widthBiasValue: document.querySelector("#width-bias-value"),
-  lengthBiasValue: document.querySelector("#length-bias-value"),
-  wildBiasValue: document.querySelector("#wild-bias-value"),
-  wetBiasValue: document.querySelector("#wet-bias-value"),
-  washBiasValue: document.querySelector("#wash-bias-value"),
-  driveBiasValue: document.querySelector("#drive-bias-value"),
   playToggle: document.querySelector("#play-toggle"),
   playbackTime: document.querySelector("#playback-time"),
   analyzeGenerate: document.querySelector("#analyze-generate"),
@@ -220,11 +208,6 @@ function currentAnalyticsSelection() {
     attack_bucket: signedBucket(elements.attackBias.value, "softer", "harder"),
     dirt_bucket: signedBucket(elements.dirtBias.value, "cleaner", "dirtier"),
     width_bucket: signedBucket(elements.widthBias.value, "narrower", "wider"),
-    length_bucket: signedBucket(elements.lengthBias.value, "shorter", "longer"),
-    wild_bucket: signedBucket(elements.wildBias.value, "safer", "wilder"),
-    wet_bucket: signedBucket(elements.wetBias.value, "drier", "wetter"),
-    wash_bucket: signedBucket(elements.washBias.value, "tighter", "washier"),
-    drive_bucket: signedBucket(elements.driveBias.value, "cleaner", "more_drive"),
   };
 }
 
@@ -284,51 +267,11 @@ function sanitizeFileName(value) {
 }
 
 function updateControlLabels() {
-  updateMutationMicroControls(elements.mutationAmount.value);
   elements.brightnessBiasValue.textContent = `${elements.brightnessBias.value}%`;
   elements.movementBiasValue.textContent = `${elements.movementBias.value}%`;
   elements.attackBiasValue.textContent = `${elements.attackBias.value}%`;
   elements.dirtBiasValue.textContent = `${elements.dirtBias.value}%`;
   elements.widthBiasValue.textContent = `${elements.widthBias.value}%`;
-  elements.lengthBiasValue.textContent = `${elements.lengthBias.value}%`;
-  elements.wildBiasValue.textContent = `${elements.wildBias.value}%`;
-  elements.wetBiasValue.textContent = `${elements.wetBias.value}%`;
-  elements.washBiasValue.textContent = `${elements.washBias.value}%`;
-  elements.driveBiasValue.textContent = `${elements.driveBias.value}%`;
-}
-
-function updateMutationMicroControls(value) {
-  const amount = Number(value);
-  const microValues = {
-    randomize: Math.round(34 + amount * 0.62),
-    morph: Math.round(22 + amount * 0.7),
-    evolve: Math.round(18 + amount * 0.78),
-    shape: Math.round(44 + Math.abs(amount - 50) * 0.52),
-    variation: amount,
-  };
-
-  for (const control of elements.mutationMicroControls) {
-    const key = control.dataset.macroControl;
-    const valueNode = control.querySelector("strong");
-    if (valueNode && key in microValues) {
-      valueNode.textContent = `${Math.min(100, Math.max(0, microValues[key]))}%`;
-    }
-  }
-}
-
-function setProControlsEnabled(enabled) {
-  elements.proControlPanel.classList.toggle("is-locked", !enabled);
-  for (const control of [
-    elements.dirtBias,
-    elements.widthBias,
-    elements.lengthBias,
-    elements.wildBias,
-    elements.wetBias,
-    elements.washBias,
-    elements.driveBias,
-  ]) {
-    control.disabled = !enabled;
-  }
 }
 
 function setReady(enabled) {
@@ -854,29 +797,23 @@ function mapProfileToVital(profile, index, options = {}) {
 function shapeProfile(baseProfile, recipe, index) {
   const dirtBias = Number(elements.dirtBias.value) / 100;
   const widthBias = Number(elements.widthBias.value) / 100;
-  const lengthBias = Number(elements.lengthBias.value) / 100;
-  const wildBias = Number(elements.wildBias.value) / 100;
-  const wetBias = Number(elements.wetBias.value) / 100;
-  const washBias = Number(elements.washBias.value) / 100;
-  const driveBias = Number(elements.driveBias.value) / 100;
   const mutationScale = 0.55 + (baseProfile.mutationAmount ?? 0.5) * 1.15;
-  const spreadBoost = Math.max(0, wildBias) * 0.06;
 
-  const spread = (fallback) => fallback * mutationScale + spreadBoost;
+  const spread = (fallback) => fallback * mutationScale;
 
   return {
     ...baseProfile,
     family: recipe.family || baseProfile.family,
     brightness: vary(clamp(baseProfile.brightness + (recipe.brightness ?? 0)), spread(recipe.spread ?? 0.07), index, 21),
     body: vary(clamp(baseProfile.body + (recipe.body ?? 0)), spread(recipe.spread ?? 0.06), index, 22),
-    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0) - lengthBias * 0.12), spread(recipe.spread ?? 0.08), index, 23),
-    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0) + lengthBias * 0.14), spread(recipe.spread ?? 0.07), index, 24),
-    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0) + wildBias * 0.08), spread(recipe.spread ?? 0.09), index, 25),
+    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0)), spread(recipe.spread ?? 0.08), index, 23),
+    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0)), spread(recipe.spread ?? 0.07), index, 24),
+    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0)), spread(recipe.spread ?? 0.09), index, 25),
     noise: vary(clamp(baseProfile.noise + (recipe.noise ?? 0) + dirtBias * 0.18), spread(recipe.spread ?? 0.07), index, 26),
     width: vary(clamp(baseProfile.width + (recipe.width ?? 0) + widthBias * 0.18), spread(recipe.spread ?? 0.08), index, 27),
-    wetness: vary(clamp((baseProfile.wetness ?? 0.18) + wetBias * 0.22 + (recipe.wetness ?? 0)), spread(recipe.spread ?? 0.05), index, 28),
-    wash: vary(clamp((baseProfile.wash ?? 0.12) + washBias * 0.22 + (recipe.wash ?? 0)), spread(recipe.spread ?? 0.05), index, 29),
-    drive: vary(clamp((baseProfile.drive ?? 0.08) + driveBias * 0.22 + (recipe.drive ?? 0)), spread(recipe.spread ?? 0.05), index, 30),
+    wetness: vary(clamp((baseProfile.wetness ?? 0.18) + (recipe.wetness ?? 0)), spread(recipe.spread ?? 0.05), index, 28),
+    wash: vary(clamp((baseProfile.wash ?? 0.12) + (recipe.wash ?? 0)), spread(recipe.spread ?? 0.05), index, 29),
+    drive: vary(clamp((baseProfile.drive ?? 0.08) + (recipe.drive ?? 0)), spread(recipe.spread ?? 0.05), index, 30),
   };
 }
 
@@ -920,7 +857,7 @@ function buildProPack(profile) {
     const recipe = recipes[index % recipes.length];
     const shaped = shapeProfile(profile, recipe, index);
     return mapProfileToVital(shaped, index, {
-      amountScale: Math.max(0.82, (recipe.amountScale ?? 1) + Number(elements.wildBias.value) / 100 * 0.28),
+      amountScale: recipe.amountScale ?? 1,
       roleLabel: recipe.role,
     });
   });
@@ -1689,7 +1626,6 @@ function renderPaidFeatureState() {
   elements.paidFeatureUnlock.hidden = true;
   elements.paidFeaturePreview.hidden = !unlocked;
   elements.paidFeatureToggle.setAttribute("aria-expanded", "false");
-  setProControlsEnabled(unlocked);
 }
 
 function setAnalysisVisible(visible) {
@@ -1780,11 +1716,6 @@ for (const control of [
   elements.attackBias,
   elements.dirtBias,
   elements.widthBias,
-  elements.lengthBias,
-  elements.wildBias,
-  elements.wetBias,
-  elements.washBias,
-  elements.driveBias,
 ]) {
   control.addEventListener("input", updateControlLabels);
 }
