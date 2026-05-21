@@ -2,8 +2,8 @@ import { PresetMutatorKnob } from "../preset-mutator-knob.js";
 
 const FREE_VARIANT_ROLES = [
   { key: "closest", label: "Closest", multiplier: 0.7, nameSuffix: "Closest" },
-  { key: "bolder", label: "Bolder", multiplier: 1.0, nameSuffix: "Bolder" },
-  { key: "wilder", label: "Wilder", multiplier: 1.35, nameSuffix: "Wilder" },
+  { key: "darker", label: "Darker", multiplier: 1.0, nameSuffix: "Darker", toneBias: -0.75, motionBias: -0.08, dirtBias: 0.12, spaceBias: -0.08 },
+  { key: "more-motion", label: "More Motion", multiplier: 1.18, nameSuffix: "More Motion", toneBias: 0.02, motionBias: 0.86, dirtBias: 0.05, spaceBias: 0.16 },
 ];
 
 function createPackRole(group, index, config = {}) {
@@ -494,13 +494,13 @@ function mutateValue(key, value, config, rng, strategy, intensity, role) {
   let roleOffset = 0;
   if (role) {
     if (config.zone === "tone") {
-      roleOffset = span * role.toneBias * 0.08 * intensity;
+      roleOffset = span * (role.toneBias ?? 0) * 0.08 * intensity;
     } else if (config.zone === "motion") {
-      roleOffset = span * role.motionBias * 0.08 * intensity;
+      roleOffset = span * (role.motionBias ?? 0) * 0.08 * intensity;
     } else if (config.zone === "dirt") {
-      roleOffset = span * role.dirtBias * 0.1 * intensity;
+      roleOffset = span * (role.dirtBias ?? 0) * 0.1 * intensity;
     } else if (config.zone === "space") {
-      roleOffset = span * role.spaceBias * 0.08 * intensity;
+      roleOffset = span * (role.spaceBias ?? 0) * 0.08 * intensity;
     }
   }
 
@@ -612,7 +612,7 @@ function generateVariants(mode = "free") {
       }
     }
 
-    const baseName = source.summary.name.replace(/\s+\/\s+(Closest|Bolder|Wilder|.+\s\d+)$/i, "").trim();
+    const baseName = source.summary.name.replace(/\s+\/\s+(Closest|Darker|More Motion|Bolder|Wilder|.+\s\d+)$/i, "").trim();
     data.preset_name = `${baseName} / ${role.nameSuffix}`;
     data.comments = buildVariantDescription(role, strategy, mode);
 

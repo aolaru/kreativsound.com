@@ -58,9 +58,6 @@
         <p class="eyebrow">Synth preset tool</p>
         <h1>Create, mutate, and export synth presets</h1>
         <p class="lede">Three Vital beta workflows for turning audio, existing presets, or simple intent into playable preset starts.</p>
-        <figure class="hero-cover" aria-label="Preset Mutator product artwork">
-          <img src="/assets/thumbs/preset-mutator.webp" width="1672" height="941" alt="Preset Mutator cover artwork" />
-        </figure>
         <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator source">
           <a class="mode-tab" href="../">
             <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
@@ -105,60 +102,61 @@
         </div>
       </section>
 
-      <section class="panel upload-panel">
-        <div class="section-head">
-          <div>
-            <h2>Input Audio</h2>
-            <p class="muted">Upload one short source sound and generate playable Vital preset starts inspired by its tone and shape.</p>
-            <p class="input-note">Best inputs: one-shot notes, basses, pads, plucks, drones, and clean textures. Supported formats: WAV, MP3, AIFF, M4A, OGG, FLAC. Max 10 MB.</p>
-            <p class="input-note">Avoid full songs, long loops, and dense mixes. They usually produce weaker mappings.</p>
-          </div>
-        </div>
-        <p class="upload-message" id="upload-message" hidden></p>
-
-        <section class="waveform-panel drop-zone" id="waveform-drop-zone">
+      <section class="workflow-grid workflow-grid-audio">
+        <section class="panel upload-panel">
           <div class="section-head">
-            <h2>Waveform</h2>
+            <div>
+              <h2>Input Audio</h2>
+              <p class="muted">Load one short source sound and generate Vital starts inspired by its tone and shape.</p>
+              <p class="input-note">Best inputs: one-shots, basses, pads, plucks, drones, and clean textures. Avoid full songs and dense mixes.</p>
+              <p class="input-note">WAV, MP3, AIFF, M4A, OGG, or FLAC. Max 10 MB.</p>
+            </div>
           </div>
-          <div class="waveform-drop-inner">
-            <canvas id="waveform" width="1200" height="150"></canvas>
-            <div class="waveform-drop-cta" id="waveform-drop-cta">
-              <label class="upload">
-                <span>Choose audio file</span>
-                <input id="file-input" type="file" accept="audio/*" />
-              </label>
-              <p class="waveform-empty-note" id="waveform-empty-note">Drop an audio file here to preview its waveform.</p>
+          <p class="upload-message" id="upload-message" hidden></p>
+
+          <section class="waveform-panel drop-zone" id="waveform-drop-zone">
+            <div class="section-head">
+              <h2>Waveform</h2>
+            </div>
+            <div class="waveform-drop-inner">
+              <canvas id="waveform" width="1200" height="150"></canvas>
+              <div class="waveform-drop-cta" id="waveform-drop-cta">
+                <label class="upload">
+                  <span>Choose audio file</span>
+                  <input id="file-input" type="file" accept="audio/*" />
+                </label>
+                <p class="waveform-empty-note" id="waveform-empty-note">Drop an audio file here to preview its waveform.</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="waveform-actions">
+            <button id="play-toggle" type="button" disabled>Play Source</button>
+            <p class="playback-time" id="playback-time">0:00 / 0:00</p>
+          </div>
+
+          <div class="meta-grid">
+            <div>
+              <span class="meta-label">File</span>
+              <strong id="file-name">No file loaded</strong>
+            </div>
+            <div>
+              <span class="meta-label">Duration</span>
+              <strong id="file-duration">0.0s</strong>
+            </div>
+            <div>
+              <span class="meta-label">Sample rate</span>
+              <strong id="file-sample-rate">-</strong>
+            </div>
+            <div>
+              <span class="meta-label">Channels</span>
+              <strong id="file-channels">-</strong>
             </div>
           </div>
         </section>
 
-        <div class="waveform-actions">
-          <button id="play-toggle" type="button" disabled>Play Source</button>
-          <p class="playback-time" id="playback-time">0:00 / 0:00</p>
-        </div>
-
-        <div class="meta-grid">
-          <div>
-            <span class="meta-label">File</span>
-            <strong id="file-name">No file loaded</strong>
-          </div>
-          <div>
-            <span class="meta-label">Duration</span>
-            <strong id="file-duration">0.0s</strong>
-          </div>
-          <div>
-            <span class="meta-label">Sample rate</span>
-            <strong id="file-sample-rate">-</strong>
-          </div>
-          <div>
-            <span class="meta-label">Channels</span>
-            <strong id="file-channels">-</strong>
-          </div>
-        </div>
-      </section>
-
-      <section class="workspace">
-        <section class="panel controls-panel">
+        <section class="workspace">
+          <section class="panel controls-panel">
           <div class="section-head">
             <h2>Preset Generation</h2>
             <p class="muted">Guide how the source gets interpreted. The result stays inspired by the upload, not matched one-to-one.</p>
@@ -257,8 +255,8 @@
 
           <div class="status" id="status">Load a short audio file, then generate 3 guided Vital preset starts.</div>
           <p class="upgrade-hint">Mutate Preset and From Scratch are available as Vital betas.</p>
+          </section>
         </section>
-
       </section>
 
       <section class="panel analysis-shell" id="analysis-shell">

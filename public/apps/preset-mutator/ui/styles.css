@@ -223,25 +223,6 @@ output {
   color: var(--muted);
 }
 
-.hero-cover {
-  max-width: min(560px, 100%);
-  margin: 0.85rem auto 0;
-  border: 1px solid rgba(153, 0, 0, 0.2);
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at 22% 50%, rgba(22, 143, 202, 0.22), transparent 36%),
-    radial-gradient(circle at 78% 48%, rgba(215, 53, 135, 0.24), transparent 38%),
-    #080a10;
-  box-shadow: 0 20px 48px rgba(22, 9, 16, 0.18);
-  overflow: hidden;
-}
-
-.hero-cover img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 .mode-tabs {
   display: flex;
   flex-wrap: wrap;
@@ -426,7 +407,6 @@ output {
 }
 
 .upload-panel,
-.trust-panel,
 .waveform-panel,
 .controls-panel,
 .analysis-grid > .panel,
@@ -435,15 +415,10 @@ output {
 }
 
 .upload-panel,
-.trust-panel,
 .waveform-panel,
 .analysis-grid,
 .presets-panel {
   margin-bottom: 20px;
-}
-
-.trust-panel {
-  padding: 18px 20px;
 }
 
 .upload-panel {
@@ -455,16 +430,49 @@ output {
   border-color: rgba(153, 0, 0, 0.22);
 }
 
+.workflow-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.workflow-grid > .upload-panel,
+.workflow-grid > .intent-panel,
+.workflow-grid > .workspace {
+  margin-bottom: 0;
+}
+
+.workflow-grid .mutation-macro {
+  grid-template-columns: 1fr;
+  text-align: center;
+}
+
+.workflow-grid .mutation-macro-copy {
+  justify-items: center;
+}
+
+.workflow-grid .mutation-macro-copy h3,
+.workflow-grid .mutation-macro-copy p {
+  max-width: 100%;
+}
+
+.workflow-grid .mutation-knob-mount {
+  width: min(100%, 18rem);
+}
+
+.workflow-grid .control-grid,
+.workflow-grid .meta-grid {
+  grid-template-columns: 1fr;
+}
+
 .section-head {
   display: flex;
   justify-content: space-between;
   align-items: end;
   gap: 16px;
   margin-bottom: 16px;
-}
-
-.trust-panel .section-head {
-  margin-bottom: 12px;
 }
 
 h2 {
@@ -537,8 +545,7 @@ h2 {
 
 .meta-grid,
 .control-grid,
-.metric-grid,
-.trust-grid {
+.metric-grid {
   display: grid;
   gap: 14px;
 }
@@ -547,31 +554,14 @@ h2 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.trust-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 .meta-grid > div,
 .control,
 .metric,
-.trust-item,
 .preset-card {
   padding: 16px;
   border-radius: 18px;
   background: rgba(255, 250, 250, 0.68);
   border: 1px solid rgba(153, 0, 0, 0.12);
-}
-
-.trust-item p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.84rem;
-  line-height: 1.35;
-}
-
-.trust-item {
-  padding: 12px 14px;
-  border-radius: 14px;
 }
 
 .meta-label,
@@ -582,19 +572,6 @@ h2 {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-}
-
-.trust-item .meta-label {
-  margin-bottom: 5px;
-  font-size: 0.72rem;
-}
-
-.trust-panel h2 {
-  font-size: 1.06rem;
-}
-
-.trust-panel .muted {
-  font-size: 0.82rem;
 }
 
 #waveform {
@@ -1756,10 +1733,6 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 
-  .hero-cover {
-    max-width: min(420px, 100%);
-  }
-
   .mode-tabs {
     width: 100%;
     max-width: 30rem;
@@ -1797,14 +1770,14 @@ button:disabled {
   }
 
   .workspace,
+  .workflow-grid,
   .analysis-grid,
   .paid-feature-panel,
   .mutation-macro,
   .mode-proof-grid,
   .meta-grid,
   .control-grid,
-  .metric-grid,
-  .trust-grid {
+  .metric-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1837,13 +1810,24 @@ button:disabled {
   .preset-knob-shell {
     width: min(100%, 15.5rem);
   }
+
+  .info-tooltip::after {
+    right: 0;
+    left: auto;
+    width: min(220px, calc(100vw - 48px));
+    transform: none;
+  }
+
+  .info-tooltip:hover::after,
+  .info-tooltip:focus-visible::after {
+    transform: translateY(-2px);
+  }
 }
 
 .panel,
 .waveform-panel,
 .control,
 .meta-grid > div,
-.trust-item,
 .preset-card,
 .suite-card,
 .paid-feature-card,
@@ -1869,7 +1853,6 @@ textarea::placeholder {
 [data-theme="dark"] .waveform-panel,
 [data-theme="dark"] .control,
 [data-theme="dark"] .meta-grid > div,
-[data-theme="dark"] .trust-item,
 [data-theme="dark"] .preset-card,
 [data-theme="dark"] .suite-card,
 [data-theme="dark"] .paid-feature-card,

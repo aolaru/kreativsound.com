@@ -57,9 +57,6 @@
         <p class="eyebrow">From Scratch beta</p>
         <h1>Create a Vital preset from intent</h1>
         <p class="lede">Choose a direction, shape the feel, and export playable Vital starting points.</p>
-        <figure class="hero-cover" aria-label="Preset Mutator product artwork">
-          <img src="/assets/thumbs/preset-mutator.webp" width="1672" height="941" alt="Preset Mutator cover artwork" />
-        </figure>
         <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator source">
           <button class="mode-tab is-active" type="button" aria-current="true">
             <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
@@ -104,54 +101,55 @@
         </div>
       </section>
 
-      <section class="panel intent-panel">
-        <div class="section-head">
-          <div>
-            <h2>Preset Intent</h2>
-            <p class="muted">Set the sound type, mood, register, and a short intent.</p>
-            <p class="input-note">Vital is live now. Serum 2 and Pigments 7 are planned.</p>
+      <section class="workflow-grid">
+        <section class="panel intent-panel">
+          <div class="section-head">
+            <div>
+              <h2>Preset Intent</h2>
+              <p class="muted">Set the type, mood, register, and a short intent.</p>
+              <p class="input-note">Vital is live now. Serum 2 and Pigments 7 are planned.</p>
+            </div>
           </div>
-        </div>
 
-        <div class="intent-grid">
-          <label class="control">
-            <span class="control-label">Sound Type</span>
-            <select id="family-select">
-              <option value="pad">Pad / Atmosphere</option>
-              <option value="pluck">Pluck / Keys</option>
-              <option value="bass">Bass</option>
-              <option value="texture">Drone / Texture</option>
-            </select>
-          </label>
+          <div class="intent-grid">
+            <label class="control">
+              <span class="control-label">Sound Type</span>
+              <select id="family-select">
+                <option value="pad">Pad / Atmosphere</option>
+                <option value="pluck">Pluck / Keys</option>
+                <option value="bass">Bass</option>
+                <option value="texture">Drone / Texture</option>
+              </select>
+            </label>
 
-          <label class="control">
-            <span class="control-label">Mood</span>
-            <select id="mood-select">
-              <option value="dark">Dark / cinematic</option>
-              <option value="warm">Warm / melodic</option>
-              <option value="clean">Clean / modern</option>
-              <option value="broken">Broken / experimental</option>
-            </select>
-          </label>
+            <label class="control">
+              <span class="control-label">Mood</span>
+              <select id="mood-select">
+                <option value="dark">Dark / cinematic</option>
+                <option value="warm">Warm / melodic</option>
+                <option value="clean">Clean / modern</option>
+                <option value="broken">Broken / experimental</option>
+              </select>
+            </label>
 
-          <label class="control">
-            <span class="control-label">Register</span>
-            <select id="register-select">
-              <option value="low">Low</option>
-              <option value="mid" selected>Mid</option>
-              <option value="high">High</option>
-            </select>
-          </label>
+            <label class="control">
+              <span class="control-label">Register</span>
+              <select id="register-select">
+                <option value="low">Low</option>
+                <option value="mid" selected>Mid</option>
+                <option value="high">High</option>
+              </select>
+            </label>
 
-          <label class="control intent-text-control">
-            <span class="control-label">Short Intent</span>
-            <textarea id="intent-text" rows="4" maxlength="180" placeholder="Example: dark evolving key for a tense intro"></textarea>
-          </label>
-        </div>
-      </section>
+            <label class="control intent-text-control">
+              <span class="control-label">Short Intent</span>
+              <textarea id="intent-text" rows="4" maxlength="180" placeholder="Example: dark evolving key for a tense intro"></textarea>
+            </label>
+          </div>
+        </section>
 
-      <section class="workspace">
-        <section class="panel controls-panel">
+        <section class="workspace">
+          <section class="panel controls-panel">
           <div class="section-head">
             <div>
               <h2>Shape the Starting Point</h2>
@@ -206,6 +204,7 @@
 
           <div class="status" id="status">Choose an intent, then generate 3 from-scratch Vital preset starts.</div>
           <p class="upgrade-hint">Preset Mutator Pro unlocks a 32-preset from-scratch pack and ZIP export.</p>
+          </section>
         </section>
       </section>
 

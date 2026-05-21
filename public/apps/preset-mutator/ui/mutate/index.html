@@ -55,9 +55,6 @@
       <section class="hero">
         <h1>Turn one Vital preset into three new directions</h1>
         <p class="lede">Load a preset you already like, bias the mutation, and export related Vital variations without losing the source identity.</p>
-        <figure class="hero-cover" aria-label="Preset Mutator product artwork">
-          <img src="/assets/thumbs/preset-mutator.webp" width="1672" height="941" alt="Preset Mutator cover artwork" />
-        </figure>
         <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator source">
           <a class="mode-tab" href="../">
             <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
@@ -102,82 +99,58 @@
         </div>
       </section>
 
-      <section class="panel upload-panel">
-        <div class="section-head">
-          <div>
-            <h2>Input Preset</h2>
-            <p class="muted">Use one `.vital` preset file. Free creates 3 related directions. Preset Mutator Pro creates a 32-preset mutation pack and ZIP download.</p>
-            <p class="input-note">Vital only for now. Serum 2 and Pigments 7 are planned future targets.</p>
+      <section class="workflow-grid">
+        <section class="panel upload-panel">
+          <div class="section-head">
+            <div>
+              <h2>Input Preset</h2>
+              <p class="muted">Load one `.vital` preset, then shape three related directions from the source.</p>
+              <p class="input-note">Vital only for now. Preset data stays local in your browser.</p>
+            </div>
           </div>
-        </div>
-        <p class="upload-message" id="upload-message" hidden></p>
+          <p class="upload-message" id="upload-message" hidden></p>
 
-        <section class="preset-drop-zone drop-zone" id="preset-drop-zone">
-          <div class="preset-drop-inner">
-            <div class="preset-drop-cta" id="preset-drop-cta">
-              <label class="upload">
-                <span>Choose .vital preset</span>
-                <input id="file-input" type="file" accept=".vital,application/json" />
-              </label>
-              <p class="drop-note">Drag and drop a `.vital` preset here.</p>
+          <section class="preset-drop-zone drop-zone" id="preset-drop-zone">
+            <div class="preset-drop-inner">
+              <div class="preset-drop-cta" id="preset-drop-cta">
+                <label class="upload">
+                  <span>Choose .vital preset</span>
+                  <input id="file-input" type="file" accept=".vital,application/json" />
+                </label>
+                <p class="drop-note">Drag and drop a `.vital` preset here.</p>
+              </div>
+              <div class="preset-summary" id="preset-summary">
+                <div>
+                  <span class="meta-label">Preset</span>
+                  <strong id="preset-name">No preset loaded</strong>
+                </div>
+                <div>
+                  <span class="meta-label">Author</span>
+                  <strong id="preset-author">-</strong>
+                </div>
+                <div>
+                  <span class="meta-label">Sample</span>
+                  <strong id="preset-sample">-</strong>
+                </div>
+                <div>
+                  <span class="meta-label">Modulations</span>
+                  <strong id="preset-modulations">-</strong>
+                </div>
+                <div>
+                  <span class="meta-label">Wavetables</span>
+                  <strong id="preset-wavetables">-</strong>
+                </div>
+                <div>
+                  <span class="meta-label">File</span>
+                  <strong id="preset-file">No file loaded</strong>
+                </div>
+              </div>
             </div>
-            <div class="preset-summary" id="preset-summary">
-              <div>
-                <span class="meta-label">Preset</span>
-                <strong id="preset-name">No preset loaded</strong>
-              </div>
-              <div>
-                <span class="meta-label">Author</span>
-                <strong id="preset-author">-</strong>
-              </div>
-              <div>
-                <span class="meta-label">Sample</span>
-                <strong id="preset-sample">-</strong>
-              </div>
-              <div>
-                <span class="meta-label">Modulations</span>
-                <strong id="preset-modulations">-</strong>
-              </div>
-              <div>
-                <span class="meta-label">Wavetables</span>
-                <strong id="preset-wavetables">-</strong>
-              </div>
-              <div>
-                <span class="meta-label">File</span>
-                <strong id="preset-file">No file loaded</strong>
-              </div>
-            </div>
-          </div>
+          </section>
         </section>
-      </section>
 
-      <section class="panel trust-panel">
-        <div class="section-head">
-          <h2>Local Processing</h2>
-          <p class="muted">Everything stays local to your browser.</p>
-        </div>
-        <div class="trust-grid">
-          <div class="trust-item">
-            <span class="meta-label">Local Only</span>
-            <p>Preset stays in your browser.</p>
-          </div>
-          <div class="trust-item">
-            <span class="meta-label">No AI</span>
-            <p>No preset data goes to AI models.</p>
-          </div>
-          <div class="trust-item">
-            <span class="meta-label">No Account</span>
-            <p>No signup is needed for the free version.</p>
-          </div>
-          <div class="trust-item">
-            <span class="meta-label">Royalty-Free</span>
-            <p>Use generated presets in your own productions.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="workspace">
-        <section class="panel controls-panel">
+        <section class="workspace">
+          <section class="panel controls-panel">
           <div class="section-head">
             <h2>Mutation Controls</h2>
             <p class="muted">Bias the direction without destroying the source preset’s identity.</p>
@@ -238,19 +211,8 @@
           </div>
 
           <div class="status" id="status">Load one Vital preset to generate 3 new directions.</div>
-          <p class="upgrade-hint">Preset Mutator Pro unlocks a 32-preset mutation pack, ZIP export, and future format updates.</p>
-        </section>
-
-        <section class="panel insight-panel">
-          <div class="section-head">
-            <h2>Tips for better results</h2>
-            <p class="muted">Preset mutation works best when the source already has a clear identity.</p>
-          </div>
-          <ul class="insights">
-            <li>Start with a preset you already like.</li>
-            <li>Use small bias moves before pushing the amount wide.</li>
-            <li>Treat the three results as directions, not final answers.</li>
-          </ul>
+          <p class="upgrade-hint">Preset Mutator Pro unlocks a 32-preset mutation pack and ZIP export.</p>
+          </section>
         </section>
       </section>
 

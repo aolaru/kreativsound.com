@@ -14,6 +14,7 @@
     "postbuild": "node scripts/fix-dist-post-routes.mjs && npm run sitemap",
     "preview": "astro preview",
     "check:products": "node scripts/check-product-data.mjs",
+    "check:preset-mutator": "node scripts/check-preset-mutator.mjs",
     "check:links": "node scripts/check-internal-links.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "sitemap:check": "node scripts/generate-sitemap.mjs --check"

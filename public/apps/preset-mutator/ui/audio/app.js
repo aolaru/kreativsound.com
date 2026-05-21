@@ -821,7 +821,7 @@ function buildFreePack(profile) {
   const recipes = [
     { role: "Closest", brightness: -0.01, movement: -0.02, spread: 0.035, amountScale: 0.82 },
     { role: "Darker", brightness: -0.15, body: 0.06, movement: -0.03, spread: 0.04, amountScale: 0.9 },
-    { role: "Brighter", brightness: 0.14, width: 0.05, movement: 0.04, spread: 0.045, amountScale: 0.94 },
+    { role: "More Motion", movement: 0.18, width: 0.06, wetness: 0.04, spread: 0.045, amountScale: 0.94 },
   ];
 
   return recipes.map((recipe, index) => {
@@ -925,7 +925,7 @@ function variantRole(index, preset) {
   if (preset.roleLabel) {
     return preset.roleLabel;
   }
-  const roles = ["Closest", preset.parameterMap.filter_1_cutoff < 50 ? "Darker" : "More Motion", "Brighter"];
+  const roles = ["Closest", "Darker", "More Motion"];
   return roles[index] || "Variant";
 }
 
@@ -1233,7 +1233,7 @@ function buildPresetSummary({ family, brightness, movement, width, sustain, atta
   const motion = movement > 0.5 ? "more animated" : movement < 0.3 ? "steadier" : "lightly moving";
   const space = width > 0.55 ? "with a wider image" : width < 0.3 ? "with a tighter image" : "with a centered image";
   const tail = sustain > 0.58 ? "longer tail" : sustain < 0.32 ? "shorter tail" : "controlled tail";
-  const onset = attack > 0.62 ? "softer attack" : attack < 0.36 ? "harder attack" : "balanced attack";
+  const onset = attack > 0.62 ? "harder attack" : attack < 0.36 ? "softer attack" : "balanced attack";
 
   if (family === "bass") {
     return `${tone.charAt(0).toUpperCase() + tone.slice(1)} bass with ${onset}, ${space}, and a ${tail}.`;
