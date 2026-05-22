@@ -2,6 +2,29 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import {
+  buildAudioFreePack,
+  buildAudioPresetSummary,
+  buildAudioProPack,
+  buildAudioProfile,
+  AUDIO_PRO_PACK_COUNT,
+} from "../public/apps/preset-mutator/ui/engine/audio-engine.js";
+import {
+  buildPresetMutateStrategy,
+  generatePresetVariants,
+  parameterConfigForKey,
+  PRESET_MUTATE_PRO_PACK_COUNT,
+  presetSummary,
+  safeScalarParameterKeys,
+} from "../public/apps/preset-mutator/ui/engine/preset-mutate-engine.js";
+import {
+  buildScratchFreePack,
+  buildScratchProPack,
+  buildScratchProfile,
+  SCRATCH_PRO_PACK_COUNT,
+} from "../public/apps/preset-mutator/ui/engine/scratch-engine.js";
+import { buildVitalPresetPayload } from "../public/apps/preset-mutator/ui/engine/vital-export.js";
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const uiDir = path.join(rootDir, "public/apps/preset-mutator/ui");
@@ -10,10 +33,10 @@ const seedDir = path.join(rootDir, "public/apps/preset-mutator/assets/seeds/vita
 const failures = [];
 
 const modePages = [
-  { name: "Scratch root", html: "index.html", app: "app.js" },
-  { name: "Scratch route", html: "scratch/index.html", app: "scratch/app.js" },
-  { name: "Audio", html: "audio/index.html", app: "audio/app.js" },
-  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js" },
+  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "vital-export.js"] },
+  { name: "Scratch route", html: "scratch/index.html", app: "scratch/app.js", requiredImports: ["scratch-engine.js", "vital-export.js"] },
+  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "vital-export.js"] },
+  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js"] },
 ];
 
 const generatedParameterRanges = {
@@ -52,167 +75,6 @@ const generatedParameterRanges = {
   noise_level: [0, 1],
 };
 
-const generationMaps = [
-  {
-    role: "Closest",
-    parameterMap: {
-      osc_1_level: 0.72,
-      osc_2_level: 0.34,
-      osc_1_unison_voices: 3,
-      osc_2_unison_voices: 2,
-      osc_1_unison_detune: 0.08,
-      osc_2_unison_detune: 0.1,
-      osc_1_stereo_spread: 0.42,
-      osc_2_stereo_spread: 0.38,
-      filter_1_cutoff: 42,
-      filter_1_resonance: 0.22,
-      filter_1_drive: 1.1,
-      filter_1_keytrack: 0.38,
-      filter_1_mix: 1,
-      env_1_attack: 0.22,
-      env_1_decay: 0.42,
-      env_1_sustain: 0.68,
-      env_1_release: 0.55,
-      chorus_dry_wet: 0.22,
-      chorus_mod_depth: 0.3,
-      chorus_feedback: 0.18,
-      reverb_dry_wet: 0.26,
-      reverb_size: 0.58,
-      reverb_decay_time: 0.6,
-      delay_dry_wet: 0.08,
-      delay_feedback: 0.22,
-      delay_filter_cutoff: 56,
-      distortion_mix: 0.08,
-      distortion_drive: 0.8,
-      filter_fx_cutoff: 54,
-      filter_fx_resonance: 0.16,
-      sample_on: 0,
-      noise_on: 1,
-      noise_level: 0.08,
-    },
-  },
-  {
-    role: "Darker",
-    parameterMap: {
-      osc_1_level: 0.86,
-      osc_2_level: 0.26,
-      osc_1_unison_voices: 2,
-      osc_2_unison_voices: 1,
-      osc_1_unison_detune: 0.05,
-      osc_2_unison_detune: 0.07,
-      osc_1_stereo_spread: 0.28,
-      osc_2_stereo_spread: 0.24,
-      filter_1_cutoff: 24,
-      filter_1_resonance: 0.34,
-      filter_1_drive: 1.8,
-      filter_1_keytrack: 0.22,
-      filter_1_mix: 1,
-      env_1_attack: 0.34,
-      env_1_decay: 0.52,
-      env_1_sustain: 0.78,
-      env_1_release: 0.68,
-      chorus_dry_wet: 0.14,
-      chorus_mod_depth: 0.22,
-      chorus_feedback: 0.12,
-      reverb_dry_wet: 0.34,
-      reverb_size: 0.66,
-      reverb_decay_time: 0.72,
-      delay_dry_wet: 0.06,
-      delay_feedback: 0.2,
-      delay_filter_cutoff: 42,
-      distortion_mix: 0.18,
-      distortion_drive: 1.6,
-      filter_fx_cutoff: 34,
-      filter_fx_resonance: 0.26,
-      sample_on: 0,
-      noise_on: 1,
-      noise_level: 0.14,
-    },
-  },
-  {
-    role: "More Motion",
-    parameterMap: {
-      osc_1_level: 0.68,
-      osc_2_level: 0.52,
-      osc_1_unison_voices: 6,
-      osc_2_unison_voices: 5,
-      osc_1_unison_detune: 0.22,
-      osc_2_unison_detune: 0.24,
-      osc_1_stereo_spread: 0.72,
-      osc_2_stereo_spread: 0.66,
-      filter_1_cutoff: 68,
-      filter_1_resonance: 0.3,
-      filter_1_drive: 1.4,
-      filter_1_keytrack: 0.46,
-      filter_1_mix: 1,
-      env_1_attack: 0.18,
-      env_1_decay: 0.5,
-      env_1_sustain: 0.62,
-      env_1_release: 0.58,
-      chorus_dry_wet: 0.42,
-      chorus_mod_depth: 0.62,
-      chorus_feedback: 0.5,
-      reverb_dry_wet: 0.38,
-      reverb_size: 0.72,
-      reverb_decay_time: 0.74,
-      delay_dry_wet: 0.18,
-      delay_feedback: 0.44,
-      delay_filter_cutoff: 72,
-      distortion_mix: 0.16,
-      distortion_drive: 1.3,
-      filter_fx_cutoff: 64,
-      filter_fx_resonance: 0.22,
-      sample_on: 0,
-      noise_on: 1,
-      noise_level: 0.12,
-    },
-  },
-];
-
-const safeParameterBounds = {
-  level: { low: 0, high: 1, integral: false },
-  pan: { low: -1, high: 1, integral: false },
-  transpose: { low: -24, high: 24, integral: true },
-  tune: { low: -1, high: 1, integral: false },
-  frame_spread: { low: 0, high: 1, integral: false },
-  stereo_spread: { low: 0, high: 1, integral: false },
-  unison_blend: { low: 0, high: 1, integral: false },
-  unison_detune: { low: 0, high: 1, integral: false },
-  wave_frame: { low: 0, high: 1, integral: false },
-  spectral_morph_amount: { low: 0, high: 1, integral: false },
-  distortion_amount: { low: 0, high: 1, integral: false },
-  cutoff: { low: 0, high: 100, integral: false },
-  resonance: { low: 0, high: 1, integral: false },
-  drive: { low: 0, high: 4, integral: false },
-  keytrack: { low: 0, high: 1, integral: false },
-  mix: { low: 0, high: 1, integral: false },
-  attack: { low: 0, high: 1, integral: false },
-  decay: { low: 0, high: 1, integral: false },
-  sustain: { low: 0, high: 1, integral: false },
-  release: { low: 0, high: 1, integral: false },
-  dry_wet: { low: 0, high: 1, integral: false },
-  feedback: { low: 0, high: 0.95, integral: false },
-  mod_depth: { low: 0, high: 1, integral: false },
-  spread: { low: 0, high: 1, integral: false },
-  decay_time: { low: 0, high: 1, integral: false },
-  size: { low: 0, high: 1, integral: false },
-  pre_high_cutoff: { low: 0, high: 100, integral: false },
-  pre_low_cutoff: { low: 0, high: 100, integral: false },
-  filter_cutoff: { low: 0, high: 100, integral: false },
-};
-
-const safeParameterPrefixes = [
-  "osc_1_",
-  "osc_2_",
-  "filter_1_",
-  "filter_2_",
-  "env_1_",
-  "env_2_",
-  "chorus_",
-  "delay_",
-  "reverb_",
-];
-
 function fail(message) {
   failures.push(message);
 }
@@ -221,47 +83,6 @@ function assert(condition, message) {
   if (!condition) {
     fail(message);
   }
-}
-
-function cloneJson(value) {
-  return JSON.parse(JSON.stringify(value));
-}
-
-function clamp(value, low, high) {
-  return Math.min(high, Math.max(low, value));
-}
-
-function configForKey(key) {
-  for (const [suffix, config] of Object.entries(safeParameterBounds)) {
-    if (key.endsWith(suffix)) {
-      return config;
-    }
-  }
-  return null;
-}
-
-function safeScalarParameterKeys(settings) {
-  return Object.keys(settings)
-    .filter((key) => {
-      const value = settings[key];
-      if (typeof value !== "number" || !Number.isFinite(value)) {
-        return false;
-      }
-      if (!safeParameterPrefixes.some((prefix) => key.startsWith(prefix))) {
-        return false;
-      }
-      if (/_on$|_style$|_model$|_destination$|_filter_input$|_midi_track$|_sync$|_tempo$|_voices$/.test(key)) {
-        return false;
-      }
-      if (/_attack_power$|_decay_power$|_release_power$|_delay$|_hold$/.test(key)) {
-        return false;
-      }
-      if (key.includes("formant_") || key.endsWith("blend_transpose")) {
-        return false;
-      }
-      return Boolean(configForKey(key));
-    })
-    .sort();
 }
 
 function validateRange(label, key, value, [low, high]) {
@@ -273,6 +94,7 @@ function validatePresetShape(data, label) {
   assert(data && typeof data === "object" && !Array.isArray(data), `${label}: preset is not an object`);
   assert(data.settings && typeof data.settings === "object" && !Array.isArray(data.settings), `${label}: missing settings object`);
   assert(typeof data.preset_name === "string" || typeof data.preset_style === "string", `${label}: missing preset name/style`);
+
   for (const [key, value] of Object.entries(data.settings || {})) {
     if (typeof value === "number") {
       assert(Number.isFinite(value), `${label}: ${key} is not finite`);
@@ -280,64 +102,62 @@ function validatePresetShape(data, label) {
   }
 }
 
-function validateGeneratedPreset(data, label) {
-  validatePresetShape(data, label);
+function validateGeneratedPresetModel(preset, label) {
+  assert(preset.name && typeof preset.name === "string", `${label}: missing generated preset name`);
+  assert(preset.summary && typeof preset.summary === "string", `${label}: missing generated summary`);
+  assert(preset.familyKey && typeof preset.familyKey === "string", `${label}: missing family key`);
+  assert(preset.parameterMap && typeof preset.parameterMap === "object", `${label}: missing parameter map`);
+
   for (const [key, range] of Object.entries(generatedParameterRanges)) {
-    validateRange(label, key, data.settings[key], range);
+    validateRange(label, key, preset.parameterMap[key], range);
   }
 }
 
-function buildGeneratedPreset(seed, role) {
-  const data = cloneJson(seed);
-  for (const [key, value] of Object.entries(role.parameterMap)) {
-    data.settings[key] = value;
+function validateRenderedGeneratedPreset(seed, preset, label) {
+  const payload = buildVitalPresetPayload(seed, preset);
+  assert(payload.fileName.endsWith(".vital"), `${label}: rendered filename should be .vital`);
+  validatePresetShape(payload.data, `${label}: rendered`);
+
+  for (const [key, range] of Object.entries(generatedParameterRanges)) {
+    validateRange(`${label}: rendered`, key, payload.data.settings[key], range);
   }
-  data.author = "Preset Mutator QA";
-  data.comments = `${role.role} generated QA preset.`;
-  data.preset_name = `QA ${role.role}`;
-  data.preset_style = "QA";
-  return data;
 }
 
-function buildMutatedPreset(seed, label, amount) {
-  const data = cloneJson(seed);
-  const keys = safeScalarParameterKeys(data.settings);
-  assert(keys.length >= 8, `${label}: expected at least 8 safe mutation parameters, found ${keys.length}`);
+function validateMutatedVariant(variant, label) {
+  validatePresetShape(variant.data, label);
+  assert(variant.changedParameters.length > 0, `${label}: no parameters changed`);
+  assert(variant.downloadName.endsWith(".vital"), `${label}: download name should be .vital`);
 
-  const changeCount = Math.min(18, Math.max(6, Math.round(6 + amount * 14)));
-  const chosen = [];
-  for (let index = 0; chosen.length < Math.min(changeCount, keys.length) && index < keys.length * 2; index += 1) {
-    const key = keys[(index * 7 + Math.round(amount * 10)) % keys.length];
-    if (!chosen.includes(key)) {
-      chosen.push(key);
+  for (const key of variant.changedParameters) {
+    const config = parameterConfigForKey(key);
+    assert(Boolean(config), `${label}: ${key} is not a safe mutation parameter`);
+    if (!config) {
+      continue;
     }
+    validateRange(label, key, variant.data.settings[key], [config.low, config.high]);
   }
-
-  for (const [index, key] of chosen.entries()) {
-    const config = configForKey(key);
-    const span = config.high - config.low;
-    const direction = index % 2 === 0 ? 1 : -1;
-    const nextValue = clamp(Number(data.settings[key]) + direction * span * amount * 0.08, config.low, config.high);
-    data.settings[key] = config.integral ? Math.round(nextValue) : nextValue;
-    assert(data.settings[key] >= config.low && data.settings[key] <= config.high, `${label}: ${key} mutation escaped safe bounds`);
-  }
-
-  data.preset_name = `${data.preset_name || data.preset_style || "Preset"} / QA Mutation`;
-  data.comments = `QA mutation changed ${chosen.length} safe parameters.`;
-  return { data, changedCount: chosen.length };
 }
 
 async function readText(relativePath) {
   return readFile(path.join(uiDir, relativePath), "utf8");
 }
 
+async function loadSeed(file) {
+  return JSON.parse(await readFile(path.join(seedDir, file), "utf8"));
+}
+
 async function checkPages() {
   for (const page of modePages) {
     const html = await readText(page.html);
+    const app = await readText(page.app);
     assert(html.includes("id=\"mutation-knob\""), `${page.name}: missing Mutation Amount knob mount`);
     assert(html.includes("local-trust-strip"), `${page.name}: missing compact local trust strip`);
     assert(!html.includes("hero-cover"), `${page.name}: hero cover should not be present in app UI`);
     assert(!html.includes("<h1></h1>"), `${page.name}: empty h1 found`);
+
+    for (const requiredImport of page.requiredImports) {
+      assert(app.includes(requiredImport), `${page.name}: app is not using ${requiredImport}`);
+    }
   }
 
   const mutateHtml = await readText("mutate/index.html");
@@ -345,44 +165,131 @@ async function checkPages() {
   assert(!mutateHtml.includes("insight-panel"), "Preset mode: tips panel should stay removed");
 }
 
-async function checkModeConsistency() {
-  const requiredDirections = ["Closest", "Darker", "More Motion"];
+function checkScratchEngine(seedByFamily) {
+  const profile = buildScratchProfile({
+    family: "pad",
+    mood: "dark",
+    register: "mid",
+    intent: "dark evolving key for a tense intro",
+    mutationAmount: 72,
+    brightness: -12,
+    motion: 34,
+    attack: -8,
+    width: 18,
+    texture: 24,
+  });
+  const freePack = buildScratchFreePack(profile);
+  const proPack = buildScratchProPack(profile);
 
-  for (const page of modePages) {
-    const app = await readText(page.app);
-    for (const direction of requiredDirections) {
-      assert(app.includes(direction), `${page.name}: missing '${direction}' free direction`);
-    }
+  assert(freePack.length === 3, `Scratch engine: expected 3 free presets, found ${freePack.length}`);
+  assert(proPack.length === SCRATCH_PRO_PACK_COUNT, `Scratch engine: expected ${SCRATCH_PRO_PACK_COUNT} pro presets, found ${proPack.length}`);
+  assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Scratch engine: free roles are inconsistent");
+
+  for (const [index, preset] of [...freePack, ...proPack].entries()) {
+    const label = `Scratch engine preset ${index + 1}`;
+    validateGeneratedPresetModel(preset, label);
+    validateRenderedGeneratedPreset(seedByFamily[preset.familyKey], preset, label);
   }
-
-  const audioApp = await readText("audio/app.js");
-  assert(!audioApp.includes('attack > 0.62 ? "softer attack"'), "Audio mode: attack summary is reversed");
 }
 
-async function checkSeedsAndGeneratedPresets() {
+function checkAudioEngine(seedByFamily) {
+  const analysis = {
+    rms: 0.18,
+    peak: 0.62,
+    zeroCrossRate: 0.045,
+    onsetRatio: 0.22,
+    sustainRatio: 0.66,
+    movement: 0.34,
+    centroidHz: 2450,
+    flatness: 0.18,
+    stereoWidth: 0.52,
+    pitchHz: 146,
+    duration: 4.2,
+  };
+  const profile = buildAudioProfile(analysis, {
+    inputMode: "auto",
+    brightnessBias: -10,
+    movementBias: 28,
+    attackBias: 14,
+    dirtBias: 18,
+    widthBias: 20,
+    mutationAmount: 68,
+  });
+  const freePack = buildAudioFreePack(profile);
+  const proPack = buildAudioProPack(profile);
+
+  assert(freePack.length === 3, `Audio engine: expected 3 free presets, found ${freePack.length}`);
+  assert(proPack.length === AUDIO_PRO_PACK_COUNT, `Audio engine: expected ${AUDIO_PRO_PACK_COUNT} pro presets, found ${proPack.length}`);
+  assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Audio engine: free roles are inconsistent");
+  assert(buildAudioPresetSummary({ family: "pad", brightness: 0.5, movement: 0.4, width: 0.5, sustain: 0.5, attack: 0.8, register: "C3" }).includes("harder attack"), "Audio engine: high attack summary should say harder attack");
+
+  for (const [index, preset] of [...freePack, ...proPack].entries()) {
+    const label = `Audio engine preset ${index + 1}`;
+    validateGeneratedPresetModel(preset, label);
+    validateRenderedGeneratedPreset(seedByFamily[preset.familyKey], preset, label);
+  }
+}
+
+function checkPresetMutationEngine(seedFile, seedData) {
+  const summary = presetSummary(seedData);
+  const scalarKeys = safeScalarParameterKeys(seedData.settings);
+  assert(summary.scalarKeys.length === scalarKeys.length, `${seedFile}: summary scalar key count does not match safe key scan`);
+  assert(scalarKeys.length >= 8, `${seedFile}: expected at least 8 safe mutation parameters, found ${scalarKeys.length}`);
+
+  const strategy = buildPresetMutateStrategy({
+    amount: 74,
+    tone: -18,
+    motion: 42,
+    attack: 12,
+    space: 24,
+    dirt: 28,
+  });
+  const sourcePreset = { data: seedData, summary, fileName: seedFile };
+  const freeVariants = generatePresetVariants({
+    sourcePreset,
+    strategy,
+    mode: "free",
+    controls: { amount: 74, tone: -18, motion: 42, attack: 12, space: 24, dirt: 28 },
+  });
+  const proVariants = generatePresetVariants({
+    sourcePreset,
+    strategy,
+    mode: "pro",
+    controls: { amount: 74, tone: -18, motion: 42, attack: 12, space: 24, dirt: 28 },
+  });
+
+  assert(freeVariants.length === 3, `${seedFile}: expected 3 free mutation variants, found ${freeVariants.length}`);
+  assert(proVariants.length === PRESET_MUTATE_PRO_PACK_COUNT, `${seedFile}: expected ${PRESET_MUTATE_PRO_PACK_COUNT} pro mutation variants, found ${proVariants.length}`);
+  assert(freeVariants.map((variant) => variant.role.label).join("|") === "Closest|Darker|More Motion", `${seedFile}: free mutation roles are inconsistent`);
+
+  for (const [index, variant] of [...freeVariants, ...proVariants].entries()) {
+    validateMutatedVariant(variant, `${seedFile}: mutation variant ${index + 1}`);
+  }
+}
+
+async function checkEngines() {
   const seedFiles = (await readdir(seedDir)).filter((file) => file.endsWith(".vital")).sort();
   assert(seedFiles.length >= 4, `Expected at least 4 Vital seed presets, found ${seedFiles.length}`);
 
+  const seedByFamily = {
+    pad: await loadSeed("KS Frozen Hollow.vital"),
+    pluck: await loadSeed("KS Dread Lantern.vital"),
+    bass: await loadSeed("KS Iron Wake.vital"),
+    texture: await loadSeed("KS Shadow Archive.vital"),
+  };
+
   for (const file of seedFiles) {
-    const label = `Seed ${file}`;
-    const data = JSON.parse(await readFile(path.join(seedDir, file), "utf8"));
-    validatePresetShape(data, label);
-
-    for (const role of generationMaps) {
-      validateGeneratedPreset(buildGeneratedPreset(data, role), `${label} -> generated ${role.role}`);
-    }
-
-    for (const amount of [0.25, 0.6, 0.9]) {
-      const mutation = buildMutatedPreset(data, `${label} -> mutate ${amount}`, amount);
-      validatePresetShape(mutation.data, `${label} -> mutate ${amount}`);
-      assert(mutation.changedCount > 0, `${label} -> mutate ${amount}: no parameters changed`);
-    }
+    const seed = await loadSeed(file);
+    validatePresetShape(seed, `Seed ${file}`);
+    checkPresetMutationEngine(file, seed);
   }
+
+  checkScratchEngine(seedByFamily);
+  checkAudioEngine(seedByFamily);
 }
 
 await checkPages();
-await checkModeConsistency();
-await checkSeedsAndGeneratedPresets();
+await checkEngines();
 
 if (failures.length) {
   console.error("Preset Mutator QA failed:");
