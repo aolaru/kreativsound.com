@@ -1,9 +1,9 @@
-const CACHE_NAME = "preset-mutator-shell-v6";
+const CACHE_NAME = "preset-mutator-shell-v5";
 const SHELL_ASSETS = [
+  "./",
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./preset-mutator-knob.js",
   "./scratch/index.html",
   "./scratch/styles.css",
   "./scratch/app.js",
@@ -12,16 +12,6 @@ const SHELL_ASSETS = [
   "./mutate/app.js",
   "./audio/index.html",
   "./audio/app.js",
-  "./engine/common.js",
-  "./engine/quality.js",
-  "./engine/scratch-engine.js",
-  "./engine/audio-engine.js",
-  "./engine/preset-mutate-engine.js",
-  "./engine/vital-export.js",
-  "../assets/seeds/vital/raw/KS%20Dread%20Lantern.vital",
-  "../assets/seeds/vital/raw/KS%20Frozen%20Hollow.vital",
-  "../assets/seeds/vital/raw/KS%20Iron%20Wake.vital",
-  "../assets/seeds/vital/raw/KS%20Shadow%20Archive.vital",
   "./manifest.webmanifest",
   "./preset-mutator-mark.svg",
 ];
@@ -65,10 +55,6 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          if (!response.ok && request.mode === "navigate") {
-            return caches.match("./index.html").then((cached) => cached || response);
-          }
-
           if (!response.ok || response.type === "opaque") {
             return response;
           }
@@ -77,17 +63,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
           return response;
         })
-        .catch(() =>
-          caches.match(request).then((cached) => {
-            if (cached) {
-              return cached;
-            }
-            if (request.mode === "navigate") {
-              return caches.match("./index.html").then((fallback) => fallback || Response.error());
-            }
-            return Response.error();
-          }),
-        ),
+        .catch(() => caches.match(request)),
     );
     return;
   }

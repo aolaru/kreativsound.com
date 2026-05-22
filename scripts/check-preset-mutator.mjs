@@ -23,10 +23,6 @@ import {
   buildScratchProfile,
   SCRATCH_PRO_PACK_COUNT,
 } from "../public/apps/preset-mutator/ui/engine/scratch-engine.js";
-import {
-  scoreGeneratedPreset,
-  scoreMutationVariant,
-} from "../public/apps/preset-mutator/ui/engine/quality.js";
 import { buildVitalPresetPayload } from "../public/apps/preset-mutator/ui/engine/vital-export.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -37,10 +33,10 @@ const seedDir = path.join(rootDir, "public/apps/preset-mutator/assets/seeds/vita
 const failures = [];
 
 const modePages = [
-  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "quality.js", "vital-export.js"] },
-  { name: "Scratch route", html: "scratch/index.html", app: "scratch/app.js", requiredImports: ["scratch-engine.js", "quality.js", "vital-export.js"] },
-  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "quality.js", "vital-export.js"] },
-  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js", "quality.js"] },
+  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "vital-export.js"] },
+  { name: "Scratch route", html: "scratch/index.html", app: "scratch/app.js", requiredImports: ["scratch-engine.js", "vital-export.js"] },
+  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "vital-export.js"] },
+  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js"] },
 ];
 
 const generatedParameterRanges = {
@@ -115,10 +111,6 @@ function validateGeneratedPresetModel(preset, label) {
   for (const [key, range] of Object.entries(generatedParameterRanges)) {
     validateRange(label, key, preset.parameterMap[key], range);
   }
-
-  const quality = scoreGeneratedPreset(preset);
-  assert(quality.score >= 60 && quality.score <= 98, `${label}: quality score ${quality.score} is outside expected range`);
-  assert(quality.notes.length > 0, `${label}: missing quality notes`);
 }
 
 function validateRenderedGeneratedPreset(seed, preset, label) {
@@ -144,10 +136,6 @@ function validateMutatedVariant(variant, label) {
     }
     validateRange(label, key, variant.data.settings[key], [config.low, config.high]);
   }
-
-  const quality = scoreMutationVariant(variant);
-  assert(quality.score >= 60 && quality.score <= 98, `${label}: quality score ${quality.score} is outside expected range`);
-  assert(quality.notes.length > 0, `${label}: missing quality notes`);
 }
 
 async function readText(relativePath) {
@@ -166,8 +154,6 @@ async function checkPages() {
     assert(html.includes("local-trust-strip"), `${page.name}: missing compact local trust strip`);
     assert(!html.includes("hero-cover"), `${page.name}: hero cover should not be present in app UI`);
     assert(!html.includes("<h1></h1>"), `${page.name}: empty h1 found`);
-    assert(html.includes("Generate 3 Free Variants"), `${page.name}: free action should use variants language`);
-    assert(html.includes("32 Pro variants"), `${page.name}: Pro output should use variants language`);
 
     for (const requiredImport of page.requiredImports) {
       assert(app.includes(requiredImport), `${page.name}: app is not using ${requiredImport}`);

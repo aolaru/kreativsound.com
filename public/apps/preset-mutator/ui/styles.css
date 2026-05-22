@@ -1410,13 +1410,13 @@ button:disabled {
   gap: 8px;
 }
 
-.preset-quality-score {
+.preset-confidence {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
 }
 
-.preset-quality-score span {
+.preset-confidence span {
   display: inline-flex;
   align-items: center;
   gap: 0.28rem;
@@ -1429,7 +1429,7 @@ button:disabled {
   line-height: 1.2;
 }
 
-.preset-quality-score strong {
+.preset-confidence strong {
   color: var(--accent-strong);
 }
 

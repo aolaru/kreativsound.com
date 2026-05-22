@@ -7,7 +7,6 @@ import {
   SCRATCH_FREE_VARIANT_LIMIT,
   SCRATCH_PRO_PACK_COUNT,
 } from "./engine/scratch-engine.js";
-import { scoreGeneratedPreset } from "./engine/quality.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "./engine/vital-export.js";
 
 const state = {
@@ -183,12 +182,11 @@ function renderPresets(presets) {
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
   elements.presetsPanel.classList.toggle("is-pack", presets.length > FREE_VARIANT_LIMIT);
   if (!presets.length) {
-    elements.presetList.innerHTML = `<p class="empty-state">Click <strong>Generate 3 Free Variants</strong> to create from-scratch Vital starting points.</p>`;
+    elements.presetList.innerHTML = `<p class="empty-state">Click <strong>Generate 3 Free Presets</strong> to create from-scratch Vital starting points.</p>`;
     return;
   }
 
   for (const preset of presets) {
-    const quality = scoreGeneratedPreset(preset);
     const card = document.createElement("article");
     card.className = "preset-card";
     card.innerHTML = `
@@ -200,11 +198,11 @@ function renderPresets(presets) {
         </div>
       </div>
       <p class="preset-summary">${preset.summary}</p>
-      <div class="preset-quality-score">
-        <span><strong>${quality.score}%</strong> quality</span>
+      <div class="preset-confidence">
+        <span><strong>${confidenceForPreset(preset)}</strong> confidence</span>
         <span><strong>Best use</strong> ${bestUseForPreset(preset)}</span>
       </div>
-      <p class="preset-quality">Quality notes: ${quality.notes.join("; ")}. Built from the selected intent profile, then biased toward ${preset.roleLabel.toLowerCase()} behavior.</p>
+      <p class="preset-quality">Why this result: built from the selected intent profile, then biased toward ${preset.roleLabel.toLowerCase()} behavior.</p>
       <div class="param-list">${preset.parameters.map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`).join("")}</div>
       <div class="preset-actions">
         <button class="download-button" type="button">
@@ -218,6 +216,24 @@ function renderPresets(presets) {
   }
 }
 
+function confidenceForPreset(preset) {
+  let score = 83;
+  if (preset.roleLabel === "Closest") {
+    score += 8;
+  } else if (preset.roleLabel === "Darker" || preset.roleLabel === "Brighter") {
+    score += 5;
+  } else if (preset.roleLabel === "More Motion") {
+    score += 3;
+  }
+  if (preset.parameterMap.filter_1_cutoff >= 18 && preset.parameterMap.filter_1_cutoff <= 92) {
+    score += 2;
+  }
+  if (preset.parameterMap.env_1_release >= 0.06 && preset.parameterMap.env_1_release <= 0.9) {
+    score += 2;
+  }
+  return `${Math.min(95, score)}%`;
+}
+
 function bestUseForPreset(preset) {
   if (preset.familyKey === "bass") {
     return "Low-end starts and bass sketches";
@@ -229,24 +245,6 @@ function bestUseForPreset(preset) {
     return "Drones, FX beds, and transitions";
   }
   return "Pads, cues, and atmospheric layers";
-}
-
-function qualityBucket(score) {
-  if (score >= 90) {
-    return "strong";
-  }
-  if (score >= 80) {
-    return "balanced";
-  }
-  return "usable";
-}
-
-function averageQualityScore(presets) {
-  if (!presets.length) {
-    return 0;
-  }
-  const total = presets.reduce((sum, preset) => sum + scoreGeneratedPreset(preset).score, 0);
-  return Math.round(total / presets.length);
 }
 
 function seedUrlForFamily(family) {
@@ -286,13 +284,10 @@ async function downloadPreset(preset) {
     link.click();
     URL.revokeObjectURL(url);
     updateStatus(`${preset.name} is ready.`);
-    const quality = scoreGeneratedPreset(preset);
     analyticsEvent("download_preset", {
       generation_mode: state.lastGenerationMode,
       preset_role: preset.roleLabel,
       sound_type: preset.familyKey,
-      quality_score: quality.score,
-      quality_bucket: qualityBucket(quality.score),
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
@@ -322,12 +317,9 @@ async function downloadPack() {
     link.click();
     URL.revokeObjectURL(url);
     updateStatus("32-pack ZIP ready.");
-    const qualityScore = averageQualityScore(state.presets);
     analyticsEvent("download_pack", {
       generation_mode: "pro",
       preset_count: state.presets.length,
-      avg_quality_score: qualityScore,
-      avg_quality_bucket: qualityBucket(qualityScore),
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
@@ -348,18 +340,15 @@ function setLoading(isLoading) {
 function generate(mode = "free") {
   setLoading(true);
   state.lastGenerationMode = mode;
-  updateStatus(mode === "pro" ? "Building 32 Pro variants..." : "Building 3 free variants...");
+  updateStatus(mode === "pro" ? "Building 32 from-scratch Vital presets..." : "Building 3 from-scratch Vital presets...");
   window.setTimeout(() => {
     const profile = currentProfile();
     state.presets = mode === "pro" ? buildScratchProPack(profile) : buildScratchFreePack(profile);
     renderPresets(state.presets);
     elements.downloadPack.disabled = mode !== "pro";
-    const qualityScore = averageQualityScore(state.presets);
-    updateStatus(mode === "pro" ? "32 Pro variants ready." : "3 free variants ready.");
+    updateStatus(mode === "pro" ? "32 from-scratch Vital presets ready." : "3 from-scratch Vital presets ready.");
     analyticsEvent(mode === "pro" ? "generate_pro" : "generate_free", {
       preset_count: state.presets.length,
-      avg_quality_score: qualityScore,
-      avg_quality_bucket: qualityBucket(qualityScore),
       ...currentAnalyticsSelection(),
     });
     setLoading(false);
