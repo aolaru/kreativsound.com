@@ -6,6 +6,7 @@ import {
   PRESET_MUTATE_PRO_PACK_COUNT,
   presetSummary as summarizeVitalPreset,
 } from "../engine/preset-mutate-engine.js";
+import { scoreMutationVariant } from "../engine/quality.js";
 
 const state = {
   sourcePreset: null,
@@ -61,6 +62,14 @@ const SUITE_UNLOCK_STORAGE_KEY = "kreativ-sound-tools-unlocked";
 const SUITE_PURCHASE_CODE = "AA-PRO-32-DGTW9930";
 const PRO_PACK_COUNT = PRESET_MUTATE_PRO_PACK_COUNT;
 const ANALYTICS_MODE = "preset";
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("../service-worker.js").catch(() => {
+      // Installability should fail quietly rather than affecting the app UI.
+    });
+  });
+}
 
 function analyticsEvent(name, params = {}) {
   if (typeof window.gtag !== "function") {
@@ -137,7 +146,7 @@ function amountLabel(value) {
 }
 
 function currentActionLabel() {
-  return state.lastGenerationMode === "pro" ? "Generate 32-Preset Pack" : "Generate 3 Free Variations";
+  return state.lastGenerationMode === "pro" ? "Generate 32 Pro Variants" : "Generate 3 Free Variants";
 }
 
 function updateControlLabels() {
@@ -313,11 +322,14 @@ function downloadVariant(variant) {
   anchor.click();
   anchor.remove();
   URL.revokeObjectURL(url);
+  const quality = scoreMutationVariant(variant);
   analyticsEvent("download_preset", {
     generation_mode: state.lastGenerationMode,
     preset_role: variant.role.label,
     preset_group: variant.groupKey,
     changed_parameters_bucket: countBucket(variant.changedParameters.length),
+    quality_score: quality.score,
+    quality_bucket: qualityBucket(quality.score),
     ...currentAnalyticsSelection(),
   });
 }
@@ -342,9 +354,12 @@ async function downloadVariantPack() {
   anchor.click();
   anchor.remove();
   URL.revokeObjectURL(url);
+  const qualityScore = averageQualityScore(state.generatedVariants);
   analyticsEvent("download_pack", {
     generation_mode: "pro",
     preset_count: state.generatedVariants.length,
+    avg_quality_score: qualityScore,
+    avg_quality_bucket: qualityBucket(qualityScore),
     ...currentAnalyticsSelection(),
   });
 }
@@ -388,6 +403,7 @@ function renderVariants() {
 
     const list = section.querySelector(".preset-group-list");
     for (const variant of group.variants) {
+      const quality = scoreMutationVariant(variant);
       const card = document.createElement("article");
       card.className = "preset-card";
       card.innerHTML = `
@@ -398,11 +414,11 @@ function renderVariants() {
             <p class="preset-subline">${variant.description}</p>
           </div>
         </div>
-        <p class="preset-quality">${summarizeVariantFocus(variant)}</p>
+        <p class="preset-quality">Quality notes: ${quality.notes.join("; ")}. ${summarizeVariantFocus(variant)}</p>
         <div class="preset-metrics">
           <div>
-            <span class="metric-label">Confidence</span>
-            <strong>${confidenceForVariant(variant)}%</strong>
+            <span class="metric-label">Quality</span>
+            <strong>${quality.score}%</strong>
           </div>
           <div>
             <span class="metric-label">Changes</span>
@@ -449,21 +465,6 @@ function renderVariants() {
   }
 }
 
-function confidenceForVariant(variant) {
-  let score = 82;
-  if (variant.groupKey === "closest") {
-    score += 9;
-  } else if (variant.groupKey === "darker" || variant.groupKey === "brighter") {
-    score += 5;
-  } else if (variant.groupKey === "more-motion" || variant.groupKey === "steadier") {
-    score += 3;
-  }
-  if (variant.changedParameters.length >= 6 && variant.changedParameters.length <= 18) {
-    score += 4;
-  }
-  return Math.min(96, score);
-}
-
 function bestUseForVariant(variant) {
   if (variant.groupKey === "closest") {
     return "Safer alternates";
@@ -481,6 +482,24 @@ function bestUseForVariant(variant) {
     return "Edge and grit";
   }
   return "Exploration";
+}
+
+function qualityBucket(score) {
+  if (score >= 90) {
+    return "strong";
+  }
+  if (score >= 80) {
+    return "balanced";
+  }
+  return "usable";
+}
+
+function averageQualityScore(variants) {
+  if (!variants.length) {
+    return 0;
+  }
+  const total = variants.reduce((sum, variant) => sum + scoreMutationVariant(variant).score, 0);
+  return Math.round(total / variants.length);
 }
 
 async function loadPreset(file) {
@@ -525,8 +544,8 @@ async function loadPreset(file) {
       macro_count: summary.macroCount,
     });
     elements.status.textContent = state.suiteUnlocked
-      ? `Loaded ${summary.name}. Generate 3 free variants or build the 32-preset pack.`
-      : `Loaded ${summary.name}. Generate 3 new preset directions when ready.`;
+      ? `Loaded ${summary.name}. Generate 3 free variants or build 32 Pro variants.`
+      : `Loaded ${summary.name}. Generate 3 free variants when ready.`;
   } catch (error) {
     state.sourcePreset = null;
     state.sourceFile = null;
@@ -541,7 +560,7 @@ function setGenerationLoadingState(isLoading, mode) {
   state.isGenerating = isLoading;
   elements.generateButton.disabled = isLoading || !state.sourcePreset;
   elements.generateButton.classList.toggle("is-loading", isLoading && mode === "free");
-  elements.buttonLabel.textContent = isLoading && mode === "free" ? "Generating..." : "Generate 3 Free Variations";
+  elements.buttonLabel.textContent = isLoading && mode === "free" ? "Generating..." : "Generate 3 Free Variants";
   if (elements.generatePack) {
     elements.generatePack.disabled = isLoading || !state.sourcePreset || !state.suiteUnlocked;
     elements.generatePack.classList.toggle("is-loading", isLoading && mode === "pro");
@@ -561,19 +580,22 @@ async function handleGenerate(mode = "free") {
 
   setGenerationLoadingState(true, mode);
   elements.status.textContent = mode === "pro"
-    ? "Building a 32-preset mutation pack from the loaded source preset..."
-    : "Mutating the source preset into 3 new directions...";
+    ? "Building 32 Pro variants from the loaded source preset..."
+    : "Mutating the source preset into 3 free variants...";
 
   try {
     await new Promise((resolve) => window.setTimeout(resolve, 520));
     state.generatedVariants = generateVariants(mode);
     state.lastGenerationMode = mode;
     renderVariants();
+    const qualityScore = averageQualityScore(state.generatedVariants);
     elements.status.textContent = mode === "pro"
-      ? "32-preset mutation pack ready. Expand each group and download individual presets or the full ZIP."
-      : "3 preset variations generated. Download the one that feels closest.";
+      ? "32 Pro variants ready. Expand each group and download individual presets or the full ZIP."
+      : "3 free variants ready. Download the one that feels closest.";
     analyticsEvent(mode === "pro" ? "generate_pro" : "generate_free", {
       preset_count: state.generatedVariants.length,
+      avg_quality_score: qualityScore,
+      avg_quality_bucket: qualityBucket(qualityScore),
       ...currentAnalyticsSelection(),
     });
   } finally {
@@ -658,7 +680,7 @@ function handleSuiteUnlock() {
   window.localStorage.setItem(SUITE_UNLOCK_STORAGE_KEY, "1");
   renderSuiteState();
   elements.status.textContent = state.sourcePreset
-    ? "Preset Mutator Pro is active in this browser. Generate the 32-preset pack when ready."
+    ? "Preset Mutator Pro is active in this browser. Generate 32 Pro variants when ready."
     : "Preset Mutator Pro is active in this browser.";
   analyticsEvent("unlock_attempt", { result: "success" });
 }

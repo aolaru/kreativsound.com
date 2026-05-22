@@ -1,9 +1,9 @@
 {
-  "id": "/apps/preset-mutator/ui/",
+  "id": "/apps/preset-mutator/ui/index.html",
   "name": "Preset Mutator",
   "short_name": "Preset Mutator",
   "description": "Create synth presets from audio, existing presets, or scratch ideas. Vital is live first; Serum 2 and Pigments 7 are planned.",
-  "start_url": "/apps/preset-mutator/ui/",
+  "start_url": "/apps/preset-mutator/ui/index.html",
   "scope": "/apps/preset-mutator/ui/",
   "display": "standalone",
   "background_color": "#fdf5f5",

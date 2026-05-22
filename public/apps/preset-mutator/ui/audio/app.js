@@ -1,6 +1,7 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
 import { clamp, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
 import { AUDIO_PRO_PACK_COUNT, buildAudioFreePack, buildAudioProfile as createAudioProfile, buildAudioProPack } from "../engine/audio-engine.js";
+import { scoreGeneratedPreset } from "../engine/quality.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "../engine/vital-export.js";
 
 const state = {
@@ -264,7 +265,7 @@ function setReady(enabled) {
 function setGenerateLoadingState(isLoading) {
   state.isGenerating = isLoading;
   elements.analyzeGenerate.classList.toggle("is-loading", isLoading);
-  elements.analyzeGenerateLabel.textContent = isLoading ? "Analyzing audio..." : "Generate 3 Free Presets";
+  elements.analyzeGenerateLabel.textContent = isLoading ? "Analyzing audio..." : "Generate 3 Free Variants";
   if (elements.generatePack) {
     elements.generatePack.disabled = !state.originalBuffer || isLoading || !state.proPreviewUnlocked;
   }
@@ -642,24 +643,6 @@ function buildPresetReason(preset, role) {
   return `${reasons[0]}; ${reasons[1]}.`;
 }
 
-function confidenceForPreset(preset, role) {
-  let score = 84;
-  if (role === "Closest") {
-    score += 8;
-  } else if (role === "Darker" || role === "Brighter") {
-    score += 5;
-  } else if (role === "More Motion") {
-    score += 3;
-  }
-  if (preset.parameterMap.filter_1_cutoff >= 18 && preset.parameterMap.filter_1_cutoff <= 92) {
-    score += 2;
-  }
-  if (preset.parameterMap.env_1_release >= 0.08 && preset.parameterMap.env_1_release <= 0.82) {
-    score += 2;
-  }
-  return `${Math.min(96, score)}%`;
-}
-
 function bestUseForPreset(preset) {
   if (preset.familyKey === "bass") {
     return "Bass foundations and low tension";
@@ -671,6 +654,24 @@ function bestUseForPreset(preset) {
     return "Atmospheres, transitions, and beds";
   }
   return "Pads, intros, and cinematic support";
+}
+
+function qualityBucket(score) {
+  if (score >= 90) {
+    return "strong";
+  }
+  if (score >= 80) {
+    return "balanced";
+  }
+  return "usable";
+}
+
+function averageQualityScore(presets) {
+  if (!presets.length) {
+    return 0;
+  }
+  const total = presets.reduce((sum, preset) => sum + scoreGeneratedPreset(preset, preset.roleLabel).score, 0);
+  return Math.round(total / presets.length);
 }
 
 function seedUrlForFamily(family) {
@@ -782,6 +783,7 @@ function buildPresetCard(preset, role, totalCount) {
     card.className = "preset-card";
     const maxRows = totalCount > FREE_VARIANT_LIMIT ? 4 : 4;
     const tags = totalCount > FREE_VARIANT_LIMIT ? [] : buildPresetTags(preset, role);
+    const quality = scoreGeneratedPreset(preset, role);
     const visibleParameters = totalCount > FREE_VARIANT_LIMIT ? preset.parameters : selectFreeCardParameters(preset.parameters);
     const paramRows = visibleParameters
       .slice(0, maxRows)
@@ -797,11 +799,11 @@ function buildPresetCard(preset, role, totalCount) {
       </div>
       <p class="preset-summary">${preset.summary}</p>
       ${tags.length ? `<div class="preset-tags">${tags.map((tag) => `<span class="preset-tag">${tag}</span>`).join("")}</div>` : ""}
-      <div class="preset-confidence">
-        <span><strong>${confidenceForPreset(preset, role)}</strong> confidence</span>
+      <div class="preset-quality-score">
+        <span><strong>${quality.score}%</strong> quality</span>
         <span><strong>Best use</strong> ${bestUseForPreset(preset)}</span>
       </div>
-      <p class="preset-quality">Why this result: ${buildPresetReason(preset, role)}</p>
+      <p class="preset-quality">Quality notes: ${quality.notes.join("; ")}. Why this result: ${buildPresetReason(preset, role)}</p>
       <div class="param-list">${paramRows}</div>
       <div class="preset-actions">
         <button class="download-button" type="button">
@@ -875,10 +877,13 @@ async function downloadPreset(preset) {
     link.click();
     URL.revokeObjectURL(url);
     updateStatus(`${preset.name} is ready.`);
+    const quality = scoreGeneratedPreset(preset, preset.roleLabel);
     analyticsEvent("download_preset", {
       generation_mode: state.lastGenerationMode,
       preset_role: preset.roleLabel,
       detected_family: preset.familyKey,
+      quality_score: quality.score,
+      quality_bucket: qualityBucket(quality.score),
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
@@ -915,10 +920,13 @@ async function downloadPresetPack() {
     link.click();
     URL.revokeObjectURL(url);
     updateStatus("32-pack ZIP ready.");
+    const qualityScore = averageQualityScore(state.presets);
     analyticsEvent("download_pack", {
       generation_mode: "pro",
       preset_count: state.presets.length,
       detected_family: state.profile?.family || "unknown",
+      avg_quality_score: qualityScore,
+      avg_quality_bucket: qualityBucket(qualityScore),
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
@@ -989,7 +997,7 @@ async function loadAudioFile(file, resetInput = false) {
     renderPresets([]);
     setReady(true);
 
-    updateStatus("Source ready. Generate 3 free presets or unlock the 32-pack.");
+    updateStatus("Source ready. Generate 3 free variants or unlock the 32-pack.");
     analyticsEvent("source_loaded", {
       source_type: "audio",
       duration_bucket: durationBucket(state.originalBuffer.duration),
@@ -1099,7 +1107,7 @@ function generatePresets() {
     return;
   }
 
-  updateStatus("Shaping 3 guided Vital preset directions...");
+  updateStatus("Shaping 3 guided Vital variants...");
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
   state.lastGenerationMode = "free";
@@ -1129,11 +1137,14 @@ function generatePresets() {
   ]);
 
   renderPresets(state.presets);
-  updateStatus("3 guided Vital presets ready. Download the ones that feel closest to your track.");
+  const qualityScore = averageQualityScore(state.presets);
+  updateStatus("3 free variants ready. Download the ones that feel closest to your track.");
   analyticsEvent("generate_free", {
     preset_count: state.presets.length,
     detected_family: state.profile.family,
     duration_bucket: durationBucket(state.originalBuffer.duration),
+    avg_quality_score: qualityScore,
+    avg_quality_bucket: qualityBucket(qualityScore),
     ...currentAnalyticsSelection(),
   });
   setReady(Boolean(state.originalBuffer));
@@ -1144,7 +1155,7 @@ function generatePresetPack() {
     return;
   }
 
-  updateStatus("Shaping a 32-preset Vital pack...");
+  updateStatus("Shaping 32 Pro variants...");
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
   state.lastGenerationMode = "pro";
@@ -1174,11 +1185,14 @@ function generatePresetPack() {
   ]);
 
   renderPresets(state.presets);
-  updateStatus("32-preset Vital pack ready.");
+  const qualityScore = averageQualityScore(state.presets);
+  updateStatus("32 Pro variants ready.");
   analyticsEvent("generate_pro", {
     preset_count: state.presets.length,
     detected_family: state.profile.family,
     duration_bucket: durationBucket(state.originalBuffer.duration),
+    avg_quality_score: qualityScore,
+    avg_quality_bucket: qualityBucket(qualityScore),
     ...currentAnalyticsSelection(),
   });
   setReady(Boolean(state.originalBuffer));
@@ -1190,7 +1204,7 @@ async function handleGeneratePresets() {
   }
 
   setGenerateLoadingState(true);
-  updateStatus("Generating 3 guided Vital presets...");
+  updateStatus("Generating 3 free variants...");
 
   await new Promise((resolve) => {
     window.setTimeout(resolve, GENERATE_DELAY_MS);
@@ -1209,7 +1223,7 @@ async function handleGeneratePresetPack() {
   }
 
   setGenerateLoadingState(true);
-  updateStatus("Generating a 32-preset Vital pack...");
+  updateStatus("Generating 32 Pro variants...");
 
   await new Promise((resolve) => {
     window.setTimeout(resolve, GENERATE_DELAY_MS);
