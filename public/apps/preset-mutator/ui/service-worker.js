@@ -1,9 +1,9 @@
-const CACHE_NAME = "preset-mutator-shell-v4";
+const CACHE_NAME = "preset-mutator-shell-v7";
 const SHELL_ASSETS = [
-  "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./preset-mutator-knob.js",
   "./scratch/index.html",
   "./scratch/styles.css",
   "./scratch/app.js",
@@ -12,13 +12,35 @@ const SHELL_ASSETS = [
   "./mutate/app.js",
   "./audio/index.html",
   "./audio/app.js",
+  "./engine/audio-preview.js",
+  "./engine/common.js",
+  "./engine/license.js",
+  "./engine/scratch-engine.js",
+  "./engine/audio-engine.js",
+  "./engine/preset-mutate-engine.js",
+  "./engine/vital-export.js",
+  "../assets/seeds/vital/raw/KS%20Dread%20Lantern.vital",
+  "../assets/seeds/vital/raw/KS%20Frozen%20Hollow.vital",
+  "../assets/seeds/vital/raw/KS%20Iron%20Wake.vital",
+  "../assets/seeds/vital/raw/KS%20Shadow%20Archive.vital",
   "./manifest.webmanifest",
   "./preset-mutator-mark.svg",
 ];
 
+async function cacheShellAssets(cache) {
+  await Promise.allSettled(
+    SHELL_ASSETS.map(async (asset) => {
+      const response = await fetch(asset, { cache: "reload" });
+      if (response.ok) {
+        await cache.put(asset, response);
+      }
+    }),
+  );
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL_ASSETS)),
+    caches.open(CACHE_NAME).then((cache) => cacheShellAssets(cache)),
   );
   self.skipWaiting();
 });
@@ -55,6 +77,10 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
+          if (!response.ok && request.mode === "navigate") {
+            return caches.match("./index.html").then((cached) => cached || response);
+          }
+
           if (!response.ok || response.type === "opaque") {
             return response;
           }
@@ -63,7 +89,17 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
           return response;
         })
-        .catch(() => caches.match(request)),
+        .catch(() =>
+          caches.match(request).then((cached) => {
+            if (cached) {
+              return cached;
+            }
+            if (request.mode === "navigate") {
+              return caches.match("./index.html").then((fallback) => fallback || Response.error());
+            }
+            return Response.error();
+          }),
+        ),
     );
     return;
   }
@@ -74,15 +110,17 @@ self.addEventListener("fetch", (event) => {
         return cached;
       }
 
-      return fetch(request).then((response) => {
-        if (!response.ok || response.type === "opaque") {
-          return response;
-        }
+      return fetch(request)
+        .then((response) => {
+          if (!response.ok || response.type === "opaque") {
+            return response;
+          }
 
-        const cloned = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
-        return response;
-      });
+          const cloned = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
+          return response;
+        })
+        .catch(() => Response.error());
     }),
   );
 });

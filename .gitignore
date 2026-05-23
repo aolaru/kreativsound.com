@@ -6,3 +6,5 @@ node_modules/
 dist/
 .astro/
 public/sitemap.xml
+private/
+.env.local

@@ -86,7 +86,7 @@ def main() -> int:
             "From Scratch",
             "Create a Vital preset from intent",
             "Preset Intent",
-            "Generate 3 Free Presets",
+            "Generate 3 Free Variants",
             "Generated Preset Variants",
             "Preset Mutator Pro",
             "Download 32-Pack",
@@ -96,14 +96,14 @@ def main() -> int:
         mutate_dom = dump_dom(chrome, base_url + "/apps/preset-mutator/ui/mutate/")
         for needle in [
             "Preset Mutator",
-            "Turn one Vital preset into three new directions",
+            "Mutate one Vital preset into new variants",
             "Scratch",
             "Preset",
             "Audio",
-            "Generate 3 Free Variations",
+            "Generate 3 Free Variants",
             "Mutation Controls",
             "Preset Mutator Pro",
-            "Serum 2 and Pigments 7 are planned future targets.",
+            "Kreativ Sound experimental tool surface for preset-driven mutation.",
         ]:
             require(mutate_dom, needle, "/apps/preset-mutator/ui/mutate/", errors)
 
@@ -116,9 +116,9 @@ def main() -> int:
             "Preset",
             "Audio",
             "Preset Intent",
-            "Generate 3 Free Presets",
+            "Generate 3 Free Variants",
             "Preset Mutator Pro",
-            "Serum 2 and Pigments 7 are planned future targets.",
+            "Serum 2 and Pigments 7 are planned.",
         ]:
             require(scratch_dom, needle, "/apps/preset-mutator/ui/scratch/", errors)
 

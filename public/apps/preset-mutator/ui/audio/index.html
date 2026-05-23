@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preset Mutator | Audio to Preset</title>
     <meta name="theme-color" content="#f8e9e9" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <script>
       (() => {
         const storedTheme = localStorage.getItem("theme");
@@ -12,7 +13,6 @@
         document.documentElement.setAttribute("data-theme", theme);
       })();
     </script>
-    <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Preset Mutator" />
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
     <link rel="manifest" href="../manifest.webmanifest" />
@@ -39,7 +39,7 @@
         <div class="nav-group nav-group-main">
           <a class="nav-link" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer">Back to Kreativ Sound</a>
         </div>
-        <a class="nav-brand nav-brand-wordmark" href="https://kreativsound.com/apps/preset-mutator/ui/" aria-label="Preset Mutator home">
+        <a class="nav-brand nav-brand-wordmark" href="../index.html" aria-label="Preset Mutator home">
           <img class="nav-brand-mark-image" src="../preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator</strong>
@@ -55,21 +55,18 @@
       </nav>
 
       <section class="hero">
-        <p class="eyebrow">Synth preset tool</p>
-        <h1>Create, mutate, and export synth presets</h1>
-        <p class="lede">Three Vital beta workflows for turning audio, existing presets, or simple intent into playable preset starts.</p>
-        <figure class="hero-cover" aria-label="Preset Mutator product artwork">
-          <img src="/assets/thumbs/preset-mutator.webp" width="1672" height="941" alt="Preset Mutator cover artwork" />
-        </figure>
+        <p class="eyebrow">Audio to Preset beta</p>
+        <h1>Turn audio into Vital preset variants</h1>
+        <p class="lede">Load one short source sound, shape the mapping, and export playable Vital variants.</p>
         <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator source">
-          <a class="mode-tab" href="../">
+          <a class="mode-tab" href="../index.html">
             <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
             <span class="mode-copy">
               <strong>Scratch</strong>
               <small>Start from intent</small>
             </span>
           </a>
-          <a class="mode-tab" href="../mutate/">
+          <a class="mode-tab" href="../mutate/index.html">
             <i class="fa-solid fa-sliders" aria-hidden="true"></i>
             <span class="mode-copy">
               <strong>Preset</strong>
@@ -91,11 +88,11 @@
           </div>
           <div>
             <span>Free</span>
-            <strong>3 Vital presets</strong>
+            <strong>3 free variants</strong>
           </div>
           <div>
             <span>Pro output</span>
-            <strong>32 presets + ZIP</strong>
+            <strong>32 Pro variants + ZIP</strong>
           </div>
         </div>
         <div class="local-trust-strip" aria-label="Preset Mutator privacy promises">
@@ -105,63 +102,64 @@
         </div>
       </section>
 
-      <section class="panel upload-panel">
-        <div class="section-head">
-          <div>
-            <h2>Input Audio</h2>
-            <p class="muted">Upload one short source sound and generate playable Vital preset starts inspired by its tone and shape.</p>
-            <p class="input-note">Best inputs: one-shot notes, basses, pads, plucks, drones, and clean textures. Supported formats: WAV, MP3, AIFF, M4A, OGG, FLAC. Max 10 MB.</p>
-            <p class="input-note">Avoid full songs, long loops, and dense mixes. They usually produce weaker mappings.</p>
-          </div>
-        </div>
-        <p class="upload-message" id="upload-message" hidden></p>
-
-        <section class="waveform-panel drop-zone" id="waveform-drop-zone">
+      <section class="workflow-grid workflow-grid-audio">
+        <section class="panel upload-panel">
           <div class="section-head">
-            <h2>Waveform</h2>
+            <div>
+              <h2>Input Audio</h2>
+              <p class="muted">Load one short source sound and generate Vital variants inspired by its tone and shape.</p>
+              <p class="input-note">Best inputs: one-shots, basses, pads, plucks, drones, and clean textures. Avoid full songs and dense mixes.</p>
+              <p class="input-note">WAV, MP3, AIFF, M4A, OGG, or FLAC. Max 10 MB.</p>
+            </div>
           </div>
-          <div class="waveform-drop-inner">
-            <canvas id="waveform" width="1200" height="150"></canvas>
-            <div class="waveform-drop-cta" id="waveform-drop-cta">
-              <label class="upload">
-                <span>Choose audio file</span>
-                <input id="file-input" type="file" accept="audio/*" />
-              </label>
-              <p class="waveform-empty-note" id="waveform-empty-note">Drop an audio file here to preview its waveform.</p>
+          <p class="upload-message" id="upload-message" hidden></p>
+
+          <section class="waveform-panel drop-zone" id="waveform-drop-zone">
+            <div class="section-head">
+              <h2>Waveform</h2>
+            </div>
+            <div class="waveform-drop-inner">
+              <canvas id="waveform" width="1200" height="150"></canvas>
+              <div class="waveform-drop-cta" id="waveform-drop-cta">
+                <label class="upload">
+                  <span>Choose audio file</span>
+                  <input id="file-input" type="file" accept="audio/*" />
+                </label>
+                <p class="waveform-empty-note" id="waveform-empty-note">Drop an audio file here to preview its waveform.</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="waveform-actions">
+            <button id="play-toggle" type="button" disabled>Play Source</button>
+            <p class="playback-time" id="playback-time">0:00 / 0:00</p>
+          </div>
+
+          <div class="meta-grid">
+            <div>
+              <span class="meta-label">File</span>
+              <strong id="file-name">No file loaded</strong>
+            </div>
+            <div>
+              <span class="meta-label">Duration</span>
+              <strong id="file-duration">0.0s</strong>
+            </div>
+            <div>
+              <span class="meta-label">Sample rate</span>
+              <strong id="file-sample-rate">-</strong>
+            </div>
+            <div>
+              <span class="meta-label">Channels</span>
+              <strong id="file-channels">-</strong>
             </div>
           </div>
         </section>
 
-        <div class="waveform-actions">
-          <button id="play-toggle" type="button" disabled>Play Source</button>
-          <p class="playback-time" id="playback-time">0:00 / 0:00</p>
-        </div>
-
-        <div class="meta-grid">
-          <div>
-            <span class="meta-label">File</span>
-            <strong id="file-name">No file loaded</strong>
-          </div>
-          <div>
-            <span class="meta-label">Duration</span>
-            <strong id="file-duration">0.0s</strong>
-          </div>
-          <div>
-            <span class="meta-label">Sample rate</span>
-            <strong id="file-sample-rate">-</strong>
-          </div>
-          <div>
-            <span class="meta-label">Channels</span>
-            <strong id="file-channels">-</strong>
-          </div>
-        </div>
-      </section>
-
-      <section class="workspace">
-        <section class="panel controls-panel">
+        <section class="workspace">
+          <section class="panel controls-panel">
           <div class="section-head">
-            <h2>Preset Generation</h2>
-            <p class="muted">Guide how the source gets interpreted. The result stays inspired by the upload, not matched one-to-one.</p>
+            <h2>Mutation Controls</h2>
+            <p class="muted">Guide how the source gets interpreted. The variants stay inspired by the upload, not matched one-to-one.</p>
           </div>
 
           <section class="control-section control-section-free" aria-labelledby="free-control-title">
@@ -174,7 +172,7 @@
               <div class="mutation-macro-copy">
                 <span class="meta-label">Macro Control</span>
                 <h3 id="mutation-amount-heading">Mutation Amount</h3>
-                <p>Set how far the generated presets can move from the uploaded audio profile.</p>
+                <p>Set how far the generated variants can move from the uploaded audio profile.</p>
               </div>
               <div id="mutation-knob" class="mutation-knob-mount"></div>
               <input id="mutation-amount" type="hidden" value="50" />
@@ -208,7 +206,7 @@
 
               <label class="control">
                 <span class="control-label">Steadier / More Motion
-                  <button class="info-tooltip" type="button" aria-label="Explain Steadier / More Motion" data-tooltip="Biases modulation and movement. Higher values push the presets toward more animation, motion, and modulation depth.">
+                  <button class="info-tooltip" type="button" aria-label="Explain Steadier / More Motion" data-tooltip="Biases modulation and movement. Higher values push the variants toward more animation, motion, and modulation depth.">
                     <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                   </button>
                 </span>
@@ -218,7 +216,7 @@
 
               <label class="control">
                 <span class="control-label">Softer / Harder Attack
-                  <button class="info-tooltip" type="button" aria-label="Explain Softer / Harder Attack" data-tooltip="Biases how soft or sharp the generated preset feels at the start. Higher values tighten the onset and make attacks feel more immediate.">
+                  <button class="info-tooltip" type="button" aria-label="Explain Softer / Harder Attack" data-tooltip="Biases how soft or sharp the generated variant feels at the start. Higher values tighten the onset and make attacks feel more immediate.">
                     <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                   </button>
                 </span>
@@ -228,7 +226,7 @@
 
               <label class="control">
                 <span class="control-label">Narrower / Wider
-                  <button class="info-tooltip" type="button" aria-label="Explain Narrower / Wider" data-tooltip="Changes how wide the generated presets feel by biasing stereo spread, unison width, and spaciousness.">
+                  <button class="info-tooltip" type="button" aria-label="Explain Narrower / Wider" data-tooltip="Changes how wide the generated variants feel by biasing stereo spread, unison width, and spaciousness.">
                     <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                   </button>
                 </span>
@@ -250,15 +248,15 @@
             <div class="actions section-actions">
               <button id="analyze-generate" type="button" disabled>
                 <span class="button-spinner" aria-hidden="true"></span>
-                <span class="button-label">Generate 3 Free Presets</span>
+                <span class="button-label">Generate 3 Free Variants</span>
               </button>
             </div>
           </section>
 
-          <div class="status" id="status">Load a short audio file, then generate 3 guided Vital preset starts.</div>
+          <div class="status" id="status">Load a short audio file, then generate 3 free variants.</div>
           <p class="upgrade-hint">Mutate Preset and From Scratch are available as Vital betas.</p>
+          </section>
         </section>
-
       </section>
 
       <section class="panel analysis-shell" id="analysis-shell">
@@ -282,7 +280,7 @@
 
           <section class="panel analysis-panel">
             <div class="section-head">
-              <h2>Sound Profile</h2>
+              <h2>Source Profile</h2>
               <p class="muted">Normalized features that drive the current synth mapping.</p>
             </div>
             <div class="metric-grid" id="profile-metrics"></div>
@@ -295,9 +293,9 @@
           <h2>Generated Preset Variants</h2>
           <p class="muted">Preview the generated directions, then download real `.vital` files built from curated Vital seeds.</p>
         </div>
-        <p class="self-test-note" id="self-test-note" hidden>Self-test mode generated synthetic demo presets.</p>
+        <p class="self-test-note" id="self-test-note" hidden>Self-test mode generated synthetic demo variants.</p>
         <div class="preset-list" id="preset-list">
-        <p class="empty-state">Choose a short source sound, then click <strong>Generate 3 Free Presets</strong>. Use Pro when you want a full 32-preset pack from the same source.</p>
+        <p class="empty-state">Choose a short source sound, then click <strong>Generate 3 Free Variants</strong>. Use Pro when you want 32 Pro variants from the same source.</p>
         </div>
       </section>
 
@@ -306,11 +304,11 @@
           <p class="paid-feature-kicker">Preset Mutator Pro</p>
           <h2 id="paid-feature-title">Unlock more variations and faster export</h2>
           <p class="paid-feature-price">Launch price: 19 EUR</p>
-          <p class="paid-feature-ownership">Pay once. Unlock Pro on this browser with your purchase code.</p>
+          <p class="paid-feature-ownership">Pay once. Unlock Pro on this browser with your license token.</p>
           <div class="paid-benefit-grid" aria-label="Preset Mutator Pro benefits">
             <div>
               <strong>More variations</strong>
-              <span>Explore 32 starts from one source.</span>
+              <span>Explore 32 variants from one source.</span>
             </div>
             <div>
               <strong>Faster exploration</strong>
@@ -326,7 +324,7 @@
             </div>
           </div>
           <ul class="paid-feature-list">
-            <li>Audio to Preset 32-pack generation</li>
+            <li>Audio to Preset 32 Pro variant generation</li>
             <li>Preset mutation mode</li>
             <li>From-scratch creation mode</li>
             <li>One ZIP export</li>
@@ -343,15 +341,15 @@
           </a>
           <button class="button secondary paid-feature-toggle" id="paid-feature-toggle" type="button" aria-expanded="false" aria-controls="paid-feature-unlock">
             <i class="fa-solid fa-key" aria-hidden="true"></i>
-            Enter purchase code
+            Enter license token
           </button>
           <p class="paid-feature-meta">Gumroad is default checkout. PayPal is available if preferred.</p>
         </div>
         <div class="paid-feature-unlock" id="paid-feature-unlock" hidden>
-          <label class="sr-only" for="paid-feature-key">Preset Mutator purchase code</label>
-          <input id="paid-feature-key" type="text" placeholder="Enter your Preset Mutator purchase code" autocomplete="off" />
+          <label class="sr-only" for="paid-feature-key">Preset Mutator license token</label>
+          <input id="paid-feature-key" type="text" placeholder="Enter your Preset Mutator license token" autocomplete="off" />
           <button class="button secondary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Unlock Pro</button>
-          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Enter your code after purchase. No account required.</p>
+          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Enter your license token after purchase. No account required.</p>
         </div>
         <div class="paid-feature-preview" id="paid-feature-preview" hidden>
           <p class="paid-feature-preview-badge">Preset Mutator Pro active</p>
@@ -359,7 +357,7 @@
           <div class="paid-feature-preview-actions">
             <button class="button primary" id="generate-pack" type="button" disabled>
               <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-              Generate 32 Pro Presets
+              Generate 32 Pro Variants
             </button>
             <button class="button secondary" id="download-pack" type="button" disabled>
               <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
