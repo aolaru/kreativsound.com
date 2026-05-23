@@ -31,6 +31,9 @@ export type ProductPage = {
   liteLabel?: string;
   liteNote?: string;
   shortMeta?: string;
+  price?: string;
+  priceAmount?: number;
+  priceCurrency?: string;
   valueLine?: string;
   ctaLine?: string;
   proofPoints?: string[];
@@ -989,6 +992,9 @@ export const productPages: ProductPage[] = products
       liteLabel: override.liteLabel,
       liteNote: override.liteNote,
       shortMeta: override.shortMeta || defaultShortMeta(product),
+      price: override.price || product.price,
+      priceAmount: override.priceAmount || product.priceAmount,
+      priceCurrency: override.priceCurrency || product.priceCurrency,
       valueLine: override.valueLine,
       ctaLine: override.ctaLine,
       proofPoints: override.proofPoints,

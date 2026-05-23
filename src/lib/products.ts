@@ -23,8 +23,17 @@ export type Product = {
   format: string;
   count: string;
   useCase: string;
+  price?: string;
+  priceAmount?: number;
+  priceCurrency?: string;
   demo?: ProductDemo;
 };
+
+const standardSoundPackPrice = {
+  price: "9 EUR",
+  priceAmount: 9,
+  priceCurrency: "EUR"
+} satisfies Pick<Product, "price" | "priceAmount" | "priceCurrency">;
 
 export const products: Product[] = [
   {
@@ -57,6 +66,7 @@ export const products: Product[] = [
   {
     title: "OPERATORS - Atmos & Motion for Native Instruments FM8",
     category: "Presets",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
     detailsUrl: "/sounds/operators-fm8-presets",
     badge: "New",
@@ -69,6 +79,7 @@ export const products: Product[] = [
   {
     title: "BLACK ARCOLOGY - Industrial Presets for Pigments",
     category: "Presets",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/black-arcology-industrial-presets-for-pigments",
     detailsUrl: "/sounds/black-arcology-pigments-presets",
     thumbnail: "/assets/thumbs/black-arcology-thumb.png",
@@ -84,6 +95,7 @@ export const products: Product[] = [
   {
     title: "VELVET RUINS - Presets for Vital spectral synth",
     category: "Presets",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
     detailsUrl: "/sounds/velvet-ruins-vital-presets",
     thumbnail: "/assets/thumbs/velvet-ruins.jpg",
@@ -98,6 +110,7 @@ export const products: Product[] = [
   {
     title: "NEOLITH - Presets for Softube Models",
     category: "Presets",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile",
     detailsUrl: "/sounds/neolith-softube-models-presets",
     thumbnail: "/assets/thumbs/neolith.jpg",
@@ -108,6 +121,7 @@ export const products: Product[] = [
   {
     title: "BIOFORMS - Evolving Presets for Synplant 2",
     category: "Presets",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile",
     detailsUrl: "/sounds/bioforms-synplant-2-presets",
     thumbnail: "/assets/thumbs/bioforms.jpg",
@@ -118,6 +132,7 @@ export const products: Product[] = [
   {
     title: "MONOLUSH - Presets for FabFilter One",
     category: "Presets",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/monolush-fabfilter-one-presets?layout=profile",
     detailsUrl: "/sounds/monolush-fabfilter-one-presets",
     thumbnail: "/assets/thumbs/monolush.jpg",
@@ -128,6 +143,7 @@ export const products: Product[] = [
   {
     title: "DIRTY MODEL - Presets for Moog Model D",
     category: "Presets",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/dirty-model?layout=profile",
     detailsUrl: "/sounds/dirty-model-moog-model-d-presets",
     thumbnail: "/assets/thumbs/dirty-model.jpg",
@@ -143,6 +159,7 @@ export const products: Product[] = [
   {
     title: "ZEPHYR - Presets for Moog Animoog Z",
     category: "Presets",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/zephy-animoog-z-presets?layout=profile",
     detailsUrl: "/sounds/zephyr-animoog-z-presets",
     thumbnail: "/assets/thumbs/zephyr.jpg",
@@ -158,6 +175,7 @@ export const products: Product[] = [
   {
     title: "SFXS 2 - Creative Sound Effects Collection",
     category: "Samples",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/sfxs-sound-effects-library?layout=profile",
     detailsUrl: "/sounds/sfxs-2-sound-effects",
     thumbnail: "/assets/thumbs/sfxs-2.jpg",
@@ -173,6 +191,7 @@ export const products: Product[] = [
   {
     title: "NOIZE 2 - Experimental Noise Textures and FX",
     category: "Samples",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/noize-oscillators?layout=profile",
     detailsUrl: "/sounds/noize-2-noise-textures",
     thumbnail: "/assets/thumbs/noize-2.jpg",
@@ -188,6 +207,7 @@ export const products: Product[] = [
   {
     title: "ENIGMA 2 - Cinematic Mysterious Atmospheres",
     category: "Samples",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/enigma?layout=profile",
     detailsUrl: "/sounds/enigma-2-cinematic-atmospheres",
     thumbnail: "/assets/thumbs/enigma-2.jpg",
@@ -203,6 +223,7 @@ export const products: Product[] = [
   {
     title: "BLEEPS 2 - Experimental Percussion Sounds",
     category: "Samples",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/bleeps-sharp-percussion-drum-samples?layout=profile",
     detailsUrl: "/sounds/bleeps-2-percussion-sounds",
     thumbnail: "/assets/thumbs/bleeps-2.jpg",
@@ -213,6 +234,7 @@ export const products: Product[] = [
   {
     title: "SPACE 2 - Space Inspired Atmospheres and Textures",
     category: "Samples",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/space-inspired-atmospheres-textures?layout=profile",
     detailsUrl: "/sounds/space-2-atmospheres-textures",
     thumbnail: "/assets/thumbs/space-2.jpg",
@@ -228,6 +250,7 @@ export const products: Product[] = [
   {
     title: "TECTONIC 2 - Dark Subs and Underground Textures",
     category: "Samples",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/tectonic-underground-textures?layout=profile",
     detailsUrl: "/sounds/tectonic-2-dark-subs-textures",
     thumbnail: "/assets/thumbs/tectonic-2.jpg",
@@ -243,6 +266,7 @@ export const products: Product[] = [
   {
     title: "HORROR 2 - Cinematic Scary Texture",
     category: "Samples",
+    ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/horror-cinematic-scary-texture?layout=profile",
     detailsUrl: "/sounds/horror-2-cinematic-textures",
     thumbnail: "/assets/thumbs/horror-2.jpg",

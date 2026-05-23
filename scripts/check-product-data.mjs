@@ -35,6 +35,7 @@ const errors = [];
 const productSlugs = products.map((product) => slugFromDetailsUrl(product.detailsUrl)).filter(Boolean);
 const productSlugSet = new Set(productSlugs);
 const landingCopySlugSet = new Set(Object.keys(landingCopyOverrides));
+const paidSoundCategories = new Set(["Presets", "Samples"]);
 
 assertUnique(products.map((product) => product.detailsUrl).filter(Boolean), "product detailsUrl", errors);
 assertUnique(productSlugs, "product slug", errors);
@@ -65,6 +66,11 @@ for (const product of products) {
   }
   if (product.demo?.src && !publicAssetExists(product.demo.src)) {
     errors.push(`${product.title}: missing demo asset ${product.demo.src}`);
+  }
+  if (paidSoundCategories.has(product.category)) {
+    if (product.price !== "9 EUR") errors.push(`${product.title}: paid sound pack price should be 9 EUR.`);
+    if (product.priceAmount !== 9) errors.push(`${product.title}: paid sound pack priceAmount should be 9.`);
+    if (product.priceCurrency !== "EUR") errors.push(`${product.title}: paid sound pack priceCurrency should be EUR.`);
   }
 }
 

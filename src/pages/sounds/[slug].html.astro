@@ -12,6 +12,13 @@ export function getStaticPaths() {
 const { product } = Astro.props;
 const hasDemo = Boolean(product.demo?.src);
 const productName = product.headline;
+const displaySpecifications = product.price
+  ? [
+      { label: "Price", value: product.price },
+      ...product.specifications.filter((spec) => spec.label.toLowerCase() !== "price")
+    ]
+  : product.specifications;
+const offerUrls = [product.primaryUrl, product.purchaseAltUrl].filter((url): url is string => Boolean(url));
 const purchaseActions = [
   product.primaryUrl && product.primaryLabel
     ? { url: product.primaryUrl, label: product.primaryLabel, icon: purchaseIconClass(product.primaryUrl) }
@@ -45,25 +52,18 @@ const productSchema = {
     name: "Kreativ Sound"
   },
   category: product.kicker,
-  offers: product.primaryUrl
-    ? [
-        {
+  offers: offerUrls.length
+    ? offerUrls.map((url) => ({
           "@type": "Offer",
-          url: product.primaryUrl,
+          url,
           availability: "https://schema.org/InStock",
-          priceCurrency: "USD"
-        },
-        ...(product.purchaseAltUrl
-          ? [
-              {
-                "@type": "Offer",
-                url: product.purchaseAltUrl,
-                availability: "https://schema.org/InStock",
-                priceCurrency: "USD"
+          ...(product.priceAmount
+            ? {
+                price: String(product.priceAmount),
+                priceCurrency: product.priceCurrency || "EUR"
               }
-            ]
-          : [])
-      ]
+            : {})
+        }))
     : undefined
 };
 const breadcrumbSchema = {
@@ -138,6 +138,7 @@ const breadcrumbSchema = {
         </div>
       ) : null}
 
+      {product.price ? <p class="product-price-line"><strong>{product.price}</strong> • Instant download</p> : null}
       {product.shortMeta ? <p class="product-landing-meta">{product.shortMeta}</p> : null}
     </header>
 
@@ -171,11 +172,11 @@ const breadcrumbSchema = {
       </section>
     ) : null}
 
-    {product.specifications.length ? (
+    {displaySpecifications.length ? (
       <section class="product-landing-section" aria-labelledby="product-specifications-title">
         <h2 id="product-specifications-title">Product Specifications</h2>
         <dl class="product-specification-list">
-          {product.specifications.map((spec) => (
+          {displaySpecifications.map((spec) => (
             <div>
               <dt>{spec.label}</dt>
               <dd>{spec.value}</dd>

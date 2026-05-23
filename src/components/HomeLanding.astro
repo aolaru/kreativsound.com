@@ -90,6 +90,12 @@ function extraActionLabel(product: Product) {
           <dt>Included</dt>
           <dd>{latestProduct.count}</dd>
         </div>
+        {latestProduct.price ? (
+          <div>
+            <dt>Price</dt>
+            <dd>{latestProduct.price}</dd>
+          </div>
+        ) : null}
       </dl>
       <div class="home-product-actions">
         {latestProduct.detailsUrl ? (
@@ -136,6 +142,12 @@ function extraActionLabel(product: Product) {
           <dt>Included</dt>
           <dd>{product.count}</dd>
         </div>
+        {product.price ? (
+          <div>
+            <dt>Price</dt>
+            <dd>{product.price}</dd>
+          </div>
+        ) : null}
       </dl>
       <div class="home-product-actions">
         {product.extraAction?.url ? (
