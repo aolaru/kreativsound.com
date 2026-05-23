@@ -92,7 +92,7 @@ const productOverrides: Record<string, ProductPageOverride> = {
     headline: "Preset Mutator",
     description: "Preset Mutator is a browser-based Vital preset generator for creating preset starts from scratch ideas, existing presets, or short audio sources.",
     kicker: "Browser tool",
-    primaryUrl: "https://kreativ.gumroad.com/l/preset-mutator-pro",
+    primaryUrl: "https://kreativ.gumroad.com/l/preset-mutator",
     primaryLabel: "Buy on Gumroad",
     purchaseAltUrl: "https://www.paypal.com/ncp/payment/RUGQ6S3NW7HE4",
     purchaseAltLabel: "Pay with PayPal",

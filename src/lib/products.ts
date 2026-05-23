@@ -41,7 +41,7 @@ export const products: Product[] = [
   {
     title: "Preset Mutator - Vital Preset Generator",
     category: "Tools",
-    url: "https://kreativ.gumroad.com/l/preset-mutator-pro",
+    url: "https://kreativ.gumroad.com/l/preset-mutator",
     detailsUrl: "/sounds/preset-mutator",
     badge: "Tool",
     extraAction: {
