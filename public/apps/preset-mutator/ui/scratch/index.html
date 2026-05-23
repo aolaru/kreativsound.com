@@ -105,51 +105,62 @@
       </section>
 
       <section class="workflow-grid">
-        <section class="panel intent-panel">
-          <div class="section-head">
-            <div>
-              <h2>Preset Intent</h2>
-              <p class="muted">Set the type, mood, register, and a short intent.</p>
-              <p class="input-note">Vital is live now. Serum 2 and Pigments 7 are planned.</p>
+        <div class="intent-stack">
+          <section class="panel intent-panel">
+            <div class="section-head">
+              <div>
+                <h2>Preset Intent</h2>
+                <p class="muted">Set the type, mood, register, and a short intent.</p>
+                <p class="input-note">Vital is live now. Serum 2 and Pigments 7 are planned.</p>
+              </div>
             </div>
-          </div>
 
-          <div class="intent-grid">
-            <label class="control">
-              <span class="control-label">Sound Type</span>
-              <select id="family-select">
-                <option value="pad">Pad / Atmosphere</option>
-                <option value="pluck">Pluck / Keys</option>
-                <option value="bass">Bass</option>
-                <option value="texture">Drone / Texture</option>
-              </select>
-            </label>
+            <div class="intent-grid">
+              <label class="control">
+                <span class="control-label">Sound Type</span>
+                <select id="family-select">
+                  <option value="pad">Pad / Atmosphere</option>
+                  <option value="pluck">Pluck / Keys</option>
+                  <option value="bass">Bass</option>
+                  <option value="texture">Drone / Texture</option>
+                </select>
+              </label>
 
-            <label class="control">
-              <span class="control-label">Mood</span>
-              <select id="mood-select">
-                <option value="dark">Dark / cinematic</option>
-                <option value="warm">Warm / melodic</option>
-                <option value="clean">Clean / modern</option>
-                <option value="broken">Broken / experimental</option>
-              </select>
-            </label>
+              <label class="control">
+                <span class="control-label">Mood</span>
+                <select id="mood-select">
+                  <option value="dark">Dark / cinematic</option>
+                  <option value="warm">Warm / melodic</option>
+                  <option value="clean">Clean / modern</option>
+                  <option value="broken">Broken / experimental</option>
+                </select>
+              </label>
 
-            <label class="control">
-              <span class="control-label">Register</span>
-              <select id="register-select">
-                <option value="low">Low</option>
-                <option value="mid" selected>Mid</option>
-                <option value="high">High</option>
-              </select>
-            </label>
+              <label class="control">
+                <span class="control-label">Register</span>
+                <select id="register-select">
+                  <option value="low">Low</option>
+                  <option value="mid" selected>Mid</option>
+                  <option value="high">High</option>
+                </select>
+              </label>
 
-            <label class="control intent-text-control">
-              <span class="control-label">Short Intent</span>
-              <textarea id="intent-text" rows="4" maxlength="180" placeholder="Example: dark evolving key for a tense intro"></textarea>
-            </label>
-          </div>
-        </section>
+              <label class="control intent-text-control">
+                <span class="control-label">Short Intent</span>
+                <textarea id="intent-text" rows="4" maxlength="180" placeholder="Example: dark evolving key for a tense intro"></textarea>
+                <span class="control-note">Optional keywords bias tone, movement, and texture. Example: dark, evolving, glass, dirty, steady.</span>
+              </label>
+            </div>
+          </section>
+
+          <section class="panel analysis-panel">
+            <div class="section-head">
+              <h2>Source Profile</h2>
+              <p class="muted">Current profile before export.</p>
+            </div>
+            <div class="metric-grid" id="profile-metrics"></div>
+          </section>
+        </div>
 
         <section class="workspace">
           <section class="panel controls-panel">
@@ -208,16 +219,6 @@
           <div class="status" id="status">Choose an intent, then generate 3 free variants.</div>
           <p class="upgrade-hint">Preset Mutator Pro unlocks 32 Pro variants and ZIP export.</p>
           </section>
-        </section>
-      </section>
-
-      <section class="analysis-grid">
-        <section class="panel analysis-panel">
-          <div class="section-head">
-            <h2>Source Profile</h2>
-            <p class="muted">Current profile before export.</p>
-          </div>
-          <div class="metric-grid" id="profile-metrics"></div>
         </section>
       </section>
 

@@ -410,6 +410,7 @@ output {
 .waveform-panel,
 .controls-panel,
 .analysis-grid > .panel,
+.intent-stack > .analysis-panel,
 .presets-panel {
   padding: 24px;
 }
@@ -440,8 +441,14 @@ output {
 
 .workflow-grid > .upload-panel,
 .workflow-grid > .intent-panel,
+.workflow-grid > .intent-stack,
 .workflow-grid > .workspace {
   margin-bottom: 0;
+}
+
+.intent-stack {
+  display: grid;
+  gap: 20px;
 }
 
 .workflow-grid .mutation-macro {
@@ -465,6 +472,15 @@ output {
 .workflow-grid .control-grid,
 .workflow-grid .meta-grid {
   grid-template-columns: 1fr;
+}
+
+.workflow-grid .control-grid {
+  gap: 10px;
+}
+
+.workflow-grid .control {
+  padding: 13px 14px;
+  border-radius: 16px;
 }
 
 .section-head {
@@ -1024,8 +1040,10 @@ h2 {
 }
 
 .control-note {
+  margin: 0;
   color: var(--soft);
-  font-size: 0.84rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
 }
 
 select,
@@ -1222,6 +1240,38 @@ button:disabled {
 
 .analysis-panel {
   opacity: 1;
+}
+
+.intent-stack > .analysis-panel {
+  padding: 18px;
+}
+
+.intent-stack > .analysis-panel .section-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.intent-stack > .analysis-panel h2 {
+  font-size: 1rem;
+}
+
+.intent-stack > .analysis-panel .muted {
+  font-size: 0.78rem;
+}
+
+.intent-stack > .analysis-panel .metric-grid {
+  gap: 10px;
+}
+
+.intent-stack > .analysis-panel .metric {
+  padding: 12px;
+  border-radius: 14px;
+}
+
+.intent-stack > .analysis-panel .metric-value {
+  font-size: 0.94rem;
 }
 
 .analysis-panel .metric {
@@ -1429,6 +1479,7 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   gap: 0.28rem;
+  max-width: 100%;
   padding: 0.34rem 0.58rem;
   border: 1px solid rgba(153, 0, 0, 0.14);
   border-radius: 999px;
@@ -1439,6 +1490,7 @@ button:disabled {
 }
 
 .preset-quality-score strong {
+  flex: 0 0 auto;
   color: var(--accent-strong);
 }
 
