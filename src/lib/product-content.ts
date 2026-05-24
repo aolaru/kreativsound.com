@@ -4,13 +4,10 @@ export type ProductLandingCopy = {
   ctaLine?: string;
   finalCtaTitle?: string;
   finalCtaText?: string;
-  demoPlaceholder?: string;
   includedProducts?: string[];
-  usageNotes?: string[];
   longDescription: string[];
   specifications: Array<{ label: string; value: string }>;
   requirements: string[];
-  faq?: Array<{ question: string; answer: string }>;
 };
 
 export const landingCopyOverrides = {

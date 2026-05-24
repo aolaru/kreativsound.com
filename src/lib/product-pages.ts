@@ -8,7 +8,6 @@ export type ProductIncludedGroup = {
 
 export type ProductPage = {
   slug: string;
-  category: ProductCategory;
   title: string;
   headline: string;
   subtitle: string;
@@ -45,8 +44,6 @@ export type ProductPage = {
   specs: Array<{ label: string; value: string }>;
   specifications: Array<{ label: string; value: string }>;
   requirements: string[];
-  usageNotes: string[];
-  faq: Array<{ question: string; answer: string }>;
   longDescription: string[];
   includedGroups: ProductIncludedGroup[];
   finalCtaTitle?: string;
@@ -836,13 +833,6 @@ function defaultDemoBlurb(product: Product, name: string) {
   return `This demo gives a quick read on ${name}'s core direction: ${product.useCase.toLowerCase()}.`;
 }
 
-function defaultDemoPlaceholder(product: Product, name: string) {
-  if (product.category === "Presets" || product.category === "Samples") {
-    return `A dedicated audio demo is being prepared for ${name}. Until it is available, use the specifications and requirements below to confirm the format, content, and compatibility.`;
-  }
-  return undefined;
-}
-
 function defaultSpecs(product: Product) {
   return [
     { label: "Format", value: product.format },
@@ -868,54 +858,8 @@ function uniqueText(values: Array<string | undefined>) {
   return [...new Set(values.map((value) => value?.trim()).filter(Boolean) as string[])];
 }
 
-function lowerFirst(value: string) {
-  return value.charAt(0).toLowerCase() + value.slice(1);
-}
-
 function defaultLongDescription(product: Product, description: string, summary: string, heroNote: string) {
   return uniqueText([description, summary, heroNote]);
-}
-
-function defaultUsageNotes(product: Product, name: string) {
-  const useCase = lowerFirst(product.useCase);
-
-  if (product.category === "Presets") {
-    return [
-      `Use ${name} when you need ${useCase} without designing every patch from zero.`,
-      `Start with the included ${product.count.toLowerCase()}, then refine modulation, effects, and levels inside the target synth.`,
-      "Layer or resample the strongest patches when a cue needs more movement, pressure, or atmosphere."
-    ];
-  }
-
-  if (product.category === "Samples") {
-    return [
-      `Use ${name} as source material for ${useCase} in any DAW or sampler that supports WAV files.`,
-      "Keep the sounds close to the front for transitions and accents, or lower in the mix for atmosphere and texture.",
-      "Resample, stretch, pitch, or layer the material when you need a more personal sound-design result."
-    ];
-  }
-
-  if (product.category === "Tools") {
-    return [
-      `Use ${name} for fast preset starts when you want ${useCase} without leaving the browser.`,
-      "Treat generated presets as starting points, then finish the strongest results inside the target synth.",
-      "Use the free workflow first, then unlock Pro when batch export saves enough session time."
-    ];
-  }
-
-  if (product.category === "Bundle") {
-    return [
-      `Use ${name} as the main entry point when you want the broader Kreativ Sound catalog in one download.`,
-      "Check the individual product notes for plugin-specific requirements before starting a session.",
-      "Use samples immediately in any DAW, and load preset banks only in their matching synths or plugins."
-    ];
-  }
-
-  return [
-    `Use ${name} as archive material for ${useCase}.`,
-    "Check compatibility before relying on older formats in a current production setup.",
-    "Treat legacy material as a historical catalog resource rather than a current flagship release."
-  ];
 }
 
 function defaultRequirements(product: Product, panels: ProductPage["panels"]) {
@@ -953,39 +897,6 @@ function defaultRequirements(product: Product, panels: ProductPage["panels"]) {
   }
 
   return ["See the product notes and linked checkout page for compatibility details."];
-}
-
-function defaultFaq(product: Product, name: string) {
-  const licenseAnswer = product.category === "Legacy"
-    ? "Yes, unless the archive download notes say otherwise. You can use the sounds in your own music, but you cannot resell, redistribute, or repackage the source files as a sound library."
-    : "Yes. You can use the sounds in personal and commercial music productions. You cannot resell, redistribute, or repackage the preset or sample files as your own sound library.";
-  const deliveryAnswer = product.url
-    ? "Delivery is handled through the linked checkout or download page. After purchase or free checkout, download the files from the checkout provider."
-    : "This product is not currently sold as an active download. Check the page status and product notes before planning around it.";
-  const compatibilityAnswer = product.category === "Presets"
-    ? `Yes. This is a preset product, so you need software that supports ${product.format}. Check the Requirements section before buying.`
-    : product.category === "Samples"
-      ? "No specific synth plugin is required. Use any DAW, sampler, video editor, or audio editor that can import standard WAV audio."
-      : product.category === "Tools"
-        ? "A modern browser is required for the tool, and Vital is required to load the generated preset files."
-        : product.category === "Bundle"
-          ? "Some included preset banks require their matching synths or plugins. Samples and audio files work in any DAW that supports standard audio files."
-          : "Compatibility depends on the archive format, plugin, host, and operating system. Check the Requirements section before relying on it.";
-
-  return [
-    {
-      question: "Can I use this in commercial music?",
-      answer: licenseAnswer
-    },
-    {
-      question: "How is it delivered?",
-      answer: deliveryAnswer
-    },
-    {
-      question: "Do I need a specific plugin?",
-      answer: compatibilityAnswer
-    }
-  ];
 }
 
 function includedGroupTitle(product: Product) {
@@ -1058,7 +969,6 @@ export const productPages: ProductPage[] = products
 
     return {
       slug,
-      category: product.category,
       title: override.title || `${name} | Kreativ Sound`,
       headline: override.headline || name,
       subtitle: override.subtitle || override.lead || defaultLead(product),
@@ -1090,13 +1000,11 @@ export const productPages: ProductPage[] = products
       proofPoints: override.proofPoints,
       heroNote: override.heroNote || defaultHeroNote(product, name),
       demoBlurb: override.demoBlurb || (product.demo ? defaultDemoBlurb(product, name) : undefined),
-      demoPlaceholder: override.demoPlaceholder || defaultDemoPlaceholder(product, name),
+      demoPlaceholder: override.demoPlaceholder || `Drop the ${name} demo file here next. This block is ready for an inline player.`,
       demo: product.demo,
       specs: override.specs || defaultSpecs(product),
       specifications: override.specifications || defaultSpecifications(product, override.specs || defaultSpecs(product)),
       requirements: override.requirements || defaultRequirements(product, override.panels || defaultPanels(product)),
-      usageNotes: override.usageNotes || defaultUsageNotes(product, name),
-      faq: override.faq || defaultFaq(product, name),
       longDescription: override.longDescription || defaultLongDescription(product, override.description || defaultDescription(product, name), override.summary || defaultSummary(product, name), override.heroNote || defaultHeroNote(product, name)),
       includedGroups: override.includedGroups || buildIncludedGroups(override.includedProducts),
       finalCtaTitle: override.finalCtaTitle,
