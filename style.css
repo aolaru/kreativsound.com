@@ -2025,6 +2025,15 @@ a:focus-visible,
   font-size: 0.9rem;
 }
 
+.product-landing-demo-placeholder {
+  padding: 0.95rem 1.1rem;
+  border: 1px solid rgba(153, 0, 0, 0.14);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.34), rgba(153, 0, 0, 0.05)),
+    rgba(255, 246, 246, 0.62);
+}
+
 .product-landing-demo audio {
   width: 100%;
 }
@@ -2187,6 +2196,36 @@ a:focus-visible,
   line-height: 1.78;
 }
 
+.product-usage-list {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product-usage-list li {
+  position: relative;
+  padding: 0.95rem 1rem 0.95rem 2.4rem;
+  border: 1px solid rgba(153, 0, 0, 0.13);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #513337;
+  line-height: 1.58;
+}
+
+.product-usage-list li::before {
+  content: "";
+  position: absolute;
+  top: 1.27rem;
+  left: 1rem;
+  width: 0.54rem;
+  height: 0.54rem;
+  border-radius: 999px;
+  background: #9a0000;
+  box-shadow: 0 0 0 0.34rem rgba(153, 0, 0, 0.08);
+}
+
 .product-specification-list {
   overflow: hidden;
   border-top: 1px solid rgba(153, 0, 0, 0.18);
@@ -2266,6 +2305,38 @@ a:focus-visible,
   color: #35191c;
   font-weight: 600;
   line-height: 1.55;
+}
+
+.product-faq-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.product-faq-list details {
+  border: 1px solid rgba(153, 0, 0, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.product-faq-list summary {
+  cursor: pointer;
+  padding: 0.95rem 1rem;
+  color: #35191c;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.product-faq-list summary:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 3px;
+}
+
+.product-faq-list p {
+  margin: 0;
+  padding: 0 1rem 1rem;
+  color: #5e3a3e;
+  line-height: 1.65;
 }
 
 .product-final-cta {
