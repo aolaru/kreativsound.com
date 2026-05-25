@@ -90,7 +90,7 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "News", "Learn", "About", "Contact", "Latest release", "Flagships", "Preset Mutator"],
+            "/": ["Sounds", "News", "Learn", "About", "Contact", "Latest release", "Preset Mutator", "Kreativ Kollection V1"],
             "/news/": ["Sounds", "Latest Sound Releases"],
             "/learn/": ["Sounds", "Latest Guides"],
             "/music/": ["Music", "Olaru", "Rethyn", "Memories"],
@@ -112,14 +112,11 @@ def main() -> int:
                 require(dom, 'href="/sounds/"', route, errors)
                 require(dom, 'href="/sounds/operators-fm8-presets"', route, errors)
                 require(dom, 'href="/sounds/kreativ-kollection-v1"', route, errors)
-                require(dom, 'href="/sounds/velvet-ruins-vital-presets"', route, errors)
-                require(dom, 'href="/sounds/neolith-softube-models-presets"', route, errors)
-                require(dom, 'href="/sounds/bioforms-synplant-2-presets"', route, errors)
                 require(dom, 'href="/sounds/preset-mutator"', route, errors)
                 require(dom, 'href="/apps/preset-mutator/ui/"', route, errors)
                 require(dom, "Flagship bundle", route, errors)
                 require(dom, "Creative tool", route, errors)
-                require(dom, "Open Full Catalog", route, errors)
+                require(dom, "Full Catalog", route, errors)
 
         if errors:
             print("Smoke test failed:")

@@ -11,14 +11,16 @@
     "prebuild": "npm run sync:astro-public",
     "dev": "astro dev",
     "build": "astro build",
-    "postbuild": "node scripts/fix-dist-post-routes.mjs && npm run sitemap",
+    "postbuild": "node scripts/normalize-static-routes.mjs && npm run sitemap",
     "preview": "astro preview",
+    "check": "npm run check:products && npm run check:preset-mutator && npm run build && npm run check:links && npm run sitemap:check",
     "check:products": "node scripts/check-product-data.mjs",
     "check:preset-mutator": "node scripts/check-preset-mutator.mjs",
     "check:links": "node scripts/check-internal-links.mjs",
     "license:preset-mutator": "node scripts/preset-mutator-license.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
-    "sitemap:check": "node scripts/generate-sitemap.mjs --check"
+    "sitemap:check": "node scripts/generate-sitemap.mjs --check",
+    "release:check": "bash scripts/release-gate.sh"
   },
   "repository": {
     "type": "git",

@@ -113,36 +113,25 @@ GitHub Pages should use `GitHub Actions`. This repository includes a workflow th
 ## Pre-Release Checks
 
 - Run the release checklist: `docs/release-checklist.md`
-- Run Lighthouse routine:
+- Run the standard local check before committing:
 
 ```bash
-bash scripts/lighthouse-check.sh
+npm run check
 ```
 
-- Run full release gate (thumbnails + Lighthouse + thresholds):
-- Run product asset validation:
+- Run the heavier release gate before a larger publish:
+
+```bash
+npm run release:check
+```
+
+- Individual checks are still available when you only need one layer:
 
 ```bash
 npm run check:products
-python3 scripts/check-product-assets.py
-```
-
-- Run rendered smoke checks:
-
-```bash
+npm run check:preset-mutator
+npm run check:links
 python3 scripts/smoke-site.py
-```
-
-- Run Preset Mutator smoke checks for the current Vital workflow:
-
-```bash
-python3 scripts/smoke-audio-alchemy.py
-```
-
-- Run full release gate (sitemap + assets + thumbnails + smoke + Lighthouse + thresholds):
-
-```bash
-bash scripts/release-gate.sh
 ```
 
 - Refresh sitemap freshness metadata explicitly when needed:

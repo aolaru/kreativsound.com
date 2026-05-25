@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProductLandingPage from "../../components/ProductLandingPage.astro";
+import { productPages } from "../../lib/product-pages";
+
+export function getStaticPaths() {
+  return productPages.map((product) => ({
+    params: { slug: product.slug },
+    props: { product }
+  }));
+}
+
+const { product } = Astro.props;
+---
+<BaseLayout
+  title={product.title}
+  description={product.description}
+  canonical={product.canonical}
+  ogImage={product.ogImage}
+  ogImageAlt={product.ogImageAlt}
+  activeNav="sound"
+>
+  <ProductLandingPage product={product} />
+</BaseLayout>

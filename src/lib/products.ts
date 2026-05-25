@@ -334,7 +334,7 @@ export const products: Product[] = [
   }
 ];
 
-export const preferredCategoryOrder: ProductCategory[] = ["Bundle", "Tools", "Presets", "Free", "Samples", "Legacy"];
+export const preferredCategoryOrder: ProductCategory[] = ["Bundle", "Tools", "Presets", "Samples", "Free", "Legacy"];
 
 export const categoryLabels: Record<ProductCategory, string> = {
   Bundle: "Flagship Bundle",
