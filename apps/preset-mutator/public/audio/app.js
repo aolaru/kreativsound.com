@@ -665,7 +665,7 @@ function bestUseForPreset(preset) {
 
 function seedUrlForFamily(family) {
   const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
-  return new URL(`../../assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, import.meta.url);
+  return new URL(`../assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, import.meta.url);
 }
 
 async function loadSeedPreset(family) {

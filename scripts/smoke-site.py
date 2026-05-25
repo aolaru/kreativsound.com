@@ -113,7 +113,7 @@ def main() -> int:
                 require(dom, 'href="/sounds/operators-fm8-presets"', route, errors)
                 require(dom, 'href="/sounds/kreativ-kollection-v1"', route, errors)
                 require(dom, 'href="/sounds/preset-mutator"', route, errors)
-                require(dom, 'href="/apps/preset-mutator/ui/"', route, errors)
+                require(dom, 'href="/preset-mutator/"', route, errors)
                 require(dom, "Flagship bundle", route, errors)
                 require(dom, "Creative tool", route, errors)
                 require(dom, "Full Catalog", route, errors)

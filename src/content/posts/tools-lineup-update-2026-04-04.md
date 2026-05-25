@@ -2,7 +2,7 @@
 title: "Tools Lineup Update"
 description: "Kreativ Sound is focusing its browser tool direction around Preset Mutator."
 canonical: "https://kreativsound.com/posts/tools-lineup-update-2026-04-04.html"
-ogImage: "https://kreativsound.com/apps/preset-mutator/ui/preset-mutator-mark.svg"
+ogImage: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg"
 section: news
 kind: site
 published: "2026-04-04"

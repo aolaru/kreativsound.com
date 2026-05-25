@@ -80,7 +80,7 @@ def main() -> int:
     try:
         errors: list[str] = []
 
-        dom = dump_dom(chrome, base_url + "/apps/preset-mutator/ui/?self_test=1")
+        dom = dump_dom(chrome, base_url + "/preset-mutator/?self_test=1")
         for needle in [
             "Preset Mutator",
             "From Scratch",
@@ -91,9 +91,9 @@ def main() -> int:
             "Preset Mutator Pro",
             "Download 32-Pack",
         ]:
-            require(dom, needle, "/apps/preset-mutator/ui/?self_test=1", errors)
+            require(dom, needle, "/preset-mutator/?self_test=1", errors)
 
-        mutate_dom = dump_dom(chrome, base_url + "/apps/preset-mutator/ui/mutate/")
+        mutate_dom = dump_dom(chrome, base_url + "/preset-mutator/mutate/")
         for needle in [
             "Preset Mutator",
             "Mutate one Vital preset into new variants",
@@ -105,9 +105,9 @@ def main() -> int:
             "Preset Mutator Pro",
             "Kreativ Sound experimental tool surface for preset-driven mutation.",
         ]:
-            require(mutate_dom, needle, "/apps/preset-mutator/ui/mutate/", errors)
+            require(mutate_dom, needle, "/preset-mutator/mutate/", errors)
 
-        scratch_dom = dump_dom(chrome, base_url + "/apps/preset-mutator/ui/scratch/")
+        scratch_dom = dump_dom(chrome, base_url + "/preset-mutator/scratch/")
         for needle in [
             "Preset Mutator",
             "Create a Vital preset from intent",
@@ -120,7 +120,7 @@ def main() -> int:
             "Preset Mutator Pro",
             "Serum 2 and Pigments 7 are planned.",
         ]:
-            require(scratch_dom, needle, "/apps/preset-mutator/ui/scratch/", errors)
+            require(scratch_dom, needle, "/preset-mutator/scratch/", errors)
 
         if errors:
             print("Preset Mutator smoke test failed:")

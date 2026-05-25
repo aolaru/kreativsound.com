@@ -57,6 +57,9 @@ function routeFromFile(filePath) {
   }
   if (relative.endsWith("/index.html")) {
     const route = `/${relative.replace(/\/index\.html$/, "/")}`;
+    if (route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) {
+      return null;
+    }
     if (route === "/sound/" || route.startsWith("/products/")) {
       return null;
     }

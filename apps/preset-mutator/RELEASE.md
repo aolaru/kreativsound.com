@@ -3,8 +3,9 @@
 ## Current Internal Layout
 
 - Source: `apps/preset-mutator/public/`
-- Generated deploy copy: `public/apps/preset-mutator/`
-- Public app URL: `/apps/preset-mutator/ui/`
+- Generated deploy copy: `public/preset-mutator/`
+- Public app URL: `/preset-mutator/`
+- Legacy redirect URL: `/apps/preset-mutator/ui/`
 - App QA: `npm run check:preset-mutator`
 - Full site QA: `npm run check`
 
@@ -13,8 +14,8 @@
 1. Edit app source under `apps/preset-mutator/public/`.
 2. Run `npm run check:preset-mutator`.
 3. Run `npm run check`.
-4. Test `/apps/preset-mutator/ui/`, `/ui/mutate/`, and `/ui/audio/` locally.
-5. Commit source changes, not generated `public/apps/preset-mutator/` output.
+4. Test `/preset-mutator/`, `/preset-mutator/mutate/`, and `/preset-mutator/audio/` locally.
+5. Commit source changes, not generated `public/preset-mutator/` output.
 
 ## Split Criteria
 

@@ -13,10 +13,10 @@ apps/preset-mutator/public/
 Public URL after sync/build:
 
 ```text
-/apps/preset-mutator/ui/
+/preset-mutator/
 ```
 
-The root `predev` and `prebuild` scripts copy this app into `public/apps/preset-mutator/`. Treat that public copy as generated output.
+The root `predev` and `prebuild` scripts copy this app into `public/preset-mutator/`. Treat that public copy as generated output. The old `/apps/preset-mutator/ui/` path is generated as a redirect.
 
 ## Local Development
 
@@ -29,7 +29,7 @@ npm run dev
 Then open:
 
 ```text
-http://127.0.0.1:4321/apps/preset-mutator/ui/
+http://127.0.0.1:4321/preset-mutator/
 ```
 
 ## QA

@@ -2,7 +2,7 @@
 title: "Preset Mutator Audio to Preset Launch"
 description: "Preset Mutator starts with Audio to Preset mode: local audio analysis and three free Vital preset variations, with Serum 2 and Pigments 7 planned later."
 canonical: "https://kreativsound.com/posts/audio-alchemy-free-launch-2026-04-02.html"
-ogImage: "https://kreativsound.com/apps/preset-mutator/ui/preset-mutator-mark.svg"
+ogImage: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg"
 section: news
 kind: release
 published: "2026-04-02"
@@ -14,4 +14,4 @@ draft: false
         <p>The Audio to Preset mode keeps the original simple flow: upload one short sound, analyze it locally in the browser, then generate three preset variations you can download and use in your own productions.</p>
         <p>Nothing is sent to AI models, nothing is uploaded to a server, and the current version is built to feel fast enough for quick sound-design experiments rather than heavy processing sessions.</p>
         <p>The best results usually come from short, simple material such as pads, plucks, bass notes, drones, and textures instead of full songs or dense mixes.</p>
-        <p><a href="../apps/preset-mutator/ui/audio/">Open Audio to Preset</a></p>
+        <p><a href="/preset-mutator/audio/">Open Audio to Preset</a></p>

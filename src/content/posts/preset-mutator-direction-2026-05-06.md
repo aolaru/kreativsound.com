@@ -2,7 +2,7 @@
 title: "Preset Mutator Becomes the Main Kreativ Sound Browser Tool"
 description: "Kreativ Sound is moving the browser tool direction around Preset Mutator, with From Scratch, Mutate Preset, and Audio to Preset live for Vital."
 canonical: "https://kreativsound.com/posts/preset-mutator-direction-2026-05-06.html"
-ogImage: "https://kreativsound.com/apps/preset-mutator/ui/preset-mutator-mark.svg"
+ogImage: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg"
 section: news
 kind: site
 published: "2026-05-06"
@@ -12,7 +12,7 @@ draft: false
 <figure class="article-figure">
   <img
     class="article-image"
-    src="../apps/preset-mutator/ui/preset-mutator-mark.svg"
+    src="/preset-mutator/preset-mutator-mark.svg"
     width="128"
     height="128"
     alt="Preset Mutator logo"
@@ -40,7 +40,7 @@ draft: false
 
 <div class="article-cta">
   <a class="button primary" href="/tools/">View Tools</a>
-  <a class="button secondary" href="/apps/preset-mutator/ui/">Open Preset Mutator</a>
-  <a class="button secondary" href="/apps/preset-mutator/ui/mutate/">Open Mutate Preset</a>
-  <a class="button secondary" href="/apps/preset-mutator/ui/audio/">Open Audio to Preset</a>
+  <a class="button secondary" href="/preset-mutator/">Open Preset Mutator</a>
+  <a class="button secondary" href="/preset-mutator/mutate/">Open Mutate Preset</a>
+  <a class="button secondary" href="/preset-mutator/audio/">Open Audio to Preset</a>
 </div>

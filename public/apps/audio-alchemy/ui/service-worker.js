@@ -1,4 +1,4 @@
-const REDIRECT_TARGET = "/apps/preset-mutator/ui/audio/";
+const REDIRECT_TARGET = "/preset-mutator/audio/";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key)))));

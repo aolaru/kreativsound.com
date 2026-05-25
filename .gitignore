@@ -7,5 +7,6 @@ dist/
 .astro/
 public/sitemap.xml
 public/apps/preset-mutator/
+public/preset-mutator/
 private/
 .env.local

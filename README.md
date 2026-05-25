@@ -40,17 +40,18 @@ The Preset Mutator source lives under:
 
 The predev/prebuild sync copies that source into the deploy path:
 
-- `public/apps/preset-mutator`
+- `public/preset-mutator`
 
 ```text
-http://127.0.0.1:4321/apps/preset-mutator/ui/
+http://127.0.0.1:4321/preset-mutator/
 ```
 
 Notes:
 
-- Edit `apps/preset-mutator/public/ui/` first. Do not edit generated files under `public/apps/preset-mutator/`.
+- Edit `apps/preset-mutator/public/` first. Do not edit generated files under `public/preset-mutator/`.
 - `public/apps/audio-alchemy/ui/` is a legacy redirect to Audio to Preset.
 - `public/apps/presetmutator/` is retired and only kept as a redirect path.
+- `public/apps/preset-mutator/ui/` is generated as a legacy redirect to `/preset-mutator/`.
 - Run `npm run check:preset-mutator` for app-specific QA.
 
 ## Editing Product Catalog

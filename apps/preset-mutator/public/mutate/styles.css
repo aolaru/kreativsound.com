@@ -189,6 +189,20 @@ output {
   line-height: 0.96;
 }
 
+.hero h1.hero-title-balanced {
+  max-width: 22ch;
+}
+
+.hero-title-balanced span {
+  display: block;
+}
+
+@media (max-width: 420px) {
+  .hero-title-balanced span {
+    display: inline;
+  }
+}
+
 .lede {
   max-width: 35rem;
   margin: 8px auto 0;

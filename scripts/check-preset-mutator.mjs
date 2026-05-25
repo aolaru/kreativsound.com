@@ -8,7 +8,7 @@ import {
   buildAudioProPack,
   buildAudioProfile,
   AUDIO_PRO_PACK_COUNT,
-} from "../apps/preset-mutator/public/ui/engine/audio-engine.js";
+} from "../apps/preset-mutator/public/engine/audio-engine.js";
 import {
   buildPresetMutateStrategy,
   generatePresetVariants,
@@ -16,18 +16,18 @@ import {
   PRESET_MUTATE_PRO_PACK_COUNT,
   presetSummary,
   safeScalarParameterKeys,
-} from "../apps/preset-mutator/public/ui/engine/preset-mutate-engine.js";
+} from "../apps/preset-mutator/public/engine/preset-mutate-engine.js";
 import {
   buildScratchFreePack,
   buildScratchProPack,
   buildScratchProfile,
   SCRATCH_PRO_PACK_COUNT,
-} from "../apps/preset-mutator/public/ui/engine/scratch-engine.js";
-import { buildVitalPresetPayload } from "../apps/preset-mutator/public/ui/engine/vital-export.js";
+} from "../apps/preset-mutator/public/engine/scratch-engine.js";
+import { buildVitalPresetPayload } from "../apps/preset-mutator/public/engine/vital-export.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
-const uiDir = path.join(rootDir, "apps/preset-mutator/public/ui");
+const uiDir = path.join(rootDir, "apps/preset-mutator/public");
 const seedDir = path.join(rootDir, "apps/preset-mutator/public/assets/seeds/vital/raw");
 
 const failures = [];

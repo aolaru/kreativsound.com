@@ -71,7 +71,7 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
     primaryLabel: "Buy on Gumroad",
     purchaseAltUrl: "https://www.paypal.com/ncp/payment/RUGQ6S3NW7HE4",
     purchaseAltLabel: "Pay with PayPal",
-    secondaryUrl: "/apps/preset-mutator/ui/",
+    secondaryUrl: "/preset-mutator/",
     secondaryLabel: "Open Preset Mutator",
     variant: "flagship"
   },

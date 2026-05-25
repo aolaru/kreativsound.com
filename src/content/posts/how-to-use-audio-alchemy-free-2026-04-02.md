@@ -2,7 +2,7 @@
 title: "How to Use Preset Mutator Audio to Preset"
 description: "A short guide to getting better results from Preset Mutator using short source sounds and the current Vital Audio to Preset workflow."
 canonical: "https://kreativsound.com/posts/how-to-use-audio-alchemy-free-2026-04-02.html"
-ogImage: "https://kreativsound.com/apps/preset-mutator/ui/preset-mutator-mark.svg"
+ogImage: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg"
 section: learn
 published: "2026-04-02"
 featured: true
@@ -11,7 +11,7 @@ draft: false
 <figure class="article-figure">
           <img
             class="article-image"
-            src="../apps/preset-mutator/ui/preset-mutator-mark.svg"
+            src="/preset-mutator/preset-mutator-mark.svg"
             width="128"
             height="128"
             alt="Preset Mutator logo"
@@ -36,6 +36,6 @@ draft: false
 
         <p>The simplest way to get stronger results is to keep the source short, focused, and musically obvious.</p>
         <div class="article-cta">
-          <a class="button primary" href="/apps/preset-mutator/ui/audio/">Open Audio to Preset</a>
+          <a class="button primary" href="/preset-mutator/audio/">Open Audio to Preset</a>
           <a class="button secondary" href="/learn/">Back to Learn</a>
         </div>

@@ -10,14 +10,14 @@
     "title": "Tools",
     "url": "/tools/",
     "type": "Page",
-    "thumbnail": "/apps/preset-mutator/ui/preset-mutator-mark.svg",
+    "thumbnail": "/preset-mutator/preset-mutator-mark.svg",
     "description": "Preset Mutator browser tool for from-scratch Vital starts, preset mutation, and audio-to-preset generation. Serum 2 and Pigments 7 are planned."
   },
   {
     "title": "Preset Mutator",
     "url": "/tools/preset-mutator/",
     "type": "Tool",
-    "thumbnail": "/apps/preset-mutator/ui/preset-mutator-mark.svg",
+    "thumbnail": "/preset-mutator/preset-mutator-mark.svg",
     "description": "Browser-based Vital preset generator with From Scratch, Mutate Preset, and Audio to Preset workflows."
   },
   {
@@ -213,7 +213,7 @@
     "title": "How to Use Preset Mutator Audio to Preset",
     "url": "/posts/how-to-use-audio-alchemy-free-2026-04-02.html",
     "type": "Article",
-    "thumbnail": "/apps/preset-mutator/ui/preset-mutator-mark.svg",
+    "thumbnail": "/preset-mutator/preset-mutator-mark.svg",
     "description": "Quick walkthrough for generating Vital presets from source audio, with Serum 2 and Pigments 7 planned later."
   },
   {

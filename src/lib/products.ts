@@ -55,7 +55,7 @@ export const products: Product[] = [
     badge: "Tool",
     extraAction: {
       label: "Open Free",
-      url: "/apps/preset-mutator/ui/"
+      url: "/preset-mutator/"
     },
     thumbnail: "/assets/thumbs/preset-mutator.webp",
     coverImage: "/assets/thumbs/preset-mutator.webp",
