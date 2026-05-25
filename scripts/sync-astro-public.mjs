@@ -3,6 +3,8 @@ import path from "node:path";
 
 const rootDir = process.cwd();
 const publicDir = path.join(rootDir, "public");
+const presetMutatorSourceDir = path.join(rootDir, "apps/preset-mutator/public");
+const presetMutatorPublicDir = path.join(publicDir, "apps/preset-mutator");
 
 const requiredPublicEntries = [
   "favicon.svg",
@@ -29,6 +31,14 @@ const generatedFiles = ["sitemap.xml"];
 if (!fs.existsSync(publicDir)) {
   throw new Error("Missing public/ directory. Static site assets should be committed under public/.");
 }
+
+if (!fs.existsSync(presetMutatorSourceDir)) {
+  throw new Error("Missing apps/preset-mutator/public. Preset Mutator source must be available before syncing public assets.");
+}
+
+fs.rmSync(presetMutatorPublicDir, { recursive: true, force: true });
+fs.mkdirSync(path.dirname(presetMutatorPublicDir), { recursive: true });
+fs.cpSync(presetMutatorSourceDir, presetMutatorPublicDir, { recursive: true });
 
 const missing = requiredPublicEntries.filter((entry) => !fs.existsSync(path.join(publicDir, entry)));
 if (missing.length) {

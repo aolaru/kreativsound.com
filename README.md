@@ -7,7 +7,8 @@ Official static website for [kreativsound.com](https://kreativsound.com).
 - Astro (`src/`, `dist/`)
 - Shared CSS (`style.css`)
 - Lightweight client scripts (`public/site.js`, `public/share.js`)
-- Static assets and browser apps (`public/assets/`, `public/apps/`, SVG files)
+- Static assets (`public/assets/`, SVG files)
+- Browser app sources (`apps/`)
 
 ## Local Preview
 
@@ -33,7 +34,11 @@ npm run preview
 
 ## Preset Mutator Browser App
 
-The public browser app lives under:
+The Preset Mutator source lives under:
+
+- `apps/preset-mutator/public`
+
+The predev/prebuild sync copies that source into the deploy path:
 
 - `public/apps/preset-mutator`
 
@@ -43,9 +48,10 @@ http://127.0.0.1:4321/apps/preset-mutator/ui/
 
 Notes:
 
-- `public/apps/preset-mutator/ui/` is the current public app.
+- Edit `apps/preset-mutator/public/ui/` first. Do not edit generated files under `public/apps/preset-mutator/`.
 - `public/apps/audio-alchemy/ui/` is a legacy redirect to Audio to Preset.
 - `public/apps/presetmutator/` is retired and only kept as a redirect path.
+- Run `npm run check:preset-mutator` for app-specific QA.
 
 ## Editing Product Catalog
 
