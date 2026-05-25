@@ -1,25 +1,119 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { musicArtists } from "../../lib/music";
+import type { MusicRelease } from "../../lib/music";
+
+const siteUrl = "https://kreativsound.com";
+const allReleaseItems = musicArtists.flatMap((artist) =>
+  artist.releases.map((release) => ({ artist, release }))
+);
+const featuredItem = allReleaseItems.find(({ release }) => release.featured) ?? allReleaseItems[0];
+
+function primaryReleaseLink(release: MusicRelease) {
+  return release.platformLinks?.find((link) => link.primary) ?? release.platformLinks?.[0] ?? {
+    label: release.linkLabel,
+    href: release.href,
+  };
+}
+
+function absoluteUrl(href: string) {
+  return href.startsWith("http") ? href : `${siteUrl}${href}`;
+}
+
+function formattedDate(date: string) {
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+const musicJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Music | Kreativ Sound",
+  description: "Artist releases and studies made with the Kreativ Sound sample, preset, and texture catalog.",
+  url: `${siteUrl}/music/`,
+  mainEntity: allReleaseItems.map(({ artist, release }) => ({
+    "@type": release.type === "Album" ? "MusicAlbum" : "MusicRecording",
+    name: release.title,
+    byArtist: {
+      "@type": "MusicGroup",
+      name: artist.name,
+      url: artist.platformHref,
+    },
+    image: absoluteUrl(release.image),
+    url: primaryReleaseLink(release).href,
+    sameAs: release.platformLinks?.map((link) => link.href) ?? [release.href],
+    ...(release.releaseDate ? { datePublished: release.releaseDate } : {}),
+  })),
+};
 ---
 <BaseLayout
   title="Music | Kreativ Sound"
-  description="Music studies, atmospheres, and selected pieces from Kreativ Sound."
+  description="Artist releases and studies made with the Kreativ Sound sample, preset, and texture catalog."
   canonical="https://kreativsound.com/music/"
+  ogImage="https://kreativsound.com/assets/music/rethyn-holo-signal.jpg"
+  ogImageAlt="Holo Signal cover art"
   activeNav="music"
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(musicJsonLd)}></script>
   <section class="card page-main music-page-modern">
     <div class="music-hero">
       <div class="music-hero-copy">
         <p class="eyebrow">Music</p>
-        <h1 class="page-title">Artist pages tied to the wider sound world.</h1>
-        <p class="page-lead">Olaru and Rethyn are both personal music projects by Andrei Olaru, built with heavy use of Kreativ Sound samples, sounds, and presets.</p>
+        <h1 class="page-title">Music built from the Kreativ Sound palette.</h1>
+        <p class="page-lead">Olaru and Rethyn are personal music projects by Andrei Olaru, built with heavy use of Kreativ Sound samples, sounds, presets, and texture workflows.</p>
+        <p class="music-hero-note">Follow the releases, then trace selected pieces back to the sound packs and tools that shaped them.</p>
       </div>
-      <div class="music-hero-panel">
-        <p class="product-section-kicker">Listening paths</p>
-        <h2>Two artist directions</h2>
-        <p><strong>Olaru</strong> carries the ambient and melodic side. <strong>Rethyn</strong> carries the darker, signal-shaped electronic direction. Both pull directly from the same Kreativ Sound palette used across the catalog.</p>
-      </div>
+      {featuredItem ? (
+        <section class="music-feature" aria-labelledby="featured-music-title">
+          <a
+            class="music-feature-art"
+            href={primaryReleaseLink(featuredItem.release).href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Listen to ${featuredItem.release.title}`}
+          >
+            <img
+              src={featuredItem.release.image}
+              width="354"
+              height="354"
+              alt={featuredItem.release.imageAlt}
+            />
+          </a>
+          <div class="music-feature-copy">
+            <p class="product-section-kicker">Featured listening</p>
+            <h2 id="featured-music-title">{featuredItem.release.title}</h2>
+            <p class="music-feature-meta">
+              {featuredItem.artist.name}
+              {featuredItem.release.releaseDate ? ` · ${formattedDate(featuredItem.release.releaseDate)}` : ""}
+            </p>
+            <p>{featuredItem.release.summary}</p>
+            {featuredItem.release.mood?.length ? (
+              <div class="music-mood-list" aria-label={`${featuredItem.release.title} mood`}>
+                {featuredItem.release.mood.map((mood) => <span>{mood}</span>)}
+              </div>
+            ) : null}
+            {featuredItem.release.platformLinks?.length ? (
+              <div class="music-feature-actions" aria-label={`${featuredItem.release.title} listening links`}>
+                {featuredItem.release.platformLinks.map((link) => (
+                  <a
+                    class:list={["button", link.primary ? "primary" : "secondary"]}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
     </div>
 
     <div class="music-artist-stack">
@@ -46,36 +140,69 @@ import { musicArtists } from "../../lib/music";
           </div>
           <div class:list={["music-grid", artist.gridClass]}>
             {artist.releases.map((release) => (
-              <a
+              <article
                 class:list={[
                   "music-card",
                   artist.gridClass === "music-grid-single" && "music-card-featured",
                 ]}
-                href={release.href}
-                target="_blank"
-                rel="noopener noreferrer"
               >
-                <img
-                  class="music-card-image"
-                  src={release.image}
-                  alt={release.imageAlt}
-                  loading="lazy"
-                />
-                <span class="music-card-body">
+                <a
+                  class="music-card-art-link"
+                  href={primaryReleaseLink(release).href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Listen to ${release.title}`}
+                >
+                  <img
+                    class="music-card-image"
+                    src={release.image}
+                    width="350"
+                    height="350"
+                    alt={release.imageAlt}
+                    loading="lazy"
+                  />
+                </a>
+                <div class="music-card-body">
                   <span class="learn-card-kicker">{release.type}</span>
-                  <span class="music-card-title">{release.title}</span>
+                  <a
+                    class="music-card-title"
+                    href={primaryReleaseLink(release).href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {release.title}
+                  </a>
                   {release.meta?.length ? (
                     <span class="music-card-meta">
                       {release.meta.map((item) => <span>{item}</span>)}
                     </span>
                   ) : null}
-                  <span class="music-card-summary">{release.summary}</span>
-                  <span class="music-card-link">
-                    {release.linkLabel}{" "}
-                    <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                  <p class="music-card-summary">{release.summary}</p>
+                  {release.madeWith?.length ? (
+                    <div class="music-made-with" aria-label={`${release.title} made with`}>
+                      <span class="music-made-label">Made with</span>
+                      <span class="music-made-list">
+                        {release.madeWith.map((product) => (
+                          <a href={product.href}>{product.label}</a>
+                        ))}
+                      </span>
+                    </div>
+                  ) : null}
+                  <span class="music-card-links">
+                    {(release.platformLinks ?? [{ label: release.linkLabel, href: release.href, primary: true }]).map((link) => (
+                      <a
+                        class:list={["music-card-link", link.primary && "is-primary"]}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {link.label}{" "}
+                        <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                      </a>
+                    ))}
                   </span>
-                </span>
-              </a>
+                </div>
+              </article>
             ))}
           </div>
         </section>

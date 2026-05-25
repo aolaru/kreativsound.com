@@ -2800,6 +2800,7 @@ a:focus-visible,
 }
 
 .music-page-modern {
+  max-width: 980px;
   border-color: rgba(228, 171, 171, 0.16);
   background:
     radial-gradient(520px 260px at 100% 0%, rgba(153, 0, 0, 0.08), transparent 62%),
@@ -2949,10 +2950,105 @@ a:focus-visible,
   align-items: stretch;
 }
 
+.music-hero {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+  align-items: start;
+}
+
 .music-hero-copy,
 .brand-hero-copy,
 .contact-hero-copy {
   max-width: 42rem;
+}
+
+.music-hero-note {
+  max-width: 38rem;
+  color: var(--soft);
+}
+
+.music-feature {
+  display: grid;
+  gap: 0.9rem;
+  padding: 0.95rem;
+  border: 1px solid rgba(228, 171, 171, 0.2);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, transparent 32%),
+    rgba(153, 0, 0, 0.06);
+  box-shadow: 0 20px 48px rgba(4, 6, 12, 0.16);
+}
+
+[data-theme="light"] .music-feature {
+  border-color: rgba(153, 0, 0, 0.18);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.58) 0%, transparent 36%),
+    rgba(153, 0, 0, 0.055);
+  box-shadow: 0 22px 42px rgba(109, 50, 50, 0.1);
+}
+
+.music-feature-art {
+  display: block;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #08080b;
+  text-decoration: none;
+  box-shadow: 0 22px 46px rgba(4, 6, 12, 0.28);
+}
+
+.music-feature-art:hover {
+  text-decoration: none;
+}
+
+.music-feature-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.music-feature-copy {
+  display: grid;
+  gap: 0.48rem;
+}
+
+.music-feature-copy h2 {
+  font-size: 1.42rem;
+  line-height: 1.1;
+}
+
+.music-feature-copy p:not(.product-section-kicker) {
+  color: var(--muted);
+}
+
+.music-feature-meta {
+  font-size: 0.88rem;
+  color: var(--soft);
+}
+
+.music-mood-list,
+.music-feature-actions,
+.music-card-links,
+.music-made-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.music-mood-list span {
+  display: inline-flex;
+  padding: 0.18rem 0.5rem;
+  border: 1px solid rgba(228, 171, 171, 0.18);
+  border-radius: 999px;
+  color: var(--soft);
+  font-size: 0.78rem;
+  line-height: 1.25;
+  background: rgba(153, 0, 0, 0.06);
+}
+
+.music-feature-actions {
+  padding-top: 0.25rem;
 }
 
 .music-hero-panel,
@@ -3053,6 +3149,16 @@ a:focus-visible,
   transition: transform 170ms ease, border-color 170ms ease, background 170ms ease;
 }
 
+.music-card-art-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.music-card-art-link:hover {
+  text-decoration: none;
+}
+
 [data-theme="light"] .music-card {
   border-color: rgba(153, 0, 0, 0.16);
   background:
@@ -3089,6 +3195,12 @@ a:focus-visible,
   font-weight: 700;
   line-height: 1.24;
   color: var(--text);
+  text-decoration: none;
+}
+
+.music-card-title:hover {
+  color: var(--accent-strong);
+  text-decoration: none;
 }
 
 .music-card-summary {
@@ -3120,6 +3232,44 @@ a:focus-visible,
   margin-bottom: 0;
 }
 
+.music-made-with {
+  display: grid;
+  gap: 0.32rem;
+  padding-top: 0.2rem;
+}
+
+.music-made-label {
+  color: var(--soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.music-made-list a {
+  display: inline-flex;
+  padding: 0.18rem 0.52rem;
+  border: 1px solid rgba(228, 171, 171, 0.18);
+  border-radius: 999px;
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.25;
+  background: rgba(153, 0, 0, 0.06);
+  text-decoration: none;
+}
+
+.music-made-list a:hover {
+  border-color: var(--card-border-hover);
+  text-decoration: none;
+  background: rgba(153, 0, 0, 0.1);
+}
+
+.music-card-links {
+  padding-top: 0.16rem;
+}
+
 .music-card-link {
   display: inline-flex;
   align-items: center;
@@ -3127,6 +3277,15 @@ a:focus-visible,
   margin-top: 0.24rem;
   color: var(--accent-strong);
   font-weight: 700;
+  text-decoration: none;
+}
+
+.music-card-link:hover {
+  text-decoration: none;
+}
+
+.music-card-link.is-primary {
+  color: var(--accent-bright);
 }
 
 .brand-grid {
@@ -3532,6 +3691,11 @@ a:focus-visible,
   .music-card-featured {
     grid-template-columns: 1fr;
     max-width: none;
+  }
+
+  .music-feature-actions .button {
+    width: 100%;
+    justify-content: center;
   }
 
   .news-featured {
