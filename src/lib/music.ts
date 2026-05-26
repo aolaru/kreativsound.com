@@ -1,8 +1,3 @@
-export type MusicProductLink = {
-  label: string;
-  href: string;
-};
-
 export type MusicPlatformLink = {
   label: string;
   href: string;
@@ -18,7 +13,6 @@ export type MusicRelease = {
   summary: string;
   releaseDate?: string;
   mood?: string[];
-  madeWith?: MusicProductLink[];
   platformLinks?: MusicPlatformLink[];
   featured?: boolean;
   meta?: string[];
@@ -35,49 +29,6 @@ export type MusicArtist = {
   gridClass?: string;
   releases: MusicRelease[];
 };
-
-const madeWith = {
-  blackArcology: {
-    label: "Black Arcology",
-    href: "/sounds/black-arcology-pigments-presets",
-  },
-  bioforms: {
-    label: "Bioforms",
-    href: "/sounds/bioforms-synplant-2-presets",
-  },
-  enigma: {
-    label: "Enigma 2",
-    href: "/sounds/enigma-2-cinematic-atmospheres",
-  },
-  neolith: {
-    label: "Neolith",
-    href: "/sounds/neolith-softube-models-presets",
-  },
-  noize: {
-    label: "Noize 2",
-    href: "/sounds/noize-2-noise-textures",
-  },
-  presetMutator: {
-    label: "Preset Mutator",
-    href: "/sounds/preset-mutator",
-  },
-  space: {
-    label: "Space 2",
-    href: "/sounds/space-2-atmospheres-textures",
-  },
-  tectonic: {
-    label: "Tectonic 2",
-    href: "/sounds/tectonic-2-dark-subs-textures",
-  },
-  velvetRuins: {
-    label: "Velvet Ruins",
-    href: "/sounds/velvet-ruins-vital-presets",
-  },
-  zephyr: {
-    label: "Zephyr",
-    href: "/sounds/zephyr-animoog-z-presets",
-  },
-} satisfies Record<string, MusicProductLink>;
 
 export const musicArtists: MusicArtist[] = [
   {
@@ -96,7 +47,6 @@ export const musicArtists: MusicArtist[] = [
         imageAlt: "Memories album cover",
         summary: "Sketchbook ambience and melodic memory fragments.",
         mood: ["ambient", "melodic", "sketchbook"],
-        madeWith: [madeWith.bioforms, madeWith.zephyr, madeWith.space],
         platformLinks: [
           {
             label: "Bandcamp",
@@ -114,7 +64,6 @@ export const musicArtists: MusicArtist[] = [
         imageAlt: "Trees album cover",
         summary: "Organic studies with texture, distance, and color.",
         mood: ["organic", "ambient", "textural"],
-        madeWith: [madeWith.bioforms, madeWith.space],
         platformLinks: [
           {
             label: "Bandcamp",
@@ -132,7 +81,6 @@ export const musicArtists: MusicArtist[] = [
         imageAlt: "Vision No Return album cover",
         summary: "Melancholic motion and hazier cinematic drift.",
         mood: ["melancholic", "cinematic", "hazy"],
-        madeWith: [madeWith.enigma, madeWith.neolith, madeWith.space],
         platformLinks: [
           {
             label: "Bandcamp",
@@ -150,7 +98,6 @@ export const musicArtists: MusicArtist[] = [
         imageAlt: "Nightfall album cover",
         summary: "Low-light ambience and restrained melodic cues.",
         mood: ["low-light", "restrained", "cinematic"],
-        madeWith: [madeWith.enigma, madeWith.neolith],
         platformLinks: [
           {
             label: "Bandcamp",
@@ -168,7 +115,6 @@ export const musicArtists: MusicArtist[] = [
         imageAlt: "Selected Ghosts album cover",
         summary: "Atmospheric fragments and shadowed piano distance.",
         mood: ["shadowed", "piano", "fragments"],
-        madeWith: [madeWith.velvetRuins, madeWith.enigma],
         platformLinks: [
           {
             label: "Bandcamp",
@@ -186,7 +132,6 @@ export const musicArtists: MusicArtist[] = [
         imageAlt: "Ambitones album cover",
         summary: "Minimal tonal studies with spatial restraint.",
         mood: ["minimal", "tonal", "spatial"],
-        madeWith: [madeWith.zephyr, madeWith.space],
         platformLinks: [
           {
             label: "Bandcamp",
@@ -217,7 +162,6 @@ export const musicArtists: MusicArtist[] = [
         summary: "Signal-shaped electronic sketches built from the same darker Kreativ Sound palette.",
         releaseDate: "2026-03-27",
         mood: ["signal-driven", "dark electronic", "industrial"],
-        madeWith: [madeWith.blackArcology, madeWith.noize, madeWith.tectonic, madeWith.presetMutator],
         platformLinks: [
           {
             label: "Spotify",

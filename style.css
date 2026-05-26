@@ -3028,8 +3028,7 @@ a:focus-visible,
 
 .music-mood-list,
 .music-feature-actions,
-.music-card-links,
-.music-made-list {
+.music-card-links {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
@@ -3230,40 +3229,6 @@ a:focus-visible,
 
 .music-card-featured .music-card-image {
   margin-bottom: 0;
-}
-
-.music-made-with {
-  display: grid;
-  gap: 0.32rem;
-  padding-top: 0.2rem;
-}
-
-.music-made-label {
-  color: var(--soft);
-  font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.music-made-list a {
-  display: inline-flex;
-  padding: 0.18rem 0.52rem;
-  border: 1px solid rgba(228, 171, 171, 0.18);
-  border-radius: 999px;
-  color: var(--accent-strong);
-  font-size: 0.78rem;
-  font-weight: 700;
-  line-height: 1.25;
-  background: rgba(153, 0, 0, 0.06);
-  text-decoration: none;
-}
-
-.music-made-list a:hover {
-  border-color: var(--card-border-hover);
-  text-decoration: none;
-  background: rgba(153, 0, 0, 0.1);
 }
 
 .music-card-links {

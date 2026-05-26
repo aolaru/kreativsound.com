@@ -65,7 +65,7 @@ const musicJsonLd = {
         <p class="eyebrow">Music</p>
         <h1 class="page-title">Music built from the Kreativ Sound palette.</h1>
         <p class="page-lead">Olaru and Rethyn are personal music projects by Andrei Olaru, built with heavy use of Kreativ Sound samples, sounds, presets, and texture workflows.</p>
-        <p class="music-hero-note">Follow the releases, then trace selected pieces back to the sound packs and tools that shaped them.</p>
+        <p class="music-hero-note">Follow the releases across ambient, melodic, and darker electronic directions.</p>
       </div>
       {featuredItem ? (
         <section class="music-feature" aria-labelledby="featured-music-title">
@@ -178,16 +178,6 @@ const musicJsonLd = {
                     </span>
                   ) : null}
                   <p class="music-card-summary">{release.summary}</p>
-                  {release.madeWith?.length ? (
-                    <div class="music-made-with" aria-label={`${release.title} made with`}>
-                      <span class="music-made-label">Made with</span>
-                      <span class="music-made-list">
-                        {release.madeWith.map((product) => (
-                          <a href={product.href}>{product.label}</a>
-                        ))}
-                      </span>
-                    </div>
-                  ) : null}
                   <span class="music-card-links">
                     {(release.platformLinks ?? [{ label: release.linkLabel, href: release.href, primary: true }]).map((link) => (
                       <a
