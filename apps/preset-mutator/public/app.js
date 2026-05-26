@@ -166,6 +166,10 @@ function currentProfile() {
 }
 
 function renderProfile(profile) {
+  if (!elements.profileMetrics) {
+    return;
+  }
+
   const rows = [
     ["Type", familyLabel(profile.family)],
     ["Mood", elements.moodSelect.options[elements.moodSelect.selectedIndex].text],

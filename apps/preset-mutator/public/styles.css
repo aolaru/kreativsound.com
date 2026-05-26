@@ -410,7 +410,6 @@ output {
 .waveform-panel,
 .controls-panel,
 .analysis-grid > .panel,
-.intent-stack > .analysis-panel,
 .presets-panel {
   padding: 24px;
 }
@@ -1240,38 +1239,6 @@ button:disabled {
 
 .analysis-panel {
   opacity: 1;
-}
-
-.intent-stack > .analysis-panel {
-  padding: 18px;
-}
-
-.intent-stack > .analysis-panel .section-head {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: baseline;
-  gap: 12px;
-}
-
-.intent-stack > .analysis-panel h2 {
-  font-size: 1rem;
-}
-
-.intent-stack > .analysis-panel .muted {
-  font-size: 0.78rem;
-}
-
-.intent-stack > .analysis-panel .metric-grid {
-  gap: 10px;
-}
-
-.intent-stack > .analysis-panel .metric {
-  padding: 12px;
-  border-radius: 14px;
-}
-
-.intent-stack > .analysis-panel .metric-value {
-  font-size: 0.94rem;
 }
 
 .analysis-panel .metric {
