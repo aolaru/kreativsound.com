@@ -1,18 +1,52 @@
 <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="aa-bg" x1="48" y1="12" x2="48" y2="84" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFF7F7"/>
-      <stop offset="1" stop-color="#F5E4E4"/>
+    <linearGradient id="pm-frame" x1="16" y1="14" x2="82" y2="84" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#142236"/>
+      <stop offset="0.48" stop-color="#100F18"/>
+      <stop offset="1" stop-color="#2B0E1D"/>
     </linearGradient>
-    <linearGradient id="aa-stroke" x1="48" y1="18" x2="48" y2="78" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#B30000"/>
-      <stop offset="1" stop-color="#7F0000"/>
+    <linearGradient id="pm-ring" x1="20" y1="48" x2="76" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2AB9FF"/>
+      <stop offset="0.5" stop-color="#B58CFF"/>
+      <stop offset="1" stop-color="#FF4A9D"/>
     </linearGradient>
+    <linearGradient id="pm-wave-left" x1="8" y1="48" x2="43" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0C5B96" stop-opacity="0"/>
+      <stop offset="1" stop-color="#37C0FF"/>
+    </linearGradient>
+    <linearGradient id="pm-wave-right" x1="53" y1="48" x2="88" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF4A9D"/>
+      <stop offset="1" stop-color="#7B153F" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="pm-knob" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(42 39) rotate(54) scale(29 31)">
+      <stop stop-color="#747982"/>
+      <stop offset="0.28" stop-color="#2D3238"/>
+      <stop offset="0.72" stop-color="#0B0E13"/>
+      <stop offset="1" stop-color="#040507"/>
+    </radialGradient>
+    <filter id="pm-shadow" x="4" y="4" width="88" height="88" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#14070B" flood-opacity="0.48"/>
+    </filter>
+    <clipPath id="pm-clip">
+      <rect x="10" y="10" width="76" height="76" rx="22"/>
+    </clipPath>
   </defs>
-  <rect x="10" y="10" width="76" height="76" rx="22" fill="url(#aa-bg)"/>
-  <rect x="10.75" y="10.75" width="74.5" height="74.5" rx="21.25" stroke="#E7B7B7" stroke-width="1.5"/>
-  <path d="M35 29H46.5" stroke="url(#aa-stroke)" stroke-width="4.5" stroke-linecap="round"/>
-  <path d="M38 29V40.5L28.5 56.5C26.8 59.5 29 63 32.5 63H49C52.7 63 54.8 59.1 52.8 56L43 40.5V29" stroke="url(#aa-stroke)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M53 35H63.5" stroke="url(#aa-stroke)" stroke-width="4.5" stroke-linecap="round"/>
-  <path d="M56 35V45L48.8 57.5C47.1 60.4 49.3 64 52.7 64H64.8C68.3 64 70.5 60.2 68.6 57.2L60 44.5V35" stroke="url(#aa-stroke)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="10" y="10" width="76" height="76" rx="22" fill="url(#pm-frame)" filter="url(#pm-shadow)"/>
+  <rect x="10.75" y="10.75" width="74.5" height="74.5" rx="21.25" stroke="#F2BFC5" stroke-opacity="0.7" stroke-width="1.5"/>
+
+  <g clip-path="url(#pm-clip)">
+    <path d="M8 48H14L17 35L21 61L25 42L29 54L33 31L37 65L41 49" stroke="url(#pm-wave-left)" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M88 48H82L79 34L75 62L71 40L67 55L63 30L59 66L55 49" stroke="url(#pm-wave-right)" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 22L68 74" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <path d="M22 74L74 22" stroke="#FFFFFF" stroke-opacity="0.05"/>
+  </g>
+
+  <circle cx="48" cy="50" r="26" stroke="url(#pm-ring)" stroke-width="3.4"/>
+  <path d="M27 36L24 33M37 27L35 23M48 24V19M59 27L61 23M69 36L72 33" stroke="url(#pm-ring)" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="48" cy="50" r="18" fill="url(#pm-knob)"/>
+  <circle cx="48" cy="50" r="18" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="1.2"/>
+  <circle cx="48" cy="50" r="10" fill="#05060A" fill-opacity="0.68"/>
+  <path d="M48 33V43" stroke="#FFF7F7" stroke-width="2.8" stroke-linecap="round"/>
+  <path d="M36 63C41.4 68.1 54.4 68.5 60.2 63.1" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="2" stroke-linecap="round"/>
 </svg>
