@@ -14,6 +14,7 @@ export const productRedirects = [
   { from: "space-2", to: "space-2-atmospheres-textures" },
   { from: "tectonic-2", to: "tectonic-2-dark-subs-textures" },
   { from: "horror-2", to: "horror-2-cinematic-textures" },
+  { from: "operators-lite", to: "operators-lite-fm8-presets" },
   { from: "velvet-ruins-lite", to: "velvet-ruins-lite-vital-presets" },
   { from: "black-arcology-lite", to: "black-arcology-lite-pigments-presets" },
   { from: "abyss", to: "abyss-pro-53-presets" },

@@ -70,6 +70,10 @@ export const products: Product[] = [
     url: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
     detailsUrl: "/sounds/operators-fm8-presets",
     badge: "New",
+    extraAction: {
+      label: "Try Lite",
+      url: "/sounds/operators-lite-fm8-presets"
+    },
     thumbnail: "/assets/thumbs/operators-fm8-thumb.webp",
     coverImage: "/assets/thumbs/operators-fm8.webp",
     format: "FM8 presets",
@@ -278,6 +282,18 @@ export const products: Product[] = [
       src: "/assets/audio/horror-2-demo-01.mp3",
       type: "audio/mpeg"
     }
+  },
+  {
+    title: "OPERATORS Lite - Free FM8 Presets",
+    category: "Free",
+    url: "https://kreativ.gumroad.com/l/operators-lite-free-fm8-presets",
+    detailsUrl: "/sounds/operators-lite-fm8-presets",
+    badge: "New",
+    thumbnail: "/assets/thumbs/operators-lite-thumb.jpg",
+    coverImage: "/assets/thumbs/operators-lite.jpg",
+    format: "FM8 presets",
+    count: "16 presets",
+    useCase: "Free cinematic FM8 motion and metallic textures"
   },
   {
     title: "VELVET RUINS Lite - Free presets for Vital",

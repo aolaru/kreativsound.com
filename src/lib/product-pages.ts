@@ -82,6 +82,11 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
     purchaseAltUrl: "https://www.paypal.com/ncp/payment/TS44NMWAGW2DL",
     purchaseAltLabel: "Pay with PayPal"
   },
+  "operators-lite-fm8-presets": {
+    headline: "OPERATORS Lite",
+    description: "OPERATORS Lite is a free 16-preset Native Instruments FM8 bank focused on cold digital motion, metallic textures, and atmospheric sound design.",
+    kicker: "Free FM8 preset bank"
+  },
   "black-arcology-pigments-presets": {
     headline: "BLACK ARCOLOGY",
     description: "BLACK ARCOLOGY is a dark cinematic Arturia Pigments preset collection built for industrial pressure, evolving tension, and character-driven synthetic tone.",

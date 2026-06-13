@@ -109,6 +109,32 @@ export const landingCopyOverrides = {
       "The presets are best used as digital FM material for ambient, cinematic, electronic, industrial, and experimental music production."
     ]
   },
+  "operators-lite-fm8-presets": {
+    subtitle: "Free 16-Preset Native Instruments FM8 Bank from OPERATORS",
+    shortMeta: "16 presets • FM8 preset bank • Free download",
+    ctaLine: "Download the free 16-preset FM8 bank.",
+    longDescription: [
+      "OPERATORS Lite is a free 16-preset FM8 bank selected from the full OPERATORS collection.",
+      "The Lite version gives you a compact slice of cold digital movement, metallic harmonic detail, dark atmosphere, and cinematic FM sound design.",
+      "Use it to test the OPERATORS direction in ambient, cinematic, industrial, IDM, experimental electronic, and darker soundtrack sessions before moving to the full 64-preset release."
+    ],
+    specifications: [
+      { label: "Product type", value: "Free preset bank" },
+      { label: "Synth", value: "Native Instruments FM8" },
+      { label: "Format", value: "FM8 preset bank" },
+      { label: "Preset count", value: "16 presets" },
+      { label: "Categories", value: "Pads, drones, basses, bells, plucks, sweeps, and FX" },
+      { label: "Download size", value: "1.84 MB" },
+      { label: "Delivery", value: "Digital download" },
+      { label: "License", value: "Personal and commercial music production use" },
+      { label: "Checkout", value: "Free Gumroad download" }
+    ],
+    requirements: [
+      "Native Instruments FM8 is required to use these presets.",
+      "You need a DAW or host that can load FM8.",
+      "The full OPERATORS release expands this Lite pack to 64 FM8 presets."
+    ]
+  },
   "bioforms-synplant-2-presets": {
     subtitle: "Evolving Synplant 2 Presets for Organic Motion",
     shortMeta: "32+ patches • Synplant 2 presets • Organic ambient motion",
