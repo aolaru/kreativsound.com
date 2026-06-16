@@ -32,13 +32,18 @@ https://kreativsound.com/tools/kreativ-sample-prep/
 - Loaded file list with selectable active file.
 - Web Audio API decoding in the browser.
 - Canvas waveform preview.
+- Draggable waveform start/end handles for manual trim selection.
 - File metadata: name, duration, sample rate, channels, peak, and clipping count.
+- Extra analysis: RMS, DC offset, stereo balance, and silence notes.
 - Play, pause, stop, progress display, and waveform click-to-seek.
 - Trim leading and trailing silence with a simple amplitude threshold.
 - Add short fade in/out, defaulting to 10 ms.
 - Normalize peak level, defaulting to -1 dBFS.
 - Detect clipping at or above 0.999 amplitude.
 - Export the selected processed file as `original-name_clean.wav`.
+- Export all loaded files as an uncompressed ZIP, generated fully client-side.
+- Naming templates with `{name}`, `{index}`, and `{i}` tokens.
+- Export quality controls for 16-bit PCM, 24-bit PCM, 32-bit float, mono sum, and optional 44.1/48 kHz resampling.
 
 ## Client-Side Privacy
 
@@ -46,10 +51,7 @@ All audio is decoded, analyzed, processed, and exported locally in the browser. 
 
 ## Future Roadmap
 
-- Batch processing
-- ZIP export
 - MP3 preview export
-- Naming templates
 - LUFS normalization
 - AI-assisted sample tagging
 - Product folder builder

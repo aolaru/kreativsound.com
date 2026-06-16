@@ -3,7 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 <BaseLayout
   title="Tools | Kreativ Sound"
-  description="Preset Mutator is the current Kreativ Sound browser tool for creating synth presets from scratch ideas, existing presets, or audio."
+  description="Kreativ Sound browser tools for local-first preset generation and audio sample preparation."
   canonical="https://kreativsound.com/tools/"
   activeNav="tools"
 >
@@ -53,31 +53,40 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
         </a>
       </section>
 
-      <section class="product-panel-grid tools-mode-grid" aria-label="Preset Mutator modes">
-        <article class="product-panel product-panel-modern product-panel-accent">
-          <p class="product-section-kicker">Default path</p>
-          <h2>From Scratch</h2>
-          <p>Generate a new Vital preset direction from a simple intent instead of starting from a source file.</p>
-          <div class="product-actions">
-            <a class="button secondary" href="/preset-mutator/">Open From Scratch</a>
+      <section class="tools-feature-card" aria-labelledby="sample-prep-title">
+        <div class="tools-feature-copy">
+          <p class="product-kicker">POC browser tool</p>
+          <h2 id="sample-prep-title" class="page-title">Kreativ Sample Prep</h2>
+          <p class="page-lead">Local audio cleanup for sound designers and sample-pack makers.</p>
+          <p class="product-summary">Drop in messy WAV files, trim silence, fade, normalize, inspect warnings, and export clean single files or ZIP packs without uploading audio.</p>
+          <dl class="tools-feature-meta" aria-label="Kreativ Sample Prep facts">
+            <div>
+              <dt>Format</dt>
+              <dd>Browser tool</dd>
+            </div>
+            <div>
+              <dt>Input</dt>
+              <dd>WAV files</dd>
+            </div>
+            <div>
+              <dt>Export</dt>
+              <dd>WAV + ZIP</dd>
+            </div>
+            <div>
+              <dt>Privacy</dt>
+              <dd>Local only</dd>
+            </div>
+          </dl>
+          <div class="product-actions tools-feature-actions">
+            <a class="button primary" href="/tools/kreativ-sample-prep/">
+              <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
+              Open Sample Prep
+            </a>
           </div>
-        </article>
-        <article class="product-panel product-panel-modern">
-          <p class="product-section-kicker">Preset source</p>
-          <h2>Mutate Preset</h2>
-          <p>Load one Vital preset and push it into related variations without losing the original sound identity.</p>
-          <div class="product-actions">
-            <a class="button secondary" href="/preset-mutator/mutate/">Open Mutate Preset</a>
-          </div>
-        </article>
-        <article class="product-panel product-panel-modern">
-          <p class="product-section-kicker">Audio source</p>
-          <h2>Audio to Preset</h2>
-          <p>Use one short source sound, analyze it locally, and generate Vital preset directions you can refine.</p>
-          <div class="product-actions">
-            <a class="button secondary" href="/preset-mutator/audio/">Open Audio to Preset</a>
-          </div>
-        </article>
+        </div>
+        <a class="tools-feature-media" href="/tools/kreativ-sample-prep/" aria-label="Open Kreativ Sample Prep">
+          <img src="/assets/thumbs/kreativ-sample-prep.jpg" width="1440" height="810" alt="Kreativ Sample Prep cover artwork showing waveform cleanup and sample export" loading="lazy" decoding="async" />
+        </a>
       </section>
     </div>
   </section>

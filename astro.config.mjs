@@ -38,6 +38,19 @@ function presetMutatorDevRoutes() {
 
         const appHtmlPath = appHtmlRoutes.get(pathname);
         if (!appHtmlPath) {
+          if (pathname === "/tools/kreativ-sample-prep" || pathname === "/tools/kreativ-sample-prep/") {
+            fs.readFile(path.join(rootDir, "public/tools/kreativ-sample-prep/index.html"), "utf8", (error, html) => {
+              if (error) {
+                next(error);
+                return;
+              }
+              response.statusCode = 200;
+              response.setHeader("Content-Type", "text/html; charset=utf-8");
+              response.end(html);
+            });
+            return;
+          }
+
           next();
           return;
         }

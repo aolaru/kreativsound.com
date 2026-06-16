@@ -48,7 +48,8 @@ body {
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -82,6 +83,7 @@ button:disabled {
 
 button:focus-visible,
 input:focus-visible,
+select:focus-visible,
 .file-button:focus-visible,
 .drop-zone:focus-visible {
   outline: 3px solid rgba(74, 74, 255, 0.58);
@@ -419,6 +421,37 @@ h3 {
   font-variant-numeric: tabular-nums;
 }
 
+.manual-trim-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 18px;
+  border: 1px solid rgba(74, 74, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.92rem;
+  background: rgba(74, 74, 255, 0.08);
+}
+
+.manual-trim-panel > div:first-child {
+  display: grid;
+  gap: 6px;
+}
+
+.manual-trim-readout {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.manual-trim-readout strong {
+  color: var(--text);
+}
+
 .meta-grid,
 .process-report {
   display: grid;
@@ -508,6 +541,21 @@ input[type="number"] {
   background: rgba(0, 0, 0, 0.18);
 }
 
+input[type="text"],
+select {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+select {
+  color-scheme: dark;
+}
+
 .action-row {
   justify-content: flex-start;
   flex-wrap: wrap;
@@ -552,7 +600,7 @@ input[type="number"] {
 
 .export-panel {
   grid-column: 1 / -1;
-  align-items: center;
+  align-items: flex-start;
   background:
     linear-gradient(135deg, rgba(74, 74, 255, 0.18), rgba(255, 51, 102, 0.08)),
     rgba(25, 31, 49, 0.88);
@@ -562,6 +610,35 @@ input[type="number"] {
   display: grid;
   gap: 8px;
   max-width: 720px;
+}
+
+.export-controls {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(130px, 1fr));
+  gap: 12px;
+  width: min(100%, 980px);
+  max-width: 980px;
+}
+
+.field-control {
+  display: grid;
+  gap: 7px;
+}
+
+.field-control span {
+  color: var(--faint);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.export-action-row {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .export-button {
@@ -589,6 +666,15 @@ input[type="number"] {
   .export-panel {
     align-items: stretch;
   }
+
+  .manual-trim-panel,
+  .export-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .export-action-row {
+    justify-content: flex-start;
+  }
 }
 
 @media (max-width: 680px) {
@@ -605,7 +691,8 @@ input[type="number"] {
   .hero-topline,
   .section-head,
   .mini-head,
-  .export-panel {
+  .export-panel,
+  .manual-trim-panel {
     align-items: flex-start;
     flex-direction: column;
   }
