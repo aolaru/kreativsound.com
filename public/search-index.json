@@ -18,7 +18,7 @@
     "url": "/tools/preset-mutator/",
     "type": "Tool",
     "thumbnail": "/preset-mutator/preset-mutator-mark.svg",
-    "description": "Browser-based Vital preset generator with From Scratch, Mutate Preset, and Audio to Preset workflows."
+    "description": "Browser-based Vital preset generator for scratch ideas, preset mutation, and short audio sources."
   },
   {
     "title": "Music",

@@ -213,7 +213,7 @@ function defaultRequirements(product: Product) {
 function defaultLongDescription(product: Product, name: string, description: string) {
   return [
     description,
-    `${name} stays focused on ${product.useCase.toLowerCase()} without turning into a broad, unfocused library.`
+    `${name} focuses on ${product.useCase.toLowerCase()}.`
   ];
 }
 

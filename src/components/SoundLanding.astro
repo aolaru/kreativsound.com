@@ -4,7 +4,7 @@ import ProductCatalog from "./ProductCatalog.astro";
 const {
   titleId = "catalog-title",
   mode = "full",
-  intro = "Start with the featured release, then move through presets, sample packs, free sounds, and archive material.",
+  intro = "Presets, sample packs, free Lite banks, and older archive releases in one place.",
   showGuide = true,
   showFeatured = true,
   showHeroActions = true,
@@ -73,8 +73,8 @@ const catalogCategories = visibleCategories || (isCurated ? ["Bundle", "Tools", 
     <section class="catalog-guide" aria-label="How to choose a Kreativ Sound pack">
       <div>
         <p class="featured-label">How to choose</p>
-        <h2>Start with the sound world you need today.</h2>
-        <p>If the catalog feels wide, use these quick entry points before browsing everything.</p>
+        <h2>Pick by texture.</h2>
+        <p>Use these routes when you already know the kind of pressure, motion, or tone you need.</p>
       </div>
       <div class="catalog-guide-grid">
         <a href="/sounds/black-arcology-pigments-presets">
@@ -91,7 +91,7 @@ const catalogCategories = visibleCategories || (isCurated ? ["Bundle", "Tools", 
         </a>
         <a href="#catalog-free">
           <strong>Test first</strong>
-          <span>Start with Free Packs if you want to check the palette before buying a full release.</span>
+          <span>Use Free Packs to hear the palette before moving to a full bank.</span>
         </a>
       </div>
     </section>
@@ -104,15 +104,15 @@ const catalogCategories = visibleCategories || (isCurated ? ["Bundle", "Tools", 
     <section class="catalog-proof" aria-label="Kreativ Sound proof points">
       <article>
         <span>Used in real releases</span>
-        <p>Olaru and Rethyn music projects use the same samples, presets, and sound-design palette.</p>
+        <p>Olaru and Rethyn releases use material from the same preset and sample archive.</p>
       </article>
       <article>
         <span>Try before buying</span>
-        <p>Free Lite packs exist for the newest flagship directions, including Operators, Black Arcology, and Velvet Ruins.</p>
+        <p>Operators, Black Arcology, and Velvet Ruins all have smaller free versions.</p>
       </article>
       <article>
         <span>Independent catalog</span>
-        <p>Available through Kreativ Sound channels including Gumroad, Patreon, and KVR Marketplace.</p>
+        <p>Product pages link to the active Gumroad, Patreon, and KVR listings.</p>
       </article>
     </section>
   ) : null}
