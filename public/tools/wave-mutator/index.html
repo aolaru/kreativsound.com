@@ -9,23 +9,69 @@
       content="Wave Mutator is a client-side beta audio sample cleanup tool for sound designers, musicians, and sample-pack makers."
     />
     <meta name="theme-color" content="#121622" />
-    <link rel="stylesheet" href="./styles.css" />
-    <script src="./app.js" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=5" />
+    <script src="./app.js?v=5" defer></script>
     <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body>
     <main class="app-shell">
       <header class="hero">
-        <div class="hero-topline">
-          <a class="brand-link" href="https://kreativsound.com/" rel="noopener noreferrer">Kreativ Sound</a>
+        <div class="app-nav" aria-label="Wave Mutator navigation">
+          <a class="brand-link" href="https://kreativsound.com/" rel="noopener noreferrer">Back to Kreativ Sound</a>
+          <div class="app-brand">
+            <span class="app-brand-mark" aria-hidden="true">WM</span>
+            <strong>Wave Mutator</strong>
+          </div>
           <span class="version-pill beta-sticker">BETA</span>
         </div>
         <div class="hero-copy">
           <p class="kicker">Local sample cleanup</p>
           <h1>Wave Mutator</h1>
-          <p class="subtitle">Product-ready sample prep for sound designers, musicians, and sample-pack makers.</p>
+          <p class="subtitle">Drop in messy WAV files. Export cleaner samples, ZIP packs, and browser-made preview montages.</p>
         </div>
-        <p class="privacy-note">Your audio stays on your computer. No files are uploaded.</p>
+
+        <div class="workflow-tabs" aria-label="Wave Mutator workflow">
+          <button class="workflow-tab is-active" type="button" data-scroll-target="#load-title">
+            <span aria-hidden="true">01</span>
+            <strong>Clean WAV</strong>
+            <small>Load and preview</small>
+          </button>
+          <button class="workflow-tab" type="button" data-scroll-target="#export-title">
+            <span aria-hidden="true">02</span>
+            <strong>Batch Pack</strong>
+            <small>Export ZIP</small>
+          </button>
+          <button class="workflow-tab" type="button" data-scroll-target="#montage-seconds">
+            <span aria-hidden="true">03</span>
+            <strong>Preview Montage</strong>
+            <small>Store demo</small>
+          </button>
+        </div>
+
+        <div class="tool-proof-grid" aria-label="Wave Mutator summary">
+          <div>
+            <span>Input</span>
+            <strong>WAV files</strong>
+          </div>
+          <div>
+            <span>Processing</span>
+            <strong>Trim, fade, normalize</strong>
+          </div>
+          <div>
+            <span>Export</span>
+            <strong>WAV, ZIP, MP3 beta</strong>
+          </div>
+          <div>
+            <span>Privacy</span>
+            <strong>Local only</strong>
+          </div>
+        </div>
+
+        <div class="local-trust-strip" aria-label="Wave Mutator privacy promises">
+          <span>Your audio stays on your computer</span>
+          <span>No file uploads</span>
+          <span>No accounts required</span>
+        </div>
       </header>
 
       <section class="tool-detail-panel" aria-labelledby="tool-detail-title">
@@ -196,6 +242,32 @@
           </div>
 
           <div class="controls-stack">
+            <section class="cleanup-strength" aria-labelledby="cleanup-strength-title">
+              <div>
+                <p class="section-kicker">Macro control</p>
+                <h3 id="cleanup-strength-title">Cleanup Strength</h3>
+                <p class="section-note">Choose a starting point, then fine-tune the controls below.</p>
+              </div>
+              <div class="strength-options" role="group" aria-label="Cleanup strength presets">
+                <button class="strength-preset" type="button" data-preset="gentle">
+                  <strong>Gentle</strong>
+                  <span>Light cleanup</span>
+                </button>
+                <button class="strength-preset is-active" type="button" data-preset="standard">
+                  <strong>Standard</strong>
+                  <span>Default prep</span>
+                </button>
+                <button class="strength-preset" type="button" data-preset="tight">
+                  <strong>Tight</strong>
+                  <span>Shorter edges</span>
+                </button>
+                <button class="strength-preset" type="button" data-preset="pack">
+                  <strong>Pack-ready</strong>
+                  <span>Release polish</span>
+                </button>
+              </div>
+            </section>
+
             <label class="toggle-row" for="trim-silence">
               <span>
                 <strong>Trim leading/trailing silence</strong>
@@ -205,7 +277,9 @@
             </label>
 
             <label class="control-row" for="trim-threshold">
-              <span>Silence threshold</span>
+              <span class="control-label">Silence threshold
+                <button class="info-tooltip" type="button" aria-label="Explain silence threshold" data-tooltip="Higher values trim more aggressively. Lower values preserve quiet tails and ambience.">?</button>
+              </span>
               <output id="trim-threshold-value">-60 dB</output>
               <input id="trim-threshold" type="range" min="-80" max="-20" step="1" value="-60" />
             </label>
@@ -233,7 +307,9 @@
             </label>
 
             <label class="control-row" for="target-peak">
-              <span>Target peak</span>
+              <span class="control-label">Target peak
+                <button class="info-tooltip" type="button" aria-label="Explain target peak" data-tooltip="Sets the loudest sample after normalization. -1 dB is a safe sample-pack default.">?</button>
+              </span>
               <output id="target-peak-value">-1 dB</output>
               <input id="target-peak" type="number" min="-24" max="0" step="0.1" value="-1" />
             </label>
@@ -307,7 +383,9 @@
               <input id="pack-name" type="text" value="wave-mutator-pack" />
             </label>
             <label class="field-control" for="bit-depth">
-              <span>WAV format</span>
+              <span>WAV format
+                <button class="info-tooltip" type="button" aria-label="Explain WAV format" data-tooltip="16-bit is widely compatible. 24-bit keeps more detail for production packs. 32-bit float preserves headroom for editing.">?</button>
+              </span>
               <select id="bit-depth">
                 <option value="16">16-bit PCM</option>
                 <option value="24">24-bit PCM</option>
@@ -315,7 +393,9 @@
               </select>
             </label>
             <label class="field-control" for="sample-rate-mode">
-              <span>Sample rate</span>
+              <span>Sample rate
+                <button class="info-tooltip" type="button" aria-label="Explain sample rate" data-tooltip="Preserve original keeps the source rate. 44.1 kHz is music-friendly. 48 kHz is common for video and game audio.">?</button>
+              </span>
               <select id="sample-rate-mode">
                 <option value="original">Preserve original</option>
                 <option value="44100">44.1 kHz</option>
@@ -323,14 +403,18 @@
               </select>
             </label>
             <label class="field-control" for="channel-mode">
-              <span>Channels</span>
+              <span>Channels
+                <button class="info-tooltip" type="button" aria-label="Explain channel mode" data-tooltip="Preserve keeps mono or stereo as loaded. Mono sum renders a centered one-channel version for one-shots.">?</button>
+              </span>
               <select id="channel-mode">
                 <option value="original">Preserve original</option>
                 <option value="mono">Mono sum</option>
               </select>
             </label>
             <label class="field-control" for="montage-seconds">
-              <span>Montage clip length</span>
+              <span>Montage clip length
+                <button class="info-tooltip" type="button" aria-label="Explain montage clip length" data-tooltip="Controls how much of each cleaned file appears in the MP3 preview montage.">?</button>
+              </span>
               <input id="montage-seconds" type="number" min="1" max="12" step="0.5" value="4" />
             </label>
             <label class="field-control" for="montage-gap">

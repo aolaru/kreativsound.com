@@ -14,6 +14,7 @@ const state = {
   trimDragHandle: null,
   suppressNextWaveformClick: false,
   exportMode: null,
+  cleanupPreset: "standard",
   batchProgress: {
     label: "Export queue idle",
     detail: "0%",
@@ -24,6 +25,8 @@ const state = {
 
 const elements = {
   fileInput: document.querySelector("#file-input"),
+  workflowTabs: document.querySelectorAll(".workflow-tab"),
+  strengthPresets: document.querySelectorAll(".strength-preset"),
   dropZone: document.querySelector("#drop-zone"),
   waveformEmptyButton: document.querySelector("#waveform-empty-button"),
   fileList: document.querySelector("#file-list"),
@@ -88,6 +91,45 @@ const MP3_MIME_CANDIDATES = [
   "audio/mp3",
   "audio/mpeg;codecs=mp3",
 ];
+
+const CLEANUP_PRESETS = {
+  gentle: {
+    label: "Gentle",
+    trimSilence: true,
+    trimThresholdDb: -70,
+    fadeEnabled: true,
+    fadeMs: 8,
+    normalizeEnabled: true,
+    targetPeakDb: -3,
+  },
+  standard: {
+    label: "Standard",
+    trimSilence: true,
+    trimThresholdDb: -60,
+    fadeEnabled: true,
+    fadeMs: 10,
+    normalizeEnabled: true,
+    targetPeakDb: -1,
+  },
+  tight: {
+    label: "Tight",
+    trimSilence: true,
+    trimThresholdDb: -54,
+    fadeEnabled: true,
+    fadeMs: 12,
+    normalizeEnabled: true,
+    targetPeakDb: -1,
+  },
+  pack: {
+    label: "Pack-ready",
+    trimSilence: true,
+    trimThresholdDb: -48,
+    fadeEnabled: true,
+    fadeMs: 15,
+    normalizeEnabled: true,
+    targetPeakDb: -1,
+  },
+};
 
 function getAudioContext() {
   if (!state.audioContext) {
@@ -243,6 +285,67 @@ function updateControlLabels() {
   const montageSettings = getMontageSettings();
   elements.montageSeconds.value = montageSettings.clipSeconds;
   elements.montageGap.value = montageSettings.gapSeconds;
+}
+
+function settingsMatchPreset(settings, preset) {
+  return settings.trimSilence === preset.trimSilence
+    && settings.trimThresholdDb === preset.trimThresholdDb
+    && settings.fadeEnabled === preset.fadeEnabled
+    && settings.fadeMs === preset.fadeMs
+    && settings.normalizeEnabled === preset.normalizeEnabled
+    && settings.targetPeakDb === preset.targetPeakDb;
+}
+
+function getMatchingCleanupPreset(settings = getSettings()) {
+  return Object.entries(CLEANUP_PRESETS).find(([, preset]) => settingsMatchPreset(settings, preset))?.[0] || "custom";
+}
+
+function syncCleanupPresetUi() {
+  const matchingPreset = getMatchingCleanupPreset();
+  state.cleanupPreset = matchingPreset;
+  elements.strengthPresets.forEach((button) => {
+    const isActive = button.dataset.preset === matchingPreset;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+}
+
+function applyCleanupPreset(presetName) {
+  const preset = CLEANUP_PRESETS[presetName];
+  if (!preset) {
+    return;
+  }
+
+  elements.trimSilence.checked = preset.trimSilence;
+  elements.trimThreshold.value = preset.trimThresholdDb;
+  elements.fadeEnabled.checked = preset.fadeEnabled;
+  elements.fadeMs.value = preset.fadeMs;
+  elements.normalizeEnabled.checked = preset.normalizeEnabled;
+  elements.targetPeak.value = preset.targetPeakDb;
+  state.cleanupPreset = presetName;
+  updateControlLabels();
+  syncCleanupPresetUi();
+
+  const selected = getSelectedFile();
+  if (selected) {
+    clearProcessedPreview(`Cleanup Strength set to ${preset.label}. Apply processing preview to audition it.`);
+    return;
+  }
+
+  setStatus(`Cleanup Strength set to ${preset.label}. Load a WAV file to audition it.`);
+  updateUi();
+}
+
+function scrollToWorkflowTarget(targetSelector) {
+  const target = document.querySelector(targetSelector);
+  if (!target) {
+    return;
+  }
+
+  elements.workflowTabs.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.scrollTarget === targetSelector);
+  });
+  target.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function clearProcessedPreview(reason = "") {
@@ -1093,6 +1196,7 @@ function updateUi() {
   renderWarnings();
   updateControlLabels();
   renderBatchProgress();
+  syncCleanupPresetUi();
   updateTransportButtons();
   updateProgressUi();
   drawWaveform();
@@ -1896,6 +2000,15 @@ function handleWaveformClick(event) {
 }
 
 function bindEvents() {
+  elements.workflowTabs.forEach((button) => {
+    button.addEventListener("click", () => scrollToWorkflowTarget(button.dataset.scrollTarget));
+  });
+
+  elements.strengthPresets.forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.classList.contains("is-active")));
+    button.addEventListener("click", () => applyCleanupPreset(button.dataset.preset));
+  });
+
   elements.fileInput.addEventListener("change", (event) => loadFiles(event.target.files));
   elements.waveformEmptyButton.addEventListener("click", () => elements.fileInput.click());
 
@@ -1973,7 +2086,13 @@ function bindEvents() {
         setBatchProgress("Montage settings updated", 0, "Ready");
         return;
       }
-      clearProcessedPreview("Processing settings changed. Apply processing preview again to audition them.");
+      syncCleanupPresetUi();
+      if (getSelectedFile()) {
+        clearProcessedPreview("Processing settings changed. Apply processing preview again to audition them.");
+      } else {
+        setStatus("Processing settings updated. Load a WAV file to audition them.");
+        updateUi();
+      }
     });
   });
 
