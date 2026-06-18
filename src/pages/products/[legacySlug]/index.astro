@@ -20,6 +20,7 @@ const canonical = `https://kreativsound.com${target}`;
     <meta name="robots" content="noindex,follow" />
     <meta http-equiv="refresh" content={`0; url=${target}`} />
     <link rel="canonical" href={canonical} />
+    <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
     <script is:inline set:html={`window.location.replace(${JSON.stringify(target)});`} />
   </head>
   <body>

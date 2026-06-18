@@ -50,6 +50,7 @@ function redirectPage(target, message) {
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="${canonical}" />
     <meta http-equiv="refresh" content="0; url=${target}" />
+    <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
     <script>
       window.location.replace(${JSON.stringify(target)});
     </script>
