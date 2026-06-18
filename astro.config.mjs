@@ -39,7 +39,14 @@ function presetMutatorDevRoutes() {
         const appHtmlPath = appHtmlRoutes.get(pathname);
         if (!appHtmlPath) {
           if (pathname === "/tools/kreativ-sample-prep" || pathname === "/tools/kreativ-sample-prep/") {
-            fs.readFile(path.join(rootDir, "public/tools/kreativ-sample-prep/index.html"), "utf8", (error, html) => {
+            response.statusCode = 302;
+            response.setHeader("Location", "/tools/wave-mutator/");
+            response.end();
+            return;
+          }
+
+          if (pathname === "/tools/wave-mutator" || pathname === "/tools/wave-mutator/") {
+            fs.readFile(path.join(rootDir, "public/tools/wave-mutator/index.html"), "utf8", (error, html) => {
               if (error) {
                 next(error);
                 return;

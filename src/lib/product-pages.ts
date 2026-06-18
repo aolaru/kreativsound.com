@@ -6,6 +6,19 @@ export type ProductIncludedGroup = {
   items: Array<{ name: string; detail: string; url?: string }>;
 };
 
+export type ProductLiteComparison = {
+  title: string;
+  intro: string;
+  liteLabel: string;
+  fullLabel: string;
+  rows: Array<{ label: string; lite: string; full: string }>;
+  upgradeUrl: string;
+  upgradeLabel: string;
+  secondaryUrl?: string;
+  secondaryLabel?: string;
+  note?: string;
+};
+
 export type ProductPage = {
   slug: string;
   title: string;
@@ -36,6 +49,7 @@ export type ProductPage = {
   requirements: string[];
   longDescription: string[];
   includedGroups: ProductIncludedGroup[];
+  liteComparison?: ProductLiteComparison;
   finalCtaTitle?: string;
   finalCtaText?: string;
 };
@@ -93,6 +107,57 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
     kicker: "Flagship preset pack",
     purchaseAltUrl: "https://www.paypal.com/ncp/payment/MUN23XJLKABU8",
     purchaseAltLabel: "Pay with PayPal"
+  }
+};
+
+const liteComparisons: Record<string, ProductLiteComparison> = {
+  "operators-lite-fm8-presets": {
+    title: "OPERATORS Lite vs Full",
+    intro: "OPERATORS Lite is the free entry point. The full bank expands the same FM8 direction into a larger preset set for complete tracks and cues.",
+    liteLabel: "Lite",
+    fullLabel: "Full OPERATORS",
+    rows: [
+      { label: "Included", lite: "16 selected FM8 presets", full: "64 FM8 presets" },
+      { label: "Palette", lite: "Cold digital motion, metallic detail, and dark atmosphere", full: "Pads, drones, basses, bells, plucks, leads, sweeps, strings, and FX" },
+      { label: "Best use", lite: "Test the FM8 tone or add a few focused colors", full: "Build a wider FM8 palette across a full track or score cue" }
+    ],
+    upgradeUrl: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
+    upgradeLabel: "Upgrade to full OPERATORS",
+    secondaryUrl: "/sounds/operators-fm8-presets",
+    secondaryLabel: "View full details",
+    note: "If the Lite bank fits your session, the full release keeps the same FM8 character and gives you four times the preset count."
+  },
+  "velvet-ruins-lite-vital-presets": {
+    title: "VELVET RUINS Lite vs Full",
+    intro: "VELVET RUINS Lite gives you a compact Vital preview. The full release extends the same darker spectral direction with a broader preset palette.",
+    liteLabel: "Lite",
+    fullLabel: "Full VELVET RUINS",
+    rows: [
+      { label: "Included", lite: "20 Vital presets", full: "Full VELVET RUINS preset pack" },
+      { label: "Palette", lite: "Dark spectral tone, pads, and melodic fragments", full: "Expanded dark melody, cinematic pads, spectral layers, and texture material" },
+      { label: "Best use", lite: "Try the mood and drop in a few darker Vital layers", full: "Use a broader Vital bank when a project needs more variation and depth" }
+    ],
+    upgradeUrl: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
+    upgradeLabel: "Upgrade to full VELVET RUINS",
+    secondaryUrl: "/sounds/velvet-ruins-vital-presets",
+    secondaryLabel: "View full details",
+    note: "The Lite pack is a free sample of the VELVET RUINS palette, not a separate product line."
+  },
+  "black-arcology-lite-pigments-presets": {
+    title: "BLACK ARCOLOGY Lite vs Full",
+    intro: "BLACK ARCOLOGY Lite is the free Pigments sampler. The full release expands the same industrial palette into a 128-preset collection.",
+    liteLabel: "Lite",
+    fullLabel: "Full BLACK ARCOLOGY",
+    rows: [
+      { label: "Included", lite: "32 Pigments presets", full: "128 Pigments presets" },
+      { label: "Palette", lite: "Industrial drones, melodic keys, textures, and FX/noise presets", full: "Deeper coverage across drones, industrial textures, melodic keys, FX, and noise material" },
+      { label: "Best use", lite: "Test the Pigments direction in a session", full: "Build a larger dark industrial palette with more variation per category" }
+    ],
+    upgradeUrl: "https://kreativ.gumroad.com/l/black-arcology-industrial-presets-for-pigments",
+    upgradeLabel: "Upgrade to full BLACK ARCOLOGY",
+    secondaryUrl: "/sounds/black-arcology-pigments-presets",
+    secondaryLabel: "View full details",
+    note: "If the Lite version has the right pressure and tone, the full collection gives you four times the presets."
   }
 };
 
@@ -308,6 +373,7 @@ export const productPages: ProductPage[] = products
       requirements: copy?.requirements || defaultRequirements(product),
       longDescription: copy?.longDescription || defaultLongDescription(product, name, description),
       includedGroups: buildIncludedGroups(copy?.includedProducts),
+      liteComparison: liteComparisons[slug],
       finalCtaTitle: copy?.finalCtaTitle,
       finalCtaText: copy?.finalCtaText
     };

@@ -485,7 +485,7 @@ export const landingCopyOverrides = {
     ]
   },
   "velvet-ruins-lite-vital-presets": {
-    subtitle: "Free Vital Presets from the VELVET RUINS Sound World",
+    subtitle: "Free Vital Presets from VELVET RUINS",
     shortMeta: "20 presets • Vital presets • Free download",
     ctaLine: "Download the free Vital preset pack.",
     longDescription: [

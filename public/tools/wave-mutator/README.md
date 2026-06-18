@@ -1,6 +1,6 @@
-# Kreativ Sample Prep
+# Wave Mutator
 
-Kreativ Sample Prep is a first proof-of-concept browser tool for preparing audio samples for sound-product releases.
+Wave Mutator is a first proof-of-concept browser tool for preparing audio samples for sound-product releases.
 
 Core idea: drop in messy WAV files and export cleaner, product-ready samples without uploading audio anywhere.
 
@@ -9,7 +9,7 @@ Core idea: drop in messy WAV files and export cleaner, product-ready samples wit
 Open `index.html` directly in a modern browser, or serve the folder with a tiny local server:
 
 ```sh
-cd public/tools/kreativ-sample-prep
+cd public/tools/wave-mutator
 python3 -m http.server 8080
 ```
 
@@ -22,8 +22,10 @@ http://localhost:8080/
 Inside the Kreativ Sound site, the intended URL is:
 
 ```text
-https://kreativsound.com/tools/kreativ-sample-prep/
+https://kreativsound.com/tools/wave-mutator/
 ```
+
+The previous `/tools/kreativ-sample-prep/` path redirects to the new Wave Mutator URL.
 
 ## Current POC Features
 

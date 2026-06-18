@@ -60,6 +60,9 @@ function routeFromFile(filePath) {
     if (route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) {
       return null;
     }
+    if (route === "/tools/kreativ-sample-prep/") {
+      return null;
+    }
     if (route === "/sound/" || route.startsWith("/products/")) {
       return null;
     }

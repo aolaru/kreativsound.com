@@ -165,7 +165,7 @@ function getExportSettings() {
     sampleRateMode: elements.sampleRateMode.value,
     channelMode: elements.channelMode.value,
     namingTemplate: elements.namingTemplate.value.trim() || "{name}_clean",
-    packName: sanitizeFileBaseName(elements.packName.value || "kreativ-sample-prep-pack"),
+    packName: sanitizeFileBaseName(elements.packName.value || "wave-mutator-pack"),
   };
 }
 

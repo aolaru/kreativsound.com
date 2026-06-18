@@ -39,6 +39,10 @@ function actionClass(index: number) {
   return index === 0 ? "button primary" : "button secondary";
 }
 
+function isExternalUrl(url: string) {
+  return /^https?:\/\//.test(url);
+}
+
 const productSchema = {
   "@context": "https://schema.org",
   "@type": "Product",
@@ -137,6 +141,61 @@ const breadcrumbSchema = {
       <h2 id="product-description-title">Description</h2>
       <div class="product-long-description">
         {product.longDescription.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </section>
+  ) : null}
+
+  {product.liteComparison ? (
+    <section class="product-landing-section product-lite-comparison" aria-labelledby="product-lite-comparison-title">
+      <div class="product-lite-comparison-head">
+        <p class="product-section-kicker">Lite vs Full</p>
+        <h2 id="product-lite-comparison-title">{product.liteComparison.title}</h2>
+        <p>{product.liteComparison.intro}</p>
+      </div>
+      <div class="product-lite-comparison-table-wrap">
+        <table class="product-lite-comparison-table">
+          <thead>
+            <tr>
+              <th scope="col">Feature</th>
+              <th scope="col">{product.liteComparison.liteLabel}</th>
+              <th scope="col">{product.liteComparison.fullLabel}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {product.liteComparison.rows.map((row) => (
+              <tr>
+                <th scope="row">{row.label}</th>
+                <td data-label={product.liteComparison?.liteLabel}>{row.lite}</td>
+                <td class="product-lite-comparison-full" data-label={product.liteComparison?.fullLabel}>{row.full}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="product-lite-upgrade">
+        {product.liteComparison.note ? <p>{product.liteComparison.note}</p> : null}
+        <div class="product-landing-actions">
+          <a
+            class="button primary"
+            href={product.liteComparison.upgradeUrl}
+            target={isExternalUrl(product.liteComparison.upgradeUrl) ? "_blank" : undefined}
+            rel={isExternalUrl(product.liteComparison.upgradeUrl) ? "noopener noreferrer" : undefined}
+          >
+            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            {product.liteComparison.upgradeLabel}
+          </a>
+          {product.liteComparison.secondaryUrl && product.liteComparison.secondaryLabel ? (
+            <a
+              class="button secondary"
+              href={product.liteComparison.secondaryUrl}
+              target={isExternalUrl(product.liteComparison.secondaryUrl) ? "_blank" : undefined}
+              rel={isExternalUrl(product.liteComparison.secondaryUrl) ? "noopener noreferrer" : undefined}
+            >
+              <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+              {product.liteComparison.secondaryLabel}
+            </a>
+          ) : null}
+        </div>
       </div>
     </section>
   ) : null}
