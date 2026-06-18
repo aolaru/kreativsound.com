@@ -6,7 +6,7 @@
     <title>Wave Mutator | Kreativ Sound</title>
     <meta
       name="description"
-      content="Wave Mutator is a client-side audio sample cleanup proof of concept for sound designers."
+      content="Wave Mutator is a client-side beta audio sample cleanup tool for sound designers, musicians, and sample-pack makers."
     />
     <meta name="theme-color" content="#121622" />
     <link rel="stylesheet" href="./styles.css" />
@@ -17,15 +17,46 @@
       <header class="hero">
         <div class="hero-topline">
           <a class="brand-link" href="https://kreativsound.com/" rel="noopener noreferrer">Kreativ Sound</a>
-          <span class="version-pill">POC</span>
+          <span class="version-pill beta-sticker">BETA</span>
         </div>
         <div class="hero-copy">
           <p class="kicker">Local sample cleanup</p>
           <h1>Wave Mutator</h1>
-          <p class="subtitle">Local audio cleanup for sound designers</p>
+          <p class="subtitle">Product-ready sample prep for sound designers, musicians, and sample-pack makers.</p>
         </div>
         <p class="privacy-note">Your audio stays on your computer. No files are uploaded.</p>
       </header>
+
+      <section class="tool-detail-panel" aria-labelledby="tool-detail-title">
+        <div class="tool-detail-copy">
+          <p class="section-kicker">Beta tool</p>
+          <h2 id="tool-detail-title">Drop in messy WAV files. Export cleaner samples and pack previews.</h2>
+          <p>
+            Wave Mutator is built for preparing sample-pack material, preset-source audio, one-shots,
+            loops, noise layers, and sound-product demos. It trims silence, adds short fades,
+            normalizes peak level, warns about clipping, exports cleaned WAV files, and can create a
+            short MP3 preview montage when your browser supports local MP3 recording.
+          </p>
+        </div>
+        <div class="tool-detail-grid" aria-label="Wave Mutator details">
+          <article>
+            <span>For</span>
+            <strong>Sound designers, musicians, preset creators, sample-pack makers.</strong>
+          </article>
+          <article>
+            <span>Privacy</span>
+            <strong>Files are decoded, processed, and exported locally in the browser.</strong>
+          </article>
+          <article>
+            <span>Formats</span>
+            <strong>WAV input. WAV/ZIP export. MP3 montage depends on browser support.</strong>
+          </article>
+          <article>
+            <span>Beta limits</span>
+            <strong>No LUFS normalization, spectral editing, AI tagging, or full DAW-style repair yet.</strong>
+          </article>
+        </div>
+      </section>
 
       <section class="top-grid" aria-label="Sample loading and preview">
         <section class="panel load-panel" aria-labelledby="load-title">
@@ -34,7 +65,7 @@
               <p class="section-kicker">Input</p>
               <h2 id="load-title">Drop WAV files</h2>
             </div>
-            <p class="section-note">WAV is the first supported format for this proof of concept.</p>
+            <p class="section-note">WAV is the first supported input format for this beta.</p>
           </div>
 
           <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Choose or drop WAV files">
@@ -70,7 +101,7 @@
               <p class="section-kicker">Preview</p>
               <h2 id="preview-title">Waveform</h2>
             </div>
-            <span id="preview-mode-label" class="preview-mode">Original</span>
+            <span id="preview-mode-label" class="preview-mode">Before: original</span>
           </div>
 
           <div class="waveform-frame">
@@ -82,6 +113,16 @@
 
           <div class="progress-track" aria-hidden="true">
             <span id="progress-fill"></span>
+          </div>
+
+          <div class="preview-toggle-row" aria-label="Before and after preview controls">
+            <div>
+              <span id="preview-state-text">Previewing the original decoded file.</span>
+            </div>
+            <div class="segmented-controls">
+              <button id="preview-original-button" type="button" disabled>Before</button>
+              <button id="preview-processed-button" type="button" disabled>After</button>
+            </div>
           </div>
 
           <div class="transport-row">
@@ -250,9 +291,9 @@
         <section class="panel export-panel" aria-labelledby="export-title">
           <div>
             <p class="section-kicker">Export</p>
-            <h2 id="export-title">Product-ready WAV</h2>
+            <h2 id="export-title">Product-ready files</h2>
             <p class="section-note">
-              Export the selected file or render all loaded files into a ZIP pack using the same cleanup settings.
+              Export one cleaned WAV, render a ZIP pack, or generate a short preview montage for store demos.
             </p>
           </div>
           <div class="export-controls">
@@ -287,15 +328,33 @@
                 <option value="mono">Mono sum</option>
               </select>
             </label>
+            <label class="field-control" for="montage-seconds">
+              <span>Montage clip length</span>
+              <input id="montage-seconds" type="number" min="1" max="12" step="0.5" value="4" />
+            </label>
+            <label class="field-control" for="montage-gap">
+              <span>Montage gap</span>
+              <input id="montage-gap" type="number" min="0" max="3" step="0.1" value="0.4" />
+            </label>
+            <div id="batch-progress" class="batch-progress" aria-live="polite">
+              <div class="batch-progress-head">
+                <span id="batch-progress-label">Export queue idle</span>
+                <span id="batch-progress-detail">0%</span>
+              </div>
+              <div class="batch-progress-track" aria-hidden="true">
+                <span id="batch-progress-fill"></span>
+              </div>
+            </div>
             <div class="export-action-row">
               <button id="export-button" class="export-button" type="button" disabled>Export selected WAV</button>
               <button id="export-zip-button" type="button" disabled>Export all as ZIP</button>
+              <button id="export-mp3-button" type="button" disabled>Export MP3 montage</button>
             </div>
           </div>
         </section>
       </section>
     </main>
 
-    <footer class="app-footer">A Kreativ Sound tool — POC version</footer>
+    <footer class="app-footer">A Kreativ Sound tool — beta version</footer>
   </body>
 </html>

@@ -13,6 +13,13 @@ const state = {
   animationFrame: null,
   trimDragHandle: null,
   suppressNextWaveformClick: false,
+  exportMode: null,
+  batchProgress: {
+    label: "Export queue idle",
+    detail: "0%",
+    percent: 0,
+  },
+  mp3MimeType: "",
 };
 
 const elements = {
@@ -28,6 +35,9 @@ const elements = {
   stopButton: document.querySelector("#stop-button"),
   timeReadout: document.querySelector("#time-readout"),
   previewModeLabel: document.querySelector("#preview-mode-label"),
+  previewOriginalButton: document.querySelector("#preview-original-button"),
+  previewProcessedButton: document.querySelector("#preview-processed-button"),
+  previewStateText: document.querySelector("#preview-state-text"),
   metaName: document.querySelector("#meta-name"),
   metaDuration: document.querySelector("#meta-duration"),
   metaSampleRate: document.querySelector("#meta-sample-rate"),
@@ -60,12 +70,24 @@ const elements = {
   reportOutputPeak: document.querySelector("#report-output-peak"),
   exportButton: document.querySelector("#export-button"),
   exportZipButton: document.querySelector("#export-zip-button"),
+  exportMp3Button: document.querySelector("#export-mp3-button"),
   namingTemplate: document.querySelector("#naming-template"),
   packName: document.querySelector("#pack-name"),
   bitDepth: document.querySelector("#bit-depth"),
   sampleRateMode: document.querySelector("#sample-rate-mode"),
   channelMode: document.querySelector("#channel-mode"),
+  montageSeconds: document.querySelector("#montage-seconds"),
+  montageGap: document.querySelector("#montage-gap"),
+  batchProgressLabel: document.querySelector("#batch-progress-label"),
+  batchProgressDetail: document.querySelector("#batch-progress-detail"),
+  batchProgressFill: document.querySelector("#batch-progress-fill"),
 };
+
+const MP3_MIME_CANDIDATES = [
+  "audio/mpeg",
+  "audio/mp3",
+  "audio/mpeg;codecs=mp3",
+];
 
 function getAudioContext() {
   if (!state.audioContext) {
@@ -75,10 +97,41 @@ function getAudioContext() {
   return state.audioContext;
 }
 
+function getSupportedMp3MimeType() {
+  if (!window.MediaRecorder || typeof MediaRecorder.isTypeSupported !== "function") {
+    return "";
+  }
+  return MP3_MIME_CANDIDATES.find((type) => MediaRecorder.isTypeSupported(type)) || "";
+}
+
 function setStatus(message, type = "neutral") {
   elements.statusMessage.textContent = message;
   elements.statusMessage.classList.toggle("is-error", type === "error");
   elements.statusMessage.classList.toggle("is-success", type === "success");
+}
+
+function setBatchProgress(label, percent = 0, detail = "") {
+  state.batchProgress = {
+    label,
+    percent: clamp(percent, 0, 100),
+    detail: detail || `${Math.round(clamp(percent, 0, 100))}%`,
+  };
+  renderBatchProgress();
+}
+
+function renderBatchProgress() {
+  elements.batchProgressLabel.textContent = state.batchProgress.label;
+  elements.batchProgressDetail.textContent = state.batchProgress.detail;
+  elements.batchProgressFill.style.width = `${state.batchProgress.percent}%`;
+}
+
+function setExportMode(mode) {
+  state.exportMode = mode;
+  updateUi();
+}
+
+function isExportBusy() {
+  return Boolean(state.exportMode);
 }
 
 function formatDuration(seconds) {
@@ -169,6 +222,17 @@ function getExportSettings() {
   };
 }
 
+function getMontageSettings() {
+  const clipSeconds = Number(elements.montageSeconds.value);
+  const gapSeconds = Number(elements.montageGap.value);
+  return {
+    clipSeconds: clamp(Number.isFinite(clipSeconds) ? clipSeconds : 4, 1, 12),
+    gapSeconds: clamp(Number.isFinite(gapSeconds) ? gapSeconds : 0.4, 0, 3),
+    sampleRate: 44100,
+    channels: 2,
+  };
+}
+
 function updateControlLabels() {
   const settings = getSettings();
   elements.trimThresholdValue.textContent = `${settings.trimThresholdDb} dB`;
@@ -176,6 +240,9 @@ function updateControlLabels() {
   elements.fadeMsValue.textContent = `${settings.fadeMs} ms`;
   elements.targetPeak.value = settings.targetPeakDb;
   elements.targetPeakValue.textContent = `${settings.targetPeakDb.toFixed(1).replace(".0", "")} dB`;
+  const montageSettings = getMontageSettings();
+  elements.montageSeconds.value = montageSettings.clipSeconds;
+  elements.montageGap.value = montageSettings.gapSeconds;
 }
 
 function clearProcessedPreview(reason = "") {
@@ -187,6 +254,7 @@ function clearProcessedPreview(reason = "") {
   selected.processedAnalysis = null;
   selected.processReport = null;
   selected.waveformCache.processed = null;
+  selected.batchStatus = "ready";
   state.previewMode = "original";
   stopPlayback();
   if (reason) {
@@ -211,7 +279,7 @@ async function loadFiles(fileList) {
   const rejectedCount = files.length - wavFiles.length;
 
   if (!wavFiles.length) {
-    setStatus("No WAV files found. This POC currently accepts WAV files only.", "error");
+    setStatus("No WAV files found. This beta currently accepts WAV files only.", "error");
     return;
   }
 
@@ -294,19 +362,59 @@ function renderFileList() {
     button.classList.toggle("is-selected", file.id === state.selectedId);
     button.addEventListener("click", () => selectFile(file.id));
 
+    const main = document.createElement("span");
+    main.className = "file-main";
+
     const title = document.createElement("span");
     title.className = "file-title";
     title.textContent = file.name;
 
     const meta = document.createElement("span");
     meta.className = "file-meta";
-    const statusLabel = file.batchStatus === "processed" ? "processed" : file.batchStatus;
-    meta.textContent = `${formatDuration(file.audioBuffer.duration)} | ${file.audioBuffer.sampleRate.toLocaleString()} Hz | ${statusLabel}`;
+    meta.textContent = `${formatDuration(file.audioBuffer.duration)} | ${file.audioBuffer.sampleRate.toLocaleString()} Hz | ${file.audioBuffer.numberOfChannels} ${file.audioBuffer.numberOfChannels === 1 ? "channel" : "channels"}`;
 
-    button.append(title, meta);
+    const badges = document.createElement("span");
+    badges.className = "file-badges";
+    for (const badge of getFileBadges(file)) {
+      const itemBadge = document.createElement("span");
+      itemBadge.className = `file-badge is-${badge.type}`;
+      itemBadge.textContent = badge.label;
+      badges.appendChild(itemBadge);
+    }
+
+    main.append(title, meta);
+    button.append(main, badges);
     item.appendChild(button);
     elements.fileList.appendChild(item);
   }
+}
+
+function getFileBadges(file) {
+  const status = file.batchStatus || "ready";
+  const statusMap = {
+    ready: { label: "Ready", type: "neutral" },
+    preview: { label: "Preview", type: "good" },
+    processed: { label: "Cleaned", type: "good" },
+    processing: { label: "Working", type: "busy" },
+    montage: { label: "Montage", type: "busy" },
+    warning: { label: "Review", type: "warning" },
+    failed: { label: "Failed", type: "danger" },
+  };
+  const badges = [statusMap[status] || statusMap.ready];
+
+  if (file.originalAnalysis?.clippedSamples > 0) {
+    badges.push({ label: "Clips", type: "danger" });
+  }
+
+  if ((file.trimStartRatio ?? 0) > 0 || (file.trimEndRatio ?? 1) < 1) {
+    badges.push({ label: "Trim", type: "warning" });
+  }
+
+  if (file.processedAnalysis?.clippedSamples > 0) {
+    badges.push({ label: "After clips", type: "warning" });
+  }
+
+  return badges;
 }
 
 function analyzeBuffer(buffer) {
@@ -804,8 +912,9 @@ async function playFrom(offset) {
 
 function updateTransportButtons() {
   const hasBuffer = Boolean(getActiveBuffer());
-  elements.playPauseButton.disabled = !hasBuffer;
-  elements.stopButton.disabled = !hasBuffer;
+  const busy = isExportBusy();
+  elements.playPauseButton.disabled = !hasBuffer || busy;
+  elements.stopButton.disabled = !hasBuffer || busy;
   elements.playPauseButton.textContent = state.isPlaying ? "Pause" : "Play";
 }
 
@@ -976,22 +1085,64 @@ function renderReport(report) {
 function updateUi() {
   const selected = getSelectedFile();
   const activeBuffer = getActiveBuffer(selected);
+  const busy = isExportBusy();
+  const hasProcessedPreview = Boolean(selected?.processedBuffer);
 
   renderFileList();
   renderMeta();
   renderWarnings();
   updateControlLabels();
+  renderBatchProgress();
   updateTransportButtons();
   updateProgressUi();
   drawWaveform();
 
   elements.waveformEmptyButton.classList.toggle("is-hidden", Boolean(selected));
-  elements.applyButton.disabled = !selected;
-  elements.resetPreviewButton.disabled = !selected || state.previewMode !== "processed";
-  elements.manualTrimReset.disabled = !selected || ((selected.trimStartRatio ?? 0) === 0 && (selected.trimEndRatio ?? 1) === 1);
-  elements.exportButton.disabled = !selected;
-  elements.exportZipButton.disabled = !state.files.length;
-  elements.previewModeLabel.textContent = state.previewMode === "processed" && activeBuffer ? "Processed preview" : "Original";
+  elements.applyButton.disabled = !selected || busy;
+  elements.resetPreviewButton.disabled = !selected || state.previewMode !== "processed" || busy;
+  elements.manualTrimReset.disabled = !selected || busy || ((selected.trimStartRatio ?? 0) === 0 && (selected.trimEndRatio ?? 1) === 1);
+  elements.exportButton.disabled = !selected || busy;
+  elements.exportZipButton.disabled = !state.files.length || busy;
+  elements.exportMp3Button.disabled = !state.files.length || busy || !state.mp3MimeType;
+  elements.exportButton.textContent = state.exportMode === "wav" ? "Exporting WAV..." : "Export selected WAV";
+  elements.exportZipButton.textContent = state.exportMode === "zip" ? "Exporting ZIP..." : "Export all as ZIP";
+  elements.exportMp3Button.textContent = !state.mp3MimeType
+    ? "MP3 unavailable"
+    : state.exportMode === "mp3" ? "Recording MP3..." : "Export MP3 montage";
+  elements.exportMp3Button.title = state.mp3MimeType
+    ? "Create an MP3 preview montage from the cleaned files."
+    : "MP3 montage export needs a browser with native audio/mpeg MediaRecorder support.";
+
+  elements.previewOriginalButton.disabled = !selected;
+  elements.previewProcessedButton.disabled = !selected || !hasProcessedPreview;
+  elements.previewOriginalButton.classList.toggle("is-active", state.previewMode !== "processed");
+  elements.previewProcessedButton.classList.toggle("is-active", state.previewMode === "processed" && hasProcessedPreview);
+  elements.previewModeLabel.textContent = state.previewMode === "processed" && activeBuffer ? "After: processed" : "Before: original";
+  elements.previewStateText.textContent = getPreviewStateText(selected, hasProcessedPreview);
+}
+
+function getPreviewStateText(file, hasProcessedPreview) {
+  if (!file) {
+    return "Load a WAV file to compare the original and processed preview.";
+  }
+  if (state.previewMode === "processed" && hasProcessedPreview) {
+    return "Previewing the processed result that will be used for export.";
+  }
+  if (hasProcessedPreview) {
+    return "Previewing the original file. Switch to After to compare the cleaned preview.";
+  }
+  return "Previewing the original file. Apply processing preview to create the After version.";
+}
+
+function showPreviewMode(mode) {
+  const file = getSelectedFile();
+  if (!file) {
+    return;
+  }
+  stopPlayback();
+  state.previewMode = mode === "processed" && file.processedBuffer ? "processed" : "original";
+  state.playbackOffset = 0;
+  updateUi();
 }
 
 function applyProcessingPreview() {
@@ -1006,7 +1157,7 @@ function applyProcessingPreview() {
     file.processedBuffer = result.buffer;
     file.processedAnalysis = result.analysis;
     file.processReport = result.report;
-    file.batchStatus = "processed";
+    file.batchStatus = result.analysis.clippedSamples ? "warning" : "preview";
     file.waveformCache.processed = null;
     state.previewMode = "processed";
     state.playbackOffset = 0;
@@ -1286,6 +1437,207 @@ function uniqueFileName(name, usedNames) {
   return candidate;
 }
 
+function makeMontageFileName(exportSettings = getExportSettings()) {
+  return `${sanitizeFileBaseName(exportSettings.packName || "wave-mutator-pack")}_preview_montage.mp3`;
+}
+
+function readBufferSample(buffer, channel, sampleIndex) {
+  if (buffer.numberOfChannels === 1) {
+    return buffer.getChannelData(0)[sampleIndex] || 0;
+  }
+  const sourceChannel = Math.min(channel, buffer.numberOfChannels - 1);
+  return buffer.getChannelData(sourceChannel)[sampleIndex] || 0;
+}
+
+function copyClipToMontage(sourceBuffer, outputBuffer, outputStartSample, clipSamples) {
+  const fadeSamples = Math.min(Math.round(outputBuffer.sampleRate * 0.025), Math.floor(clipSamples / 3));
+
+  for (let channel = 0; channel < outputBuffer.numberOfChannels; channel += 1) {
+    const target = outputBuffer.getChannelData(channel);
+    for (let index = 0; index < clipSamples; index += 1) {
+      let gain = 1;
+      if (fadeSamples > 1 && index < fadeSamples) {
+        gain = index / fadeSamples;
+      } else if (fadeSamples > 1 && index >= clipSamples - fadeSamples) {
+        gain = (clipSamples - index - 1) / fadeSamples;
+      }
+      target[outputStartSample + index] = readBufferSample(sourceBuffer, channel, index) * clamp(gain, 0, 1);
+    }
+  }
+}
+
+async function buildPreviewMontageBuffer(onProgress) {
+  const montageSettings = getMontageSettings();
+  const settings = getSettings();
+  const clips = [];
+
+  for (let index = 0; index < state.files.length; index += 1) {
+    const file = state.files[index];
+    const percent = state.files.length ? (index / state.files.length) * 62 : 0;
+    try {
+      file.batchStatus = "montage";
+      renderFileList();
+      onProgress?.(`Preparing montage clip ${index + 1} of ${state.files.length}: ${file.name}`, percent, `${index}/${state.files.length}`);
+
+      const result = processAudioBuffer(file.audioBuffer, settings, getManualTrimRange(file));
+      const resampled = await resampleBuffer(result.buffer, String(montageSettings.sampleRate));
+      const clipSamples = Math.min(resampled.length, Math.round(montageSettings.clipSeconds * montageSettings.sampleRate));
+      if (clipSamples <= 0) {
+        file.batchStatus = "failed";
+        continue;
+      }
+
+      file.processedBuffer = result.buffer;
+      file.processedAnalysis = result.analysis;
+      file.processReport = result.report;
+      file.batchStatus = result.analysis.clippedSamples ? "warning" : "processed";
+      file.waveformCache.processed = null;
+      clips.push({ buffer: resampled, clipSamples });
+    } catch (error) {
+      console.error(error);
+      file.batchStatus = "failed";
+    }
+  }
+
+  if (!clips.length) {
+    throw new Error("No montage clips could be prepared.");
+  }
+
+  const gapSamples = Math.round(montageSettings.gapSeconds * montageSettings.sampleRate);
+  const totalSamples = clips.reduce((sum, clip, index) => {
+    return sum + clip.clipSamples + (index < clips.length - 1 ? gapSamples : 0);
+  }, 0);
+  const output = getAudioContext().createBuffer(montageSettings.channels, totalSamples, montageSettings.sampleRate);
+  let offset = 0;
+
+  onProgress?.(`Assembling ${clips.length} montage ${clips.length === 1 ? "clip" : "clips"}`, 66, "Assembling");
+  for (const clip of clips) {
+    copyClipToMontage(clip.buffer, output, offset, clip.clipSamples);
+    offset += clip.clipSamples + gapSamples;
+  }
+
+  return output;
+}
+
+async function recordBufferAsMp3(buffer, mimeType, onProgress) {
+  const audioContext = getAudioContext();
+  await audioContext.resume();
+
+  return new Promise((resolve, reject) => {
+    let recorder;
+    let source;
+    let intervalId = null;
+
+    try {
+      const destination = audioContext.createMediaStreamDestination();
+      source = audioContext.createBufferSource();
+      source.buffer = buffer;
+      source.connect(destination);
+
+      recorder = new MediaRecorder(destination.stream, {
+        mimeType,
+        audioBitsPerSecond: 192000,
+      });
+
+      const chunks = [];
+      recorder.addEventListener("dataavailable", (event) => {
+        if (event.data && event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      });
+
+      recorder.addEventListener("error", () => {
+        if (intervalId) {
+          window.clearInterval(intervalId);
+        }
+        reject(new Error("MP3 recorder failed."));
+      });
+
+      recorder.addEventListener("stop", () => {
+        if (intervalId) {
+          window.clearInterval(intervalId);
+        }
+        source.disconnect();
+        destination.stream.getTracks().forEach((track) => track.stop());
+        if (!chunks.length) {
+          reject(new Error("MP3 recorder did not return audio data."));
+          return;
+        }
+        resolve(new Blob(chunks, { type: mimeType }));
+      });
+
+      source.addEventListener("ended", () => {
+        if (recorder.state !== "inactive") {
+          recorder.stop();
+        }
+      });
+
+      recorder.start(250);
+      const startedAt = audioContext.currentTime;
+      source.start(0);
+      intervalId = window.setInterval(() => {
+        const elapsed = audioContext.currentTime - startedAt;
+        const percent = 70 + clamp(elapsed / Math.max(buffer.duration, 0.01), 0, 1) * 28;
+        onProgress?.("Recording MP3 montage locally", percent, `${Math.round(elapsed)}s / ${Math.round(buffer.duration)}s`);
+      }, 200);
+    } catch (error) {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
+      try {
+        source?.disconnect();
+      } catch {
+        // Ignore cleanup errors after recorder setup failures.
+      }
+      reject(error);
+    }
+  });
+}
+
+async function exportMp3Montage() {
+  if (!state.files.length || !state.mp3MimeType) {
+    setStatus("MP3 montage export is not available in this browser. Try a browser with audio/mpeg MediaRecorder support.", "error");
+    return;
+  }
+
+  try {
+    stopPlayback();
+    setExportMode("mp3");
+    setBatchProgress("Starting MP3 montage export", 0, `0/${state.files.length}`);
+    const progress = (label, percent, detail) => {
+      setBatchProgress(label, percent, detail);
+      setStatus(label);
+    };
+
+    const montageBuffer = await buildPreviewMontageBuffer(progress);
+    state.previewMode = "processed";
+    updateUi();
+
+    const mp3Blob = await recordBufferAsMp3(montageBuffer, state.mp3MimeType, progress);
+    const exportSettings = getExportSettings();
+    const fileName = makeMontageFileName(exportSettings);
+    const url = URL.createObjectURL(mp3Blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = fileName;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1200);
+
+    setBatchProgress(`Exported ${fileName}`, 100, "Done");
+    setStatus(`Exported MP3 preview montage as ${fileName}.`, "success");
+    setExportMode(null);
+    updateUi();
+  } catch (error) {
+    console.error(error);
+    setBatchProgress("MP3 montage export failed", 0, "Failed");
+    setStatus("MP3 montage export failed. Your browser may not support local MP3 recording.", "error");
+    setExportMode(null);
+    updateUi();
+  }
+}
+
 async function exportSelectedFile() {
   const file = getSelectedFile();
   if (!file) {
@@ -1294,13 +1646,16 @@ async function exportSelectedFile() {
 
   try {
     stopPlayback();
+    setExportMode("wav");
+    setBatchProgress(`Rendering selected WAV: ${file.name}`, 15, "Preparing");
     const exportSettings = getExportSettings();
     const result = processAudioBuffer(file.audioBuffer, getSettings(), getManualTrimRange(file));
+    setBatchProgress(`Encoding selected WAV: ${file.name}`, 65, "Encoding");
     const exportBuffer = await prepareExportBuffer(result.buffer, exportSettings);
     file.processedBuffer = result.buffer;
     file.processedAnalysis = result.analysis;
     file.processReport = result.report;
-    file.batchStatus = "processed";
+    file.batchStatus = result.analysis.clippedSamples ? "warning" : "processed";
     file.waveformCache.processed = null;
     state.previewMode = "processed";
 
@@ -1314,11 +1669,15 @@ async function exportSelectedFile() {
     anchor.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1200);
 
+    setBatchProgress(`Exported ${anchor.download}`, 100, "Done");
     setStatus(`Exported ${anchor.download}.`, "success");
+    setExportMode(null);
     updateUi();
   } catch (error) {
     console.error(error);
+    setExportMode(null);
     setStatus("Export failed. Try a shorter WAV file or reload the page and try again.", "error");
+    setBatchProgress("Selected WAV export failed", 0, "Failed");
     updateUi();
   }
 }
@@ -1334,15 +1693,17 @@ async function exportAllAsZip() {
 
   try {
     stopPlayback();
-    elements.exportZipButton.disabled = true;
-    elements.exportButton.disabled = true;
+    setExportMode("zip");
+    setBatchProgress("Starting ZIP export", 0, `0/${state.files.length}`);
 
     for (let index = 0; index < state.files.length; index += 1) {
       const file = state.files[index];
       try {
         file.batchStatus = "processing";
         renderFileList();
+        const percent = (index / state.files.length) * 90;
         setStatus(`Batch processing ${index + 1} of ${state.files.length}: ${file.name}`);
+        setBatchProgress(`Cleaning ${index + 1} of ${state.files.length}: ${file.name}`, percent, `${index}/${state.files.length}`);
         const result = processAudioBuffer(file.audioBuffer, getSettings(), getManualTrimRange(file));
         const exportBuffer = await prepareExportBuffer(result.buffer, exportSettings);
         const blob = encodeWav(exportBuffer, exportSettings);
@@ -1360,11 +1721,14 @@ async function exportAllAsZip() {
     }
 
     if (!zipEntries.length) {
+      setExportMode(null);
+      setBatchProgress("ZIP export failed", 0, "Failed");
       setStatus("Batch export failed. No files could be processed.", "error");
       updateUi();
       return;
     }
 
+    setBatchProgress(`Building ZIP with ${zipEntries.length} files`, 94, "Zipping");
     const zipBlob = await createZip(zipEntries);
     const url = URL.createObjectURL(zipBlob);
     const anchor = document.createElement("a");
@@ -1374,10 +1738,14 @@ async function exportAllAsZip() {
     anchor.click();
     anchor.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1200);
+    setBatchProgress(`Exported ${anchor.download}`, 100, "Done");
     setStatus(`Exported ${zipEntries.length} cleaned WAV ${zipEntries.length === 1 ? "file" : "files"} as ${anchor.download}.`, "success");
+    setExportMode(null);
     updateUi();
   } catch (error) {
     console.error(error);
+    setExportMode(null);
+    setBatchProgress("ZIP export failed", 0, "Failed");
     setStatus("ZIP export failed. Try fewer or shorter WAV files.", "error");
     updateUi();
   }
@@ -1582,9 +1950,12 @@ function bindEvents() {
   elements.waveform.addEventListener("pointercancel", handleWaveformPointerUp);
   elements.applyButton.addEventListener("click", applyProcessingPreview);
   elements.resetPreviewButton.addEventListener("click", resetPreview);
+  elements.previewOriginalButton.addEventListener("click", () => showPreviewMode("original"));
+  elements.previewProcessedButton.addEventListener("click", () => showPreviewMode("processed"));
   elements.manualTrimReset.addEventListener("click", resetManualTrim);
   elements.exportButton.addEventListener("click", exportSelectedFile);
   elements.exportZipButton.addEventListener("click", exportAllAsZip);
+  elements.exportMp3Button.addEventListener("click", exportMp3Montage);
 
   [
     elements.trimSilence,
@@ -1593,9 +1964,15 @@ function bindEvents() {
     elements.fadeMs,
     elements.normalizeEnabled,
     elements.targetPeak,
+    elements.montageSeconds,
+    elements.montageGap,
   ].forEach((control) => {
     control.addEventListener("input", () => {
       updateControlLabels();
+      if (control === elements.montageSeconds || control === elements.montageGap) {
+        setBatchProgress("Montage settings updated", 0, "Ready");
+        return;
+      }
       clearProcessedPreview("Processing settings changed. Apply processing preview again to audition them.");
     });
   });
@@ -1604,6 +1981,7 @@ function bindEvents() {
   window.addEventListener("resize", drawWaveform);
 }
 
+state.mp3MimeType = getSupportedMp3MimeType();
 bindEvents();
 updateUi();
 
@@ -1611,10 +1989,13 @@ if (new URLSearchParams(window.location.search).get("self_test") === "1") {
   runSelfTestFixture();
 }
 
-window.kreativSamplePrep = {
+window.waveMutator = {
   analyzeBuffer,
   processAudioBuffer,
   encodeWav,
   makeExportFileName,
+  buildPreviewMontageBuffer,
   dbToGain,
 };
+
+window.kreativSamplePrep = window.waveMutator;
