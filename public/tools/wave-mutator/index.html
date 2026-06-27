@@ -9,8 +9,8 @@
       content="Wave Mutator is a client-side beta audio sample cleanup tool for sound designers, musicians, and sample-pack makers."
     />
     <meta name="theme-color" content="#121622" />
-    <link rel="stylesheet" href="./styles.css?v=5" />
-    <script src="./app.js?v=5" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=6" />
+    <script src="./app.js?v=6" defer></script>
     <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body>
@@ -215,18 +215,6 @@
               <dt>Clipping</dt>
               <dd id="meta-clipping">-</dd>
             </div>
-            <div>
-              <dt>RMS</dt>
-              <dd id="meta-rms">-</dd>
-            </div>
-            <div>
-              <dt>DC offset</dt>
-              <dd id="meta-dc-offset">-</dd>
-            </div>
-            <div>
-              <dt>Stereo balance</dt>
-              <dd id="meta-stereo-balance">-</dd>
-            </div>
           </dl>
         </section>
       </section>
@@ -324,7 +312,10 @@
           </div>
 
           <div class="action-row">
-            <button id="apply-button" class="primary-action" type="button" disabled>Apply processing preview</button>
+            <button id="apply-button" class="primary-action" type="button" disabled>
+              <span class="button-spinner" aria-hidden="true"></span>
+              <span class="button-label">Apply processing preview</span>
+            </button>
             <button id="reset-preview-button" type="button" disabled>Show original</button>
           </div>
         </section>
@@ -341,28 +332,56 @@
             <p class="empty-state">Load a WAV file to see clipping and processing notes.</p>
           </div>
 
-          <dl class="process-report" aria-label="Processing report">
-            <div>
-              <dt>Trimmed</dt>
-              <dd id="report-trimmed">-</dd>
-            </div>
-            <div>
-              <dt>Fade</dt>
-              <dd id="report-fade">-</dd>
-            </div>
-            <div>
-              <dt>Normalize gain</dt>
-              <dd id="report-normalize">-</dd>
-            </div>
-            <div>
-              <dt>Manual trim</dt>
-              <dd id="report-manual-trim">-</dd>
-            </div>
-            <div>
-              <dt>Output peak</dt>
-              <dd id="report-output-peak">-</dd>
-            </div>
-          </dl>
+          <details class="advanced-analysis">
+            <summary>
+              <span>Advanced analysis</span>
+              <small>Technical readouts and cleanup report</small>
+            </summary>
+            <dl class="process-report advanced-metrics" aria-label="Advanced audio analysis">
+              <div>
+                <dt>RMS</dt>
+                <dd id="meta-rms">-</dd>
+              </div>
+              <div>
+                <dt>DC offset</dt>
+                <dd id="meta-dc-offset">-</dd>
+              </div>
+              <div>
+                <dt>Stereo balance</dt>
+                <dd id="meta-stereo-balance">-</dd>
+              </div>
+              <div>
+                <dt>Leading silence</dt>
+                <dd id="meta-leading-silence">-</dd>
+              </div>
+              <div>
+                <dt>Trailing silence</dt>
+                <dd id="meta-trailing-silence">-</dd>
+              </div>
+            </dl>
+            <dl class="process-report" aria-label="Processing report">
+              <div>
+                <dt>Trimmed</dt>
+                <dd id="report-trimmed">-</dd>
+              </div>
+              <div>
+                <dt>Fade</dt>
+                <dd id="report-fade">-</dd>
+              </div>
+              <div>
+                <dt>Normalize gain</dt>
+                <dd id="report-normalize">-</dd>
+              </div>
+              <div>
+                <dt>Manual trim</dt>
+                <dd id="report-manual-trim">-</dd>
+              </div>
+              <div>
+                <dt>Output peak</dt>
+                <dd id="report-output-peak">-</dd>
+              </div>
+            </dl>
+          </details>
         </section>
 
         <section class="panel export-panel" aria-labelledby="export-title">
@@ -431,9 +450,30 @@
               </div>
             </div>
             <div class="export-action-row">
-              <button id="export-button" class="export-button" type="button" disabled>Export selected WAV</button>
-              <button id="export-zip-button" type="button" disabled>Export all as ZIP</button>
-              <button id="export-mp3-button" type="button" disabled>Export MP3 montage</button>
+              <button id="export-button" class="export-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Export selected WAV</span>
+              </button>
+              <button id="export-zip-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Export all as ZIP</span>
+              </button>
+              <button id="export-mp3-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Export MP3 montage</span>
+              </button>
+            </div>
+            <div class="cleaned-output-section" aria-labelledby="cleaned-output-title">
+              <div class="mini-head">
+                <div>
+                  <p class="section-kicker">Outputs</p>
+                  <h3 id="cleaned-output-title">Cleaned output cards</h3>
+                </div>
+                <span id="cleaned-output-count">0 ready</span>
+              </div>
+              <div id="cleaned-output-grid" class="cleaned-output-grid" aria-live="polite">
+                <p class="empty-state">Apply a preview or export files to see cleaned output cards.</p>
+              </div>
             </div>
           </div>
         </section>
