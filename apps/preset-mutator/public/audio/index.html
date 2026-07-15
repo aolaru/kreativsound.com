@@ -51,15 +51,37 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="../styles.css" />
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRTJS1KZD9"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag("js", new Date());
-      gtag("config", "G-QRTJS1KZD9");
-      gtag("config", "G-9YK1PNRV0N");
+      (() => {
+        const loadAnalytics = () => {
+          if (window.__kreativAnalyticsLoaded) return;
+          window.__kreativAnalyticsLoaded = true;
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = window.gtag || function gtag(){ dataLayer.push(arguments); };
+          const google = document.createElement("script");
+          google.async = true;
+          google.src = "https://www.googletagmanager.com/gtag/js?id=G-QRTJS1KZD9";
+          document.head.appendChild(google);
+          window.gtag("js", new Date());
+          window.gtag("config", "G-QRTJS1KZD9");
+          window.gtag("config", "G-9YK1PNRV0N");
+          const cf = document.createElement("script");
+          cf.defer = true;
+          cf.src = "https://static.cloudflareinsights.com/beacon.min.js";
+          cf.dataset.cfBeacon = '{"token":"4d2ef2573cb8456282aa65a1d9defd9d"}';
+          document.head.appendChild(cf);
+        };
+        const schedule = () => {
+          if ("requestIdleCallback" in window) {
+            window.requestIdleCallback(loadAnalytics, { timeout: 2500 });
+          } else {
+            window.setTimeout(loadAnalytics, 1400);
+          }
+        };
+        if (document.readyState === "complete") schedule();
+        else window.addEventListener("load", schedule, { once: true });
+      })();
     </script>
-    <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body>
     <main class="shell">
@@ -331,7 +353,7 @@
         <div class="paid-feature-copy">
           <p class="paid-feature-kicker">Preset Mutator Pro</p>
           <h2 id="paid-feature-title">Unlock more variations and faster export</h2>
-          <p class="paid-feature-price">Launch price: 19 EUR</p>
+          <p class="paid-feature-price">Launch price: $19</p>
           <p class="paid-feature-ownership">Pay once. Unlock Pro on this browser with your license token.</p>
           <div class="paid-benefit-grid" aria-label="Preset Mutator Pro benefits">
             <div>
@@ -402,7 +424,6 @@
       </footer>
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
     <script src="./app.js" type="module"></script>
     <script>
       const themeToggle = document.getElementById("theme-toggle");

@@ -1,5 +1,5 @@
 import { PresetMutatorKnob } from "./preset-mutator-knob.js";
-import { familyLabel, noteName, sanitizeFileName } from "./engine/common.js";
+import { ensureJsZip, familyLabel, noteName, sanitizeFileName } from "./engine/common.js";
 import {
   buildScratchFreePack,
   buildScratchProfile,
@@ -310,13 +310,14 @@ async function previewPreset(preset) {
 }
 
 async function downloadPack() {
-  if (state.presets.length !== PRO_PACK_COUNT || state.lastGenerationMode !== "pro" || !window.JSZip) {
+  if (state.presets.length !== PRO_PACK_COUNT || state.lastGenerationMode !== "pro") {
     return;
   }
 
   try {
     updateStatus("Preparing the 32-pack ZIP...");
-    const zip = new window.JSZip();
+    const JSZip = await ensureJsZip();
+    const zip = new JSZip();
     const folderName = sanitizeFileName(elements.intentText.value.trim() || `scratch-${elements.familySelect.value}-${elements.moodSelect.value}`);
     const folder = zip.folder(folderName);
     for (const preset of state.presets) {

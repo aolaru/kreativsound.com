@@ -1,5 +1,5 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { slugifyFilename } from "../engine/common.js";
+import { ensureJsZip, slugifyFilename } from "../engine/common.js";
 import {
   buildPresetMutateStrategy,
   generatePresetVariants as createPresetVariants,
@@ -356,30 +356,37 @@ async function previewVariant(variant) {
 }
 
 async function downloadVariantPack() {
-  if (!state.generatedVariants.length || !window.JSZip) {
+  if (!state.generatedVariants.length) {
     return;
   }
 
-  const zip = new window.JSZip();
-  for (const variant of state.generatedVariants) {
-    zip.file(variant.downloadName, JSON.stringify(variant.data, null, 2));
-  }
+  try {
+    elements.status.textContent = "Preparing the 32-pack ZIP...";
+    const JSZip = await ensureJsZip();
+    const zip = new JSZip();
+    for (const variant of state.generatedVariants) {
+      zip.file(variant.downloadName, JSON.stringify(variant.data, null, 2));
+    }
 
-  const blob = await zip.generateAsync({ type: "blob" });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  const sourceName = state.sourcePreset?.summary?.name || "Preset Mutator Pack";
-  anchor.href = url;
-  anchor.download = `${slugifyFilename(sourceName)} - 32 Preset Pack.zip`;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
-  analyticsEvent("download_pack", {
-    generation_mode: "pro",
-    preset_count: state.generatedVariants.length,
-    ...currentAnalyticsSelection(),
-  });
+    const blob = await zip.generateAsync({ type: "blob" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    const sourceName = state.sourcePreset?.summary?.name || "Preset Mutator Pack";
+    anchor.href = url;
+    anchor.download = `${slugifyFilename(sourceName)} - 32 Preset Pack.zip`;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+    elements.status.textContent = "32-pack ZIP ready.";
+    analyticsEvent("download_pack", {
+      generation_mode: "pro",
+      preset_count: state.generatedVariants.length,
+      ...currentAnalyticsSelection(),
+    });
+  } catch (error) {
+    elements.status.textContent = error.message || "Could not build the 32-pack ZIP.";
+  }
 }
 
 function renderVariants() {

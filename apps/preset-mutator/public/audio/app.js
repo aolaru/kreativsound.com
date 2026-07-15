@@ -1,5 +1,5 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { clamp, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
+import { clamp, ensureJsZip, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
 import { AUDIO_PRO_PACK_COUNT, buildAudioFreePack, buildAudioProfile as createAudioProfile, buildAudioProPack } from "../engine/audio-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "../engine/vital-export.js";
 import { playPresetPreview } from "../engine/audio-preview.js";
@@ -900,14 +900,10 @@ async function downloadPresetPack() {
     return;
   }
 
-  if (!window.JSZip) {
-    updateStatus("ZIP export is not available right now.");
-    return;
-  }
-
   try {
     updateStatus("Preparing the 32-pack ZIP...");
-    const zip = new window.JSZip();
+    const JSZip = await ensureJsZip();
+    const zip = new JSZip();
     const folderName = sanitizeFileName(state.sourceName || "preset-mutator-pack");
     const folder = zip.folder(folderName);
 

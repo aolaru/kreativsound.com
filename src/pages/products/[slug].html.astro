@@ -17,13 +17,16 @@ const canonical = `https://kreativsound.com${target}`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Redirecting to {title} | Kreativ Sound</title>
+    <meta name="description" content={`The old product page for ${title} has moved to its canonical Kreativ Sound product page.`} />
     <meta name="robots" content="noindex,follow" />
     <meta http-equiv="refresh" content={`0; url=${target}`} />
     <link rel="canonical" href={canonical} />
-    <!-- Cloudflare Web Analytics --><script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script><!-- End Cloudflare Web Analytics -->
     <script is:inline set:html={`window.location.replace(${JSON.stringify(target)});`} />
   </head>
   <body>
-    <p>Redirecting to <a href={target}>{target}</a>.</p>
+    <main>
+      <h1>Product page moved</h1>
+      <p>Redirecting to <a href={target}>{title}</a>.</p>
+    </main>
   </body>
 </html>
