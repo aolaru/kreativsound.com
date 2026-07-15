@@ -9,7 +9,7 @@ Core idea: drop in messy WAV files and export cleaner, product-ready samples wit
 Open `index.html` directly in a modern browser, or serve the folder with a tiny local server:
 
 ```sh
-cd public/tools/wave-mutator
+cd apps/wave-mutator/public
 python3 -m http.server 8080
 ```
 
@@ -26,6 +26,8 @@ https://kreativsound.com/tools/wave-mutator/
 ```
 
 The previous `/tools/kreativ-sample-prep/` path redirects to the new Wave Mutator URL.
+
+The root `predev` and `prebuild` scripts copy this source folder into `public/tools/wave-mutator/`. Treat that public copy as generated output.
 
 ## Current Beta Features
 

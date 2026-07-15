@@ -8,7 +8,7 @@ const rootDir = path.dirname(fileURLToPath(import.meta.url));
 function presetMutatorDevRoutes() {
   const appHtmlRoutes = new Map([
     ["/preset-mutator/", "index.html"],
-    ["/preset-mutator/scratch/", "scratch/index.html"],
+    ["/preset-mutator/scratch/", "index.html"],
     ["/preset-mutator/mutate/", "mutate/index.html"],
     ["/preset-mutator/audio/", "audio/index.html"]
   ]);
@@ -46,7 +46,7 @@ function presetMutatorDevRoutes() {
           }
 
           if (pathname === "/tools/wave-mutator" || pathname === "/tools/wave-mutator/") {
-            fs.readFile(path.join(rootDir, "public/tools/wave-mutator/index.html"), "utf8", (error, html) => {
+            fs.readFile(path.join(rootDir, "apps/wave-mutator/public/index.html"), "utf8", (error, html) => {
               if (error) {
                 next(error);
                 return;

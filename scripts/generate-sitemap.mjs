@@ -57,7 +57,7 @@ function routeFromFile(filePath) {
   }
   if (relative.endsWith("/index.html")) {
     const route = `/${relative.replace(/\/index\.html$/, "/")}`;
-    if (route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) {
+    if (route === "/preset-mutator/scratch/") {
       return null;
     }
     if (route === "/tools/kreativ-sample-prep/") {
@@ -91,10 +91,36 @@ function sourcePathsForRoute(route) {
   if (route.startsWith("/sounds/")) {
     return ["src/lib/products.ts", "src/lib/product-pages.ts", "src/lib/product-content.ts"];
   }
+  if (route === "/preset-mutator/") {
+    return ["apps/preset-mutator/public/index.html"];
+  }
+  if (route === "/preset-mutator/audio/") {
+    return ["apps/preset-mutator/public/audio/index.html"];
+  }
+  if (route === "/preset-mutator/mutate/") {
+    return ["apps/preset-mutator/public/mutate/index.html"];
+  }
+  if (route === "/tools/wave-mutator/") {
+    return ["apps/wave-mutator/public/index.html"];
+  }
   if (route.endsWith("/")) {
     return [`src/pages/${route.slice(1)}index.astro`];
   }
   return [route.slice(1)];
+}
+
+function shouldIndexRoute(route) {
+  if (route.startsWith("/posts/") && route.endsWith(".html")) {
+    const slug = route.slice("/posts/".length, -".html".length);
+    const sourcePath = path.join(rootDir, "src/content/posts", `${slug}.md`);
+    if (fs.existsSync(sourcePath)) {
+      const source = fs.readFileSync(sourcePath, "utf8");
+      if (/^draft:\s*true\s*$/m.test(source)) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 function lastmodForRoute(route) {
@@ -120,6 +146,7 @@ function lastmodForRoute(route) {
 function priorityForRoute(route) {
   if (route === "/") return "1.0";
   if (route === "/sounds/") return "0.9";
+  if (route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) return "0.8";
   if (route === "/news/" || route === "/learn/" || route === "/tools/") return "0.8";
   if (route.startsWith("/tools/")) return "0.8";
   if (route.startsWith("/sounds/")) return "0.8";
@@ -128,14 +155,14 @@ function priorityForRoute(route) {
 }
 
 function changefreqForRoute(route) {
-  if (route === "/" || route === "/sounds/" || route === "/news/" || route === "/learn/" || route === "/tools/" || route.startsWith("/tools/")) {
+  if (route === "/" || route === "/sounds/" || route === "/news/" || route === "/learn/" || route === "/tools/" || route.startsWith("/tools/") || route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) {
     return "weekly";
   }
   return "monthly";
 }
 
 function sortRoutes(a, b) {
-  const order = ["/", "/sounds/", "/news/", "/learn/", "/tools/", "/music/", "/about/", "/contact/"];
+  const order = ["/", "/sounds/", "/news/", "/learn/", "/tools/", "/preset-mutator/", "/preset-mutator/audio/", "/preset-mutator/mutate/", "/music/", "/about/", "/contact/"];
   const aIndex = order.indexOf(a);
   const bIndex = order.indexOf(b);
   if (aIndex !== -1 || bIndex !== -1) {
@@ -145,7 +172,7 @@ function sortRoutes(a, b) {
 }
 
 function buildSitemap() {
-  const routes = [...new Set(walkHtmlFiles(distDir).map(routeFromFile).filter(Boolean))].sort(sortRoutes);
+  const routes = [...new Set(walkHtmlFiles(distDir).map(routeFromFile).filter(Boolean).filter(shouldIndexRoute))].sort(sortRoutes);
   const entries = routes.map((route) => {
     const loc = `${siteUrl}${route}`;
     return [

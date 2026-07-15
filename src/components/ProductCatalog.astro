@@ -19,8 +19,9 @@ function ctaText(category: string) {
   return "Get Pack";
 }
 
-function unavailableText(product: { badge?: string; category: string }) {
-  if (product.badge?.toLowerCase().includes("coming")) return "Coming soon";
+function unavailableText(product: { status?: string; badge?: string; category: string }) {
+  if (product.status === "comingSoon" || product.badge?.toLowerCase().includes("coming")) return "Coming soon";
+  if (product.status === "archive") return "Archive only";
   if (product.category === "Bundle") return "Coming soon";
   return "Archive only";
 }

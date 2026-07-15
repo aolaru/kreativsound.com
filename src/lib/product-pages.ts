@@ -85,8 +85,6 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
     primaryLabel: "Buy on Gumroad",
     purchaseAltUrl: "https://www.paypal.com/ncp/payment/RUGQ6S3NW7HE4",
     purchaseAltLabel: "Pay with PayPal",
-    secondaryUrl: "/preset-mutator/",
-    secondaryLabel: "Open Preset Mutator",
     variant: "flagship"
   },
   "operators-fm8-presets": {
@@ -206,7 +204,7 @@ function productVariant(slug: string, category: ProductCategory): ProductPage["v
 
 function defaultDescription(product: Product, name: string) {
   const categoryLabel = product.category === "Tools" ? "browser tool" : product.category.toLowerCase();
-  return `${name} is a Kreativ Sound ${categoryLabel} built for ${product.useCase.toLowerCase()}.`;
+  return `${name} is a Kreativ Sound ${categoryLabel} for ${product.useCase.toLowerCase()}, with format notes, requirements, and download or checkout details in one place.`;
 }
 
 function defaultSubtitle(product: Product) {
@@ -284,8 +282,9 @@ function defaultLongDescription(product: Product, name: string, description: str
 
 function primaryLabel(product: Product) {
   if (!product.url) return undefined;
-  if (product.category === "Free") return "Download Free";
-  if (product.category === "Legacy") return "Open Archive";
+  if (product.status === "free") return "Download Free";
+  if (product.status === "archive") return "Open Archive";
+  if (product.category === "Tools") return "Buy on Gumroad";
   return "Buy on Gumroad";
 }
 
@@ -360,8 +359,8 @@ export const productPages: ProductPage[] = products
       primaryLabel: override.primaryLabel || primaryLabel(product),
       purchaseAltUrl: override.purchaseAltUrl,
       purchaseAltLabel: override.purchaseAltLabel,
-      secondaryUrl: override.secondaryUrl,
-      secondaryLabel: override.secondaryLabel,
+      secondaryUrl: override.secondaryUrl || product.appUrl,
+      secondaryLabel: override.secondaryLabel || (product.appUrl ? "Open Preset Mutator" : undefined),
       shortMeta: copy?.shortMeta || defaultShortMeta(product),
       price: product.price,
       priceAmount: product.priceAmount,

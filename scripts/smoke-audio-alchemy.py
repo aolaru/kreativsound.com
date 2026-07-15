@@ -96,7 +96,8 @@ def main() -> int:
         mutate_dom = dump_dom(chrome, base_url + "/preset-mutator/mutate/")
         for needle in [
             "Preset Mutator",
-            "Mutate one Vital preset into new variants",
+            "Mutate one Vital preset",
+            "into new variants",
             "Scratch",
             "Preset",
             "Audio",

@@ -16,6 +16,14 @@ function publicAssetExists(url) {
   return fs.existsSync(path.join(publicDir, url.replace(/^\/+/, "")));
 }
 
+function srcSetUrls(srcset) {
+  if (!srcset) return [];
+  return String(srcset)
+    .split(",")
+    .map((entry) => entry.trim().split(/\s+/)[0])
+    .filter(Boolean);
+}
+
 function hasText(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
@@ -36,9 +44,15 @@ const productSlugs = products.map((product) => slugFromDetailsUrl(product.detail
 const productSlugSet = new Set(productSlugs);
 const landingCopySlugSet = new Set(Object.keys(landingCopyOverrides));
 const paidSoundCategories = new Set(["Presets", "Samples"]);
+const allowedStatuses = new Set(["available", "comingSoon", "free", "archive"]);
 
 assertUnique(products.map((product) => product.detailsUrl).filter(Boolean), "product detailsUrl", errors);
 assertUnique(productSlugs, "product slug", errors);
+assertUnique(products.map((product) => product.featuredRank).filter(Boolean), "homepage feature rank", errors);
+
+if (!products.some((product) => product.featuredRank === 1)) {
+  errors.push("Missing homepage featuredRank: 1 product.");
+}
 
 for (const slug of productSlugs) {
   if (!landingCopySlugSet.has(slug)) {
@@ -55,14 +69,26 @@ for (const slug of landingCopySlugSet) {
 for (const product of products) {
   if (!hasText(product.title)) errors.push("Product is missing title.");
   if (!hasText(product.category)) errors.push(`${product.title}: missing category.`);
+  if (!allowedStatuses.has(product.status)) errors.push(`${product.title}: missing or invalid status.`);
   if (!hasText(product.format)) errors.push(`${product.title}: missing format.`);
   if (!hasText(product.count)) errors.push(`${product.title}: missing count.`);
   if (!hasText(product.useCase)) errors.push(`${product.title}: missing useCase.`);
+  if (product.featuredRank && (!Number.isInteger(product.featuredRank) || product.featuredRank < 1)) {
+    errors.push(`${product.title}: featuredRank must be a positive integer.`);
+  }
   if (product.thumbnail && !publicAssetExists(product.thumbnail)) {
     errors.push(`${product.title}: missing thumbnail asset ${product.thumbnail}`);
   }
   if (product.coverImage && !publicAssetExists(product.coverImage)) {
     errors.push(`${product.title}: missing cover image asset ${product.coverImage}`);
+  }
+  if (product.homeImage && !publicAssetExists(product.homeImage)) {
+    errors.push(`${product.title}: missing homepage image asset ${product.homeImage}`);
+  }
+  for (const srcsetUrl of srcSetUrls(product.homeImageSrcSet)) {
+    if (!publicAssetExists(srcsetUrl)) {
+      errors.push(`${product.title}: missing homepage srcset asset ${srcsetUrl}`);
+    }
   }
   if (product.demo?.src && !publicAssetExists(product.demo.src)) {
     errors.push(`${product.title}: missing demo asset ${product.demo.src}`);

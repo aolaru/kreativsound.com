@@ -4,10 +4,44 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preset Mutator | From Scratch</title>
+    <meta name="description" content="Preset Mutator creates Vital preset starts from scratch intent controls, runs locally in the browser, and exports free or Pro preset variants." />
     <meta name="theme-color" content="#f8e9e9" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Preset Mutator" />
-    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://kreativsound.com/preset-mutator/" />
+    <meta property="og:site_name" content="Kreativ Sound" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Preset Mutator | From Scratch" />
+    <meta property="og:description" content="Create Vital preset starts from scratch ideas in a local-first browser tool." />
+    <meta property="og:url" content="https://kreativsound.com/preset-mutator/" />
+    <meta property="og:image" content="https://kreativsound.com/preset-mutator/preset-mutator-mark.svg" />
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:title" content="Preset Mutator | From Scratch" />
+    <meta property="twitter:description" content="Create Vital preset starts from scratch ideas in a local-first browser tool." />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Preset Mutator",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web browser",
+        "url": "https://kreativsound.com/preset-mutator/",
+        "image": "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg",
+        "description": "Preset Mutator creates Vital preset starts from scratch ideas, existing presets, or short audio sources. Free mode creates three variants; Pro unlocks 32-preset batches and ZIP export.",
+        "offers": {
+          "@type": "Offer",
+          "url": "https://kreativ.gumroad.com/l/preset-mutator",
+          "price": "19",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        },
+        "creator": {
+          "@type": "Person",
+          "name": "Andrei Olaru"
+        }
+      }
+    </script>
     <script>
       (() => {
         const storedTheme = localStorage.getItem("theme");
@@ -15,15 +49,15 @@
         document.documentElement.setAttribute("data-theme", theme);
       })();
     </script>
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="icon" type="image/svg+xml" href="./preset-mutator-mark.svg" />
-    <link rel="apple-touch-icon" href="./preset-mutator-mark.svg" />
+    <link rel="manifest" href="/preset-mutator/manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/preset-mutator/preset-mutator-mark.svg" />
+    <link rel="apple-touch-icon" href="/preset-mutator/preset-mutator-mark.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <link rel="stylesheet" href="./styles.css" />
-    <link rel="stylesheet" href="./scratch/styles.css" />
+    <link rel="stylesheet" href="/preset-mutator/styles.css" />
+    <link rel="stylesheet" href="/preset-mutator/scratch/styles.css" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRTJS1KZD9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -41,8 +75,8 @@
         <div class="nav-group nav-group-main">
           <a class="nav-link" href="https://kreativsound.com/" target="_blank" rel="noopener noreferrer">Back to Kreativ Sound</a>
         </div>
-        <a class="nav-brand nav-brand-wordmark" href="./index.html" aria-label="Preset Mutator From Scratch">
-          <img class="nav-brand-mark-image" src="./preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
+        <a class="nav-brand nav-brand-wordmark" href="/preset-mutator/" aria-label="Preset Mutator From Scratch">
+          <img class="nav-brand-mark-image" src="/preset-mutator/preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator</strong>
           </span>
@@ -68,14 +102,14 @@
               <small>Start from intent</small>
             </span>
           </button>
-          <a class="mode-tab" href="./mutate/index.html">
+          <a class="mode-tab" href="/preset-mutator/mutate/">
             <i class="fa-solid fa-sliders" aria-hidden="true"></i>
             <span class="mode-copy">
               <strong>Preset</strong>
               <small>Mutate one .vital file</small>
             </span>
           </a>
-          <a class="mode-tab" href="./audio/index.html">
+          <a class="mode-tab" href="/preset-mutator/audio/">
             <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
             <span class="mode-copy">
               <strong>Audio</strong>
@@ -298,7 +332,7 @@
       </footer>
     </main>
 
-    <script src="./app.js" type="module"></script>
+    <script src="/preset-mutator/app.js" type="module"></script>
     <script>
       const themeToggle = document.getElementById("theme-toggle");
       const themeColorMeta = document.querySelector('meta[name="theme-color"]');

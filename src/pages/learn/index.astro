@@ -9,7 +9,7 @@ const featuredPost = learnPosts.find((post) => post.data.featured) || learnPosts
 const latestPosts = learnPosts.filter((post) => post.id !== featuredPost.id).slice(0, 6);
 
 function hrefFor(post) {
-  return `/posts/${post.id.replace(/\.md$/, ".html")}`;
+  return `/posts/${post.id.replace(/\.md$/, "")}.html`;
 }
 
 function formatDate(date) {
@@ -18,7 +18,7 @@ function formatDate(date) {
 ---
 <BaseLayout
   title="Learn | Kreativ Sound"
-  description="Practical sound design articles and product notes from Kreativ Sound."
+  description="Practical Kreativ Sound guides for using presets, sample packs, texture layers, and browser tools in darker production work."
   canonical="https://kreativsound.com/learn/"
   activeNav="learn"
   ogImage="https://kreativsound.com/assets/thumbs/bioforms.jpg"

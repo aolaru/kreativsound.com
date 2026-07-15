@@ -14,6 +14,16 @@ PRODUCTS_TS = ROOT / "src/lib/products.ts"
 def route_to_path(route: str) -> Path:
     if route.startswith(("/products/", "/sounds/")):
         return ROOT / "src/lib/product-pages.ts"
+    if route == "/preset-mutator/":
+        return ROOT / "apps/preset-mutator/public/index.html"
+    if route == "/preset-mutator/scratch/":
+        return ROOT / "apps/preset-mutator/public/index.html"
+    if route == "/preset-mutator/mutate/":
+        return ROOT / "apps/preset-mutator/public/mutate/index.html"
+    if route == "/preset-mutator/audio/":
+        return ROOT / "apps/preset-mutator/public/audio/index.html"
+    if route == "/tools/wave-mutator/":
+        return ROOT / "apps/wave-mutator/public/index.html"
     if route == "/":
         return ROOT / "src/pages/index.astro"
     public_target = PUBLIC / route.lstrip("/")
@@ -33,12 +43,21 @@ def main() -> int:
     text = PRODUCTS_TS.read_text()
     errors: list[str] = []
 
-    for thumb in re.findall(r'(?:thumbnail|coverImage):\s*"([^"]+)"', text):
+    for thumb in re.findall(r'(?:thumbnail|coverImage|homeImage):\s*"([^"]+)"', text):
         path = public_asset_path(thumb)
         if thumb.startswith(("http://", "https://")):
             continue
         if not path.exists():
             errors.append(f"Missing thumbnail: {thumb}")
+
+    for srcset in re.findall(r'homeImageSrcSet:\s*"([^"]+)"', text):
+        for entry in srcset.split(","):
+            url = entry.strip().split()[0]
+            if not url or url.startswith(("http://", "https://")):
+                continue
+            path = public_asset_path(url)
+            if not path.exists():
+                errors.append(f"Missing homepage srcset asset: {url}")
 
     for demo in re.findall(r'src:\s*"([^"]+)"', text):
         if demo.startswith(("http://", "https://")):
@@ -60,6 +79,13 @@ def main() -> int:
         path = route_to_path(extra)
         if not path.exists():
             errors.append(f"Missing extra action asset: {extra}")
+
+    for app in re.findall(r'appUrl:\s*"([^"]+)"', text):
+        if app.startswith(("http://", "https://")):
+            continue
+        path = route_to_path(app)
+        if not path.exists():
+            errors.append(f"Missing app URL target: {app}")
 
     for url in re.findall(r'url:\s*"([^"]+)"', text):
         if url.startswith(("http://", "https://")):

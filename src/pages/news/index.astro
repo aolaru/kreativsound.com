@@ -13,7 +13,7 @@ const moreReleases = releasePosts.slice(1);
 const latestSitePost = sitePosts[0];
 
 function hrefFor(post) {
-  return `/posts/${post.id.replace(/\.md$/, ".html")}`;
+  return `/posts/${post.id.replace(/\.md$/, "")}.html`;
 }
 
 function formatDate(date) {
@@ -26,7 +26,7 @@ function imageFor(post) {
 ---
 <BaseLayout
   title="News | Kreativ Sound"
-  description="Latest sound releases and important updates from Kreativ Sound."
+  description="Release news, tool notes, catalog updates, and public workflow changes from Kreativ Sound."
   canonical="https://kreativsound.com/news/"
   activeNav="news"
   ogImage={leadRelease?.data.ogImage || "https://kreativsound.com/assets/thumbs/velvet-ruins.jpg"}

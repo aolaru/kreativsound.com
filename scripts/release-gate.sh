@@ -1,31 +1,40 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[1/9] Building site..."
+echo "[1/12] Building site..."
 PUBLIC_DISABLE_ANALYTICS=true npm run build
 
-echo "[2/9] Checking sitemap freshness..."
+echo "[2/12] Checking sitemap freshness..."
 npm run sitemap:check
 
-echo "[3/9] Checking product data..."
+echo "[3/12] Checking product data..."
 npm run check:products
 
-echo "[4/9] Checking product assets..."
+echo "[4/12] Checking product assets..."
 python3 scripts/check-product-assets.py
 
-echo "[5/9] Checking thumbnail quality..."
+echo "[5/12] Checking thumbnail quality..."
 bash scripts/check-thumbnails.sh
 
-echo "[6/9] Checking internal links..."
+echo "[6/12] Checking Wave Mutator..."
+npm run check:wave-mutator
+
+echo "[7/12] Checking search index..."
+npm run check:search
+
+echo "[8/12] Checking internal links..."
 npm run check:links
 
-echo "[7/9] Running rendered smoke checks..."
+echo "[9/12] Running rendered smoke checks..."
 python3 scripts/smoke-site.py
 
-echo "[8/9] Running Lighthouse..."
+echo "[10/12] Running Preset Mutator smoke checks..."
+npm run smoke:preset-mutator
+
+echo "[11/12] Running Lighthouse..."
 bash scripts/lighthouse-check.sh
 
-echo "[9/9] Verifying Lighthouse thresholds..."
+echo "[12/12] Verifying Lighthouse thresholds..."
 python3 scripts/check-lighthouse-thresholds.py
 
 echo "Release gate passed."

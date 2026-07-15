@@ -20,6 +20,36 @@ const {
 } = Astro.props;
 
 const analyticsEnabled = import.meta.env.PUBLIC_DISABLE_ANALYTICS !== "true";
+const analyticsSnippet = `
+  (() => {
+    const load = () => {
+      if (window.__kreativAnalyticsLoaded) return;
+      window.__kreativAnalyticsLoaded = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function gtag(){ dataLayer.push(arguments); };
+      const google = document.createElement("script");
+      google.async = true;
+      google.src = "https://www.googletagmanager.com/gtag/js?id=G-QRTJS1KZD9";
+      document.head.appendChild(google);
+      window.gtag("js", new Date());
+      window.gtag("config", "G-QRTJS1KZD9");
+      const cf = document.createElement("script");
+      cf.defer = true;
+      cf.src = "https://static.cloudflareinsights.com/beacon.min.js";
+      cf.dataset.cfBeacon = '{"token":"4d2ef2573cb8456282aa65a1d9defd9d"}';
+      document.head.appendChild(cf);
+    };
+    const schedule = () => {
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(load, { timeout: 2500 });
+      } else {
+        window.setTimeout(load, 1400);
+      }
+    };
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
+  })();
+`;
 ---
 <!doctype html>
 <html lang="en" data-theme="light">
@@ -56,18 +86,7 @@ const analyticsEnabled = import.meta.env.PUBLIC_DISABLE_ANALYTICS !== "true";
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    {analyticsEnabled ? (
-      <>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QRTJS1KZD9"></script>
-        <script is:inline>
-          window.dataLayer = window.dataLayer || [];
-          function gtag() { dataLayer.push(arguments); }
-          gtag("js", new Date());
-          gtag("config", "G-QRTJS1KZD9");
-        </script>
-        <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "4d2ef2573cb8456282aa65a1d9defd9d"}'></script>
-      </>
-    ) : null}
+    {analyticsEnabled ? <script is:inline set:html={analyticsSnippet}></script> : null}
     <slot name="head" />
   </head>
   <body class={bodyClass}>

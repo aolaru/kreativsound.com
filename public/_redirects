@@ -1,1 +1,7 @@
+/sound /sounds/ 301!
+/sound/ /sounds/ 301!
 /sounds/:slug/ /sounds/:slug 301!
+/products/:slug /sounds/:slug 301!
+/products/:slug/ /sounds/:slug 301!
+/tools/kreativ-sample-prep /tools/wave-mutator/ 301!
+/tools/kreativ-sample-prep/ /tools/wave-mutator/ 301!

@@ -1,4 +1,5 @@
 export type ProductCategory = "Bundle" | "Tools" | "Presets" | "Samples" | "Free" | "Legacy";
+export type ProductStatus = "available" | "comingSoon" | "free" | "archive";
 
 export type ProductDemo = {
   label: string;
@@ -14,12 +15,17 @@ export type ProductAction = {
 export type Product = {
   title: string;
   category: ProductCategory;
+  status: ProductStatus;
+  featuredRank?: number;
   url?: string;
   detailsUrl?: string;
+  appUrl?: string;
   badge?: string;
   extraAction?: ProductAction;
   thumbnail?: string;
   coverImage?: string;
+  homeImage?: string;
+  homeImageSrcSet?: string;
   format: string;
   count: string;
   useCase: string;
@@ -39,10 +45,14 @@ export const products: Product[] = [
   {
     title: "Kreativ Kollection V1",
     category: "Bundle",
+    status: "comingSoon",
+    featuredRank: 3,
     detailsUrl: "/sounds/kreativ-kollection-v1",
     badge: "Coming soon",
     thumbnail: "/assets/thumbs/kreativ-kollection-v1.webp",
     coverImage: "/assets/thumbs/kreativ-kollection-v1.webp",
+    homeImage: "/assets/home/kreativ-kollection-v1-720.webp",
+    homeImageSrcSet: "/assets/home/kreativ-kollection-v1-480.webp 480w, /assets/home/kreativ-kollection-v1-720.webp 720w",
     format: "Preset and sample bundle",
     count: "V1 collection",
     useCase: "Complete Kreativ Sound preset, sample, loop, and texture collection"
@@ -50,8 +60,11 @@ export const products: Product[] = [
   {
     title: "Preset Mutator - Vital Preset Generator",
     category: "Tools",
+    status: "available",
+    featuredRank: 2,
     url: "https://kreativ.gumroad.com/l/preset-mutator",
     detailsUrl: "/sounds/preset-mutator",
+    appUrl: "/preset-mutator/",
     badge: "Tool",
     extraAction: {
       label: "Open Free",
@@ -59,13 +72,20 @@ export const products: Product[] = [
     },
     thumbnail: "/assets/thumbs/preset-mutator.webp",
     coverImage: "/assets/thumbs/preset-mutator.webp",
+    homeImage: "/assets/home/preset-mutator-720.webp",
+    homeImageSrcSet: "/assets/home/preset-mutator-480.webp 480w, /assets/home/preset-mutator-720.webp 720w",
     format: "Browser tool",
     count: "Free + Pro",
-    useCase: "Vital preset starts from scratch, preset mutation, and audio sources"
+    useCase: "Vital preset starts from scratch, preset mutation, and audio sources",
+    price: "$19",
+    priceAmount: 19,
+    priceCurrency: "USD"
   },
   {
     title: "OPERATORS - Atmos & Motion for Native Instruments FM8",
     category: "Presets",
+    status: "available",
+    featuredRank: 1,
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
     detailsUrl: "/sounds/operators-fm8-presets",
@@ -76,6 +96,8 @@ export const products: Product[] = [
     },
     thumbnail: "/assets/thumbs/operators-fm8-thumb.webp",
     coverImage: "/assets/thumbs/operators-fm8.webp",
+    homeImage: "/assets/home/operators-fm8-720.webp",
+    homeImageSrcSet: "/assets/home/operators-fm8-480.webp 480w, /assets/home/operators-fm8-720.webp 720w",
     format: "FM8 presets",
     count: "64 presets",
     useCase: "Atmospheric motion and digital FM textures"
@@ -83,6 +105,7 @@ export const products: Product[] = [
   {
     title: "BLACK ARCOLOGY - Industrial Presets for Pigments",
     category: "Presets",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/black-arcology-industrial-presets-for-pigments",
     detailsUrl: "/sounds/black-arcology-pigments-presets",
@@ -99,6 +122,7 @@ export const products: Product[] = [
   {
     title: "VELVET RUINS - Presets for Vital spectral synth",
     category: "Presets",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
     detailsUrl: "/sounds/velvet-ruins-vital-presets",
@@ -115,6 +139,7 @@ export const products: Product[] = [
   {
     title: "NEOLITH - Presets for Softube Models",
     category: "Presets",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile",
     detailsUrl: "/sounds/neolith-softube-models-presets",
@@ -127,6 +152,7 @@ export const products: Product[] = [
   {
     title: "BIOFORMS - Evolving Presets for Synplant 2",
     category: "Presets",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile",
     detailsUrl: "/sounds/bioforms-synplant-2-presets",
@@ -139,6 +165,7 @@ export const products: Product[] = [
   {
     title: "MONOLUSH - Presets for FabFilter One",
     category: "Presets",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/monolush-fabfilter-one-presets?layout=profile",
     detailsUrl: "/sounds/monolush-fabfilter-one-presets",
@@ -151,6 +178,7 @@ export const products: Product[] = [
   {
     title: "DIRTY MODEL - Presets for Moog Model D",
     category: "Presets",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/dirty-model?layout=profile",
     detailsUrl: "/sounds/dirty-model-moog-model-d-presets",
@@ -168,6 +196,7 @@ export const products: Product[] = [
   {
     title: "ZEPHYR - Presets for Moog Animoog Z",
     category: "Presets",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/zephy-animoog-z-presets?layout=profile",
     detailsUrl: "/sounds/zephyr-animoog-z-presets",
@@ -185,6 +214,7 @@ export const products: Product[] = [
   {
     title: "SFXS 2 - Creative Sound Effects Collection",
     category: "Samples",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/sfxs-sound-effects-library?layout=profile",
     detailsUrl: "/sounds/sfxs-2-sound-effects",
@@ -202,6 +232,7 @@ export const products: Product[] = [
   {
     title: "NOIZE 2 - Experimental Noise Textures and FX",
     category: "Samples",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/noize-oscillators?layout=profile",
     detailsUrl: "/sounds/noize-2-noise-textures",
@@ -219,6 +250,7 @@ export const products: Product[] = [
   {
     title: "ENIGMA 2 - Cinematic Mysterious Atmospheres",
     category: "Samples",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/enigma?layout=profile",
     detailsUrl: "/sounds/enigma-2-cinematic-atmospheres",
@@ -236,6 +268,7 @@ export const products: Product[] = [
   {
     title: "BLEEPS 2 - Experimental Percussion Sounds",
     category: "Samples",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/bleeps-sharp-percussion-drum-samples?layout=profile",
     detailsUrl: "/sounds/bleeps-2-percussion-sounds",
@@ -248,6 +281,7 @@ export const products: Product[] = [
   {
     title: "SPACE 2 - Space Inspired Atmospheres and Textures",
     category: "Samples",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/space-inspired-atmospheres-textures?layout=profile",
     detailsUrl: "/sounds/space-2-atmospheres-textures",
@@ -265,6 +299,7 @@ export const products: Product[] = [
   {
     title: "TECTONIC 2 - Dark Subs and Underground Textures",
     category: "Samples",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/tectonic-underground-textures?layout=profile",
     detailsUrl: "/sounds/tectonic-2-dark-subs-textures",
@@ -282,6 +317,7 @@ export const products: Product[] = [
   {
     title: "HORROR 2 - Cinematic Scary Texture",
     category: "Samples",
+    status: "available",
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/horror-cinematic-scary-texture?layout=profile",
     detailsUrl: "/sounds/horror-2-cinematic-textures",
@@ -299,6 +335,7 @@ export const products: Product[] = [
   {
     title: "OPERATORS Lite - Free FM8 Presets",
     category: "Free",
+    status: "free",
     url: "https://kreativ.gumroad.com/l/operators-lite-free-fm8-presets",
     detailsUrl: "/sounds/operators-lite-fm8-presets",
     badge: "New",
@@ -311,6 +348,7 @@ export const products: Product[] = [
   {
     title: "VELVET RUINS Lite - Free presets for Vital",
     category: "Free",
+    status: "free",
     url: "https://kreativ.gumroad.com/l/velvet-ruins-demo-presets-for-vital?layout=profile",
     detailsUrl: "/sounds/velvet-ruins-lite-vital-presets",
     badge: "New",
@@ -323,6 +361,7 @@ export const products: Product[] = [
   {
     title: "BLACK ARCOLOGY Lite - Free presets for Pigments",
     category: "Free",
+    status: "free",
     url: "https://kreativ.gumroad.com/l/black-arcology-lite",
     detailsUrl: "/sounds/black-arcology-lite-pigments-presets",
     badge: "New",
@@ -335,6 +374,7 @@ export const products: Product[] = [
   {
     title: "ABYSS - Free Dark Ambient Presets for PRO-53",
     category: "Legacy",
+    status: "archive",
     url: "https://kreativ.gumroad.com/l/abyss-dark-ambient-presets-for-pro-53?layout=profile",
     detailsUrl: "/sounds/abyss-pro-53-presets",
     thumbnail: "/assets/thumbs/abyss.jpg",
@@ -346,6 +386,7 @@ export const products: Product[] = [
   {
     title: "The Black Angel - ReFill",
     category: "Legacy",
+    status: "archive",
     detailsUrl: "/sounds/the-black-angel-refill",
     badge: "Archive",
     thumbnail: "/assets/thumbs/the-black-angel.jpg",
@@ -357,6 +398,7 @@ export const products: Product[] = [
   {
     title: "DAFT Plasticz Presets",
     category: "Legacy",
+    status: "archive",
     url: "https://kreativ.gumroad.com/l/daft-free-plasticz-presets?layout=profile",
     detailsUrl: "/sounds/daft-plasticz-presets",
     thumbnail: "/assets/thumbs/daft-plasticz.jpg",

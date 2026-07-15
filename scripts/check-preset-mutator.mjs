@@ -1,4 +1,4 @@
-import { readdir, readFile } from "node:fs/promises";
+import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -34,7 +34,7 @@ const failures = [];
 
 const modePages = [
   { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "audio-preview.js", "license.js", "vital-export.js"] },
-  { name: "Scratch route", html: "scratch/index.html", app: "scratch/app.js", requiredImports: ["../app.js"] },
+  { name: "Scratch route", html: "index.html", app: "scratch/app.js", requiredImports: ["../app.js"] },
   { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "audio-preview.js", "license.js", "vital-export.js"] },
   { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js", "audio-preview.js", "license.js"] },
 ];
@@ -146,11 +146,22 @@ async function readText(relativePath) {
   return readFile(path.join(uiDir, relativePath), "utf8");
 }
 
+async function sourceExists(relativePath) {
+  try {
+    await access(path.join(uiDir, relativePath));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function loadSeed(file) {
   return JSON.parse(await readFile(path.join(seedDir, file), "utf8"));
 }
 
 async function checkPages() {
+  assert(!(await sourceExists("scratch/index.html")), "Scratch route HTML should be generated from index.html during sync, not duplicated in source.");
+
   for (const page of modePages) {
     const html = await readText(page.html);
     const app = await readText(page.app);

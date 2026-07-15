@@ -7,9 +7,12 @@ const presetMutatorSourceDir = path.join(rootDir, "apps/preset-mutator/public");
 const presetMutatorPublicDir = path.join(publicDir, "preset-mutator");
 const presetMutatorLegacyPublicDir = path.join(publicDir, "apps/preset-mutator");
 const presetMutatorLegacyUiDir = path.join(presetMutatorLegacyPublicDir, "ui");
+const waveMutatorSourceDir = path.join(rootDir, "apps/wave-mutator/public");
+const waveMutatorPublicDir = path.join(publicDir, "tools/wave-mutator");
 
 const requiredPublicEntries = [
   "favicon.svg",
+  "favicon.ico",
   "favicon-16x16.png",
   "favicon-32x32.png",
   "apple-touch-icon.png",
@@ -19,7 +22,6 @@ const requiredPublicEntries = [
   "kreativ-sound-product-badge.svg",
   "site.webmanifest",
   "og-image.svg",
-  "search-index.json",
   "site.js",
   "share.js",
   "robots.txt",
@@ -37,6 +39,10 @@ if (!fs.existsSync(publicDir)) {
 
 if (!fs.existsSync(presetMutatorSourceDir)) {
   throw new Error("Missing apps/preset-mutator/public. Preset Mutator source must be available before syncing public assets.");
+}
+
+if (!fs.existsSync(waveMutatorSourceDir)) {
+  throw new Error("Missing apps/wave-mutator/public. Wave Mutator source must be available before syncing public assets.");
 }
 
 function redirectPage(target, message) {
@@ -126,7 +132,16 @@ function writeLegacyPresetMutatorRedirects() {
 fs.rmSync(presetMutatorPublicDir, { recursive: true, force: true });
 fs.mkdirSync(path.dirname(presetMutatorPublicDir), { recursive: true });
 fs.cpSync(presetMutatorSourceDir, presetMutatorPublicDir, { recursive: true });
+fs.mkdirSync(path.join(presetMutatorPublicDir, "scratch"), { recursive: true });
+fs.copyFileSync(
+  path.join(presetMutatorSourceDir, "index.html"),
+  path.join(presetMutatorPublicDir, "scratch/index.html")
+);
 writeLegacyPresetMutatorRedirects();
+
+fs.rmSync(waveMutatorPublicDir, { recursive: true, force: true });
+fs.mkdirSync(path.dirname(waveMutatorPublicDir), { recursive: true });
+fs.cpSync(waveMutatorSourceDir, waveMutatorPublicDir, { recursive: true });
 
 const missing = requiredPublicEntries.filter((entry) => !fs.existsSync(path.join(publicDir, entry)));
 if (missing.length) {
