@@ -14,7 +14,7 @@ echo "[4/12] Checking product assets..."
 python3 scripts/check-product-assets.py
 
 echo "[5/12] Checking thumbnail quality..."
-bash scripts/check-thumbnails.sh
+npm run check:thumbnails
 
 echo "[6/12] Checking Wave Mutator..."
 npm run check:wave-mutator

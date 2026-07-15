@@ -49,7 +49,7 @@ jobs:
         run: python3 scripts/check-product-assets.py
 
       - name: Check thumbnail quality
-        run: bash scripts/check-thumbnails.sh
+        run: npm run check:thumbnails
 
       - name: Check Wave Mutator
         run: npm run check:wave-mutator
