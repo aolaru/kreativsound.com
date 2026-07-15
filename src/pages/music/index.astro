@@ -33,7 +33,7 @@ const musicJsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   name: "Music | Kreativ Sound",
-  description: "Artist releases and studies made with the Kreativ Sound sample, preset, and texture catalog.",
+  description: "Olaru releases and studies made with the Kreativ Sound sample, preset, and texture catalog.",
   url: `${siteUrl}/music/`,
   mainEntity: allReleaseItems.map(({ artist, release }) => ({
     "@type": release.type === "Album" ? "MusicAlbum" : "MusicRecording",
@@ -52,10 +52,10 @@ const musicJsonLd = {
 ---
 <BaseLayout
   title="Music | Kreativ Sound"
-  description="Artist releases and studies made with the Kreativ Sound sample, preset, and texture catalog."
+  description="Olaru releases and studies made with the Kreativ Sound sample, preset, and texture catalog."
   canonical="https://kreativsound.com/music/"
-  ogImage="https://kreativsound.com/assets/music/rethyn-holo-signal.jpg"
-  ogImageAlt="Holo Signal cover art"
+  ogImage="https://kreativsound.com/assets/music/olaru-memories.jpg"
+  ogImageAlt="Memories album cover"
   activeNav="music"
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(musicJsonLd)}></script>
@@ -64,8 +64,8 @@ const musicJsonLd = {
       <div class="music-hero-copy">
         <p class="eyebrow">Music</p>
         <h1 class="page-title">Music built from the Kreativ Sound palette.</h1>
-        <p class="page-lead">Olaru and Rethyn are personal music projects by Andrei Olaru, built with Kreativ Sound samples, presets, drones, and texture layers.</p>
-        <p class="music-hero-note">Follow the releases across ambient, melodic, and darker electronic directions.</p>
+        <p class="page-lead">Olaru is Andrei Olaru's personal music project, built with Kreativ Sound samples, presets, drones, and texture layers.</p>
+        <p class="music-hero-note">Follow the releases across ambient, melodic, and cinematic directions.</p>
       </div>
       {featuredItem ? (
         <section class="music-feature" aria-labelledby="featured-music-title">

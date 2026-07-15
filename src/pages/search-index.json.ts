@@ -89,8 +89,8 @@ const staticEntries: SearchEntry[] = [
     title: "Music",
     url: "/music/",
     type: "Page",
-    thumbnail: "/assets/music/rethyn-holo-signal.jpg",
-    description: "Olaru and Rethyn releases built from the same dark ambient and cinematic sound palette."
+    thumbnail: "/assets/music/olaru-memories.jpg",
+    description: "Olaru releases built from the same dark ambient and cinematic sound palette."
   },
   {
     title: "News",

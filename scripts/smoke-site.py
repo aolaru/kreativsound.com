@@ -71,6 +71,11 @@ def require(dom: str, needle: str, label: str, errors: list[str]) -> None:
         errors.append(f"{label}: missing `{needle}`")
 
 
+def forbid(dom: str, needle: str, label: str, errors: list[str]) -> None:
+    if needle in dom:
+        errors.append(f"{label}: unexpected `{needle}`")
+
+
 def main() -> int:
     chrome = find_chrome()
     if not chrome:
@@ -93,7 +98,7 @@ def main() -> int:
             "/": ["Sounds", "News", "Learn", "About", "Contact", "Latest release", "Preset Mutator", "Kreativ Kollection V1"],
             "/news/": ["Sounds", "Latest Sound Releases"],
             "/learn/": ["Sounds", "Latest Guides"],
-            "/music/": ["Music", "Olaru", "Rethyn", "Memories"],
+            "/music/": ["Music", "Olaru", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
             "/sounds/": ["Browse Sound", "OPERATORS", "Preset Packs", "Sample Packs", "Free Packs"],
@@ -117,6 +122,9 @@ def main() -> int:
                 require(dom, "Flagship bundle", route, errors)
                 require(dom, "Creative tool", route, errors)
                 require(dom, "Full Catalog", route, errors)
+            if route == "/music/":
+                forbid(dom, "Rethyn", route, errors)
+                forbid(dom, "Holo Signal", route, errors)
 
         if errors:
             print("Smoke test failed:")

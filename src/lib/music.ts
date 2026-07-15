@@ -143,40 +143,4 @@ export const musicArtists: MusicArtist[] = [
       },
     ],
   },
-  {
-    slug: "rethyn",
-    name: "Rethyn",
-    intro:
-      "Electronic sketches and signal-driven pieces under the Rethyn moniker, also built with strong use of Kreativ Sound sounds and presets.",
-    platformLabel: "Open Spotify",
-    platformHref: "https://open.spotify.com/artist/7iwBaUeCQYimysZAoKh42X",
-    shellClass: "music-artist-shell-alt",
-    gridClass: "music-grid-single",
-    releases: [
-      {
-        title: "Holo Signal",
-        type: "Single",
-        href: "https://music.amazon.com/artists/B0GV4RM888/rethyn",
-        image: "/assets/music/rethyn-holo-signal.jpg",
-        imageAlt: "Holo Signal cover",
-        summary: "Signal-shaped electronic sketches built from the same darker Kreativ Sound palette.",
-        releaseDate: "2026-03-27",
-        mood: ["signal-driven", "dark electronic", "industrial"],
-        platformLinks: [
-          {
-            label: "Spotify",
-            href: "https://open.spotify.com/artist/7iwBaUeCQYimysZAoKh42X",
-            primary: true,
-          },
-          {
-            label: "Amazon Music",
-            href: "https://music.amazon.com/artists/B0GV4RM888/rethyn",
-          },
-        ],
-        featured: true,
-        meta: ["March 27, 2026", "2 tracks"],
-        linkLabel: "Open artist page",
-      },
-    ],
-  },
 ];
