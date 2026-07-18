@@ -81,6 +81,58 @@ export const landingCopyOverrides = {
       "Generated presets are best treated as starting points for sound design, not final mix-ready presets."
     ]
   },
+  "juno-nocturnes-jun-6-v-presets": {
+    subtitle: "96 Arturia JUN-6 V presets for dark ambient pads, drones, sequences, basses, leads, keys, and FX.",
+    shortMeta: "96 presets • JUN-6 V preset bank • 1.5 MB download",
+    ctaLine: "Download the 96-preset Arturia JUN-6 V bank.",
+    longDescription: [
+      "Juno Nocturnes is a cinematic dark ambient preset bank for Arturia JUN-6 V, built around massive pads, deep drones, pulsing sequences, shadowed basses, fragile leads, dusty keys, and atmospheric FX.",
+      "The bank focuses on nocturnal analog motion, wide chorus, deep reverb, unstable modulation, low-frequency pressure, and soundtrack-ready atmosphere.",
+      "Use it for dark ambient, drone, experimental electronic music, cinematic scoring, sci-fi texture work, introspective downtempo, and sparse chord-driven sound design."
+    ],
+    specifications: [
+      { label: "Product type", value: "Preset bank" },
+      { label: "Synth", value: "Arturia JUN-6 V" },
+      { label: "Format", value: "JUN-6 V preset bank in .junx format" },
+      { label: "Preset count", value: "96 presets" },
+      { label: "Categories", value: "32 Pads, 16 Drones, 13 Sequences, 8 Bass, 9 Leads, 9 Keys, 9 FX" },
+      { label: "Download size", value: "1.5 MB" },
+      { label: "Delivery", value: "ZIP download" },
+      { label: "License", value: "Personal and commercial music production use" },
+      { label: "Checkout", value: "Gumroad" }
+    ],
+    requirements: [
+      "Arturia JUN-6 V is required to use these presets.",
+      "JUN-6 V 1.6.x or newer is recommended.",
+      "Import the included .junx preset bank through the Arturia preset browser."
+    ]
+  },
+  "juno-nocturnes-lite-jun-6-v-presets": {
+    subtitle: "Free 16-preset Arturia JUN-6 V preview bank from Juno Nocturnes.",
+    shortMeta: "16 presets • JUN-6 V preset bank • Free download",
+    ctaLine: "Download the free 16-preset Arturia JUN-6 V bank.",
+    longDescription: [
+      "Juno Nocturnes Lite is a free preview of the full Juno Nocturnes preset bank for Arturia JUN-6 V.",
+      "It gives you a focused selection of dark ambient pads, drones, sequences, basses, leads, keys, and FX so you can test the nocturnal JUN-6 V sound before getting the full 96-preset bank.",
+      "Use it when you want a small, usable JUN-6 V preset set for dark ambient, drone, cinematic, sci-fi, and experimental electronic music."
+    ],
+    specifications: [
+      { label: "Product type", value: "Free preset bank" },
+      { label: "Synth", value: "Arturia JUN-6 V" },
+      { label: "Format", value: "JUN-6 V preset bank in .junx format" },
+      { label: "Preset count", value: "16 presets" },
+      { label: "Categories", value: "5 Pads, 3 Drones, 2 Sequences, 2 Bass, 1 Lead, 1 Keys, 2 FX" },
+      { label: "Download size", value: "1.64 MB" },
+      { label: "Delivery", value: "ZIP download" },
+      { label: "License", value: "Personal and commercial music production use" },
+      { label: "Checkout", value: "Free Gumroad download" }
+    ],
+    requirements: [
+      "Arturia JUN-6 V is required to use these presets.",
+      "JUN-6 V 1.6.x or newer is recommended.",
+      "The full Juno Nocturnes release expands this Lite pack to 96 presets."
+    ]
+  },
   "operators-fm8-presets": {
     subtitle: "64 FM8 Presets for Native Instruments FM8",
     shortMeta: "64 presets • 4 MB download • FM8 preset bank",

@@ -1836,25 +1836,32 @@ a:focus-visible,
 }
 
 .product-page-landing .page-title {
+  max-width: 100%;
   margin-bottom: 0.35rem;
   color: #241113;
   font-size: clamp(2.2rem, 7vw, 4.6rem);
   line-height: 0.98;
   text-align: center;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
 .product-page-landing .page-lead {
   max-width: 38rem;
+  min-width: 0;
   margin: 0 auto;
   color: #6e4549;
   font-size: clamp(1.05rem, 2.4vw, 1.45rem);
   line-height: 1.45;
   text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .product-landing-hero {
   display: grid;
   justify-items: center;
+  max-width: 100%;
+  min-width: 0;
   gap: 1.15rem;
   text-align: center;
 }
@@ -2023,10 +2030,12 @@ a:focus-visible,
 }
 
 .product-landing-meta {
+  max-width: 100%;
   margin: 0;
   color: #76565a;
   font-size: 0.88rem;
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .product-price-line {
@@ -3697,6 +3706,11 @@ a:focus-visible,
   .product-page-landing {
     padding: 1.25rem;
     border-radius: 18px;
+  }
+
+  .product-page-landing .page-title {
+    font-size: clamp(1.85rem, 10vw, 2.55rem);
+    line-height: 1.05;
   }
 
   .product-landing-media {

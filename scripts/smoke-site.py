@@ -95,14 +95,16 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "News", "Learn", "About", "Contact", "Latest release", "Preset Mutator", "Kreativ Kollection V1"],
+            "/": ["Sounds", "News", "Learn", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1"],
             "/news/": ["Sounds", "Latest Sound Releases"],
             "/learn/": ["Sounds", "Latest Guides"],
             "/music/": ["Music", "Olaru", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
-            "/sounds/": ["Browse Sound", "OPERATORS", "Preset Packs", "Sample Packs", "Free Packs"],
+            "/sounds/": ["Browse Sound", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs"],
             "/sounds/kreativ-kollection-v1": ["Coming soon", "Kreativ Kollection V1", "Description", "What's Included", "Product Specifications", "Requirements"],
+            "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements"],
+            "/sounds/juno-nocturnes-lite-jun-6-v-presets": ["Download Free", "Juno Nocturnes Lite", "16 presets", "Lite vs Full", "Upgrade to full Juno Nocturnes"],
             "/sounds/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Description", "Product Specifications", "Requirements"],
             "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Description", "Product Specifications", "Requirements"],
             "/sounds/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Description", "Product Specifications", "Requirements"],
@@ -115,6 +117,7 @@ def main() -> int:
 
             if route == "/":
                 require(dom, 'href="/sounds/"', route, errors)
+                require(dom, 'href="/sounds/juno-nocturnes-jun-6-v-presets"', route, errors)
                 require(dom, 'href="/sounds/operators-fm8-presets"', route, errors)
                 require(dom, 'href="/sounds/kreativ-kollection-v1"', route, errors)
                 require(dom, 'href="/sounds/preset-mutator"', route, errors)

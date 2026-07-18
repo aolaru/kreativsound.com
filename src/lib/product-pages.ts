@@ -87,6 +87,16 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
     purchaseAltLabel: "Pay with PayPal",
     variant: "flagship"
   },
+  "juno-nocturnes-jun-6-v-presets": {
+    headline: "JUNO NOCTURNES",
+    description: "Juno Nocturnes is a 96-preset Arturia JUN-6 V bank for dark ambient pads, drones, sequences, basses, leads, keys, and FX.",
+    kicker: "New preset pack"
+  },
+  "juno-nocturnes-lite-jun-6-v-presets": {
+    headline: "Juno Nocturnes Lite",
+    description: "Juno Nocturnes Lite is a free 16-preset Arturia JUN-6 V preview bank drawn from the full Juno Nocturnes release.",
+    kicker: "Free JUN-6 V preset bank"
+  },
   "operators-fm8-presets": {
     headline: "OPERATORS",
     description: "OPERATORS is a 64-preset soundset for Native Instruments FM8, focused on atmospheric motion, digital textures, and frequency-driven synthesis.",
@@ -109,6 +119,22 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
 };
 
 const liteComparisons: Record<string, ProductLiteComparison> = {
+  "juno-nocturnes-lite-jun-6-v-presets": {
+    title: "Juno Nocturnes Lite vs Full",
+    intro: "Juno Nocturnes Lite is the free entry point. The full bank expands the same Arturia JUN-6 V direction into a larger dark ambient preset palette.",
+    liteLabel: "Lite",
+    fullLabel: "Full Juno Nocturnes",
+    rows: [
+      { label: "Included", lite: "16 selected JUN-6 V presets", full: "96 JUN-6 V presets" },
+      { label: "Palette", lite: "Pads, drones, sequences, basses, leads, keys, and FX in a compact preview", full: "32 Pads, 16 Drones, 13 Sequences, 8 Bass, 9 Leads, 9 Keys, and 9 FX" },
+      { label: "Best use", lite: "Test the nocturnal JUN-6 V tone in a session", full: "Build a broader dark ambient and cinematic palette around JUN-6 V" }
+    ],
+    upgradeUrl: "https://kreativ.gumroad.com/l/juno-nocturnes",
+    upgradeLabel: "Upgrade to full Juno Nocturnes",
+    secondaryUrl: "/sounds/juno-nocturnes-jun-6-v-presets",
+    secondaryLabel: "View full details",
+    note: "If the Lite bank fits your session, the full release keeps the same JUN-6 V mood and gives you six times the preset count."
+  },
   "operators-lite-fm8-presets": {
     title: "OPERATORS Lite vs Full",
     intro: "OPERATORS Lite is the free entry point. The full bank expands the same FM8 direction into a larger preset set for complete tracks and cues.",

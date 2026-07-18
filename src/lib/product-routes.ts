@@ -1,4 +1,6 @@
 export const productRedirects = [
+  { from: "juno-nocturnes", to: "juno-nocturnes-jun-6-v-presets" },
+  { from: "juno-nocturnes-lite", to: "juno-nocturnes-lite-jun-6-v-presets" },
   { from: "operators-fm8", to: "operators-fm8-presets" },
   { from: "black-arcology", to: "black-arcology-pigments-presets" },
   { from: "velvet-ruins", to: "velvet-ruins-vital-presets" },

@@ -82,10 +82,31 @@ export const products: Product[] = [
     priceCurrency: "USD"
   },
   {
-    title: "OPERATORS - Atmos & Motion for Native Instruments FM8",
+    title: "JUNO NOCTURNES - 96 Arturia JUN-6 V Presets",
     category: "Presets",
     status: "available",
     featuredRank: 1,
+    ...standardSoundPackPrice,
+    url: "https://kreativ.gumroad.com/l/juno-nocturnes",
+    detailsUrl: "/sounds/juno-nocturnes-jun-6-v-presets",
+    badge: "New",
+    extraAction: {
+      label: "Try Lite",
+      url: "/sounds/juno-nocturnes-lite-jun-6-v-presets"
+    },
+    thumbnail: "/assets/thumbs/juno-nocturnes-thumb.webp",
+    coverImage: "/assets/thumbs/juno-nocturnes.webp",
+    homeImage: "/assets/home/juno-nocturnes-720.webp",
+    homeImageSrcSet: "/assets/home/juno-nocturnes-480.webp 480w, /assets/home/juno-nocturnes-720.webp 720w",
+    format: "Arturia JUN-6 V presets",
+    count: "96 presets",
+    useCase: "Dark ambient pads, drones, sequences, basses, leads, keys, and FX"
+  },
+  {
+    title: "OPERATORS - Atmos & Motion for Native Instruments FM8",
+    category: "Presets",
+    status: "available",
+    featuredRank: 4,
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
     detailsUrl: "/sounds/operators-fm8-presets",
@@ -331,6 +352,23 @@ export const products: Product[] = [
       src: "/assets/audio/horror-2-demo-01.mp3",
       type: "audio/mpeg"
     }
+  },
+  {
+    title: "Juno Nocturnes Lite - Free Arturia JUN-6 V Presets",
+    category: "Free",
+    status: "free",
+    url: "https://kreativ.gumroad.com/l/juno-nocturnes-lite",
+    detailsUrl: "/sounds/juno-nocturnes-lite-jun-6-v-presets",
+    badge: "New",
+    extraAction: {
+      label: "Full Bank",
+      url: "/sounds/juno-nocturnes-jun-6-v-presets"
+    },
+    thumbnail: "/assets/thumbs/juno-nocturnes-lite-thumb.webp",
+    coverImage: "/assets/thumbs/juno-nocturnes-lite.webp",
+    format: "Arturia JUN-6 V presets",
+    count: "16 presets",
+    useCase: "Free dark ambient preview pack for Arturia JUN-6 V"
   },
   {
     title: "OPERATORS Lite - Free FM8 Presets",
