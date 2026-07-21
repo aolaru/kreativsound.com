@@ -33,5 +33,5 @@ draft: false
       <p>The main idea is simple: pressure comes from control, not volume.</p>
       <div class="article-cta">
         <a class="button primary" href="https://kreativ.gumroad.com/l/tectonic-underground-textures?layout=profile" target="_blank" rel="noopener noreferrer">Get TECTONIC 2</a>
-        <a class="button secondary" href="/learn/">Back to Learn</a>
+        <a class="button secondary" href="/learn/">Back to Guides</a>
       </div>

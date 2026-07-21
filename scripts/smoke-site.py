@@ -95,13 +95,13 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "News", "Learn", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1"],
+            "/": ["Sounds", "News", "Guides", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1"],
             "/news/": ["Sounds", "Latest Sound Releases"],
-            "/learn/": ["Sounds", "Latest Guides"],
+            "/learn/": ["Sounds", "Guides", "Latest Guides"],
             "/music/": ["Music", "Olaru", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
-            "/sounds/": ["Browse Sound", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs"],
+            "/sounds/": ["Browse Sound", "Need placement ideas?", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs"],
             "/sounds/kreativ-kollection-v1": ["Coming soon", "Kreativ Kollection V1", "Description", "What's Included", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-lite-jun-6-v-presets": ["Download Free", "Juno Nocturnes Lite", "16 presets", "Lite vs Full", "Upgrade to full Juno Nocturnes"],
@@ -122,6 +122,7 @@ def main() -> int:
                 require(dom, 'href="/sounds/kreativ-kollection-v1"', route, errors)
                 require(dom, 'href="/sounds/preset-mutator"', route, errors)
                 require(dom, 'href="/preset-mutator/"', route, errors)
+                require(dom, 'href="/learn/"', route, errors)
                 require(dom, "Flagship bundle", route, errors)
                 require(dom, "Creative tool", route, errors)
                 require(dom, "Full Catalog", route, errors)

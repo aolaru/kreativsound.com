@@ -17,6 +17,6 @@ draft: false
 <p>Release posts stay tied to actual products. Site notes stay tied to visible improvements, such as navigation, analytics, search, or tool routing. That keeps the section useful without becoming an internal changelog dump.</p>
 
 <h2>How to use it</h2>
-<p>Use News when you want the current state of the catalog, especially around new packs and free versions. Use Learn when you want practical sound-design guidance around using those packs in sessions.</p>
+<p>Use News when you want the current state of the catalog, especially around new packs and free versions. Use Guides when you want practical sound-design guidance around using those packs in sessions.</p>
 
-<p>This split gives returning visitors a cleaner rhythm: News for what changed, Learn for how to use it.</p>
+<p>This split gives returning visitors a cleaner rhythm: News for what changed, Guides for how to use it.</p>

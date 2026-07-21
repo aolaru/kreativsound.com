@@ -3470,6 +3470,24 @@ a:focus-visible,
   text-align: center;
 }
 
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.45rem;
+}
+
+.footer-links a {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.footer-links a:hover {
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+
 .footer-meta {
   margin: 0;
 }

@@ -100,7 +100,7 @@ const staticEntries: SearchEntry[] = [
     description: "Release news, tool notes, and catalog updates from Kreativ Sound."
   },
   {
-    title: "Learn",
+    title: "Guides",
     url: "/learn/",
     type: "Page",
     thumbnail: "/assets/thumbs/bioforms.jpg",

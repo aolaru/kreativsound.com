@@ -38,5 +38,5 @@ draft: false
 
 <div class="article-cta">
   <a class="button primary" href="/sounds/black-arcology-pigments-presets">View Black Arcology</a>
-  <a class="button secondary" href="/learn/">Back to Learn</a>
+  <a class="button secondary" href="/learn/">Back to Guides</a>
 </div>

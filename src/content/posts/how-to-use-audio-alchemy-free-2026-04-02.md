@@ -37,5 +37,5 @@ draft: false
         <p>The simplest way to get stronger results is to keep the source short, focused, and musically obvious.</p>
         <div class="article-cta">
           <a class="button primary" href="/preset-mutator/audio/">Open Audio to Preset</a>
-          <a class="button secondary" href="/learn/">Back to Learn</a>
+          <a class="button secondary" href="/learn/">Back to Guides</a>
         </div>
