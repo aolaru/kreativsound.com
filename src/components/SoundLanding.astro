@@ -69,13 +69,20 @@ const catalogCategories = visibleCategories || (isCurated ? ["Bundle", "Tools", 
       </div>
     </article>
   ) : null}
+  <ProductCatalog
+    visibleCategories={catalogCategories}
+    showCategoryNav={isCurated}
+    showFilters={!isCurated}
+  />
   {showGuide ? (
-    <section class="catalog-guide" aria-label="How to choose a Kreativ Sound pack">
-      <div>
-        <p class="featured-label">How to choose</p>
-        <h2>Pick by texture.</h2>
-        <p>Use these routes when you already know the kind of pressure, motion, or tone you need.</p>
-      </div>
+    <details class="catalog-guide catalog-guide-collapsible">
+      <summary>
+        <span>
+          <span class="featured-label">How to choose</span>
+          <strong>Pick by texture</strong>
+        </span>
+        <span>Open guide</span>
+      </summary>
       <div class="catalog-guide-grid">
         <a href="/sounds/black-arcology-pigments-presets">
           <strong>Dark Pigments pressure</strong>
@@ -98,12 +105,8 @@ const catalogCategories = visibleCategories || (isCurated ? ["Bundle", "Tools", 
           <span>Use Guides for quick notes on layering, tension, texture, and product-specific workflows.</span>
         </a>
       </div>
-    </section>
+    </details>
   ) : null}
-  <ProductCatalog
-    visibleCategories={catalogCategories}
-    showCategoryNav={isCurated}
-  />
   {showProof ? (
     <section class="catalog-proof" aria-label="Kreativ Sound proof points">
       <article>
@@ -112,7 +115,7 @@ const catalogCategories = visibleCategories || (isCurated ? ["Bundle", "Tools", 
       </article>
       <article>
         <span>Try before buying</span>
-        <p>Operators, Black Arcology, and Velvet Ruins all have smaller free versions.</p>
+        <p>Juno Nocturnes, Operators, Black Arcology, and Velvet Ruins all have smaller free versions.</p>
       </article>
       <article>
         <span>Independent catalog</span>

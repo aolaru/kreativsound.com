@@ -95,17 +95,24 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "News", "Guides", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1"],
-            "/news/": ["Sounds", "Latest Sound Releases"],
-            "/learn/": ["Sounds", "Guides", "Latest Guides"],
+            "/": ["Sounds", "News", "Guides", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
+            "/news/": ["Sounds", "Latest Sound Releases", "JUNO NOCTURNES Released for Arturia JUN-6 V"],
+            "/learn/": ["Sounds", "Guides", "Latest Guides", "How to Use JUNO NOCTURNES for Dark Ambient"],
             "/music/": ["Music", "Olaru", "Memories"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
-            "/sounds/": ["Browse Sound", "Need placement ideas?", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs"],
-            "/sounds/kreativ-kollection-v1": ["Coming soon", "Kreativ Kollection V1", "Description", "What's Included", "Product Specifications", "Requirements"],
-            "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements"],
+            "/privacy/": ["Privacy Policy", "Optional analytics", "Google Analytics", "Cloudflare Web Analytics"],
+            "/terms/": ["Terms of Use", "Purchases", "Product License"],
+            "/refunds/": ["Refund Policy", "Refund requests", "Gumroad and PayPal purchases"],
+            "/license/": ["Product License", "What the license allows", "What the license does not allow"],
+            "/search/": ["Find sounds, tools, and guides.", "Search Kreativ Sound", "Enter a product, synth, format, texture, guide, or tool."],
+            "/sounds/": ["Browse Sound", "Find a sound", "Need placement ideas?", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs"],
+            "/sounds/kreativ-kollection-v1": ["Coming soon", "Kreativ Kollection V1", "JUNO NOCTURNES", "Description", "What's Included", "Product Specifications", "Requirements"],
+            "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements"],
+            "/sounds/operators-fm8-presets": ["Buy on Gumroad", "Try Lite free", "OPERATORS", "64 presets", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-lite-jun-6-v-presets": ["Download Free", "Juno Nocturnes Lite", "16 presets", "Lite vs Full", "Upgrade to full Juno Nocturnes"],
-            "/sounds/velvet-ruins-vital-presets": ["Buy on Gumroad", "VELVET RUINS", "Description", "Product Specifications", "Requirements"],
+            "/sounds/velvet-ruins-vital-presets": ["Buy on Gumroad", "Try Lite free", "VELVET RUINS", "Description", "Product Specifications", "Requirements"],
+            "/sounds/black-arcology-pigments-presets": ["Buy on Gumroad", "Try Lite free", "BLACK ARCOLOGY", "Product Specifications", "Requirements"],
             "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Description", "Product Specifications", "Requirements"],
             "/sounds/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Description", "Product Specifications", "Requirements"],
         }
@@ -116,6 +123,9 @@ def main() -> int:
                 require(dom, needle, route, errors)
 
             if route == "/":
+                require(dom, 'href="#latest-featured"', route, errors)
+                require(dom, 'id="main-content"', route, errors)
+                require(dom, 'class="site-header"', route, errors)
                 require(dom, 'href="/sounds/"', route, errors)
                 require(dom, 'href="/sounds/juno-nocturnes-jun-6-v-presets"', route, errors)
                 require(dom, 'href="/sounds/operators-fm8-presets"', route, errors)
@@ -126,6 +136,13 @@ def main() -> int:
                 require(dom, "Flagship bundle", route, errors)
                 require(dom, "Creative tool", route, errors)
                 require(dom, "Full Catalog", route, errors)
+                require(dom, 'href="/privacy/"', route, errors)
+                forbid(dom, 'action="https://www.google.com/search"', route, errors)
+                require(dom, 'action="/search/"', route, errors)
+            if route == "/sounds/":
+                require(dom, 'data-catalog-query', route, errors)
+                require(dom, 'data-catalog-category="Presets"', route, errors)
+                require(dom, 'data-catalog-category="Free"', route, errors)
             if route == "/music/":
                 forbid(dom, "Rethyn", route, errors)
                 forbid(dom, "Holo Signal", route, errors)

@@ -25,6 +25,9 @@ const purchaseActions = [
     ? { url: product.purchaseAltUrl, label: product.purchaseAltLabel, icon: purchaseIconClass(product.purchaseAltUrl) }
     : null
 ].filter(Boolean) as PurchaseAction[];
+const previewAction = product.previewUrl && product.previewLabel
+  ? { url: product.previewUrl, label: product.previewLabel }
+  : null;
 const toolActions = product.slug === "preset-mutator" && product.secondaryUrl && product.secondaryLabel
   ? [{ url: product.secondaryUrl, label: product.secondaryLabel, icon: "payment-icon payment-icon-app" }]
   : [];
@@ -123,6 +126,12 @@ const breadcrumbSchema = {
             {action.label}
           </a>
         ))}
+        {previewAction ? (
+          <a class="button secondary" href={previewAction.url}>
+            <i class="fa-solid fa-headphones" aria-hidden="true"></i>
+            {previewAction.label}
+          </a>
+        ) : null}
         {toolActions.map((action) => (
           <a class="button secondary" href={action.url}>
             <span class={action.icon} aria-hidden="true"></span>
@@ -256,6 +265,12 @@ const breadcrumbSchema = {
               {action.label}
             </a>
           ))}
+          {previewAction ? (
+            <a class="button secondary" href={previewAction.url}>
+              <i class="fa-solid fa-headphones" aria-hidden="true"></i>
+              {previewAction.label}
+            </a>
+          ) : null}
           {toolActions.map((action) => (
             <a class="button secondary" href={action.url}>
               <span class={action.icon} aria-hidden="true"></span>

@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="Search | Kreativ Sound"
+  description="Search Kreativ Sound products, tools, guides, release notes, and pages."
+  canonical="https://kreativsound.com/search/"
+  robots="noindex,follow"
+  activeNav=""
+>
+  <section class="card page-main search-page" data-search-page>
+    <p class="eyebrow">Search</p>
+    <h1 class="page-title">Find sounds, tools, and guides.</h1>
+    <form class="search-page-form" action="/search/" method="get" role="search">
+      <label for="search-page-input">Search Kreativ Sound</label>
+      <div>
+        <input
+          id="search-page-input"
+          name="q"
+          type="search"
+          placeholder="Try Vital, FM8, drones, or cinematic"
+          autocomplete="off"
+          data-search-page-input
+        />
+        <button class="button primary" type="submit">Search</button>
+      </div>
+    </form>
+    <p class="search-page-status" role="status" aria-live="polite" data-search-page-status>
+      Enter a product, synth, format, texture, guide, or tool.
+    </p>
+    <div class="search-page-results" data-search-page-results></div>
+    <noscript>
+      <p>JavaScript is required for on-site search. You can still browse the <a href="/sounds/">complete sound catalog</a>.</p>
+    </noscript>
+  </section>
+</BaseLayout>

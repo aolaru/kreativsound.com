@@ -14,33 +14,44 @@ function navClass(key) {
     </span>
     <span class="sr-only">Kreativ Sound</span>
   </a>
-  <form class="site-search" action="https://www.google.com/search" method="get" role="search">
-    <input type="hidden" name="sitesearch" value="kreativsound.com" />
-    <label class="sr-only" for="site-search-input">Search Kreativ Sound</label>
-    <i class="fa-solid fa-magnifying-glass site-search-icon" aria-hidden="true"></i>
-    <input
-      class="site-search-input"
-      id="site-search-input"
-      name="q"
-      type="search"
-      role="combobox"
-      aria-controls="site-search-results"
-      aria-expanded="false"
-      placeholder="Search site"
-      autocomplete="off"
-    />
-  </form>
-  <div class="nav-group nav-group-right">
-    <a class={navClass("sound")} href="/sounds/" aria-label="Sounds">Sounds</a>
-    <a class={navClass("tools")} href="/tools/">Tools</a>
-    <a class={navClass("music")} href="/music/">Music</a>
-    <a class={navClass("news")} href="/news/">News</a>
-    <a class={navClass("about")} href="/about/">About</a>
-    <a class={navClass("contact")} href="/contact/">Contact</a>
-    <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
-      <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
-      <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>
-      <span class="sr-only">Toggle theme</span>
-    </button>
+  <button
+    class="nav-menu-toggle"
+    id="nav-menu-toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="site-nav-panel"
+    aria-label="Open menu"
+  >
+    <span class="nav-menu-icon" aria-hidden="true"></span>
+  </button>
+  <div class="site-nav-panel" id="site-nav-panel">
+    <form class="site-search" action="/search/" method="get" role="search">
+      <label class="sr-only" for="site-search-input">Search Kreativ Sound</label>
+      <i class="fa-solid fa-magnifying-glass site-search-icon" aria-hidden="true"></i>
+      <input
+        class="site-search-input"
+        id="site-search-input"
+        name="q"
+        type="search"
+        role="combobox"
+        aria-controls="site-search-results"
+        aria-expanded="false"
+        placeholder="Search site"
+        autocomplete="off"
+      />
+    </form>
+    <div class="nav-group nav-group-right">
+      <a class={navClass("sound")} href="/sounds/" aria-label="Sounds">Sounds</a>
+      <a class={navClass("tools")} href="/tools/">Tools</a>
+      <a class={navClass("music")} href="/music/">Music</a>
+      <a class={navClass("news")} href="/news/">News</a>
+      <a class={navClass("about")} href="/about/">About</a>
+      <a class={navClass("contact")} href="/contact/">Contact</a>
+      <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
+        <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
+        <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>
+        <span class="sr-only">Toggle theme</span>
+      </button>
+    </div>
   </div>
 </nav>

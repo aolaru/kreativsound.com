@@ -36,6 +36,8 @@ export type ProductPage = {
   primaryLabel?: string;
   purchaseAltUrl?: string;
   purchaseAltLabel?: string;
+  previewUrl?: string;
+  previewLabel?: string;
   secondaryUrl?: string;
   secondaryLabel?: string;
   shortMeta?: string;
@@ -100,7 +102,7 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   "operators-fm8-presets": {
     headline: "OPERATORS",
     description: "OPERATORS is a 64-preset soundset for Native Instruments FM8, focused on atmospheric motion, digital textures, and frequency-driven synthesis.",
-    kicker: "New preset pack",
+    kicker: "FM8 preset pack",
     purchaseAltUrl: "https://www.paypal.com/ncp/payment/TS44NMWAGW2DL",
     purchaseAltLabel: "Pay with PayPal"
   },
@@ -385,6 +387,8 @@ export const productPages: ProductPage[] = products
       primaryLabel: override.primaryLabel || primaryLabel(product),
       purchaseAltUrl: override.purchaseAltUrl,
       purchaseAltLabel: override.purchaseAltLabel,
+      previewUrl: product.category === "Presets" ? product.extraAction?.url : undefined,
+      previewLabel: product.category === "Presets" && product.extraAction?.url ? "Try Lite free" : undefined,
       secondaryUrl: override.secondaryUrl || product.appUrl,
       secondaryLabel: override.secondaryLabel || (product.appUrl ? "Open Preset Mutator" : undefined),
       shortMeta: copy?.shortMeta || defaultShortMeta(product),

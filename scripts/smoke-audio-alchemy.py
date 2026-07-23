@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import tempfile
 import threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -44,16 +45,43 @@ def find_chrome() -> str | None:
 
 
 def dump_dom(chrome: str, url: str) -> str:
-    commands = [
-        [chrome, "--headless=new", "--no-sandbox", "--disable-gpu", "--virtual-time-budget=5000", "--dump-dom", url],
-        [chrome, "--headless", "--no-sandbox", "--disable-gpu", "--virtual-time-budget=5000", "--dump-dom", url],
-    ]
     last_error = None
-    for command in commands:
-        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
-        if result.returncode == 0:
-            return result.stdout
-        last_error = result.stderr or result.stdout
+    for headless_mode in ("--headless=new", "--headless"):
+        with tempfile.TemporaryDirectory(prefix="kreativ-smoke-chrome-") as profile_dir:
+            command = [
+                chrome,
+                headless_mode,
+                "--no-sandbox",
+                "--disable-gpu",
+                "--disable-background-networking",
+                "--no-first-run",
+                "--no-default-browser-check",
+                f"--user-data-dir={profile_dir}",
+                "--virtual-time-budget=5000",
+                "--dump-dom",
+                url,
+            ]
+            with tempfile.TemporaryFile(mode="w+", encoding="utf-8") as stdout_file:
+                with tempfile.TemporaryFile(mode="w+", encoding="utf-8") as stderr_file:
+                    try:
+                        result = subprocess.run(
+                            command,
+                            cwd=ROOT,
+                            stdout=stdout_file,
+                            stderr=stderr_file,
+                            text=True,
+                            timeout=30,
+                        )
+                    except subprocess.TimeoutExpired:
+                        last_error = f"Chrome timed out while loading {url}"
+                        continue
+                    stdout_file.seek(0)
+                    stderr_file.seek(0)
+                    stdout = stdout_file.read()
+                    stderr = stderr_file.read()
+            if result.returncode == 0:
+                return stdout
+            last_error = stderr or stdout
     raise RuntimeError(last_error or f"Failed to dump DOM for {url}")
 
 

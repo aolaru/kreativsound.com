@@ -96,7 +96,7 @@ const staticEntries: SearchEntry[] = [
     title: "News",
     url: "/news/",
     type: "Page",
-    thumbnail: "/assets/thumbs/operators-fm8.webp",
+    thumbnail: "/assets/thumbs/juno-nocturnes.webp",
     description: "Release news, tool notes, and catalog updates from Kreativ Sound."
   },
   {
@@ -119,6 +119,34 @@ const staticEntries: SearchEntry[] = [
     type: "Page",
     thumbnail: "/logo-128.svg",
     description: "Support, licensing, collaboration, and direct contact details for Kreativ Sound."
+  },
+  {
+    title: "Privacy Policy",
+    url: "/privacy/",
+    type: "Policy",
+    thumbnail: "/logo-128.svg",
+    description: "Analytics preferences, local browser data, purchases, contact details, and browser tool privacy."
+  },
+  {
+    title: "Terms of Use",
+    url: "/terms/",
+    type: "Policy",
+    thumbnail: "/logo-128.svg",
+    description: "Terms for the Kreativ Sound website, digital products, downloads, and browser tools."
+  },
+  {
+    title: "Refund Policy",
+    url: "/refunds/",
+    type: "Policy",
+    thumbnail: "/logo-128.svg",
+    description: "Refund and support policy for Kreativ Sound digital products."
+  },
+  {
+    title: "Product License",
+    url: "/license/",
+    type: "Policy",
+    thumbnail: "/logo-128.svg",
+    description: "Usage license for Kreativ Sound presets, samples, sound packs, and browser tool exports."
   }
 ];
 

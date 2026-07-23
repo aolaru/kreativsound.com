@@ -14,8 +14,8 @@ const {
   robots = "index,follow",
   activeNav = "home",
   bodyClass = "top-level-page",
-  skipLinkTarget = "",
-  skipLinkLabel = "",
+  skipLinkTarget = "#main-content",
+  skipLinkLabel = "Skip to main content",
   scripts = []
 } = Astro.props;
 
@@ -46,8 +46,21 @@ const analyticsSnippet = `
         window.setTimeout(load, 1400);
       }
     };
-    if (document.readyState === "complete") schedule();
-    else window.addEventListener("load", schedule, { once: true });
+    window.__loadKreativAnalytics = schedule;
+    let consent = null;
+    try {
+      consent = localStorage.getItem("kreativ-analytics-consent");
+    } catch {}
+    if (!consent) {
+      const cookie = document.cookie
+        .split("; ")
+        .find((entry) => entry.startsWith("kreativ-analytics-consent="));
+      consent = cookie ? decodeURIComponent(cookie.split("=").slice(1).join("=")) : null;
+    }
+    if (consent === "accepted") {
+      if (document.readyState === "complete") schedule();
+      else window.addEventListener("load", schedule, { once: true });
+    }
   })();
 `;
 ---
@@ -62,7 +75,11 @@ const analyticsSnippet = `
     <meta name="robots" content={robots} />
     <script is:inline>
       (() => {
-        const stored = localStorage.getItem("theme");
+        document.documentElement.classList.add("js");
+        let stored = null;
+        try {
+          stored = localStorage.getItem("theme");
+        } catch {}
         const theme = stored === "light" || stored === "dark" ? stored : "light";
         document.documentElement.setAttribute("data-theme", theme);
       })();
@@ -90,15 +107,28 @@ const analyticsSnippet = `
     <slot name="head" />
   </head>
   <body class={bodyClass}>
-    {skipLinkTarget && skipLinkLabel ? (
-      <a class="skip-link" href={skipLinkTarget}>{skipLinkLabel}</a>
-    ) : null}
-    <main class="container" id="top">
-      <SiteNav active={activeNav} />
-      <slot />
+    <a class="skip-link" href={skipLinkTarget}>{skipLinkLabel}</a>
+    <div class="container" id="top">
+      <header class="site-header">
+        <SiteNav active={activeNav} />
+      </header>
+      <main id="main-content" tabindex="-1">
+        <slot />
+      </main>
       <SiteFooter />
-    </main>
-    <script is:inline src="/site.js"></script>
+    </div>
+    <section class="privacy-consent" data-privacy-consent hidden aria-labelledby="privacy-consent-title">
+      <div>
+        <h2 id="privacy-consent-title">Optional analytics</h2>
+        <p>Help improve Kreativ Sound with Google Analytics and Cloudflare Web Analytics. The site works without them.</p>
+      </div>
+      <div class="privacy-consent-actions">
+        <button class="button primary" type="button" data-analytics-accept>Accept analytics</button>
+        <button class="button secondary" type="button" data-analytics-decline>Decline</button>
+        <a href="/privacy/">Privacy details</a>
+      </div>
+    </section>
+    <script is:inline src="/site.js?v=20260723"></script>
     {scripts.map((src) => <script is:inline src={src}></script>)}
   </body>
 </html>

@@ -177,6 +177,9 @@ async function checkPages() {
     assert(!app.includes("PURCHASE_CODE"), `${page.name}: hard-coded purchase-code constant is still present`);
     assert(!app.includes("Quality notes"), `${page.name}: generated results should not claim heuristic quality notes`);
     assert(!app.includes("quality_score"), `${page.name}: analytics should not emit heuristic quality scores`);
+    for (const rangeInput of html.match(/<input[^>]*type="range"[^>]*>/g) || []) {
+      assert(rangeInput.includes("aria-label="), `${page.name}: range input is missing an accessible name`);
+    }
 
     for (const requiredImport of page.requiredImports) {
       assert(app.includes(requiredImport), `${page.name}: app is not using ${requiredImport}`);

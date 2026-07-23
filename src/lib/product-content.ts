@@ -18,6 +18,7 @@ export const landingCopyOverrides = {
     finalCtaTitle: "Kreativ Kollection V1 is coming soon.",
     finalCtaText: "Presets, samples, loops, drones, and texture packs will be grouped into one download.",
     includedProducts: [
+      "juno-nocturnes-jun-6-v-presets",
       "bioforms-synplant-2-presets",
       "velvet-ruins-vital-presets",
       "black-arcology-pigments-presets",

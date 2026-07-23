@@ -110,7 +110,6 @@ export const products: Product[] = [
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/operators-fm8-sounds",
     detailsUrl: "/sounds/operators-fm8-presets",
-    badge: "New",
     extraAction: {
       label: "Try Lite",
       url: "/sounds/operators-lite-fm8-presets"
@@ -376,7 +375,6 @@ export const products: Product[] = [
     status: "free",
     url: "https://kreativ.gumroad.com/l/operators-lite-free-fm8-presets",
     detailsUrl: "/sounds/operators-lite-fm8-presets",
-    badge: "New",
     thumbnail: "/assets/thumbs/operators-lite-thumb.jpg",
     coverImage: "/assets/thumbs/operators-lite-cover.webp",
     format: "FM8 presets",
@@ -389,7 +387,6 @@ export const products: Product[] = [
     status: "free",
     url: "https://kreativ.gumroad.com/l/velvet-ruins-demo-presets-for-vital?layout=profile",
     detailsUrl: "/sounds/velvet-ruins-lite-vital-presets",
-    badge: "New",
     thumbnail: "/assets/thumbs/velvet-ruins-lite.jpg",
     coverImage: "/assets/thumbs/velvet-ruins-lite-cover.webp",
     format: "Vital presets",
@@ -402,7 +399,6 @@ export const products: Product[] = [
     status: "free",
     url: "https://kreativ.gumroad.com/l/black-arcology-lite",
     detailsUrl: "/sounds/black-arcology-lite-pigments-presets",
-    badge: "New",
     thumbnail: "/assets/thumbs/black-arcology-lite-thumb.png",
     coverImage: "/assets/thumbs/black-arcology-lite.webp",
     format: "Pigments presets",
