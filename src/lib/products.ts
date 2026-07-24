@@ -45,17 +45,26 @@ export const products: Product[] = [
   {
     title: "Kreativ Kollection V1",
     category: "Bundle",
-    status: "comingSoon",
+    status: "available",
     featuredRank: 3,
+    url: "https://kreativ.gumroad.com/l/kreativ-kollection-v1",
     detailsUrl: "/sounds/kreativ-kollection-v1",
-    badge: "Coming soon",
-    thumbnail: "/assets/thumbs/kreativ-kollection-v1.webp",
+    badge: "Flagship",
+    thumbnail: "/assets/thumbs/kreativ-kollection-v1-thumbnail-v2.webp",
     coverImage: "/assets/thumbs/kreativ-kollection-v1.webp",
     homeImage: "/assets/home/kreativ-kollection-v1-720.webp",
     homeImageSrcSet: "/assets/home/kreativ-kollection-v1-480.webp 480w, /assets/home/kreativ-kollection-v1-720.webp 720w",
-    format: "Preset and sample bundle",
-    count: "V1 collection",
-    useCase: "Complete Kreativ Sound preset, sample, loop, and texture collection"
+    format: "Native Gumroad bundle",
+    count: "16 products",
+    useCase: "9 preset banks and 7 WAV sound packs for ambient, cinematic, industrial, and experimental production",
+    price: "49 EUR",
+    priceAmount: 49,
+    priceCurrency: "EUR",
+    demo: {
+      label: "Kreativ Kollection V1 Demo Reel",
+      src: "/assets/audio/kreativ-kollection-v1-demo-reel.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "Preset Mutator - Vital Preset Generator",

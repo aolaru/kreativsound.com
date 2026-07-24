@@ -12,11 +12,11 @@ export type ProductLandingCopy = {
 
 export const landingCopyOverrides = {
   "kreativ-kollection-v1": {
-    subtitle: "The complete Kreativ Sound preset and sample collection.",
-    shortMeta: "Coming soon • Presets • Samples • Loops • Textures",
-    ctaLine: "A single bundle for the first wave of Kreativ Sound presets, samples, loops, and textures.",
-    finalCtaTitle: "Kreativ Kollection V1 is coming soon.",
-    finalCtaText: "Presets, samples, loops, drones, and texture packs will be grouped into one download.",
+    subtitle: "9 synth preset banks and 7 WAV sound packs in one native Gumroad bundle.",
+    shortMeta: "16 products • 9 preset banks • 7 WAV sound packs • €144 individual value",
+    ctaLine: "Get all 16 products for €49 through August 15, 2026, then €69.",
+    finalCtaTitle: "Build a broader sound palette for less.",
+    finalCtaText: "Get the €144 collection for €49 through August 15, 2026. The price moves to €69 after the launch period.",
     includedProducts: [
       "juno-nocturnes-jun-6-v-presets",
       "bioforms-synplant-2-presets",
@@ -36,23 +36,25 @@ export const landingCopyOverrides = {
       "tectonic-2-dark-subs-textures"
     ],
     longDescription: [
-      "Kreativ Kollection V1 collects the first wave of Kreativ Sound releases: preset banks, sample packs, loops, drones, textures, and experimental sound material.",
-      "The bundle is aimed at ambient, cinematic, electronic, industrial, and darker production work.",
-      "Use it when a project needs dark pads, tension beds, low-end pressure, noise details, and playable synth material in one download."
+      "Kreativ Kollection V1 brings together 16 complete Kreativ Sound releases: 9 synth preset banks and 7 WAV sound packs spanning dark ambient, cinematic, industrial, experimental, and electronic production.",
+      "The preset side covers Arturia JUN-6 V and Pigments, Native Instruments FM8, Vital, Synplant 2, Softube Synth Models, FabFilter One, Moog Model D, and Animoog Z. The WAV side adds percussion, transitions, atmospheres, noise, subs, horror textures, and experimental sound material that works in any modern DAW.",
+      "Each included product is delivered separately through your Gumroad library, so you can download only what a project needs and receive eligible product updates in the same place. Dark Drones 2 will also be added as a free future V1 update."
     ],
     specifications: [
-      { label: "Product type", value: "Complete sound bundle" },
-      { label: "Format", value: "Digital download" },
-      { label: "Includes", value: "Preset banks, samples, loops, textures, and sound design packs" },
+      { label: "Product type", value: "Native Gumroad product bundle" },
+      { label: "Format", value: "Synth preset banks and WAV audio packs" },
+      { label: "Includes", value: "16 products: 9 preset banks and 7 WAV sound packs" },
       { label: "Best for", value: "Ambient, cinematic, electronic, industrial, experimental, and darker production" },
-      { label: "Delivery", value: "Digital download when released" },
+      { label: "Individual value", value: "€144" },
+      { label: "Launch price", value: "€49 through August 15, 2026; €69 afterward" },
+      { label: "Delivery", value: "Separate products in your Gumroad library" },
       { label: "License", value: "Personal and commercial music production use" },
-      { label: "Updates", value: "V1 collection snapshot, with future versions released separately unless otherwise specified" },
-      { label: "Checkout", value: "Coming soon" }
+      { label: "Updates", value: "Eligible included-product updates plus Dark Drones 2 as a free future V1 update" },
+      { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [
-      "Some included preset banks require specific synths or plugins such as Synplant 2, Vital, Arturia Pigments, Native Instruments FM8, Native Instruments PRO-53, FabFilter One, Moog Model D, Animoog Z, or Softube Synth Models.",
-      "Audio samples, loops, drones, and textures can be used in any DAW or sampler that supports standard audio files.",
+      "The preset banks require their matching instruments: Arturia JUN-6 V, Arturia Pigments, Native Instruments FM8, Vital, Synplant 2, Softube Synth Models, FabFilter One, Moog Model D, or Animoog Z.",
+      "The 7 WAV sound packs can be used in any DAW, sampler, or audio editor that supports standard WAV files.",
       "Please check the individual product notes inside the collection for exact plugin requirements."
     ]
   },

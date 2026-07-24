@@ -75,8 +75,11 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   "kreativ-kollection-v1": {
     title: "Kreativ Kollection V1 - Complete Kreativ Sound Preset & Sample Bundle",
     headline: "Kreativ Kollection V1",
-    description: "Kreativ Kollection V1 is the complete Kreativ Sound bundle, collecting presets, samples, loops, textures, and experimental sound design packs for ambient, cinematic, electronic, and dark production.",
-    kicker: "Flagship bundle"
+    description: "Kreativ Kollection V1 combines 9 synth preset banks and 7 WAV sound packs for ambient, cinematic, industrial, experimental, and dark electronic production.",
+    kicker: "16-product flagship bundle",
+    primaryUrl: "https://kreativ.gumroad.com/l/kreativ-kollection-v1",
+    primaryLabel: "Get the bundle on Gumroad",
+    variant: "bundle"
   },
   "preset-mutator": {
     title: "Preset Mutator | Vital Preset Generator",
