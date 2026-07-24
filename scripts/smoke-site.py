@@ -107,7 +107,7 @@ def main() -> int:
             "/license/": ["Product License", "What the license allows", "What the license does not allow"],
             "/search/": ["Find sounds, tools, and guides.", "Search Kreativ Sound", "Enter a product, synth, format, texture, guide, or tool."],
             "/sounds/": ["Browse Sound", "Find a sound", "Need placement ideas?", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs"],
-            "/sounds/kreativ-kollection-v1": ["Coming soon", "Kreativ Kollection V1", "JUNO NOCTURNES", "Description", "What's Included", "Product Specifications", "Requirements"],
+            "/sounds/kreativ-kollection-v1": ["Get the bundle on Gumroad", "49 EUR", "16 products", "Kreativ Kollection V1", "JUNO NOCTURNES", "Description", "What's Included", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements"],
             "/sounds/operators-fm8-presets": ["Buy on Gumroad", "Try Lite free", "OPERATORS", "64 presets", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-lite-jun-6-v-presets": ["Download Free", "Juno Nocturnes Lite", "16 presets", "Lite vs Full", "Upgrade to full Juno Nocturnes"],
