@@ -5,7 +5,7 @@ canonical: "https://kreativsound.com/posts/how-to-use-audio-alchemy-free-2026-04
 ogImage: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg"
 section: learn
 published: "2026-04-02"
-featured: true
+featured: false
 draft: false
 ---
 <figure class="article-figure">

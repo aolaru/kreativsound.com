@@ -11,6 +11,7 @@ export type MusicRelease = {
   image: string;
   imageAlt: string;
   summary: string;
+  bandcampAlbumId?: string;
   releaseDate?: string;
   mood?: string[];
   platformLinks?: MusicPlatformLink[];
@@ -46,6 +47,7 @@ export const musicArtists: MusicArtist[] = [
         image: "/assets/music/olaru-memories.jpg",
         imageAlt: "Memories album cover",
         summary: "Sketchbook ambience and melodic memory fragments.",
+        bandcampAlbumId: "3005188030",
         mood: ["ambient", "melodic", "sketchbook"],
         platformLinks: [
           {
@@ -63,6 +65,7 @@ export const musicArtists: MusicArtist[] = [
         image: "/assets/music/olaru-trees.jpg",
         imageAlt: "Trees album cover",
         summary: "Organic studies with texture, distance, and color.",
+        bandcampAlbumId: "3106922682",
         mood: ["organic", "ambient", "textural"],
         platformLinks: [
           {
@@ -80,6 +83,7 @@ export const musicArtists: MusicArtist[] = [
         image: "/assets/music/olaru-vision-no-return.jpg",
         imageAlt: "Vision No Return album cover",
         summary: "Melancholic motion and hazier cinematic drift.",
+        bandcampAlbumId: "1563336206",
         mood: ["melancholic", "cinematic", "hazy"],
         platformLinks: [
           {
@@ -97,6 +101,7 @@ export const musicArtists: MusicArtist[] = [
         image: "/assets/music/olaru-nightfall.jpg",
         imageAlt: "Nightfall album cover",
         summary: "Low-light ambience and restrained melodic cues.",
+        bandcampAlbumId: "4173187328",
         mood: ["low-light", "restrained", "cinematic"],
         platformLinks: [
           {
@@ -114,6 +119,7 @@ export const musicArtists: MusicArtist[] = [
         image: "/assets/music/olaru-selected-ghosts.jpg",
         imageAlt: "Selected Ghosts album cover",
         summary: "Atmospheric fragments and shadowed piano distance.",
+        bandcampAlbumId: "3726038612",
         mood: ["shadowed", "piano", "fragments"],
         platformLinks: [
           {
@@ -131,6 +137,7 @@ export const musicArtists: MusicArtist[] = [
         image: "/assets/music/olaru-ambitones.jpg",
         imageAlt: "Ambitones album cover",
         summary: "Minimal tonal studies with spatial restraint.",
+        bandcampAlbumId: "2314114483",
         mood: ["minimal", "tonal", "spatial"],
         platformLinks: [
           {

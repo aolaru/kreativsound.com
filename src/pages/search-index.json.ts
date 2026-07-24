@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
+import { musicArtists } from "../lib/music";
 import { productPages } from "../lib/product-pages";
 
 type SearchEntry = {
@@ -26,6 +27,11 @@ function localImage(url?: string) {
 
 function articleUrl(id: string) {
   return `/posts/${id.replace(/\.md$/, "")}.html`;
+}
+
+function musicReleaseUrl(artistSlug: string, title: string) {
+  const releaseSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return `/music/#${artistSlug}-${releaseSlug}`;
 }
 
 const staticEntries: SearchEntry[] = [
@@ -97,14 +103,7 @@ const staticEntries: SearchEntry[] = [
     url: "/news/",
     type: "Page",
     thumbnail: "/assets/thumbs/juno-nocturnes.webp",
-    description: "Release news, tool notes, and catalog updates from Kreativ Sound."
-  },
-  {
-    title: "Guides",
-    url: "/learn/",
-    type: "Page",
-    thumbnail: "/assets/thumbs/bioforms.jpg",
-    description: "Practical sound-design guides for tension, motion, layering, and restrained atmosphere."
+    description: "Release news, practical guides, and selected tool updates from Kreativ Sound."
   },
   {
     title: "About",
@@ -159,6 +158,19 @@ export const GET: APIRoute = async () => {
     thumbnail: product.image,
     description: product.description
   }));
+  const musicEntries: SearchEntry[] = musicArtists.flatMap((artist) =>
+    artist.releases.map((release) => ({
+      title: release.title,
+      url: musicReleaseUrl(artist.slug, release.title),
+      type: `${release.type} by ${artist.name}`,
+      thumbnail: release.image,
+      description: [
+        release.summary,
+        release.mood?.length ? `Mood: ${release.mood.join(", ")}.` : "",
+        `Listen to ${artist.name} on Bandcamp.`
+      ].filter(Boolean).join(" ")
+    }))
+  );
   const postEntries: SearchEntry[] = posts
     .sort((a, b) => (b.data.published || "").localeCompare(a.data.published || ""))
     .map((post) => ({
@@ -170,7 +182,7 @@ export const GET: APIRoute = async () => {
     }));
 
   const seen = new Set<string>();
-  const entries = [...staticEntries, ...productEntries, ...postEntries].filter((entry) => {
+  const entries = [...staticEntries, ...productEntries, ...musicEntries, ...postEntries].filter((entry) => {
     if (seen.has(entry.url)) return false;
     seen.add(entry.url);
     return true;

@@ -74,6 +74,17 @@ if (!browseSound) {
   fail(`Browse Sound search entry points to ${browseSound.url}, expected /sounds/.`);
 }
 
+const memories = entries.find((entry) => entry.title === "Memories");
+if (!memories) {
+  fail("Missing Memories music search entry.");
+} else if (memories.url !== "/music/#olaru-memories") {
+  fail(`Memories search entry points to ${memories.url}, expected /music/#olaru-memories.`);
+}
+
+if (entryUrls.has("/learn/")) {
+  fail("Retired /learn/ route should not appear in the search index.");
+}
+
 for (const entry of entries) {
   if (!entry.title || !entry.url || !entry.type || !entry.description) {
     fail(`Incomplete search entry: ${JSON.stringify(entry)}`);

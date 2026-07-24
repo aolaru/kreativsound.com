@@ -11,6 +11,7 @@ const posts = defineCollection({
     section: z.enum(["news", "learn"]),
     kind: z.enum(["release", "site"]).optional(),
     published: z.string().optional(),
+    author: z.string().default("Andrei Olaru"),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false)
   })

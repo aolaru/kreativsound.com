@@ -95,20 +95,21 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "News", "Guides", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
-            "/news/": ["Sounds", "Latest Sound Releases", "JUNO NOCTURNES Released for Arturia JUN-6 V"],
-            "/learn/": ["Sounds", "Guides", "Latest Guides", "How to Use JUNO NOCTURNES for Dark Ambient"],
-            "/music/": ["Music", "Olaru", "Memories"],
+            "/": ["Sounds", "News", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
+            "/news/": ["Sounds", "Latest Sound Releases", "Practical Sound-Design Guides", "How to Use JUNO NOCTURNES for Dark Ambient", "Site and tool changelog"],
+            "/learn/": ["Sounds", "Practical guides now live with News.", "Browse practical guides", "Search guides"],
+            "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
             "/privacy/": ["Privacy Policy", "Optional analytics", "Google Analytics", "Cloudflare Web Analytics"],
             "/terms/": ["Terms of Use", "Purchases", "Product License"],
             "/refunds/": ["Refund Policy", "Refund requests", "Gumroad and PayPal purchases"],
             "/license/": ["Product License", "What the license allows", "What the license does not allow"],
-            "/search/": ["Find sounds, tools, and guides.", "Search Kreativ Sound", "Enter a product, synth, format, texture, guide, or tool."],
+            "/posts/how-to-use-juno-nocturnes-for-dark-ambient-2026-07-18.html": ["By Andrei Olaru", "Published July 18, 2026", "How to Use JUNO NOCTURNES for Dark Ambient"],
+            "/search/": ["Find sounds, music, tools, and articles.", "Search Kreativ Sound", "Enter a product, album, artist, synth, format, guide, or tool."],
             "/sounds/": ["Browse Sound", "Find a sound", "Need placement ideas?", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs"],
             "/sounds/kreativ-kollection-v1": ["Get the bundle on Gumroad", "49 EUR", "16 products", "Kreativ Kollection V1", "JUNO NOCTURNES", "Description", "What's Included", "Product Specifications", "Requirements"],
-            "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements"],
+            "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements", "Related sounds", "View full catalog"],
             "/sounds/operators-fm8-presets": ["Buy on Gumroad", "Try Lite free", "OPERATORS", "64 presets", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-lite-jun-6-v-presets": ["Download Free", "Juno Nocturnes Lite", "16 presets", "Lite vs Full", "Upgrade to full Juno Nocturnes"],
             "/sounds/velvet-ruins-vital-presets": ["Buy on Gumroad", "Try Lite free", "VELVET RUINS", "Description", "Product Specifications", "Requirements"],
@@ -132,7 +133,7 @@ def main() -> int:
                 require(dom, 'href="/sounds/kreativ-kollection-v1"', route, errors)
                 require(dom, 'href="/sounds/preset-mutator"', route, errors)
                 require(dom, 'href="/preset-mutator/"', route, errors)
-                require(dom, 'href="/learn/"', route, errors)
+                forbid(dom, 'href="/learn/"', route, errors)
                 require(dom, "Flagship bundle", route, errors)
                 require(dom, "Creative tool", route, errors)
                 require(dom, "Full Catalog", route, errors)
@@ -143,9 +144,16 @@ def main() -> int:
                 require(dom, 'data-catalog-query', route, errors)
                 require(dom, 'data-catalog-category="Presets"', route, errors)
                 require(dom, 'data-catalog-category="Free"', route, errors)
+                forbid(dom, 'class="catalog-anchor-links"', route, errors)
+            if route.startswith("/sounds/") and route != "/sounds/":
+                require(dom, 'class="product-breadcrumbs"', route, errors)
+                require(dom, 'href="/sounds/"', route, errors)
             if route == "/music/":
                 forbid(dom, "Rethyn", route, errors)
                 forbid(dom, "Holo Signal", route, errors)
+            if route.startswith("/posts/"):
+                require(dom, '"@type":"Article"', route, errors)
+                require(dom, '"name":"Andrei Olaru"', route, errors)
 
         if errors:
             print("Smoke test failed:")

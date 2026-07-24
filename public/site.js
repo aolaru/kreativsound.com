@@ -83,13 +83,16 @@ function normalizeQuery(value) {
 function scoreSearchEntry(entry, query) {
   const title = normalizeQuery(entry.title);
   const description = normalizeQuery(entry.description);
+  const type = normalizeQuery(entry.type);
   const words = query.split(/\s+/).filter(Boolean);
-  if (!title && !description) return -1;
+  if (!title && !description && !type) return -1;
   if (title === query) return 100;
   if (title.startsWith(query)) return 80;
   if (title.includes(query)) return 60;
+  if (type === query) return 45;
+  if (type.includes(query)) return 40;
   if (description.includes(query)) return 30;
-  if (words.length > 1 && words.every((word) => title.includes(word) || description.includes(word))) return 20;
+  if (words.length > 1 && words.every((word) => title.includes(word) || description.includes(word) || type.includes(word))) return 20;
   return -1;
 }
 
@@ -311,7 +314,7 @@ if (searchPage) {
       .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
 
     if (!query) {
-      if (status) status.textContent = "Enter a product, synth, format, texture, guide, or tool.";
+      if (status) status.textContent = "Enter a product, album, artist, synth, format, guide, or tool.";
       return;
     }
 

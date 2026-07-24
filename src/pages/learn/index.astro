@@ -1,112 +1,26 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
-
-const learnPosts = (await getCollection("posts", ({ data }) => data.section === "learn" && !data.draft))
-  .sort((a, b) => (b.data.published || "").localeCompare(a.data.published || ""));
-
-const featuredPost = learnPosts.find((post) => post.data.featured) || learnPosts[0];
-const latestPosts = learnPosts.filter((post) => post.id !== featuredPost.id).slice(0, 6);
-
-function hrefFor(post) {
-  return `/posts/${post.id.replace(/\.md$/, "")}.html`;
-}
-
-function formatDate(date) {
-  return new Date(date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
-}
 ---
 <BaseLayout
-  title="Guides | Kreativ Sound"
-  description="Practical Kreativ Sound guides for using presets, sample packs, texture layers, and browser tools in darker production work."
-  canonical="https://kreativsound.com/learn/"
-  activeNav="learn"
-  ogImage="https://kreativsound.com/assets/thumbs/bioforms.jpg"
+  title="Guides Have Moved | Kreativ Sound"
+  description="Kreativ Sound practical guides now live alongside release news and remain available through site search."
+  canonical="https://kreativsound.com/news/"
+  robots="noindex,follow"
+  activeNav="news"
 >
-  <section class="card page-main learn-page">
-    <div class="learn-hero">
-      <div class="learn-hero-copy">
-        <p class="eyebrow">Guides</p>
-        <h1 class="page-title">Short sound-design guides you can use immediately.</h1>
-        <p class="page-lead">Practical notes tied to actual packs, with less theory and more direct decisions around tension, motion, layering, and restraint.</p>
-        <div class="learn-quick-links" aria-label="Guide shortcuts">
-          <a href="#latest-guides">
-            <strong>{learnPosts.length}</strong>
-            <span>Practical guides</span>
-          </a>
-          <a href="#learn-covers">
-            <strong>3</strong>
-            <span>Main topics</span>
-          </a>
-        </div>
-      </div>
-      <a class="learn-featured" href={hrefFor(featuredPost)}>
-        <img class="learn-featured-image" src={featuredPost.data.ogImage || "/og-image.svg"} width="256" height="256" alt={`${featuredPost.data.title} artwork`} />
-        <div class="learn-featured-copy">
-          <span class="learn-card-kicker">Featured guide</span>
-          {featuredPost.data.published ? <time datetime={featuredPost.data.published}>{formatDate(featuredPost.data.published)}</time> : null}
-          <h2>{featuredPost.data.title}</h2>
-          <p>{featuredPost.data.description}</p>
-          <span class="learn-card-link">Read guide <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
-        </div>
+  <section class="card page-main legacy-guides-page">
+    <p class="eyebrow">Guides</p>
+    <h1 class="page-title">Practical guides now live with News.</h1>
+    <p class="page-lead">The separate Learn section has been retired. Product workflows and sound-design articles remain available alongside release updates and through site search.</p>
+    <div class="legacy-guides-actions">
+      <a class="button primary" href="/news/#guides">
+        <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+        Browse practical guides
+      </a>
+      <a class="button secondary" href="/search/?q=guide">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        Search guides
       </a>
     </div>
-
-    <div class="learn-notes">
-      <article class="learn-note">
-        <span class="learn-card-kicker">Approach</span>
-        <h2>Built from actual releases</h2>
-        <p>Each guide stays tied to real packs and real decisions instead of abstract synthesis theory.</p>
-      </article>
-      <article class="learn-note">
-        <span class="learn-card-kicker">Focus</span>
-        <h2>Fast reads, usable outcomes</h2>
-        <p>The goal is faster movement from browsing sounds to actually placing them inside cues, beds, and transitions.</p>
-      </article>
-    </div>
-
-    <section class="learn-section" id="latest-guides">
-      <div class="learn-section-head">
-        <h2>Latest Guides</h2>
-        <p>Fast reads with direct musical use.</p>
-      </div>
-      <div class="learn-grid">
-        {latestPosts.map((post) => (
-          <a class="learn-card" href={hrefFor(post)}>
-            <img class="learn-card-image" src={post.data.ogImage || "/og-image.svg"} width="160" height="160" alt={`${post.data.title} artwork`} />
-            <span class="learn-card-copy">
-              {post.data.published ? <time datetime={post.data.published}>{formatDate(post.data.published)}</time> : null}
-              <span class="learn-card-title">{post.data.title}</span>
-              <span class="learn-card-summary">{post.data.description}</span>
-              <span class="learn-card-link">Read guide <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
-            </span>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <section class="learn-section" id="learn-covers">
-      <div class="learn-section-head">
-        <h2>What Guides Cover</h2>
-        <p>Built around practical use, not long theory.</p>
-      </div>
-      <div class="learn-pillars">
-        <article class="learn-pillar">
-          <span class="learn-card-kicker">Workflows</span>
-          <h3>Product-specific use</h3>
-          <p>Guides that help move from browsing presets to actually using them inside cues, beds, and transitions.</p>
-        </article>
-        <article class="learn-pillar">
-          <span class="learn-card-kicker">Focus</span>
-          <h3>Tension, space, and motion</h3>
-          <p>Short breakdowns around atmosphere, low-register movement, restrained layering, and cinematic pressure.</p>
-        </article>
-        <article class="learn-pillar">
-          <span class="learn-card-kicker">Style</span>
-          <h3>Useful, not academic</h3>
-          <p>Creative notes that stay direct enough to use in film, ambient, and experimental production sessions.</p>
-        </article>
-      </div>
-    </section>
   </section>
 </BaseLayout>

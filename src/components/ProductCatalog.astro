@@ -43,11 +43,13 @@ function unavailableText(product: { status?: string; badge?: string; category: s
       <p class="catalog-filter-status" role="status" aria-live="polite" data-catalog-status></p>
     </div>
   ) : null}
-  <div class="catalog-anchor-links" aria-label="Catalog sections" hidden={!showCategoryNav || categories.length === 0}>
-    {categories.map((category) => (
-      <a href={`#${categoryIds[category]}`}>{categoryLabels[category]}</a>
-    ))}
-  </div>
+  {showCategoryNav && !showFilters && categories.length ? (
+    <div class="catalog-anchor-links" aria-label="Catalog sections">
+      {categories.map((category) => (
+        <a href={`#${categoryIds[category]}`}>{categoryLabels[category]}</a>
+      ))}
+    </div>
+  ) : null}
   {categories.map((category, categoryIndex) => {
     const categoryItems = products.filter((product) => product.category === category);
     return (

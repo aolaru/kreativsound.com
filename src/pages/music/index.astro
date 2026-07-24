@@ -20,6 +20,14 @@ function absoluteUrl(href: string) {
   return href.startsWith("http") ? href : `${siteUrl}${href}`;
 }
 
+function releaseId(artistSlug: string, title: string) {
+  return `${artistSlug}-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+}
+
+function bandcampEmbedUrl(albumId: string) {
+  return `https://bandcamp.com/EmbeddedPlayer/album=${albumId}/size=small/bgcol=ffffff/linkcol=990000/tracklist=false/artwork=none/transparent=true/`;
+}
+
 function formattedDate(date: string) {
   return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", {
     month: "long",
@@ -91,6 +99,15 @@ const musicJsonLd = {
               {featuredItem.release.releaseDate ? ` · ${formattedDate(featuredItem.release.releaseDate)}` : ""}
             </p>
             <p>{featuredItem.release.summary}</p>
+            {featuredItem.release.bandcampAlbumId ? (
+              <iframe
+                class="music-bandcamp-player"
+                src={bandcampEmbedUrl(featuredItem.release.bandcampAlbumId)}
+                title={`Listen to ${featuredItem.release.title} by ${featuredItem.artist.name}`}
+                loading="lazy"
+                allow="autoplay"
+              ></iframe>
+            ) : null}
             {featuredItem.release.mood?.length ? (
               <div class="music-mood-list" aria-label={`${featuredItem.release.title} mood`}>
                 {featuredItem.release.mood.map((mood) => <span>{mood}</span>)}
@@ -141,6 +158,7 @@ const musicJsonLd = {
           <div class:list={["music-grid", artist.gridClass]}>
             {artist.releases.map((release) => (
               <article
+                id={releaseId(artist.slug, release.title)}
                 class:list={[
                   "music-card",
                   artist.gridClass === "music-grid-single" && "music-card-featured",
@@ -178,6 +196,15 @@ const musicJsonLd = {
                     </span>
                   ) : null}
                   <p class="music-card-summary">{release.summary}</p>
+                  {release.bandcampAlbumId ? (
+                    <iframe
+                      class="music-bandcamp-player"
+                      src={bandcampEmbedUrl(release.bandcampAlbumId)}
+                      title={`Listen to ${release.title} by ${artist.name}`}
+                      loading="lazy"
+                      allow="autoplay"
+                    ></iframe>
+                  ) : null}
                   <span class="music-card-links">
                     {(release.platformLinks ?? [{ label: release.linkLabel, href: release.href, primary: true }]).map((link) => (
                       <a

@@ -5,7 +5,7 @@ canonical: "https://kreativsound.com/posts/how-to-use-juno-nocturnes-for-dark-am
 ogImage: "https://kreativsound.com/assets/thumbs/juno-nocturnes.webp"
 section: learn
 published: "2026-07-18"
-featured: false
+featured: true
 draft: false
 ---
 <figure class="article-figure">

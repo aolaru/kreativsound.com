@@ -19,6 +19,15 @@ export type ProductLiteComparison = {
   note?: string;
 };
 
+export type ProductRelatedItem = {
+  title: string;
+  url: string;
+  image: string;
+  imageAlt: string;
+  meta: string;
+  category: ProductCategory;
+};
+
 export type ProductPage = {
   slug: string;
   title: string;
@@ -51,6 +60,7 @@ export type ProductPage = {
   requirements: string[];
   longDescription: string[];
   includedGroups: ProductIncludedGroup[];
+  relatedProducts: ProductRelatedItem[];
   liteComparison?: ProductLiteComparison;
   finalCtaTitle?: string;
   finalCtaText?: string;
@@ -364,6 +374,39 @@ function buildIncludedGroups(includedProducts?: string[]): ProductIncludedGroup[
     .filter(Boolean) as ProductIncludedGroup[];
 }
 
+function buildRelatedProducts(current: Product): ProductRelatedItem[] {
+  const candidates = products.filter((candidate) =>
+    candidate.detailsUrl && candidate.detailsUrl !== current.detailsUrl
+  );
+
+  function relationScore(candidate: Product) {
+    const isCounterpart =
+      current.extraAction?.url === candidate.detailsUrl ||
+      candidate.extraAction?.url === current.detailsUrl;
+    if (isCounterpart) return 0;
+    if (candidate.format === current.format) return 1;
+    if (candidate.category === current.category) return 2;
+    if (candidate.featuredRank) return 3;
+    return 4;
+  }
+
+  return candidates
+    .sort((a, b) =>
+      relationScore(a) - relationScore(b) ||
+      (a.featuredRank ?? 999) - (b.featuredRank ?? 999) ||
+      productTitle(a).localeCompare(productTitle(b))
+    )
+    .slice(0, 3)
+    .map((product) => ({
+      title: productTitle(product),
+      url: product.detailsUrl as string,
+      image: product.thumbnail || product.coverImage || "/logo-128.svg",
+      imageAlt: `${productTitle(product)} cover`,
+      meta: [product.count, product.format].filter(Boolean).join(" | "),
+      category: product.category
+    }));
+}
+
 export const productPages: ProductPage[] = products
   .filter((product) => product.detailsUrl)
   .map((product) => {
@@ -405,6 +448,7 @@ export const productPages: ProductPage[] = products
       requirements: copy?.requirements || defaultRequirements(product),
       longDescription: copy?.longDescription || defaultLongDescription(product, name, description),
       includedGroups: buildIncludedGroups(copy?.includedProducts),
+      relatedProducts: buildRelatedProducts(product),
       liteComparison: liteComparisons[slug],
       finalCtaTitle: copy?.finalCtaTitle,
       finalCtaText: copy?.finalCtaText

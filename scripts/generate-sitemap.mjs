@@ -113,6 +113,9 @@ function sourcePathsForRoute(route) {
 }
 
 function shouldIndexRoute(route) {
+  if (route === "/learn/") {
+    return false;
+  }
   if (route.startsWith("/posts/") && route.endsWith(".html")) {
     const slug = route.slice("/posts/".length, -".html".length);
     const sourcePath = path.join(rootDir, "src/content/posts", `${slug}.md`);
@@ -150,7 +153,7 @@ function priorityForRoute(route) {
   if (route === "/") return "1.0";
   if (route === "/sounds/") return "0.9";
   if (route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) return "0.8";
-  if (route === "/news/" || route === "/learn/" || route === "/tools/") return "0.8";
+  if (route === "/news/" || route === "/tools/") return "0.8";
   if (route.startsWith("/tools/")) return "0.8";
   if (route.startsWith("/sounds/")) return "0.8";
   if (route.startsWith("/posts/")) return "0.7";
@@ -158,14 +161,14 @@ function priorityForRoute(route) {
 }
 
 function changefreqForRoute(route) {
-  if (route === "/" || route === "/sounds/" || route === "/news/" || route === "/learn/" || route === "/tools/" || route.startsWith("/tools/") || route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) {
+  if (route === "/" || route === "/sounds/" || route === "/news/" || route === "/tools/" || route.startsWith("/tools/") || route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) {
     return "weekly";
   }
   return "monthly";
 }
 
 function sortRoutes(a, b) {
-  const order = ["/", "/sounds/", "/news/", "/learn/", "/tools/", "/preset-mutator/", "/preset-mutator/audio/", "/preset-mutator/mutate/", "/music/", "/about/", "/contact/"];
+  const order = ["/", "/sounds/", "/news/", "/tools/", "/preset-mutator/", "/preset-mutator/audio/", "/preset-mutator/mutate/", "/music/", "/about/", "/contact/"];
   const aIndex = order.indexOf(a);
   const bIndex = order.indexOf(b);
   if (aIndex !== -1 || bIndex !== -1) {
