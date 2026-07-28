@@ -95,7 +95,7 @@ function imageFor(post) {
           <h2 id="release-news-title">Latest Sound Releases</h2>
           <p>Recent preset packs, sample releases, and free drops.</p>
         </div>
-        <ul class="news-card-list">
+        <ul class="news-card-list" id="release-news-list" data-content-list>
           {moreReleases.map((post) => (
             <li>
               <a class="news-card news-card-release" href={hrefFor(post)}>
@@ -118,6 +118,10 @@ function imageFor(post) {
             </li>
           ))}
         </ul>
+        <button class="button secondary content-list-toggle" type="button" data-content-toggle aria-controls="release-news-list" aria-expanded="false" hidden>
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          <span>Show more releases</span>
+        </button>
       </section>
 
       <section class="news-panel" id="guides" aria-labelledby="practical-guides-title">
@@ -126,7 +130,7 @@ function imageFor(post) {
           <h2 id="practical-guides-title">Practical Sound-Design Guides</h2>
           <p>Direct workflows tied to current products, synths, and production decisions.</p>
         </div>
-        <ul class="news-card-list">
+        <ul class="news-card-list" id="guide-news-list" data-content-list>
           {guidePosts.map((post) => (
             <li>
               <a class="news-card news-card-release" href={hrefFor(post)}>
@@ -149,6 +153,10 @@ function imageFor(post) {
             </li>
           ))}
         </ul>
+        <button class="button secondary content-list-toggle" type="button" data-content-toggle aria-controls="guide-news-list" aria-expanded="false" hidden>
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          <span>Show more guides</span>
+        </button>
       </section>
 
       {sitePosts.length ? (

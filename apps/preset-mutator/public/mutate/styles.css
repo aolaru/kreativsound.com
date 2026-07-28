@@ -106,7 +106,7 @@ output {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 38px;
+  min-height: 44px;
   padding: 0.35rem 0.15rem;
   color: var(--text);
   background: transparent;
@@ -126,6 +126,7 @@ output {
 
 .theme-toggle {
   gap: 0.35rem;
+  min-width: 44px;
 }
 
 .theme-toggle::before {

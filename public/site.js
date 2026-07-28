@@ -258,16 +258,24 @@ if (catalog) {
   const catalogItems = Array.from(catalog.querySelectorAll("[data-catalog-item]"));
   const catalogSections = Array.from(catalog.querySelectorAll("[data-catalog-section]"));
   const status = catalog.querySelector("[data-catalog-status]");
+  const moreButton = catalog.querySelector("[data-catalog-more]");
+  const mobileCatalog = window.matchMedia("(max-width: 720px)");
+  const pageSize = 9;
   let activeCategory = "all";
+  let visibleLimit = moreButton && mobileCatalog.matches ? pageSize : Infinity;
 
   function applyCatalogFilters() {
     const query = normalizeQuery(queryInput?.value);
+    const matchingItems = catalogItems.filter((item) => {
+      const categoryMatch = activeCategory === "all" || item.dataset.category === activeCategory;
+      const queryMatch = !query || normalizeQuery(item.dataset.searchText).includes(query);
+      return categoryMatch && queryMatch;
+    });
     let visibleCount = 0;
 
     catalogItems.forEach((item) => {
-      const categoryMatch = activeCategory === "all" || item.dataset.category === activeCategory;
-      const queryMatch = !query || normalizeQuery(item.dataset.searchText).includes(query);
-      const visible = categoryMatch && queryMatch;
+      const matchIndex = matchingItems.indexOf(item);
+      const visible = matchIndex >= 0 && matchIndex < visibleLimit;
       item.hidden = !visible;
       if (visible) visibleCount += 1;
     });
@@ -277,13 +285,24 @@ if (catalog) {
     });
 
     if (status) {
-      status.textContent = `${visibleCount} ${visibleCount === 1 ? "product" : "products"} shown`;
+      status.textContent = visibleCount === matchingItems.length
+        ? `${visibleCount} ${visibleCount === 1 ? "product" : "products"} shown`
+        : `${visibleCount} of ${matchingItems.length} products shown`;
     }
+
+    if (moreButton) {
+      moreButton.hidden = !mobileCatalog.matches || visibleCount >= matchingItems.length;
+    }
+  }
+
+  function resetCatalogLimit() {
+    visibleLimit = moreButton && mobileCatalog.matches ? pageSize : Infinity;
   }
 
   categoryButtons.forEach((button) => {
     button.addEventListener("click", () => {
       activeCategory = button.dataset.catalogCategory || "all";
+      resetCatalogLimit();
       categoryButtons.forEach((candidate) => {
         const selected = candidate === button;
         candidate.classList.toggle("is-active", selected);
@@ -293,9 +312,68 @@ if (catalog) {
     });
   });
 
-  queryInput?.addEventListener("input", applyCatalogFilters);
+  queryInput?.addEventListener("input", () => {
+    resetCatalogLimit();
+    applyCatalogFilters();
+  });
+  moreButton?.addEventListener("click", () => {
+    visibleLimit += pageSize;
+    applyCatalogFilters();
+  });
+  mobileCatalog.addEventListener("change", () => {
+    resetCatalogLimit();
+    applyCatalogFilters();
+  });
   applyCatalogFilters();
 }
+
+document.querySelectorAll(".news-panel").forEach((panel) => {
+  const list = panel.querySelector("[data-content-list]");
+  const toggle = panel.querySelector("[data-content-toggle]");
+  const items = list ? Array.from(list.children) : [];
+  const mobileList = window.matchMedia("(max-width: 720px)");
+  const initialCount = 4;
+  const toggleLabel = toggle?.querySelector("span");
+  const collapsedLabel = toggleLabel?.textContent || "Show more";
+  const expandedLabel = collapsedLabel.replace("more", "fewer");
+  let expanded = false;
+
+  if (!list || !toggle || items.length <= initialCount) return;
+
+  function updateContentList() {
+    const collapsed = mobileList.matches && !expanded;
+    items.forEach((item, index) => {
+      item.hidden = collapsed && index >= initialCount;
+    });
+    toggle.hidden = !mobileList.matches;
+    toggle.setAttribute("aria-expanded", String(!collapsed));
+    if (toggleLabel) toggleLabel.textContent = collapsed ? collapsedLabel : expandedLabel;
+  }
+
+  toggle.addEventListener("click", () => {
+    expanded = !expanded;
+    updateContentList();
+    if (!expanded) list.scrollIntoView({ block: "start", behavior: "smooth" });
+  });
+
+  mobileList.addEventListener("change", () => {
+    expanded = false;
+    updateContentList();
+  });
+  updateContentList();
+});
+
+document.querySelectorAll("[data-music-player-toggle]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const container = button.closest(".music-player-on-demand");
+    const player = container?.querySelector("[data-src]");
+    if (!player) return;
+    if (!player.src) player.src = player.dataset.src;
+    player.hidden = false;
+    button.hidden = true;
+    button.setAttribute("aria-expanded", "true");
+  });
+});
 
 const searchPage = document.querySelector("[data-search-page]");
 

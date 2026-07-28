@@ -12,6 +12,7 @@ const categories = [
   ...preferredCategoryOrder.filter((category) => discoveredCategories.includes(category)),
   ...discoveredCategories.filter((category) => !preferredCategoryOrder.includes(category))
 ].filter((category) => visibleCategories.includes(category));
+const CategoryHeading = showFilters ? "h2" : "h3";
 
 function ctaText(category: string) {
   if (category === "Free") return "Download Free";
@@ -54,7 +55,7 @@ function unavailableText(product: { status?: string; badge?: string; category: s
     const categoryItems = products.filter((product) => product.category === category);
     return (
       <section class:list={["catalog-group", category === "Legacy" && "catalog-group-legacy"]} id={categoryIds[category]} data-catalog-section={category}>
-        <h3>{categoryLabels[category]}</h3>
+        <CategoryHeading>{categoryLabels[category]}</CategoryHeading>
         <ul class="product-grid">
           {categoryItems.map((item, itemIndex) => {
             const hasPrimaryAction = Boolean(item.url);
@@ -120,4 +121,12 @@ function unavailableText(product: { status?: string; badge?: string; category: s
       </section>
     );
   })}
+  {showFilters ? (
+    <div class="catalog-progress">
+      <button class="button secondary" type="button" data-catalog-more hidden>
+        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+        Show more products
+      </button>
+    </div>
+  ) : null}
 </div>

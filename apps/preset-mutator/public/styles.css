@@ -107,7 +107,7 @@ output {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 38px;
+  min-height: 44px;
   padding: 0.35rem 0.15rem;
   border: 0;
   color: var(--text);
@@ -132,6 +132,7 @@ output {
 
 .theme-toggle {
   gap: 0.35rem;
+  min-width: 44px;
 }
 
 .theme-toggle::before {
@@ -983,8 +984,9 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.1rem;
-  height: 1.1rem;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
   padding: 0;
   border: 0;
   border-radius: 999px;

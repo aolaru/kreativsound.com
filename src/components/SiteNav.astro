@@ -6,7 +6,7 @@ function navClass(key) {
 }
 ---
 <nav class="site-nav site-nav-split site-nav-home" aria-label="Primary">
-  <a class="nav-brand nav-brand-left" href="/" aria-label="Kreativ Sound home">
+  <a class="nav-brand nav-brand-left" href="/" aria-label="Kreativ Sound home" aria-current={active === "" ? "page" : undefined}>
     <img class="nav-brand-mark" src="/logo-128.svg" width="128" height="128" alt="" aria-hidden="true" />
     <span class="nav-brand-copy" aria-hidden="true">
       <span class="nav-brand-name">Kreativ</span>
@@ -41,12 +41,12 @@ function navClass(key) {
       />
     </form>
     <div class="nav-group nav-group-right">
-      <a class={navClass("sound")} href="/sounds/" aria-label="Sounds">Sounds</a>
-      <a class={navClass("tools")} href="/tools/">Tools</a>
-      <a class={navClass("music")} href="/music/">Music</a>
-      <a class={navClass("news")} href="/news/">News</a>
-      <a class={navClass("about")} href="/about/">About</a>
-      <a class={navClass("contact")} href="/contact/">Contact</a>
+      <a class={navClass("sound")} href="/sounds/" aria-label="Sounds" aria-current={active === "sound" ? "page" : undefined}>Sounds</a>
+      <a class={navClass("tools")} href="/tools/" aria-current={active === "tools" ? "page" : undefined}>Tools</a>
+      <a class={navClass("music")} href="/music/" aria-current={active === "music" ? "page" : undefined}>Music</a>
+      <a class={navClass("news")} href="/news/" aria-current={active === "news" ? "page" : undefined}>News</a>
+      <a class={navClass("about")} href="/about/" aria-current={active === "about" ? "page" : undefined}>About</a>
+      <a class={navClass("contact")} href="/contact/" aria-current={active === "contact" ? "page" : undefined}>Contact</a>
       <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
         <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
         <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>

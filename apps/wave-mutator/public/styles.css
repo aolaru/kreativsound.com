@@ -732,7 +732,7 @@ h3 {
 }
 
 .segmented-controls button {
-  min-height: 36px;
+  min-height: 44px;
   border-color: transparent;
   padding: 0.48rem 0.75rem;
   background: transparent;
@@ -1091,27 +1091,45 @@ select {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.12rem;
-  height: 1.12rem;
-  min-height: 0;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border: 0;
   border-radius: 999px;
   padding: 0;
   color: #e9edff;
-  background: rgba(255, 255, 255, 0.08);
-  font-size: 0.68rem;
+  background: transparent;
+  font-size: 0;
   font-weight: 800;
   line-height: 1;
   cursor: help;
   transform: none;
 }
 
+.info-tooltip::before {
+  content: "?";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.12rem;
+  height: 1.12rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.68rem;
+}
+
 .info-tooltip:hover:not(:disabled),
 .info-tooltip:focus-visible {
-  border-color: rgba(82, 240, 170, 0.48);
   color: #ecfff7;
-  background: rgba(82, 240, 170, 0.12);
+  background: transparent;
   transform: none;
+}
+
+.info-tooltip:hover:not(:disabled)::before,
+.info-tooltip:focus-visible::before {
+  border-color: rgba(82, 240, 170, 0.48);
+  background: rgba(82, 240, 170, 0.12);
 }
 
 .info-tooltip::after {

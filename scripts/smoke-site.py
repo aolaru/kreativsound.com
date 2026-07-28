@@ -135,6 +135,7 @@ def main() -> int:
                 require(dom, 'href="/preset-mutator/"', route, errors)
                 forbid(dom, 'href="/learn/"', route, errors)
                 require(dom, "Flagship bundle", route, errors)
+                require(dom, 'id="latest-title">Kreativ Kollection V1</h2>', route, errors)
                 require(dom, "Creative tool", route, errors)
                 require(dom, "Full Catalog", route, errors)
                 require(dom, 'href="/privacy/"', route, errors)
@@ -142,8 +143,11 @@ def main() -> int:
                 require(dom, 'action="/search/"', route, errors)
             if route == "/sounds/":
                 require(dom, 'data-catalog-query', route, errors)
+                require(dom, 'data-catalog-category="Bundle"', route, errors)
+                require(dom, 'data-catalog-category="Tools"', route, errors)
                 require(dom, 'data-catalog-category="Presets"', route, errors)
                 require(dom, 'data-catalog-category="Free"', route, errors)
+                require(dom, 'data-catalog-more', route, errors)
                 forbid(dom, 'class="catalog-anchor-links"', route, errors)
             if route.startswith("/sounds/") and route != "/sounds/":
                 require(dom, 'class="product-breadcrumbs"', route, errors)
@@ -151,6 +155,8 @@ def main() -> int:
             if route == "/music/":
                 forbid(dom, "Rethyn", route, errors)
                 forbid(dom, "Holo Signal", route, errors)
+                require(dom, "data-music-player-toggle", route, errors)
+                require(dom, "data-src=", route, errors)
             if route.startswith("/posts/"):
                 require(dom, '"@type":"Article"', route, errors)
                 require(dom, '"name":"Andrei Olaru"', route, errors)
