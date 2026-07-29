@@ -305,7 +305,12 @@ export const products: Product[] = [
     coverImage: "/assets/thumbs/bleeps-2-cover.webp",
     format: "WAV samples",
     count: "Percussion pack",
-    useCase: "Percussive one-shots and rhythmic FX"
+    useCase: "Percussive one-shots and rhythmic FX",
+    demo: {
+      label: "Listen to demo",
+      src: "/assets/audio/bleeps-2-demo-01.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "SPACE 2 - Space Inspired Atmospheres and Textures",

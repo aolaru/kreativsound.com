@@ -442,7 +442,7 @@ export const landingCopyOverrides = {
   },
   "bleeps-2-percussion-sounds": {
     subtitle: "WAV Percussion Sounds for Synthetic One-Shots and Rhythm Accents",
-    shortMeta: "Percussion pack • WAV samples • Experimental one-shots",
+    shortMeta: "Percussion pack • WAV samples • Audio demo included",
     ctaLine: "Download the experimental percussion collection.",
     longDescription: [
       "BLEEPS 2 is an experimental percussion sample pack built for strange rhythm accents, synthetic one-shots, and sharper percussive detail.",
@@ -454,6 +454,7 @@ export const landingCopyOverrides = {
       { label: "Format", value: "WAV samples" },
       { label: "Collection", value: "Percussion pack" },
       { label: "Focus", value: "Experimental percussion, one-shots, rhythmic FX" },
+      { label: "Audio demo", value: "Included" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
