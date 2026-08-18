@@ -43,7 +43,7 @@ const articleSchema = {
 };
 ---
 <BaseLayout
-  title={`${post.data.title} | Kreativ Sound`}
+  title={`${post.data.seoTitle || post.data.title} | Kreativ Sound`}
   description={post.data.description}
   canonical={post.data.canonical}
   ogImage={post.data.ogImage || "https://kreativsound.com/og-image.svg"}

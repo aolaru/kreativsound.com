@@ -1,6 +1,6 @@
 ---
 title: "NEOLITH Release Notes"
-description: "Release notes for NEOLITH presets for Softube Models, published March 3, 2026."
+description: "NEOLITH brings analog-forward Softube Models presets to cinematic scenes, ambient scoring, and low-register tension work."
 canonical: "https://kreativsound.com/posts/neolith-release-2026-03-03.html"
 ogImage: "https://kreativsound.com/assets/thumbs/neolith.jpg"
 section: news

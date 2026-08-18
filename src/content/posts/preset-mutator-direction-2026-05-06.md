@@ -1,5 +1,6 @@
 ---
 title: "Preset Mutator Becomes the Main Kreativ Sound Browser Tool"
+seoTitle: "Preset Mutator Browser Tool Update"
 description: "Kreativ Sound is moving the browser tool direction around Preset Mutator, with From Scratch, Mutate Preset, and Audio to Preset live for Vital."
 canonical: "https://kreativsound.com/posts/preset-mutator-direction-2026-05-06.html"
 ogImage: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg"

@@ -59,7 +59,8 @@ function unavailableText(product: { status?: string; badge?: string; category: s
         <ul class="product-grid">
           {categoryItems.map((item, itemIndex) => {
             const hasPrimaryAction = Boolean(item.url);
-            const fetchPriority = categoryIndex === 0 && itemIndex < 6 ? "high" : "auto";
+            const eagerImage = categoryIndex === 0 && itemIndex < 6;
+            const fetchPriority = eagerImage ? "high" : "auto";
             const searchText = [item.title, item.format, item.count, item.useCase, categoryLabels[category]].join(" ").toLowerCase();
 
             return (
@@ -79,7 +80,7 @@ function unavailableText(product: { status?: string; badge?: string; category: s
                         alt={`${item.title} thumbnail`}
                         width="128"
                         height="128"
-                        loading="eager"
+                        loading={eagerImage ? "eager" : "lazy"}
                         decoding="async"
                         fetchpriority={fetchPriority}
                       />
@@ -91,7 +92,7 @@ function unavailableText(product: { status?: string; badge?: string; category: s
                       alt={`${item.title} thumbnail`}
                       width="128"
                       height="128"
-                      loading="eager"
+                      loading={eagerImage ? "eager" : "lazy"}
                       decoding="async"
                       fetchpriority={fetchPriority}
                     />

@@ -1,6 +1,7 @@
 ---
 title: "How to Turn One Audio Texture into a Vital Preset with Preset Mutator"
-description: "A practical Preset Mutator workflow for turning one focused audio texture into playable preset starting points. Vital is live first, with Serum 2 and Pigments 7 planned."
+seoTitle: "Audio Texture to Vital Preset"
+description: "Turn one focused audio texture into playable Vital preset starting points with Preset Mutator, using a practical workflow for clearer source material."
 canonical: "https://kreativsound.com/posts/how-to-turn-one-audio-texture-into-vital-preset-with-preset-mutator-2026-05-06.html"
 ogImage: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg"
 section: learn

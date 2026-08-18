@@ -33,5 +33,5 @@ draft: false
         <p>The main idea is simple: one tonal core, one controlled movement layer, and less brightness than you think.</p>
         <div class="article-cta">
           <a class="button primary" href="https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile" target="_blank" rel="noopener noreferrer">Get VELVET RUINS</a>
-          <a class="button secondary" href="/learn/">Back to Guides</a>
+          <a class="button secondary" href="/news/#guides">Back to Guides</a>
         </div>

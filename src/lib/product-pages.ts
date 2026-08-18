@@ -83,7 +83,7 @@ type ProductPageOverride = Partial<Pick<
 
 const productPageOverrides: Record<string, ProductPageOverride> = {
   "kreativ-kollection-v1": {
-    title: "Kreativ Kollection V1 - Complete Kreativ Sound Preset & Sample Bundle",
+    title: "Kreativ Kollection V1 | Preset & Sample Bundle",
     headline: "Kreativ Kollection V1",
     description: "Kreativ Kollection V1 combines 9 synth preset banks and 7 WAV sound packs for ambient, cinematic, industrial, experimental, and dark electronic production.",
     kicker: "16-product flagship bundle",
@@ -244,8 +244,20 @@ function productVariant(slug: string, category: ProductCategory): ProductPage["v
 }
 
 function defaultDescription(product: Product, name: string) {
-  const categoryLabel = product.category === "Tools" ? "browser tool" : product.category.toLowerCase();
-  return `${name} is a Kreativ Sound ${categoryLabel} for ${product.useCase.toLowerCase()}, with format notes, requirements, and download or checkout details in one place.`;
+  const categoryLabel: Record<ProductCategory, string> = {
+    Bundle: "a Kreativ Sound bundle",
+    Tools: "a Kreativ Sound browser tool",
+    Presets: "a Kreativ Sound preset bank",
+    Samples: "a Kreativ Sound sample collection",
+    Free: "a free Kreativ Sound release",
+    Legacy: "a Kreativ Sound archive release"
+  };
+  const details = product.category === "Legacy"
+    ? "format, requirements, and availability notes"
+    : product.status === "free"
+      ? "format, requirements, and download details"
+      : "format, requirements, and checkout details";
+  return `${name} is ${categoryLabel[product.category]} for ${product.useCase.toLowerCase()}. Review ${details}.`;
 }
 
 function defaultSubtitle(product: Product) {

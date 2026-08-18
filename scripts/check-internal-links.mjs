@@ -21,55 +21,108 @@ function walkHtmlFiles(dir, files = []) {
   return files;
 }
 
-function assetExists(pathname) {
-  const normalized = pathname.replace(/^\/+/, "");
-  if (!normalized) return true;
-
-  const exactPath = path.join(distDir, normalized);
-  return (
-    fs.existsSync(exactPath) ||
-    fs.existsSync(path.join(exactPath, "index.html")) ||
-    fs.existsSync(`${exactPath}.html`)
-  );
+function routeForFile(filePath) {
+  const relative = path.relative(distDir, filePath).replaceAll(path.sep, "/");
+  if (relative === "index.html") return "/";
+  if (relative.endsWith("/index.html")) {
+    return `/${relative.replace(/index\.html$/, "")}`;
+  }
+  return `/${relative}`;
 }
 
-function internalPathFromUrl(value) {
-  if (!value || value.startsWith("#")) return "";
-  if (value.startsWith("mailto:") || value.startsWith("tel:")) return "";
-
-  if (value.startsWith(siteOrigin)) {
-    return new URL(value).pathname;
+function fileForPathname(pathname) {
+  let normalized;
+  try {
+    normalized = decodeURIComponent(pathname).replace(/^\/+/, "");
+  } catch {
+    return null;
   }
 
-  if (value.startsWith("/")) {
-    return value.split(/[?#]/)[0];
-  }
+  if (!normalized) return path.join(distDir, "index.html");
 
-  return "";
+  const exactPath = path.join(distDir, normalized);
+  const candidates = [
+    exactPath,
+    path.join(exactPath, "index.html"),
+    `${exactPath}.html`
+  ];
+  return candidates.find((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile()) || null;
+}
+
+const idCache = new Map();
+
+function idsForFile(filePath) {
+  if (idCache.has(filePath)) return idCache.get(filePath);
+
+  const html = fs.readFileSync(filePath, "utf8");
+  const ids = new Set();
+  const idPattern = /\bid=["']([^"']+)["']/gi;
+  let match;
+  while ((match = idPattern.exec(html))) {
+    ids.add(match[1]);
+  }
+  idCache.set(filePath, ids);
+  return ids;
 }
 
 const brokenLinks = [];
+const brokenFragments = [];
+const malformedLinks = [];
 
 for (const filePath of walkHtmlFiles(distDir)) {
   const relativeFilePath = path.relative(distDir, filePath);
   const html = fs.readFileSync(filePath, "utf8");
-  const attributePattern = /(?:href|src)=["']([^"']+)["']/g;
+  const pageUrl = new URL(routeForFile(filePath), siteOrigin);
+  const attributePattern = /\b(?:href|src|action|poster)=["']([^"']+)["']/gi;
   let match;
 
   while ((match = attributePattern.exec(html))) {
-    const pathname = internalPathFromUrl(match[1]);
-    if (pathname && !assetExists(pathname)) {
+    const value = match[1].replaceAll("&amp;", "&").trim();
+    if (!value || /^(?:mailto:|tel:|javascript:|data:|blob:)/i.test(value)) continue;
+
+    let resolved;
+    try {
+      resolved = new URL(value, pageUrl);
+    } catch {
+      malformedLinks.push(`${relativeFilePath} -> ${match[1]}`);
+      continue;
+    }
+
+    if (resolved.origin !== siteOrigin) continue;
+
+    const targetFile = fileForPathname(resolved.pathname);
+    if (!targetFile) {
       brokenLinks.push(`${relativeFilePath} -> ${match[1]}`);
+      continue;
+    }
+
+    if (resolved.hash && resolved.hash !== "#") {
+      let fragment;
+      try {
+        fragment = decodeURIComponent(resolved.hash.slice(1));
+      } catch {
+        brokenFragments.push(`${relativeFilePath} -> ${match[1]} (invalid encoding)`);
+        continue;
+      }
+      if (!idsForFile(targetFile).has(fragment)) {
+        brokenFragments.push(`${relativeFilePath} -> ${match[1]} (missing #${fragment})`);
+      }
     }
   }
 }
 
-if (brokenLinks.length) {
-  console.error(`Broken internal links found: ${brokenLinks.length}`);
-  for (const link of brokenLinks) {
-    console.error(link);
+const failures = [
+  ...malformedLinks.map((link) => `Malformed internal URL: ${link}`),
+  ...brokenLinks.map((link) => `Missing internal target: ${link}`),
+  ...brokenFragments.map((link) => `Missing fragment target: ${link}`)
+];
+
+if (failures.length) {
+  console.error(`Internal link validation failed: ${failures.length}`);
+  for (const failure of failures) {
+    console.error(failure);
   }
   process.exit(1);
 }
 
-console.log("Internal links are valid.");
+console.log("Internal links and fragments are valid.");

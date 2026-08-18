@@ -1,6 +1,6 @@
 ---
 title: "VELVET RUINS Release Notes"
-description: "Release notes for VELVET RUINS presets for Vital, published March 21, 2026."
+description: "VELVET RUINS brings dark melodic motion, worn cinematic textures, and restrained tension to a focused preset collection for Vital."
 canonical: "https://kreativsound.com/posts/velvet-ruins-release-2026-03-21.html"
 ogImage: "https://kreativsound.com/assets/thumbs/velvet-ruins.jpg"
 section: news

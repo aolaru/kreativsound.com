@@ -33,5 +33,5 @@ draft: false
       <p>The main idea is simple: one layer for tone, one layer for motion.</p>
       <div class="article-cta">
         <a class="button primary" href="https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile" target="_blank" rel="noopener noreferrer">Get BIOFORMS</a>
-        <a class="button secondary" href="/learn/">Back to Guides</a>
+        <a class="button secondary" href="/news/#guides">Back to Guides</a>
       </div>

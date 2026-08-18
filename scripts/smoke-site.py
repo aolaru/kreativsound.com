@@ -116,6 +116,13 @@ def main() -> int:
             "/sounds/black-arcology-pigments-presets": ["Buy on Gumroad", "Try Lite free", "BLACK ARCOLOGY", "Product Specifications", "Requirements"],
             "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Description", "Product Specifications", "Requirements"],
             "/sounds/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Description", "Product Specifications", "Requirements"],
+            "/sounds/sfxs-2-sound-effects": ["SFXS 2", "Listen to demo", "/assets/audio/sfxs-2-demo-01.mp3"],
+            "/sounds/noize-2-noise-textures": ["NOIZE 2", "Listen to demo", "/assets/audio/noize-2-demo-01.mp3"],
+            "/sounds/enigma-2-cinematic-atmospheres": ["ENIGMA 2", "Listen to demo", "/assets/audio/enigma-2-demo-01.mp3"],
+            "/sounds/bleeps-2-percussion-sounds": ["BLEEPS 2", "Listen to demo", "/assets/audio/bleeps-2-demo-01.mp3"],
+            "/sounds/space-2-atmospheres-textures": ["SPACE 2", "Listen to demo", "/assets/audio/space-2-demo-01.mp3"],
+            "/sounds/tectonic-2-dark-subs-textures": ["TECTONIC 2", "Listen to demo", "/assets/audio/tectonic-2-demo-01.mp3"],
+            "/sounds/horror-2-cinematic-textures": ["HORROR 2", "Listen to demo", "/assets/audio/horror-2-demo-01.mp3"],
         }
 
         for route, needles in pages.items():

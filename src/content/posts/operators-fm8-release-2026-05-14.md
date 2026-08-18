@@ -1,5 +1,6 @@
 ---
 title: "OPERATORS Released for Native Instruments FM8"
+seoTitle: "OPERATORS for FM8 Released"
 description: "OPERATORS is a new 64-preset FM8 soundset focused on atmospheric motion, digital textures, and frequency-driven synthesis."
 canonical: "https://kreativsound.com/posts/operators-fm8-release-2026-05-14.html"
 ogImage: "https://kreativsound.com/assets/thumbs/operators-fm8.webp"

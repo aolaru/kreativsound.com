@@ -33,5 +33,5 @@ draft: false
       <p>The idea is simple: use NEOLITH to hold pressure, not to fill everything. A single focused layer usually works better than stacking too much.</p>
       <div class="article-cta">
         <a class="button primary" href="https://kreativ.gumroad.com/l/neolith-softube-models-presets?layout=profile" target="_blank" rel="noopener noreferrer">Get NEOLITH</a>
-        <a class="button secondary" href="/learn/">Back to Guides</a>
+        <a class="button secondary" href="/news/#guides">Back to Guides</a>
       </div>

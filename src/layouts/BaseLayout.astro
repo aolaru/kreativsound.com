@@ -34,7 +34,7 @@ const analyticsSnippet = `
       window.gtag("js", new Date());
       window.gtag("config", "G-QRTJS1KZD9");
       const cf = document.createElement("script");
-      cf.defer = true;
+      cf.type = "module";
       cf.src = "https://static.cloudflareinsights.com/beacon.min.js";
       cf.dataset.cfBeacon = '{"token":"4d2ef2573cb8456282aa65a1d9defd9d"}';
       document.head.appendChild(cf);
