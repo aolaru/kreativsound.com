@@ -7,11 +7,13 @@ const posts = (await getCollection("posts", ({ data }) => !data.draft))
 const newsPosts = posts.filter((post) => post.data.section === "news");
 const guidePosts = posts.filter((post) => post.data.section === "learn");
 const releasePosts = newsPosts.filter((post) => post.data.kind === "release");
-const sitePosts = newsPosts.filter((post) => post.data.kind === "site");
 
 const leadRelease = releasePosts[0];
 const moreReleases = releasePosts.slice(1);
 const featuredGuide = guidePosts.find((post) => post.data.featured) || guidePosts[0];
+const recentHighlights = newsPosts.filter((post) => post.id !== leadRelease?.id).slice(0, 3);
+const recentLogPosts = newsPosts.slice(0, 6);
+const archivedLogPosts = newsPosts.slice(6);
 
 function hrefFor(post) {
   return `/posts/${post.id.replace(/\.md$/, "")}.html`;
@@ -24,10 +26,18 @@ function formatDate(date) {
 function imageFor(post) {
   return new URL(post.data.ogImage || "https://kreativsound.com/og-image.svg").pathname;
 }
+
+function updateLabel(post) {
+  return post.data.kind === "site" ? "Update" : "Release";
+}
+
+function updateIcon(post) {
+  return post.data.kind === "site" ? "fa-wrench" : "fa-compact-disc";
+}
 ---
 <BaseLayout
   title="News & Guides | Kreativ Sound"
-  description="Kreativ Sound release news, practical sound-design guides, and selected tool updates."
+  description="Latest Kreativ Sound releases, catalog updates, browser-tool news, and practical sound-design guides."
   canonical="https://kreativsound.com/news/"
   activeNav="news"
   ogImage={leadRelease?.data.ogImage || "https://kreativsound.com/assets/thumbs/juno-nocturnes.jpg"}
@@ -36,9 +46,13 @@ function imageFor(post) {
     <div class="news-hero">
       <div class="news-hero-copy">
         <p class="eyebrow">News</p>
-        <h1 class="page-title">Releases and practical sound-design guides.</h1>
-        <p class="page-lead">New sound packs, free drops, and focused workflows for putting Kreativ Sound releases to work.</p>
+        <h1 class="page-title">Latest releases, updates, and sound-design guides.</h1>
+        <p class="page-lead">New sound packs, free drops, catalog improvements, and focused workflows for putting Kreativ Sound releases to work.</p>
         <div class="news-quick-stats" aria-label="News categories">
+          <a href="#updates">
+            <strong>{newsPosts.length}</strong>
+            <span>Product updates</span>
+          </a>
           <a href="#releases">
             <strong>{releasePosts.length}</strong>
             <span>Release updates</span>
@@ -87,6 +101,77 @@ function imageFor(post) {
         </aside>
       ) : null}
     </div>
+
+    {recentHighlights.length ? (
+      <section class="news-update-highlights" aria-labelledby="latest-updates-title">
+        <div class="news-update-section-head">
+          <p class="product-section-kicker">Latest updates</p>
+          <h2 id="latest-updates-title">What changed most recently</h2>
+        </div>
+        <div class="news-update-highlight-list">
+          {recentHighlights.map((post) => (
+            <a class="news-update-highlight" href={hrefFor(post)}>
+              <span class="news-update-highlight-meta">
+                <i class:list={["fa-solid", updateIcon(post)]} aria-hidden="true"></i>
+                <span>{updateLabel(post)}</span>
+                <time datetime={post.data.published}>{post.data.published}</time>
+              </span>
+              <strong>{post.data.title}</strong>
+              <span>{post.data.description}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ) : null}
+
+    {recentLogPosts.length ? (
+      <section class="news-recent-log" id="updates" aria-labelledby="recent-log-title">
+        <div class="news-update-section-head">
+          <p class="product-section-kicker">Recent log</p>
+          <h2 id="recent-log-title">The newest product moves, in order.</h2>
+          <p>Short release and update notes, with the full story one click away.</p>
+        </div>
+        <ul class="news-log-list">
+          {recentLogPosts.map((post) => (
+            <li>
+              <a class="news-log-entry" href={hrefFor(post)}>
+                <time datetime={post.data.published}>{post.data.published}</time>
+                <span class:list={["news-log-kind", post.data.kind === "site" && "is-update"]}>{updateLabel(post)}</span>
+                <span class="news-log-copy">
+                  <strong>{post.data.title}</strong>
+                  <span>{post.data.description}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        {archivedLogPosts.length ? (
+          <details class="news-archive news-log-archive">
+            <summary>
+              <span>
+                <strong>Earlier updates</strong>
+                <small>{archivedLogPosts.length} previous releases and site updates</small>
+              </span>
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </summary>
+            <ul class="news-log-list">
+              {archivedLogPosts.map((post) => (
+                <li>
+                  <a class="news-log-entry" href={hrefFor(post)}>
+                    <time datetime={post.data.published}>{post.data.published}</time>
+                    <span class:list={["news-log-kind", post.data.kind === "site" && "is-update"]}>{updateLabel(post)}</span>
+                    <span class="news-log-copy">
+                      <strong>{post.data.title}</strong>
+                      <span>{post.data.description}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        ) : null}
+      </section>
+    ) : null}
 
     <div class="news-sections">
       <section class="news-panel" id="releases" aria-labelledby="release-news-title">
@@ -159,27 +244,6 @@ function imageFor(post) {
         </button>
       </section>
 
-      {sitePosts.length ? (
-        <details class="news-archive" id="site-notes">
-          <summary>
-            <span>
-              <strong>Site and tool changelog</strong>
-              <small>{sitePosts.length} operational updates</small>
-            </span>
-            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-          </summary>
-          <ul class="news-archive-list">
-            {sitePosts.map((post) => (
-              <li>
-                <a href={hrefFor(post)}>
-                  <span>{post.data.title}</span>
-                  <time datetime={post.data.published}>{formatDate(post.data.published)}</time>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </details>
-      ) : null}
     </div>
   </section>
 </BaseLayout>

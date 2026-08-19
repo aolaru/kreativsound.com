@@ -31,9 +31,19 @@ cleanup() {
 }
 trap cleanup EXIT
 
-sleep 2
+for _ in $(seq 1 20); do
+  if curl --fail --silent --output /dev/null "${URL}"; then
+    break
+  fi
+  sleep 0.1
+done
 
-npx -y lighthouse "${URL}" \
+if ! curl --fail --silent --output /dev/null "${URL}"; then
+  echo "Local server did not become ready."
+  exit 1
+fi
+
+npx --yes --prefer-offline lighthouse "${URL}" \
   --quiet \
   --no-enable-error-reporting \
   --chrome-flags="--headless=new" \

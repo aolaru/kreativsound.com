@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://kreativsound.com/news/</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-08-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -87,6 +87,12 @@
   <url>
     <loc>https://kreativsound.com/posts/black-arcology-release-2026-04-30.html</loc>
     <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/posts/catalog-discovery-update-2026-08-19.html</loc>
+    <lastmod>2026-08-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -96,7 +96,7 @@ def main() -> int:
 
         pages = {
             "/": ["Sounds", "News", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
-            "/news/": ["Sounds", "Latest Sound Releases", "Practical Sound-Design Guides", "How to Use JUNO NOCTURNES for Dark Ambient", "Site and tool changelog"],
+            "/news/": ["Sounds", "What changed most recently", "The newest product moves, in order.", "Earlier updates", "Latest Sound Releases", "Practical Sound-Design Guides", "How to Use JUNO NOCTURNES for Dark Ambient"],
             "/learn/": ["Sounds", "Practical guides now live with News.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
             "/about/": ["Sounds", "About"],
