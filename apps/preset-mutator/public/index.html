@@ -58,37 +58,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="/preset-mutator/styles.css" />
     <link rel="stylesheet" href="/preset-mutator/scratch/styles.css" />
-    <script>
-      (() => {
-        const loadAnalytics = () => {
-          if (window.__kreativAnalyticsLoaded) return;
-          window.__kreativAnalyticsLoaded = true;
-          window.dataLayer = window.dataLayer || [];
-          window.gtag = window.gtag || function gtag(){ dataLayer.push(arguments); };
-          const google = document.createElement("script");
-          google.async = true;
-          google.src = "https://www.googletagmanager.com/gtag/js?id=G-QRTJS1KZD9";
-          document.head.appendChild(google);
-          window.gtag("js", new Date());
-          window.gtag("config", "G-QRTJS1KZD9");
-          window.gtag("config", "G-9YK1PNRV0N");
-          const cf = document.createElement("script");
-          cf.defer = true;
-          cf.src = "https://static.cloudflareinsights.com/beacon.min.js";
-          cf.dataset.cfBeacon = '{"token":"4d2ef2573cb8456282aa65a1d9defd9d"}';
-          document.head.appendChild(cf);
-        };
-        const schedule = () => {
-          if ("requestIdleCallback" in window) {
-            window.requestIdleCallback(loadAnalytics, { timeout: 2500 });
-          } else {
-            window.setTimeout(loadAnalytics, 1400);
-          }
-        };
-        if (document.readyState === "complete") schedule();
-        else window.addEventListener("load", schedule, { once: true });
-      })();
-    </script>
+    <script defer src="/kreativ-analytics.js?v=20260819"></script>
   </head>
   <body>
     <main class="shell">
@@ -103,6 +73,7 @@
           </span>
         </a>
         <div class="nav-group nav-group-utility">
+          <button class="nav-link" type="button" data-analytics-settings>Privacy settings</button>
           <button class="nav-link theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch theme" data-icon="moon">
             <i class="theme-icon theme-icon-sun fa-regular fa-sun" aria-hidden="true"></i>
             <i class="theme-icon theme-icon-moon fa-regular fa-moon" aria-hidden="true"></i>

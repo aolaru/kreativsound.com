@@ -103,7 +103,7 @@ function appActionUrl(product: Product) {
           </a>
         ) : null}
         {latestProduct.url ? (
-          <a class="button primary" href={latestProduct.url} target="_blank" rel="noopener noreferrer">
+          <a class="button primary" data-track="begin_checkout" data-track-product={latestProduct.title} data-track-placement="home_latest" href={latestProduct.url} target="_blank" rel="noopener noreferrer">
             <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
             {primaryActionLabel(latestProduct)}
           </a>
@@ -163,7 +163,7 @@ function appActionUrl(product: Product) {
           </a>
         ) : null}
         {product.url ? (
-          <a class={appActionUrl(product) ? "button secondary" : "button primary"} href={product.url} target="_blank" rel="noopener noreferrer">
+          <a class={appActionUrl(product) ? "button secondary" : "button primary"} data-track="begin_checkout" data-track-product={product.title} data-track-placement="home_feature" href={product.url} target="_blank" rel="noopener noreferrer">
             <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
             {primaryActionLabel(product)}
           </a>

@@ -27,6 +27,12 @@ function unavailableText(product: { status?: string; badge?: string; category: s
   if (product.category === "Bundle") return "Coming soon";
   return "Archive only";
 }
+
+function ctaTrackingEvent(product: { status?: string }) {
+  if (product.status === "free") return "generate_lead";
+  if (product.status === "archive") return "select_content";
+  return "begin_checkout";
+}
 ---
 <div class="product-catalog" data-product-catalog>
   {showFilters ? (
@@ -106,7 +112,7 @@ function unavailableText(product: { status?: string; badge?: string; category: s
                     {item.detailsUrl ? <a class="product-action-link" href={item.detailsUrl}>Details</a> : null}
                     {item.extraAction?.url ? <a class="product-action-link" href={item.extraAction.url}>{item.extraAction.label || "More"}</a> : null}
                     {hasPrimaryAction ? (
-                      <a class="product-action-link is-primary" data-track="product_card_click" href={item.url} target="_blank" rel="noopener noreferrer">
+                      <a class="product-action-link is-primary" data-track={ctaTrackingEvent(item)} data-track-product={item.title} data-track-placement="catalog" href={item.url} target="_blank" rel="noopener noreferrer">
                         {ctaText(item.category)}
                       </a>
                     ) : (

@@ -495,3 +495,21 @@ if (consentPanel && !getAnalyticsConsent()) {
 consentAccept?.addEventListener("click", () => saveAnalyticsConsent("accepted"));
 consentDecline?.addEventListener("click", () => saveAnalyticsConsent("declined"));
 privacySettingsButtons.forEach((button) => button.addEventListener("click", showPrivacySettings));
+
+document.querySelectorAll("[data-track]").forEach((element) => {
+  element.addEventListener("click", () => {
+    if (getAnalyticsConsent() !== "accepted") return;
+
+    const eventName = element.dataset.track;
+    if (!eventName) return;
+
+    const destination = element instanceof HTMLAnchorElement ? new URL(element.href, window.location.href) : null;
+    window.__trackKreativEvent?.(eventName, {
+      link_domain: destination?.hostname || undefined,
+      link_text: element.textContent?.trim().replace(/\s+/g, " ").slice(0, 100) || undefined,
+      page_path: window.location.pathname,
+      product_name: element.dataset.trackProduct || undefined,
+      placement: element.dataset.trackPlacement || undefined
+    });
+  });
+});
