@@ -47,6 +47,28 @@ function ctaTrackingEvent(product: { status?: string }) {
           <button type="button" aria-pressed="false" data-catalog-category={category}>{categoryLabels[category]}</button>
         ))}
       </div>
+      <nav class="catalog-discovery" aria-label="Browse sounds by synth or use case">
+        <div class="catalog-discovery-group">
+          <span>By synth</span>
+          <div class="catalog-discovery-links">
+            <a href="/sounds/?q=JUN-6+V#catalog-title">JUN-6 V</a>
+            <a href="/sounds/?q=Pigments#catalog-title">Pigments</a>
+            <a href="/sounds/?q=Vital#catalog-title">Vital</a>
+            <a href="/sounds/?q=FM8#catalog-title">FM8</a>
+            <a href="/sounds/?q=Softube+Models#catalog-title">Softube Models</a>
+          </div>
+        </div>
+        <div class="catalog-discovery-group">
+          <span>By sound</span>
+          <div class="catalog-discovery-links">
+            <a href="/sounds/?q=ambient#catalog-title">Ambient</a>
+            <a href="/sounds/?q=cinematic#catalog-title">Cinematic</a>
+            <a href="/sounds/?q=industrial#catalog-title">Industrial</a>
+            <a href="/sounds/?q=FX#catalog-title">FX and transitions</a>
+            <a href="/sounds/?category=Free#catalog-title">Free packs</a>
+          </div>
+        </div>
+      </nav>
       <p class="catalog-filter-status" role="status" aria-live="polite" data-catalog-status></p>
     </div>
   ) : null}

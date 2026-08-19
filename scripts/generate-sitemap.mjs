@@ -85,14 +85,29 @@ function routeFromFile(filePath) {
 
 function sourcePathsForRoute(route) {
   if (route === "/") {
-    return ["src/pages/index.astro"];
+    return ["src/pages/index.astro", "src/components/HomeLanding.astro", "src/lib/products.ts"];
+  }
+  if (route === "/sounds/") {
+    return [
+      "src/pages/sounds/index.astro",
+      "src/components/SoundLanding.astro",
+      "src/components/ProductCatalog.astro",
+      "src/lib/products.ts",
+      "src/lib/product-pages.ts",
+      "src/lib/product-content.ts"
+    ];
   }
   if (route.startsWith("/posts/") && route.endsWith(".html")) {
     const slug = route.slice("/posts/".length, -".html".length);
     return [`src/content/posts/${slug}.md`];
   }
   if (route.startsWith("/sounds/")) {
-    return ["src/lib/products.ts", "src/lib/product-pages.ts", "src/lib/product-content.ts"];
+    return [
+      "src/components/ProductLandingPage.astro",
+      "src/lib/products.ts",
+      "src/lib/product-pages.ts",
+      "src/lib/product-content.ts"
+    ];
   }
   if (route === "/preset-mutator/") {
     return ["apps/preset-mutator/public/index.html"];

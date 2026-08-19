@@ -264,6 +264,39 @@ if (catalog) {
   let activeCategory = "all";
   let visibleLimit = moreButton && mobileCatalog.matches ? pageSize : Infinity;
 
+  function categoryButtonFor(category) {
+    const normalizedCategory = (category || "all").toLowerCase();
+    return categoryButtons.find((button) =>
+      (button.dataset.catalogCategory || "").toLowerCase() === normalizedCategory
+    );
+  }
+
+  function setActiveCategory(category, resetLimit = true) {
+    const selectedButton = categoryButtonFor(category) || categoryButtonFor("all");
+    activeCategory = selectedButton?.dataset.catalogCategory || "all";
+
+    if (resetLimit) resetCatalogLimit();
+
+    categoryButtons.forEach((button) => {
+      const selected = button === selectedButton;
+      button.classList.toggle("is-active", selected);
+      button.setAttribute("aria-pressed", String(selected));
+    });
+  }
+
+  function syncCatalogUrl() {
+    const url = new URL(window.location.href);
+    const query = queryInput?.value.trim();
+
+    if (query) url.searchParams.set("q", query);
+    else url.searchParams.delete("q");
+
+    if (activeCategory !== "all") url.searchParams.set("category", activeCategory);
+    else url.searchParams.delete("category");
+
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  }
+
   function applyCatalogFilters() {
     const query = normalizeQuery(queryInput?.value);
     const matchingItems = catalogItems.filter((item) => {
@@ -299,22 +332,24 @@ if (catalog) {
     visibleLimit = moreButton && mobileCatalog.matches ? pageSize : Infinity;
   }
 
+  const catalogParams = new URLSearchParams(window.location.search);
+  if (queryInput && catalogParams.has("q")) {
+    queryInput.value = catalogParams.get("q") || "";
+  }
+  setActiveCategory(catalogParams.get("category") || "all", false);
+
   categoryButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      activeCategory = button.dataset.catalogCategory || "all";
-      resetCatalogLimit();
-      categoryButtons.forEach((candidate) => {
-        const selected = candidate === button;
-        candidate.classList.toggle("is-active", selected);
-        candidate.setAttribute("aria-pressed", String(selected));
-      });
+      setActiveCategory(button.dataset.catalogCategory || "all");
       applyCatalogFilters();
+      syncCatalogUrl();
     });
   });
 
   queryInput?.addEventListener("input", () => {
     resetCatalogLimit();
     applyCatalogFilters();
+    syncCatalogUrl();
   });
   moreButton?.addEventListener("click", () => {
     visibleLimit += pageSize;
