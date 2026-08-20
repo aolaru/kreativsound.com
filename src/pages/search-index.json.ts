@@ -57,6 +57,13 @@ const staticEntries: SearchEntry[] = [
     description: "Browser tools for local-first preset generation and audio wave preparation."
   },
   {
+    title: "Plugins",
+    url: "/plugins/",
+    type: "Page",
+    thumbnail: "/logo-128.svg",
+    description: "Upcoming Kreativ Sound instrument and effect plugins."
+  },
+  {
     title: "Preset Mutator",
     url: "/preset-mutator/",
     type: "Tool",

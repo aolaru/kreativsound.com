@@ -99,6 +99,7 @@ def main() -> int:
             "/news/": ["Sounds", "What changed most recently", "The newest product moves, in order.", "Earlier updates", "Latest Sound Releases", "Practical Sound-Design Guides", "How to Use JUNO NOCTURNES for Dark Ambient"],
             "/learn/": ["Sounds", "Practical guides now live with News.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
+            "/plugins/": ["Plugins", "Kreativ Sound plugins are coming soon.", "Coming soon", "View News", "Browse Sounds"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
             "/privacy/": ["Privacy Policy", "Optional analytics", "Google Analytics", "Cloudflare Web Analytics"],
@@ -140,6 +141,7 @@ def main() -> int:
                 require(dom, 'href="/sounds/kreativ-kollection-v1"', route, errors)
                 require(dom, 'href="/sounds/preset-mutator"', route, errors)
                 require(dom, 'href="/preset-mutator/"', route, errors)
+                require(dom, 'href="/plugins/"', route, errors)
                 forbid(dom, 'href="/learn/"', route, errors)
                 require(dom, "Flagship bundle", route, errors)
                 require(dom, 'id="latest-title">Kreativ Kollection V1</h2>', route, errors)
@@ -151,11 +153,11 @@ def main() -> int:
             if route == "/sounds/":
                 require(dom, 'data-catalog-query', route, errors)
                 require(dom, 'data-catalog-category="Bundle"', route, errors)
-                require(dom, 'data-catalog-category="Tools"', route, errors)
                 require(dom, 'data-catalog-category="Presets"', route, errors)
                 require(dom, 'data-catalog-category="Free"', route, errors)
                 require(dom, 'data-catalog-more', route, errors)
                 forbid(dom, 'class="catalog-anchor-links"', route, errors)
+                forbid(dom, 'data-catalog-category="Tools"', route, errors)
             if route.startswith("/sounds/") and route != "/sounds/":
                 require(dom, 'class="product-breadcrumbs"', route, errors)
                 require(dom, 'href="/sounds/"', route, errors)
