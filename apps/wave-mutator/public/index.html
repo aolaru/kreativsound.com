@@ -23,8 +23,9 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="stylesheet" href="./styles.css?v=6" />
-    <script src="./app.js?v=6" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=7" />
+    <script src="./vendor/lame.min.js" defer></script>
+    <script src="./app.js?v=7" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -117,8 +118,8 @@
           <p>
             Wave Mutator is built for preparing sample-pack material, preset-source audio, one-shots,
             loops, noise layers, and sound-product demos. It trims silence, adds short fades,
-            normalizes peak level, warns about clipping, exports cleaned WAV files, and can create a
-            short MP3 preview montage when your browser supports local MP3 recording.
+            normalizes peak level, warns about clipping, exports cleaned WAV files, and creates a
+            short MP3 preview montage locally in the browser.
           </p>
         </div>
         <div class="tool-detail-grid" aria-label="Wave Mutator details">
@@ -132,7 +133,7 @@
           </article>
           <article>
             <span>Formats</span>
-            <strong>WAV input. WAV/ZIP export. MP3 montage depends on browser support.</strong>
+            <strong>WAV input. WAV/ZIP/MP3 export. MP3 encoding is bundled locally.</strong>
           </article>
           <article>
             <span>Beta limits</span>
@@ -170,7 +171,10 @@
           <div class="file-list-block">
             <div class="mini-head">
               <h3>Loaded files</h3>
-              <span id="file-count">0 files</span>
+              <div class="queue-head-actions">
+                <span id="file-count">0 files</span>
+                <button id="clear-queue-button" class="quiet-button" type="button" disabled>Clear</button>
+              </div>
             </div>
             <ul id="file-list" class="file-list" aria-label="Loaded audio files">
               <li class="empty-state">No files loaded yet.</li>
@@ -308,6 +312,18 @@
               <input id="trim-threshold" type="range" min="-80" max="-20" step="1" value="-60" />
             </label>
 
+            <div class="two-control-row">
+              <label class="field-control" for="trim-min-silence">
+                <span>Minimum silence</span>
+                <input id="trim-min-silence" type="number" min="10" max="1000" step="5" value="60" />
+              </label>
+              <label class="field-control" for="trim-padding">
+                <span>Tail safety padding</span>
+                <input id="trim-padding" type="number" min="0" max="500" step="1" value="20" />
+              </label>
+            </div>
+            <p class="control-hint">Windowed detection keeps short transients and leaves a small safety margin around detected content.</p>
+
             <label class="toggle-row" for="fade-enabled">
               <span>
                 <strong>Add short fade in/out</strong>
@@ -353,6 +369,8 @@
               <span class="button-label">Apply processing preview</span>
             </button>
             <button id="reset-preview-button" type="button" disabled>Show original</button>
+            <button id="save-file-override-button" type="button" disabled>Save settings for this file</button>
+            <button id="reset-file-override-button" type="button" disabled>Use global settings</button>
           </div>
         </section>
 
@@ -394,6 +412,10 @@
                 <dt>Trailing silence</dt>
                 <dd id="meta-trailing-silence">-</dd>
               </div>
+              <div>
+                <dt>Est. true peak</dt>
+                <dd id="meta-true-peak">-</dd>
+              </div>
             </dl>
             <dl class="process-report" aria-label="Processing report">
               <div>
@@ -418,6 +440,36 @@
               </div>
             </dl>
           </details>
+        </section>
+
+        <section class="panel preflight-panel" aria-labelledby="preflight-title">
+          <div class="section-head">
+            <div>
+              <p class="section-kicker">Pack QA</p>
+              <h2 id="preflight-title">Preflight report</h2>
+            </div>
+            <span id="preflight-summary" class="preflight-summary">Load WAV files to check the pack.</span>
+          </div>
+          <p class="section-note">Review the full selected export queue before rendering. Warnings stay local and do not block export.</p>
+          <div id="preflight-warnings" class="preflight-warnings" aria-live="polite"></div>
+          <div class="preflight-table-wrap">
+            <table class="preflight-table">
+              <thead>
+                <tr>
+                  <th scope="col">Export</th>
+                  <th scope="col">File</th>
+                  <th scope="col">Format</th>
+                  <th scope="col">Duration</th>
+                  <th scope="col">Peak</th>
+                  <th scope="col">Est. true peak</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="preflight-body">
+                <tr><td colspan="7" class="empty-state">No files loaded yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <section class="panel export-panel" aria-labelledby="export-title">
@@ -466,6 +518,13 @@
                 <option value="mono">Mono sum</option>
               </select>
             </label>
+            <label class="field-control" for="export-scope">
+              <span>ZIP scope</span>
+              <select id="export-scope">
+                <option value="selected">Selected queue files</option>
+                <option value="all">All loaded files</option>
+              </select>
+            </label>
             <label class="field-control" for="montage-seconds">
               <span>Montage clip length
                 <button class="info-tooltip" type="button" aria-label="Explain montage clip length" data-tooltip="Controls how much of each cleaned file appears in the MP3 preview montage.">?</button>
@@ -498,6 +557,8 @@
                 <span class="button-spinner" aria-hidden="true"></span>
                 <span class="button-label">Export MP3 montage</span>
               </button>
+              <button id="export-manifest-button" type="button" disabled>Download manifest</button>
+              <button id="cancel-export-button" class="danger-button" type="button" disabled>Cancel batch</button>
             </div>
             <div class="cleaned-output-section" aria-labelledby="cleaned-output-title">
               <div class="mini-head">

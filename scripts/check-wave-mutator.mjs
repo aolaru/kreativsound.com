@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 
 const rootDir = process.cwd();
 const sourceDir = path.join(rootDir, "apps/wave-mutator/public");
-const requiredFiles = ["index.html", "styles.css", "app.js"];
+const requiredFiles = ["index.html", "styles.css", "app.js", "vendor/lame.min.js"];
 const errors = [];
 
 function fail(message) {
@@ -27,8 +27,27 @@ if (!errors.length) {
   if (!html.includes("./styles.css") || !html.includes("./app.js")) {
     fail("Wave Mutator HTML should load local styles.css and app.js.");
   }
+  if (!html.includes("./vendor/lame.min.js")) {
+    fail("Wave Mutator HTML should load the bundled local MP3 encoder.");
+  }
   if (!app.includes("Wave Mutator") && !app.includes("wave")) {
     fail("Wave Mutator app source does not look like the expected tool script.");
+  }
+  for (const expectedFeature of [
+    "encodeBufferAsMp3",
+    "findTrimBounds",
+    "renderPreflight",
+    "cancelBatch",
+    "createManifestText",
+    "MAX_QUEUE_FILES",
+  ]) {
+    if (!app.includes(expectedFeature)) {
+      fail(`Wave Mutator app is missing expected release feature: ${expectedFeature}.`);
+    }
+  }
+  const lame = readFileSync(path.join(sourceDir, "vendor/lame.min.js"), "utf8");
+  if (!lame.includes("Mp3Encoder")) {
+    fail("Bundled MP3 encoder does not expose Mp3Encoder.");
   }
 
   const syntax = spawnSync(process.execPath, ["--check", path.join(sourceDir, "app.js")], {

@@ -565,6 +565,21 @@ h3 {
   font-size: 0.9rem;
 }
 
+.queue-head-actions,
+.file-queue-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quiet-button,
+.file-remove-button {
+  min-height: 32px;
+  padding: 0.35rem 0.6rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
 .file-list {
   display: grid;
   gap: 8px;
@@ -573,6 +588,13 @@ h3 {
   padding: 0;
   overflow: auto;
   list-style: none;
+}
+
+.file-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: stretch;
 }
 
 .file-list button {
@@ -591,6 +613,28 @@ h3 {
 .file-list button.is-selected {
   border-color: rgba(74, 74, 255, 0.82);
   background: rgba(74, 74, 255, 0.18);
+}
+
+.file-queue-actions {
+  align-self: center;
+  flex-direction: column;
+  min-width: 76px;
+}
+
+.file-include-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.file-include-toggle input,
+.preflight-table input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--blue);
 }
 
 .file-main {
@@ -885,6 +929,23 @@ dd {
   background: rgba(255, 255, 255, 0.035);
 }
 
+.two-control-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  padding: 0.92rem;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.control-hint {
+  margin: -3px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
 .toggle-row span {
   display: grid;
   gap: 4px;
@@ -1059,6 +1120,93 @@ select {
     rgba(25, 31, 49, 0.88);
 }
 
+.preflight-panel {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 12px;
+}
+
+.preflight-summary {
+  color: var(--green);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.preflight-warnings {
+  display: grid;
+  gap: 8px;
+}
+
+.preflight-warning {
+  margin: 0;
+  border-left: 3px solid var(--yellow);
+  padding: 0.52rem 0.7rem;
+  color: #fff1c3;
+  background: rgba(255, 209, 102, 0.08);
+  font-size: 0.88rem;
+}
+
+.preflight-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+}
+
+.preflight-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.preflight-table th,
+.preflight-table td {
+  padding: 0.72rem 0.76rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.preflight-table th {
+  color: var(--faint);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.preflight-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.preflight-table tr.is-excluded {
+  opacity: 0.48;
+}
+
+.preflight-file-name {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preflight-status {
+  font-weight: 800;
+}
+
+.preflight-status.is-good {
+  color: var(--green);
+}
+
+.preflight-status.is-warning,
+.preflight-status.is-note {
+  color: var(--yellow);
+}
+
+.preflight-status.is-danger {
+  color: var(--danger);
+}
+
 .export-panel > div {
   display: grid;
   gap: 8px;
@@ -1168,6 +1316,12 @@ select {
   gap: 12px;
   flex-wrap: wrap;
   justify-content: flex-end;
+}
+
+.danger-button {
+  border-color: rgba(255, 92, 124, 0.5);
+  color: #ffd6df;
+  background: rgba(255, 92, 124, 0.12);
 }
 
 .cleaned-output-section {
@@ -1466,8 +1620,18 @@ select {
 
   .meta-grid,
   .cleaned-output-metrics,
-  .control-row {
+  .control-row,
+  .two-control-row {
     grid-template-columns: 1fr;
+  }
+
+  .file-list li {
+    grid-template-columns: 1fr;
+  }
+
+  .file-queue-actions {
+    flex-direction: row;
+    justify-content: flex-end;
   }
 
   .file-list button {

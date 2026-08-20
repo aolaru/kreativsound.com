@@ -40,6 +40,7 @@
   },
   "homepage": "https://github.com/aolaru/kreativsound.com#readme",
   "dependencies": {
-    "astro": "^6.1.9"
+    "astro": "^6.1.9",
+    "lamejs": "1.2.1"
   }
 }
