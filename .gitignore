@@ -8,6 +8,7 @@ dist/
 public/sitemap.xml
 public/apps/preset-mutator/
 public/preset-mutator/
+public/preset-mutator-pro/
 public/tools/wave-mutator/
 private/
 .env.local

@@ -1,0 +1,19 @@
+{
+  "id": "/preset-mutator-pro/",
+  "name": "Preset Mutator Legacy Pro",
+  "short_name": "Mutator Pro",
+  "description": "Legacy Pro access for verified Preset Mutator customers.",
+  "start_url": "/preset-mutator-pro/",
+  "scope": "/preset-mutator-pro/",
+  "display": "standalone",
+  "background_color": "#fdf5f5",
+  "theme_color": "#f8e9e9",
+  "icons": [
+    {
+      "src": "./preset-mutator-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

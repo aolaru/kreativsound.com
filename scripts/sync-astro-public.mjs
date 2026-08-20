@@ -5,6 +5,8 @@ const rootDir = process.cwd();
 const publicDir = path.join(rootDir, "public");
 const presetMutatorSourceDir = path.join(rootDir, "apps/preset-mutator/public");
 const presetMutatorPublicDir = path.join(publicDir, "preset-mutator");
+const presetMutatorLegacyProSourceDir = path.join(rootDir, "apps/preset-mutator-legacy-pro/public");
+const presetMutatorLegacyProPublicDir = path.join(publicDir, "preset-mutator-pro");
 const presetMutatorLegacyPublicDir = path.join(publicDir, "apps/preset-mutator");
 const presetMutatorLegacyUiDir = path.join(presetMutatorLegacyPublicDir, "ui");
 const waveMutatorSourceDir = path.join(rootDir, "apps/wave-mutator/public");
@@ -28,7 +30,8 @@ const requiredPublicEntries = [
   "CNAME",
   "assets",
   "apps",
-  "preset-mutator"
+  "preset-mutator",
+  "preset-mutator-pro"
 ];
 
 const generatedFiles = ["sitemap.xml"];
@@ -39,6 +42,10 @@ if (!fs.existsSync(publicDir)) {
 
 if (!fs.existsSync(presetMutatorSourceDir)) {
   throw new Error("Missing apps/preset-mutator/public. Preset Mutator source must be available before syncing public assets.");
+}
+
+if (!fs.existsSync(presetMutatorLegacyProSourceDir)) {
+  throw new Error("Missing apps/preset-mutator-legacy-pro/public. Legacy Pro source must be available before syncing public assets.");
 }
 
 if (!fs.existsSync(waveMutatorSourceDir)) {
@@ -136,6 +143,15 @@ fs.mkdirSync(path.join(presetMutatorPublicDir, "scratch"), { recursive: true });
 fs.copyFileSync(
   path.join(presetMutatorSourceDir, "index.html"),
   path.join(presetMutatorPublicDir, "scratch/index.html")
+);
+
+fs.rmSync(presetMutatorLegacyProPublicDir, { recursive: true, force: true });
+fs.mkdirSync(path.dirname(presetMutatorLegacyProPublicDir), { recursive: true });
+fs.cpSync(presetMutatorLegacyProSourceDir, presetMutatorLegacyProPublicDir, { recursive: true });
+fs.mkdirSync(path.join(presetMutatorLegacyProPublicDir, "scratch"), { recursive: true });
+fs.copyFileSync(
+  path.join(presetMutatorLegacyProSourceDir, "index.html"),
+  path.join(presetMutatorLegacyProPublicDir, "scratch/index.html")
 );
 writeLegacyPresetMutatorRedirects();
 

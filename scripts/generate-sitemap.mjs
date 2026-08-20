@@ -131,6 +131,9 @@ function shouldIndexRoute(route) {
   if (route === "/learn/") {
     return false;
   }
+  if (route.startsWith("/preset-mutator-pro/")) {
+    return false;
+  }
   if (route.startsWith("/posts/") && route.endsWith(".html")) {
     const slug = route.slice("/posts/".length, -".html".length);
     const sourcePath = path.join(rootDir, "src/content/posts", `${slug}.md`);

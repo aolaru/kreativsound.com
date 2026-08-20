@@ -1,0 +1,67 @@
+import { access, readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(__dirname, "..");
+const appDir = path.join(rootDir, "apps/preset-mutator-legacy-pro/public");
+const failures = [];
+
+function assert(condition, message) {
+  if (!condition) {
+    failures.push(message);
+  }
+}
+
+async function read(relativePath) {
+  return readFile(path.join(appDir, relativePath), "utf8");
+}
+
+async function exists(relativePath) {
+  try {
+    await access(path.join(appDir, relativePath));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+const pages = [
+  { name: "From Scratch", html: "index.html", app: "app.js", proEngine: "buildScratchProPack" },
+  { name: "Audio", html: "audio/index.html", app: "audio/app.js", proEngine: "buildAudioProPack" },
+  { name: "Mutate Preset", html: "mutate/index.html", app: "mutate/app.js", proEngine: "PRESET_MUTATE_PRO_PACK_COUNT" },
+];
+
+for (const page of pages) {
+  const [html, app] = await Promise.all([read(page.html), read(page.app)]);
+  assert(html.includes('content="noindex, nofollow"'), `${page.name}: legacy page must stay out of search indexes`);
+  assert(html.includes("Preset Mutator Legacy Pro"), `${page.name}: legacy access must be clearly labelled`);
+  assert(html.includes("Enter license token"), `${page.name}: license token entry is missing`);
+  assert(html.includes("Generate 32 Pro Variants"), `${page.name}: Pro batch action is missing`);
+  assert(!html.includes("Buy on Gumroad"), `${page.name}: legacy page must not expose a Gumroad checkout link`);
+  assert(!html.includes("Pay with PayPal"), `${page.name}: legacy page must not expose a PayPal checkout link`);
+  assert(!html.includes('href="/preset-mutator/'), `${page.name}: legacy page must not route customers to the free app`);
+  assert(app.includes("verifyLicenseToken"), `${page.name}: signed-token verification is missing`);
+  assert(app.includes(page.proEngine), `${page.name}: Pro generation engine is missing`);
+}
+
+const [manifest, serviceWorker, licenseScript] = await Promise.all([
+  read("manifest.webmanifest"),
+  read("service-worker.js"),
+  read("engine/license.js"),
+]);
+
+assert(manifest.includes('"scope": "/preset-mutator-pro/"'), "Manifest: legacy route scope is incorrect");
+assert(serviceWorker.includes("preset-mutator-legacy-pro-shell"), "Service worker: legacy cache namespace is missing");
+assert(licenseScript.includes('LICENSE_PRODUCT = "preset-mutator-pro"'), "License verifier: product identifier changed unexpectedly");
+assert(await exists("assets/seeds/vital/raw/KS Dread Lantern.vital"), "Legacy Pro: missing Vital seed assets");
+
+if (failures.length) {
+  console.error("Preset Mutator Legacy Pro QA failed:");
+  for (const failure of failures) {
+    console.error(`- ${failure}`);
+  }
+  process.exit(1);
+}
+
+console.log("Preset Mutator Legacy Pro QA passed.");
