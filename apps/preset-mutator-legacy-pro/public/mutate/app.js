@@ -24,7 +24,7 @@ const state = {
   isGenerating: false,
   suiteUnlocked: false,
   license: null,
-  lastGenerationMode: "free",
+  lastGenerationMode: "pro",
 };
 
 const elements = {
@@ -50,8 +50,6 @@ const elements = {
   widthValue: document.querySelector("#width-value"),
   dirtRange: document.querySelector("#dirt-range"),
   dirtValue: document.querySelector("#dirt-value"),
-  generateButton: document.querySelector("#generate-button"),
-  buttonLabel: document.querySelector(".button-label"),
   status: document.querySelector("#status"),
   suitePanel: document.querySelector("#suite-panel"),
   suiteActions: document.querySelector("#suite-actions"),
@@ -154,7 +152,7 @@ function amountLabel(value) {
 }
 
 function currentActionLabel() {
-  return state.lastGenerationMode === "pro" ? "Generate 32 Pro Variants" : "Generate 3 Free Variants";
+  return "Generate 32 PRO Variants";
 }
 
 function updateControlLabels() {
@@ -262,7 +260,6 @@ function updateSourceUi() {
     elements.presetModulations.textContent = "-";
     elements.presetWavetables.textContent = "-";
     elements.presetFile.textContent = "No file loaded";
-    elements.generateButton.disabled = true;
     if (elements.generatePack) {
       elements.generatePack.disabled = true;
     }
@@ -282,7 +279,6 @@ function updateSourceUi() {
   elements.presetModulations.textContent = String(summary.modulationCount);
   elements.presetWavetables.textContent = String(summary.wavetableCount);
   elements.presetFile.textContent = state.sourceFile.name;
-  elements.generateButton.disabled = state.isGenerating ? true : false;
   if (elements.generatePack) {
     elements.generatePack.disabled = !state.suiteUnlocked || state.isGenerating;
   }
@@ -304,11 +300,11 @@ function buildStrategyWeights() {
   });
 }
 
-function generateVariants(mode = "free") {
+function generateVariants() {
   return createPresetVariants({
     sourcePreset: state.sourcePreset,
     strategy: buildStrategyWeights(),
-    mode,
+    mode: "pro",
     controls: {
       amount: elements.amountRange.value,
       tone: elements.brightnessRange.value,
@@ -398,7 +394,7 @@ function renderVariants() {
   elements.presetList.innerHTML = "";
   const groups = new Map();
   for (const variant of state.generatedVariants) {
-    const key = variant.groupKey || "free";
+    const key = variant.groupKey || "pro";
     if (!groups.has(key)) {
       groups.set(key, {
         label: variant.groupLabel,
@@ -412,7 +408,7 @@ function renderVariants() {
   for (const [key, group] of groups.entries()) {
     const section = document.createElement("section");
     section.className = "preset-group";
-    const shouldStartOpen = state.lastGenerationMode !== "pro" || key === "closest";
+    const shouldStartOpen = key === "closest";
     const listId = `preset-group-${key}`;
 
     section.innerHTML = `
@@ -541,7 +537,7 @@ async function loadPreset(file) {
     state.sourcePreset = { data, summary, fileName: file.name };
     state.sourceFile = file;
     state.generatedVariants = [];
-    state.lastGenerationMode = "free";
+    state.lastGenerationMode = "pro";
     setUploadMessage("");
     updateSourceUi();
     renderVariants();
@@ -553,8 +549,8 @@ async function loadPreset(file) {
       macro_count: summary.macroCount,
     });
     elements.status.textContent = state.suiteUnlocked
-      ? `Loaded ${summary.name}. Generate 3 free variants or build 32 Pro variants.`
-      : `Loaded ${summary.name}. Generate 3 free variants when ready.`;
+      ? `Loaded ${summary.name}. Generate your 32-variant PRO pack.`
+      : `Loaded ${summary.name}. Enter your PRO license token to unlock generation.`;
   } catch (error) {
     state.sourcePreset = null;
     state.sourceFile = null;
@@ -565,47 +561,37 @@ async function loadPreset(file) {
   }
 }
 
-function setGenerationLoadingState(isLoading, mode) {
+function setGenerationLoadingState(isLoading) {
   state.isGenerating = isLoading;
-  elements.generateButton.disabled = isLoading || !state.sourcePreset;
-  elements.generateButton.classList.toggle("is-loading", isLoading && mode === "free");
-  elements.buttonLabel.textContent = isLoading && mode === "free" ? "Generating..." : "Generate 3 Free Variants";
   if (elements.generatePack) {
     elements.generatePack.disabled = isLoading || !state.sourcePreset || !state.suiteUnlocked;
-    elements.generatePack.classList.toggle("is-loading", isLoading && mode === "pro");
+    elements.generatePack.classList.toggle("is-loading", isLoading);
   }
   if (elements.downloadPack) {
     elements.downloadPack.disabled = isLoading || state.lastGenerationMode !== "pro" || state.generatedVariants.length !== PRO_PACK_COUNT;
   }
 }
 
-async function handleGenerate(mode = "free") {
-  if (!state.sourcePreset || state.isGenerating) {
-    return;
-  }
-  if (mode === "pro" && !state.suiteUnlocked) {
+async function handleGenerate() {
+  if (!state.sourcePreset || state.isGenerating || !state.suiteUnlocked) {
     return;
   }
 
-  setGenerationLoadingState(true, mode);
-  elements.status.textContent = mode === "pro"
-    ? "Building 32 Pro variants from the loaded source preset..."
-    : "Mutating the source preset into 3 free variants...";
+  setGenerationLoadingState(true);
+  elements.status.textContent = "Building 32 PRO variants from the loaded source preset...";
 
   try {
     await new Promise((resolve) => window.setTimeout(resolve, 520));
-    state.generatedVariants = generateVariants(mode);
-    state.lastGenerationMode = mode;
+    state.generatedVariants = generateVariants();
+    state.lastGenerationMode = "pro";
     renderVariants();
-    elements.status.textContent = mode === "pro"
-      ? "32 Pro variants ready. Expand each group and download individual presets or the full ZIP."
-      : "3 free variants ready. Download the one that feels closest.";
-    analyticsEvent(mode === "pro" ? "generate_pro" : "generate_free", {
+    elements.status.textContent = "32 PRO variants ready. Expand each group and download individual presets or the full ZIP.";
+    analyticsEvent("generate_pro", {
       preset_count: state.generatedVariants.length,
       ...currentAnalyticsSelection(),
     });
   } finally {
-    setGenerationLoadingState(false, mode);
+    setGenerationLoadingState(false);
   }
 }
 
@@ -691,8 +677,8 @@ async function handleSuiteUnlock() {
   saveLicenseToken(key);
   renderSuiteState();
   elements.status.textContent = state.sourcePreset
-    ? `Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}. Generate 32 Pro variants when ready.`
-    : `Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}.`;
+    ? `Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}. Generate 32 PRO variants when ready.`
+    : `Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}.`;
   analyticsEvent("unlock_attempt", { result: "success" });
 }
 
@@ -743,8 +729,7 @@ elements.dirtRange.addEventListener("input", () => {
   updateControlLabels();
   renderStrategyMetrics();
 });
-elements.generateButton.addEventListener("click", () => handleGenerate("free"));
-elements.generatePack?.addEventListener("click", () => handleGenerate("pro"));
+elements.generatePack?.addEventListener("click", handleGenerate);
 elements.downloadPack?.addEventListener("click", downloadVariantPack);
 elements.suiteToggle?.addEventListener("click", toggleSuiteUnlock);
 elements.suiteUnlockButton?.addEventListener("click", () => {

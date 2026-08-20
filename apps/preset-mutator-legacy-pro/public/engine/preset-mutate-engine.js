@@ -1,11 +1,5 @@
 import { clamp, cloneJson, createRng, hashString, slugifyFilename } from "./common.js";
 
-export const FREE_VARIANT_ROLES = [
-  { key: "closest", label: "Closest", multiplier: 0.7, nameSuffix: "Closest" },
-  { key: "darker", label: "Darker", multiplier: 1, nameSuffix: "Darker", toneBias: -0.75, motionBias: -0.08, dirtBias: 0.12, spaceBias: -0.08 },
-  { key: "more-motion", label: "More Motion", multiplier: 1.18, nameSuffix: "More Motion", toneBias: 0.02, motionBias: 0.86, dirtBias: 0.05, spaceBias: 0.16 },
-];
-
 function createPackRole(group, index, config = {}) {
   return {
     key: `${group.key}-${index + 1}`,
@@ -238,7 +232,7 @@ function chooseParameterPool(keys, strategy) {
   return scored.sort((left, right) => right.score - left.score);
 }
 
-function buildVariantDescription(role, strategy, mode) {
+function buildVariantDescription(role, strategy) {
   const descriptors = [];
   if (strategy.tone < -0.2) {
     descriptors.push("darker");
@@ -274,18 +268,14 @@ function buildVariantDescription(role, strategy, mode) {
     descriptors.push("balanced");
   }
 
-  if (mode === "pro" && role.groupLabel) {
-    return `${role.groupLabel} mutation leaning ${descriptors.join(", ")} with a broader pack spread.`;
-  }
-
-  return `${role.label} variation leaning ${descriptors.join(", ")}.`;
+  return `${role.groupLabel} mutation leaning ${descriptors.join(", ")} with a broader pack spread.`;
 }
 
 function controlValue(controls, key, fallback) {
   return String(controls?.[key] ?? Math.round(fallback * 100));
 }
 
-export function generatePresetVariants({ sourcePreset, strategy, mode = "free", controls = {} }) {
+export function generatePresetVariants({ sourcePreset, strategy, controls = {} }) {
   const source = sourcePreset;
   if (!source?.data?.settings) {
     return [];
@@ -294,7 +284,7 @@ export function generatePresetVariants({ sourcePreset, strategy, mode = "free", 
   const summary = source.summary || presetSummary(source.data);
   const scalarKeys = summary.scalarKeys || safeScalarParameterKeys(source.data.settings);
   const pool = chooseParameterPool(scalarKeys, strategy);
-  const roles = mode === "pro" ? PRO_PACK_ROLES : FREE_VARIANT_ROLES;
+  const roles = PRO_PACK_ROLES;
   const amountValue = controlValue(controls, "amount", strategy.amount);
   const toneValue = controlValue(controls, "tone", strategy.tone);
   const motionValue = controlValue(controls, "motion", strategy.motion);
@@ -303,11 +293,11 @@ export function generatePresetVariants({ sourcePreset, strategy, mode = "free", 
   const dirtValue = controlValue(controls, "dirt", strategy.dirt);
 
   return roles.map((role, index) => {
-    const rng = createRng(hashString(`${mode}:${source.fileName}:${role.key}:${amountValue}:${toneValue}:${motionValue}:${attackValue}:${spaceValue}:${dirtValue}`));
+    const rng = createRng(hashString(`pro:${source.fileName}:${role.key}:${amountValue}:${toneValue}:${motionValue}:${attackValue}:${spaceValue}:${dirtValue}`));
     const data = cloneJson(source.data);
     const settings = data.settings;
-    const baseChanges = mode === "pro" ? 10 : 8;
-    const changeCount = clamp(Math.round(baseChanges + strategy.amount * (mode === "pro" ? 18 : 16) + (index % 4) * 2), 6, mode === "pro" ? 24 : 22);
+    const baseChanges = 10;
+    const changeCount = clamp(Math.round(baseChanges + strategy.amount * 18 + (index % 4) * 2), 6, 24);
     const candidateKeys = pool.slice(0, Math.max(changeCount * 2, 12));
     const chosen = [];
 
@@ -334,13 +324,13 @@ export function generatePresetVariants({ sourcePreset, strategy, mode = "free", 
 
     const baseName = summary.name.replace(/\s+\/\s+(Closest|Darker|More Motion|Bolder|Wilder|.+\s\d+)$/i, "").trim();
     data.preset_name = `${baseName} / ${role.nameSuffix}`;
-    data.comments = buildVariantDescription(role, strategy, mode);
+    data.comments = buildVariantDescription(role, strategy);
 
     return {
       role,
-      groupKey: role.groupKey || "free",
-      groupLabel: role.groupLabel || "Free Variants",
-      groupDescription: role.groupDescription || "Three starter mutations generated from the loaded preset.",
+      groupKey: role.groupKey || "pro",
+      groupLabel: role.groupLabel || "PRO Variants",
+      groupDescription: role.groupDescription || "PRO mutations generated from the loaded preset.",
       name: data.preset_name,
       description: data.comments,
       changedParameters,

@@ -1,6 +1,5 @@
 import { clamp, familyLabel, lerp, noteName, titleCase, vary } from "./common.js";
 
-export const SCRATCH_FREE_VARIANT_LIMIT = 3;
 export const SCRATCH_PRO_PACK_COUNT = 32;
 
 const MOOD_PROFILE = {
@@ -201,14 +200,6 @@ export function shapeScratchProfile(base, recipe, index) {
     wetness: vary(clamp(base.wetness + (recipe.wetness ?? 0)), spread, index, 18),
     drive: vary(clamp(base.drive + (recipe.drive ?? 0)), spread, index, 19),
   };
-}
-
-export function buildScratchFreePack(profile) {
-  return [
-    { role: "Closest", spread: 0.04 },
-    { role: "Darker", brightness: -0.16, body: 0.06, spread: 0.05 },
-    { role: "More Motion", movement: 0.18, width: 0.06, wetness: 0.04, spread: 0.05 },
-  ].map((recipe, index) => mapScratchProfileToVital(shapeScratchProfile(profile, recipe, index), index, recipe.role, 0.9));
 }
 
 export function buildScratchProPack(profile) {

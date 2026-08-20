@@ -1,10 +1,8 @@
 import { PresetMutatorKnob } from "./preset-mutator-knob.js";
 import { ensureJsZip, familyLabel, noteName, sanitizeFileName } from "./engine/common.js";
 import {
-  buildScratchFreePack,
   buildScratchProfile,
   buildScratchProPack,
-  SCRATCH_FREE_VARIANT_LIMIT,
   SCRATCH_PRO_PACK_COUNT,
 } from "./engine/scratch-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "./engine/vital-export.js";
@@ -25,7 +23,7 @@ const state = {
   proUnlocked: false,
   license: null,
   isGenerating: false,
-  lastGenerationMode: "free",
+  lastGenerationMode: "pro",
 };
 
 const elements = {
@@ -45,7 +43,6 @@ const elements = {
   attackValue: document.querySelector("#attack-value"),
   widthValue: document.querySelector("#width-value"),
   textureValue: document.querySelector("#texture-value"),
-  generateButton: document.querySelector("#generate-button"),
   generatePack: document.querySelector("#generate-pack"),
   downloadPack: document.querySelector("#download-pack"),
   status: document.querySelector("#status"),
@@ -62,7 +59,6 @@ const elements = {
   paidFeaturePreview: document.querySelector("#paid-feature-preview"),
 };
 
-const FREE_VARIANT_LIMIT = SCRATCH_FREE_VARIANT_LIMIT;
 const PRO_PACK_COUNT = SCRATCH_PRO_PACK_COUNT;
 const ANALYTICS_MODE = "scratch";
 
@@ -192,9 +188,9 @@ function renderProfile(profile) {
 function renderPresets(presets) {
   elements.presetList.innerHTML = "";
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
-  elements.presetsPanel.classList.toggle("is-pack", presets.length > FREE_VARIANT_LIMIT);
+  elements.presetsPanel.classList.toggle("is-pack", presets.length > 0);
   if (!presets.length) {
-    elements.presetList.innerHTML = `<p class="empty-state">Click <strong>Generate 3 Free Variants</strong> to create from-scratch Vital starting points.</p>`;
+    elements.presetList.innerHTML = `<p class="empty-state">Unlock PRO, then generate a 32-variant Vital preset pack from your selected direction.</p>`;
     return;
   }
 
@@ -344,25 +340,26 @@ async function downloadPack() {
 
 function setLoading(isLoading) {
   state.isGenerating = isLoading;
-  elements.generateButton.disabled = isLoading;
-  elements.generateButton.classList.toggle("is-loading", isLoading);
   if (elements.generatePack) {
     elements.generatePack.disabled = isLoading || !state.proUnlocked;
     elements.generatePack.classList.toggle("is-loading", isLoading);
   }
 }
 
-function generate(mode = "free") {
+function generate() {
+  if (!state.proUnlocked) {
+    return;
+  }
   setLoading(true);
-  state.lastGenerationMode = mode;
-  updateStatus(mode === "pro" ? "Building 32 Pro variants..." : "Building 3 free variants...");
+  state.lastGenerationMode = "pro";
+  updateStatus("Building 32 PRO variants...");
   window.setTimeout(() => {
     const profile = currentProfile();
-    state.presets = mode === "pro" ? buildScratchProPack(profile) : buildScratchFreePack(profile);
+    state.presets = buildScratchProPack(profile);
     renderPresets(state.presets);
-    elements.downloadPack.disabled = mode !== "pro";
-    updateStatus(mode === "pro" ? "32 Pro variants ready." : "3 free variants ready.");
-    analyticsEvent(mode === "pro" ? "generate_pro" : "generate_free", {
+    elements.downloadPack.disabled = false;
+    updateStatus("32 PRO variants ready.");
+    analyticsEvent("generate_pro", {
       preset_count: state.presets.length,
       ...currentAnalyticsSelection(),
     });
@@ -415,7 +412,7 @@ async function unlockPro() {
   state.license = result.payload;
   saveLicenseToken(code);
   renderUnlockState();
-  updateStatus(`Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}.`);
+  updateStatus(`Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}.`);
   analyticsEvent("unlock_attempt", { result: "success" });
 }
 
@@ -465,8 +462,7 @@ for (const element of [
   element.addEventListener("change", refreshProfile);
 }
 
-elements.generateButton.addEventListener("click", () => generate("free"));
-elements.generatePack?.addEventListener("click", () => generate("pro"));
+elements.generatePack?.addEventListener("click", generate);
 elements.downloadPack?.addEventListener("click", downloadPack);
 elements.paidFeatureToggle?.addEventListener("click", toggleUnlock);
 elements.paidFeatureUnlockButton?.addEventListener("click", () => {

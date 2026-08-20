@@ -1,6 +1,5 @@
 import { clamp, familyLabel, formatHz, lerp, noteName, vary } from "./common.js";
 
-export const AUDIO_FREE_VARIANT_LIMIT = 3;
 export const AUDIO_PRO_PACK_COUNT = 32;
 
 function percentValue(value) {
@@ -244,22 +243,6 @@ export function shapeAudioProfile(baseProfile, recipe, index) {
     wash: vary(clamp((baseProfile.wash ?? 0.12) + (recipe.wash ?? 0)), spread(recipe.spread ?? 0.05), index, 29),
     drive: vary(clamp((baseProfile.drive ?? 0.08) + (recipe.drive ?? 0)), spread(recipe.spread ?? 0.05), index, 30),
   };
-}
-
-export function buildAudioFreePack(profile) {
-  const recipes = [
-    { role: "Closest", brightness: -0.01, movement: -0.02, spread: 0.035, amountScale: 0.82 },
-    { role: "Darker", brightness: -0.15, body: 0.06, movement: -0.03, spread: 0.04, amountScale: 0.9 },
-    { role: "More Motion", movement: 0.18, width: 0.06, wetness: 0.04, spread: 0.045, amountScale: 0.94 },
-  ];
-
-  return recipes.map((recipe, index) => {
-    const shaped = shapeAudioProfile(profile, recipe, index);
-    return mapAudioProfileToVital(shaped, index, {
-      amountScale: recipe.amountScale,
-      roleLabel: recipe.role,
-    });
-  });
 }
 
 export function buildAudioProPack(profile) {

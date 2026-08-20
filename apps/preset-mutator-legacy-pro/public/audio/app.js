@@ -1,6 +1,6 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
 import { clamp, ensureJsZip, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
-import { AUDIO_PRO_PACK_COUNT, buildAudioFreePack, buildAudioProfile as createAudioProfile, buildAudioProPack } from "../engine/audio-engine.js";
+import { AUDIO_PRO_PACK_COUNT, buildAudioProfile as createAudioProfile, buildAudioProPack } from "../engine/audio-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "../engine/vital-export.js";
 import { playPresetPreview } from "../engine/audio-preview.js";
 import {
@@ -29,7 +29,7 @@ const state = {
   license: null,
   sourceName: "",
   seedCache: new Map(),
-  lastGenerationMode: "free",
+  lastGenerationMode: "pro",
 };
 
 const elements = {
@@ -59,8 +59,6 @@ const elements = {
   widthBiasValue: document.querySelector("#width-bias-value"),
   playToggle: document.querySelector("#play-toggle"),
   playbackTime: document.querySelector("#playback-time"),
-  analyzeGenerate: document.querySelector("#analyze-generate"),
-  analyzeGenerateLabel: document.querySelector("#analyze-generate .button-label"),
   analysisMetrics: document.querySelector("#analysis-metrics"),
   profileMetrics: document.querySelector("#profile-metrics"),
   analysisShell: document.querySelector("#analysis-shell"),
@@ -81,7 +79,6 @@ const elements = {
   selfTestNote: document.querySelector("#self-test-note"),
 };
 
-const FREE_VARIANT_LIMIT = 3;
 const PRO_PACK_COUNT = AUDIO_PRO_PACK_COUNT;
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
@@ -212,7 +209,7 @@ function resetLoadedState() {
   state.analysis = null;
   state.profile = null;
   state.presets = [];
-  state.lastGenerationMode = "free";
+  state.lastGenerationMode = "pro";
   state.sourceName = "";
   elements.fileName.textContent = "No file loaded";
   elements.fileDuration.textContent = "0.0s";
@@ -260,7 +257,6 @@ function updateControlLabels() {
 
 function setReady(enabled) {
   elements.playToggle.disabled = !enabled;
-  elements.analyzeGenerate.disabled = !enabled || state.isGenerating;
   if (elements.generatePack) {
     elements.generatePack.disabled = !enabled || state.isGenerating || !state.proPreviewUnlocked;
   }
@@ -271,8 +267,6 @@ function setReady(enabled) {
 
 function setGenerateLoadingState(isLoading) {
   state.isGenerating = isLoading;
-  elements.analyzeGenerate.classList.toggle("is-loading", isLoading);
-  elements.analyzeGenerateLabel.textContent = isLoading ? "Analyzing audio..." : "Generate 3 Free Variants";
   if (elements.generatePack) {
     elements.generatePack.disabled = !state.originalBuffer || isLoading || !state.proPreviewUnlocked;
   }
@@ -608,10 +602,6 @@ function buildProfile(analysis) {
   });
 }
 
-function buildFreePack(profile) {
-  return buildAudioFreePack(profile);
-}
-
 function buildProPack(profile) {
   return buildAudioProPack(profile);
 }
@@ -705,13 +695,13 @@ function renderMetricGrid(target, items) {
 function renderPresets(presets) {
   elements.presetList.innerHTML = "";
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
-  elements.presetsPanel.classList.toggle("is-pack", presets.length > FREE_VARIANT_LIMIT);
+  elements.presetsPanel.classList.toggle("is-pack", presets.length > 0);
   if (!presets.length) {
     elements.presetList.innerHTML = `<p class="empty-state">No variants generated yet.</p>`;
     return;
   }
 
-  if (presets.length > FREE_VARIANT_LIMIT) {
+  if (presets.length > 0) {
     const groups = new Map();
     for (const preset of presets) {
       const role = variantRole(presets.indexOf(preset), preset);
@@ -761,18 +751,14 @@ function renderPresets(presets) {
     return;
   }
 
-  for (const preset of presets) {
-    const role = variantRole(presets.indexOf(preset), preset);
-    elements.presetList.appendChild(buildPresetCard(preset, role, presets.length));
-  }
 }
 
 function buildPresetCard(preset, role, totalCount) {
     const card = document.createElement("article");
     card.className = "preset-card";
-    const maxRows = totalCount > FREE_VARIANT_LIMIT ? 4 : 4;
-    const tags = totalCount > FREE_VARIANT_LIMIT ? [] : buildPresetTags(preset, role);
-    const visibleParameters = totalCount > FREE_VARIANT_LIMIT ? preset.parameters : selectFreeCardParameters(preset.parameters);
+    const maxRows = 4;
+    const tags = [];
+    const visibleParameters = preset.parameters;
     const paramRows = visibleParameters
       .slice(0, maxRows)
       .map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`)
@@ -835,13 +821,6 @@ function buildPresetTags(preset, role) {
   }
 
   return tags.slice(0, 3);
-}
-
-function selectFreeCardParameters(parameters) {
-  const preferredLabels = ["Filter Cutoff", "Env Attack", "Env Release", "Reverb Mix"];
-  return preferredLabels
-    .map((label) => parameters.find(([currentLabel]) => currentLabel === label))
-    .filter(Boolean);
 }
 
 function describePackGroup(role) {
@@ -980,7 +959,7 @@ async function loadAudioFile(file, resetInput = false) {
     state.analysis = null;
     state.profile = null;
     state.presets = [];
-    state.lastGenerationMode = "free";
+    state.lastGenerationMode = "pro";
     state.sourceName = file.name.replace(/\.[^.]+$/, "");
 
     elements.fileName.textContent = file.name;
@@ -994,7 +973,7 @@ async function loadAudioFile(file, resetInput = false) {
     renderPresets([]);
     setReady(true);
 
-    updateStatus("Source ready. Generate 3 free variants or unlock the 32-pack.");
+    updateStatus(state.proPreviewUnlocked ? "Source ready. Generate your 32-variant PRO pack." : "Source ready. Enter your PRO license token to unlock generation.");
     analyticsEvent("source_loaded", {
       source_type: "audio",
       duration_bucket: durationBucket(state.originalBuffer.duration),
@@ -1081,7 +1060,7 @@ function loadSyntheticSource() {
   state.analysis = null;
   state.profile = null;
   state.presets = [];
-  state.lastGenerationMode = "free";
+  state.lastGenerationMode = "pro";
   state.sourceName = "self-test-source";
 
   elements.fileName.textContent = "self-test-source.wav";
@@ -1095,53 +1074,7 @@ function loadSyntheticSource() {
   renderMetricGrid(elements.profileMetrics, []);
   renderPresets([]);
   setReady(true);
-  updateStatus("Self-test source ready. Generating presets...");
-  generatePresets();
-}
-
-function generatePresets() {
-  if (!state.originalBuffer) {
-    return;
-  }
-
-  updateStatus("Shaping 3 guided Vital variants...");
-  state.analysis = analyzeAudio(state.originalBuffer);
-  state.profile = buildProfile(state.analysis);
-  state.lastGenerationMode = "free";
-  state.presets = buildFreePack(state.profile);
-
-  renderMetricGrid(elements.analysisMetrics, [
-    ["Pitch Center", state.analysis.pitchHz ? `${Math.round(state.analysis.pitchHz)} Hz` : "Unclear"],
-    ["Spectral Centroid", formatHz(state.analysis.centroidHz)],
-    ["RMS", state.analysis.rms.toFixed(3)],
-    ["Peak", state.analysis.peak.toFixed(3)],
-    ["Zero Cross Rate", state.analysis.zeroCrossRate.toFixed(3)],
-    ["Onset Position", formatPercent(state.analysis.onsetRatio)],
-    ["Sustain Ratio", formatPercent(state.analysis.sustainRatio)],
-    ["Stereo Width", formatPercent(state.analysis.stereoWidth)],
-  ]);
-
-  renderMetricGrid(elements.profileMetrics, [
-    ["Detected Family", familyLabel(state.profile.family)],
-    ["Mutation", formatPercent(state.profile.mutationAmount)],
-    ["Brightness", formatPercent(state.profile.brightness)],
-    ["Body", formatPercent(state.profile.body)],
-    ["Attack", formatPercent(state.profile.attack)],
-    ["Sustain", formatPercent(state.profile.sustain)],
-    ["Movement", formatPercent(state.profile.movement)],
-    ["Noise", formatPercent(state.profile.noise)],
-    ["Width", formatPercent(state.profile.width)],
-  ]);
-
-  renderPresets(state.presets);
-  updateStatus("3 free variants ready. Download the ones that feel closest to your track.");
-  analyticsEvent("generate_free", {
-    preset_count: state.presets.length,
-    detected_family: state.profile.family,
-    duration_bucket: durationBucket(state.originalBuffer.duration),
-    ...currentAnalyticsSelection(),
-  });
-  setReady(Boolean(state.originalBuffer));
+  updateStatus("Self-test source ready. Enter your PRO license token to unlock generation.");
 }
 
 function generatePresetPack() {
@@ -1149,7 +1082,7 @@ function generatePresetPack() {
     return;
   }
 
-  updateStatus("Shaping 32 Pro variants...");
+  updateStatus("Shaping 32 PRO variants...");
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
   state.lastGenerationMode = "pro";
@@ -1179,7 +1112,7 @@ function generatePresetPack() {
   ]);
 
   renderPresets(state.presets);
-  updateStatus("32 Pro variants ready.");
+  updateStatus("32 PRO variants ready.");
   analyticsEvent("generate_pro", {
     preset_count: state.presets.length,
     detected_family: state.profile.family,
@@ -1189,32 +1122,13 @@ function generatePresetPack() {
   setReady(Boolean(state.originalBuffer));
 }
 
-async function handleGeneratePresets() {
-  if (!state.originalBuffer || state.isGenerating) {
-    return;
-  }
-
-  setGenerateLoadingState(true);
-  updateStatus("Generating 3 free variants...");
-
-  await new Promise((resolve) => {
-    window.setTimeout(resolve, GENERATE_DELAY_MS);
-  });
-
-  try {
-    generatePresets();
-  } finally {
-    setGenerateLoadingState(false);
-  }
-}
-
 async function handleGeneratePresetPack() {
   if (!state.originalBuffer || state.isGenerating || !state.proPreviewUnlocked) {
     return;
   }
 
   setGenerateLoadingState(true);
-  updateStatus("Generating 32 Pro variants...");
+  updateStatus("Generating 32 PRO variants...");
 
   await new Promise((resolve) => {
     window.setTimeout(resolve, GENERATE_DELAY_MS);
@@ -1285,7 +1199,7 @@ async function handlePaidFeatureUnlock() {
   state.license = result.payload;
   saveLicenseToken(key);
   renderPaidFeatureState();
-  updateStatus(`Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}.`);
+  updateStatus(`Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}.`);
   setReady(Boolean(state.originalBuffer));
   analyticsEvent("unlock_attempt", { result: "success" });
 }
@@ -1313,7 +1227,6 @@ elements.waveformPanel.addEventListener("dragleave", handleDropZoneLeave);
 elements.waveformPanel.addEventListener("drop", handleDropZoneDrop);
 elements.waveform.addEventListener("click", handleWaveformSeek);
 elements.playToggle.addEventListener("click", handlePlayToggle);
-elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
 elements.analysisToggle.addEventListener("click", toggleAnalysisVisibility);
 elements.paidFeatureToggle.addEventListener("click", togglePaidFeatureUnlock);
 elements.paidFeatureUnlockButton.addEventListener("click", () => {

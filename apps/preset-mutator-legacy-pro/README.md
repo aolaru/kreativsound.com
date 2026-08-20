@@ -1,6 +1,6 @@
-# Preset Mutator Legacy Pro
+# Preset Mutator PRO
 
-This unlisted app preserves the paid Preset Mutator Pro workflow for verified customers who purchased it before the public tool became free.
+This unlisted app preserves the paid Preset Mutator PRO workflow for verified customers who purchased it before the public tool became free.
 
 ## Public URL
 
@@ -18,10 +18,10 @@ Generate a signed token after verifying the customer's Gumroad order:
 npm run license:preset-mutator-legacy-pro -- --email customer@example.com --order ORDER-ID
 ```
 
-The private signing key is stored under `private/` and is intentionally not committed. Send the resulting token directly to the customer along with the Legacy Pro URL.
+The private signing key is stored under `private/` and is intentionally not committed. Send the resulting token directly to the customer along with the Preset Mutator PRO URL.
 
 ## Editing Notes
 
 - Keep this app isolated from `apps/preset-mutator/public/`, which is the free public tool.
 - Do not add checkout links to this legacy app.
-- Keep the signed-token verification path until all eligible Legacy Pro customers have been fulfilled.
+- Keep the signed-token verification path until all eligible Preset Mutator PRO customers have been fulfilled.

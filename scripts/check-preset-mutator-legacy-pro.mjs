@@ -27,22 +27,25 @@ async function exists(relativePath) {
 }
 
 const pages = [
-  { name: "From Scratch", html: "index.html", app: "app.js", proEngine: "buildScratchProPack" },
-  { name: "Audio", html: "audio/index.html", app: "audio/app.js", proEngine: "buildAudioProPack" },
-  { name: "Mutate Preset", html: "mutate/index.html", app: "mutate/app.js", proEngine: "PRESET_MUTATE_PRO_PACK_COUNT" },
+  { name: "From Scratch", html: "index.html", app: "app.js", proEngine: "buildScratchProPack", freeEngine: "buildScratchFreePack" },
+  { name: "Audio", html: "audio/index.html", app: "audio/app.js", proEngine: "buildAudioProPack", freeEngine: "buildAudioFreePack" },
+  { name: "Mutate Preset", html: "mutate/index.html", app: "mutate/app.js", proEngine: "PRESET_MUTATE_PRO_PACK_COUNT", freeEngine: "mode: \"free\"" },
 ];
 
 for (const page of pages) {
   const [html, app] = await Promise.all([read(page.html), read(page.app)]);
   assert(html.includes('content="noindex, nofollow"'), `${page.name}: legacy page must stay out of search indexes`);
-  assert(html.includes("Preset Mutator Legacy Pro"), `${page.name}: legacy access must be clearly labelled`);
+  assert(html.includes("Preset Mutator PRO"), `${page.name}: PRO access must be clearly labelled`);
   assert(html.includes("Enter license token"), `${page.name}: license token entry is missing`);
-  assert(html.includes("Generate 32 Pro Variants"), `${page.name}: Pro batch action is missing`);
+  assert(html.includes("Generate 32 PRO Variants"), `${page.name}: PRO batch action is missing`);
+  assert(!/\bfree\b/i.test(html), `${page.name}: free-tier copy must not appear in the PRO app`);
   assert(!html.includes("Buy on Gumroad"), `${page.name}: legacy page must not expose a Gumroad checkout link`);
   assert(!html.includes("Pay with PayPal"), `${page.name}: legacy page must not expose a PayPal checkout link`);
   assert(!html.includes('href="/preset-mutator/'), `${page.name}: legacy page must not route customers to the free app`);
   assert(app.includes("verifyLicenseToken"), `${page.name}: signed-token verification is missing`);
   assert(app.includes(page.proEngine), `${page.name}: Pro generation engine is missing`);
+  assert(!app.includes(page.freeEngine), `${page.name}: free generation engine is still present`);
+  assert(!app.includes("generate_free"), `${page.name}: free generation analytics should not ship`);
 }
 
 const [manifest, serviceWorker, licenseScript] = await Promise.all([
