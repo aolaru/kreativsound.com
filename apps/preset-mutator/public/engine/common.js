@@ -91,26 +91,3 @@ export function countBucket(count) {
   }
   return "large";
 }
-
-export function ensureJsZip() {
-  if (window.JSZip) {
-    return Promise.resolve(window.JSZip);
-  }
-
-  return new Promise((resolve, reject) => {
-    const existing = document.querySelector("script[data-jszip-loader]");
-    if (existing) {
-      existing.addEventListener("load", () => resolve(window.JSZip), { once: true });
-      existing.addEventListener("error", () => reject(new Error("ZIP export is not available right now.")), { once: true });
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
-    script.async = true;
-    script.dataset.jszipLoader = "true";
-    script.addEventListener("load", () => resolve(window.JSZip), { once: true });
-    script.addEventListener("error", () => reject(new Error("ZIP export is not available right now.")), { once: true });
-    document.head.appendChild(script);
-  });
-}

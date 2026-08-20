@@ -1,30 +1,17 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { ensureJsZip, slugifyFilename } from "../engine/common.js";
 import {
   buildPresetMutateStrategy,
   generatePresetVariants as createPresetVariants,
-  PRESET_MUTATE_PRO_PACK_COUNT,
   presetSummary as summarizeVitalPreset,
 } from "../engine/preset-mutate-engine.js";
 import { playPresetPreview } from "../engine/audio-preview.js";
-import {
-  clearLegacyUnlocks,
-  clearLicenseToken,
-  getStoredLicenseToken,
-  hasLegacyUnlock,
-  licenseOwnerLabel,
-  saveLicenseToken,
-  verifyLicenseToken,
-} from "../engine/license.js";
 
 const state = {
   sourcePreset: null,
   sourceFile: null,
   generatedVariants: [],
   isGenerating: false,
-  suiteUnlocked: false,
-  license: null,
-  lastGenerationMode: "free",
+  lastGenerationMode: "standard",
 };
 
 const elements = {
@@ -53,22 +40,11 @@ const elements = {
   generateButton: document.querySelector("#generate-button"),
   buttonLabel: document.querySelector(".button-label"),
   status: document.querySelector("#status"),
-  suitePanel: document.querySelector("#suite-panel"),
-  suiteActions: document.querySelector("#suite-actions"),
-  suiteToggle: document.querySelector("#suite-toggle"),
-  suiteUnlock: document.querySelector("#suite-unlock"),
-  suiteKey: document.querySelector("#suite-key"),
-  suiteUnlockButton: document.querySelector("#suite-unlock-button"),
-  suiteUnlockNote: document.querySelector("#suite-unlock-note"),
-  suiteActive: document.querySelector("#suite-active"),
-  generatePack: document.querySelector("#generate-pack"),
-  downloadPack: document.querySelector("#download-pack"),
   sourceMetrics: document.querySelector("#source-metrics"),
   strategyMetrics: document.querySelector("#strategy-metrics"),
   presetList: document.querySelector("#preset-list"),
 };
 
-const PRO_PACK_COUNT = PRESET_MUTATE_PRO_PACK_COUNT;
 const ANALYTICS_MODE = "preset";
 
 if ("serviceWorker" in navigator) {
@@ -154,7 +130,7 @@ function amountLabel(value) {
 }
 
 function currentActionLabel() {
-  return state.lastGenerationMode === "pro" ? "Generate 32 Pro Variants" : "Generate 3 Free Variants";
+  return "Generate 3 Variants";
 }
 
 function updateControlLabels() {
@@ -263,12 +239,6 @@ function updateSourceUi() {
     elements.presetWavetables.textContent = "-";
     elements.presetFile.textContent = "No file loaded";
     elements.generateButton.disabled = true;
-    if (elements.generatePack) {
-      elements.generatePack.disabled = true;
-    }
-    if (elements.downloadPack) {
-      elements.downloadPack.disabled = true;
-    }
     renderSourceMetrics();
     renderStrategyMetrics();
     return;
@@ -283,12 +253,6 @@ function updateSourceUi() {
   elements.presetWavetables.textContent = String(summary.wavetableCount);
   elements.presetFile.textContent = state.sourceFile.name;
   elements.generateButton.disabled = state.isGenerating ? true : false;
-  if (elements.generatePack) {
-    elements.generatePack.disabled = !state.suiteUnlocked || state.isGenerating;
-  }
-  if (elements.downloadPack) {
-    elements.downloadPack.disabled = state.isGenerating || state.lastGenerationMode !== "pro" || state.generatedVariants.length !== PRO_PACK_COUNT;
-  }
   renderSourceMetrics();
   renderStrategyMetrics();
 }
@@ -304,11 +268,10 @@ function buildStrategyWeights() {
   });
 }
 
-function generateVariants(mode = "free") {
+function generateVariants() {
   return createPresetVariants({
     sourcePreset: state.sourcePreset,
     strategy: buildStrategyWeights(),
-    mode,
     controls: {
       amount: elements.amountRange.value,
       tone: elements.brightnessRange.value,
@@ -355,40 +318,6 @@ async function previewVariant(variant) {
   }
 }
 
-async function downloadVariantPack() {
-  if (!state.generatedVariants.length) {
-    return;
-  }
-
-  try {
-    elements.status.textContent = "Preparing the 32-pack ZIP...";
-    const JSZip = await ensureJsZip();
-    const zip = new JSZip();
-    for (const variant of state.generatedVariants) {
-      zip.file(variant.downloadName, JSON.stringify(variant.data, null, 2));
-    }
-
-    const blob = await zip.generateAsync({ type: "blob" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    const sourceName = state.sourcePreset?.summary?.name || "Preset Mutator Pack";
-    anchor.href = url;
-    anchor.download = `${slugifyFilename(sourceName)} - 32 Preset Pack.zip`;
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-    URL.revokeObjectURL(url);
-    elements.status.textContent = "32-pack ZIP ready.";
-    analyticsEvent("download_pack", {
-      generation_mode: "pro",
-      preset_count: state.generatedVariants.length,
-      ...currentAnalyticsSelection(),
-    });
-  } catch (error) {
-    elements.status.textContent = error.message || "Could not build the 32-pack ZIP.";
-  }
-}
-
 function renderVariants() {
   if (!state.generatedVariants.length) {
     elements.presetList.innerHTML = `<p class="empty-state">Choose one <strong>.vital</strong> preset, then click <strong>${currentActionLabel()}</strong> to create new playable mutations.</p>`;
@@ -412,7 +341,7 @@ function renderVariants() {
   for (const [key, group] of groups.entries()) {
     const section = document.createElement("section");
     section.className = "preset-group";
-    const shouldStartOpen = state.lastGenerationMode !== "pro" || key === "closest";
+    const shouldStartOpen = true;
     const listId = `preset-group-${key}`;
 
     section.innerHTML = `
@@ -541,7 +470,7 @@ async function loadPreset(file) {
     state.sourcePreset = { data, summary, fileName: file.name };
     state.sourceFile = file;
     state.generatedVariants = [];
-    state.lastGenerationMode = "free";
+    state.lastGenerationMode = "standard";
     setUploadMessage("");
     updateSourceUi();
     renderVariants();
@@ -552,9 +481,7 @@ async function loadPreset(file) {
       safe_parameter_bucket: countBucket(summary.scalarKeys.length),
       macro_count: summary.macroCount,
     });
-    elements.status.textContent = state.suiteUnlocked
-      ? `Loaded ${summary.name}. Generate 3 free variants or build 32 Pro variants.`
-      : `Loaded ${summary.name}. Generate 3 free variants when ready.`;
+    elements.status.textContent = `Loaded ${summary.name}. Generate 3 variants when ready.`;
   } catch (error) {
     state.sourcePreset = null;
     state.sourceFile = null;
@@ -565,47 +492,33 @@ async function loadPreset(file) {
   }
 }
 
-function setGenerationLoadingState(isLoading, mode) {
+function setGenerationLoadingState(isLoading) {
   state.isGenerating = isLoading;
   elements.generateButton.disabled = isLoading || !state.sourcePreset;
-  elements.generateButton.classList.toggle("is-loading", isLoading && mode === "free");
-  elements.buttonLabel.textContent = isLoading && mode === "free" ? "Generating..." : "Generate 3 Free Variants";
-  if (elements.generatePack) {
-    elements.generatePack.disabled = isLoading || !state.sourcePreset || !state.suiteUnlocked;
-    elements.generatePack.classList.toggle("is-loading", isLoading && mode === "pro");
-  }
-  if (elements.downloadPack) {
-    elements.downloadPack.disabled = isLoading || state.lastGenerationMode !== "pro" || state.generatedVariants.length !== PRO_PACK_COUNT;
-  }
+  elements.generateButton.classList.toggle("is-loading", isLoading);
+  elements.buttonLabel.textContent = isLoading ? "Generating..." : "Generate 3 Variants";
 }
 
-async function handleGenerate(mode = "free") {
+async function handleGenerate() {
   if (!state.sourcePreset || state.isGenerating) {
     return;
   }
-  if (mode === "pro" && !state.suiteUnlocked) {
-    return;
-  }
 
-  setGenerationLoadingState(true, mode);
-  elements.status.textContent = mode === "pro"
-    ? "Building 32 Pro variants from the loaded source preset..."
-    : "Mutating the source preset into 3 free variants...";
+  setGenerationLoadingState(true);
+  elements.status.textContent = "Mutating the source preset into 3 variants...";
 
   try {
     await new Promise((resolve) => window.setTimeout(resolve, 520));
-    state.generatedVariants = generateVariants(mode);
-    state.lastGenerationMode = mode;
+    state.generatedVariants = generateVariants();
+    state.lastGenerationMode = "standard";
     renderVariants();
-    elements.status.textContent = mode === "pro"
-      ? "32 Pro variants ready. Expand each group and download individual presets or the full ZIP."
-      : "3 free variants ready. Download the one that feels closest.";
-    analyticsEvent(mode === "pro" ? "generate_pro" : "generate_free", {
+    elements.status.textContent = "3 variants ready. Download the one that feels closest.";
+    analyticsEvent("generate", {
       preset_count: state.generatedVariants.length,
       ...currentAnalyticsSelection(),
     });
   } finally {
-    setGenerationLoadingState(false, mode);
+    setGenerationLoadingState(false);
   }
 }
 
@@ -636,80 +549,6 @@ function bindDropZone() {
       loadPreset(file);
     }
   });
-}
-
-function renderSuiteState() {
-  elements.suitePanel.classList.toggle("is-unlocked", state.suiteUnlocked);
-  elements.suiteActions.hidden = state.suiteUnlocked;
-  elements.suiteUnlock.hidden = true;
-  elements.suiteActive.hidden = !state.suiteUnlocked;
-  elements.suiteToggle?.setAttribute("aria-expanded", "false");
-  if (elements.generatePack) {
-    elements.generatePack.disabled = !state.suiteUnlocked || !state.sourcePreset || state.isGenerating;
-  }
-  if (elements.downloadPack) {
-    elements.downloadPack.disabled = state.isGenerating || state.lastGenerationMode !== "pro" || state.generatedVariants.length !== PRO_PACK_COUNT;
-  }
-}
-
-function toggleSuiteUnlock() {
-  if (state.suiteUnlocked) {
-    return;
-  }
-  const isOpen = !elements.suiteUnlock.hidden;
-  elements.suiteUnlock.hidden = isOpen;
-  elements.suiteToggle.setAttribute("aria-expanded", String(!isOpen));
-  if (isOpen) {
-    analyticsEvent("unlock_panel_close");
-  } else {
-    analyticsEvent("unlock_panel_open");
-  }
-  if (!isOpen) {
-    elements.suiteKey.focus();
-  }
-}
-
-async function handleSuiteUnlock() {
-  const key = elements.suiteKey.value.trim();
-  if (!key) {
-    elements.suiteUnlockNote.textContent = "Enter your license token to unlock this browser.";
-    analyticsEvent("unlock_attempt", { result: "empty" });
-    return;
-  }
-  elements.suiteUnlockButton.disabled = true;
-  elements.suiteUnlockNote.textContent = "Checking license token...";
-  const result = await verifyLicenseToken(key);
-  elements.suiteUnlockButton.disabled = false;
-  if (!result.valid) {
-    elements.suiteUnlockNote.textContent = "Invalid license token. Check the token and try again.";
-    analyticsEvent("unlock_attempt", { result: "invalid" });
-    return;
-  }
-
-  state.suiteUnlocked = true;
-  state.license = result.payload;
-  saveLicenseToken(key);
-  renderSuiteState();
-  elements.status.textContent = state.sourcePreset
-    ? `Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}. Generate 32 Pro variants when ready.`
-    : `Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}.`;
-  analyticsEvent("unlock_attempt", { result: "success" });
-}
-
-async function restoreLicense() {
-  const storedLicense = getStoredLicenseToken();
-  if (storedLicense) {
-    const result = await verifyLicenseToken(storedLicense);
-    if (result.valid) {
-      state.suiteUnlocked = true;
-      state.license = result.payload;
-      return;
-    }
-    clearLicenseToken();
-  }
-  if (hasLegacyUnlock()) {
-    clearLegacyUnlocks();
-  }
 }
 
 elements.fileInput.addEventListener("change", (event) => {
@@ -743,22 +582,7 @@ elements.dirtRange.addEventListener("input", () => {
   updateControlLabels();
   renderStrategyMetrics();
 });
-elements.generateButton.addEventListener("click", () => handleGenerate("free"));
-elements.generatePack?.addEventListener("click", () => handleGenerate("pro"));
-elements.downloadPack?.addEventListener("click", downloadVariantPack);
-elements.suiteToggle?.addEventListener("click", toggleSuiteUnlock);
-elements.suiteUnlockButton?.addEventListener("click", () => {
-  handleSuiteUnlock();
-});
-elements.suiteActions?.addEventListener("click", (event) => {
-  const link = event.target.closest("a");
-  if (!link) {
-    return;
-  }
-  analyticsEvent("pro_cta_click", {
-    checkout: link.href.includes("paypal.com") ? "paypal" : "gumroad",
-  });
-});
+elements.generateButton.addEventListener("click", handleGenerate);
 
 new PresetMutatorKnob(elements.mutationKnob, {
   value: Number(elements.amountRange.value),
@@ -775,5 +599,3 @@ updateControlLabels();
 updateSourceUi();
 renderVariants();
 bindDropZone();
-await restoreLicense();
-renderSuiteState();

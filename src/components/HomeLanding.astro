@@ -28,7 +28,7 @@ function productKicker(product: Product) {
 
 function primaryActionLabel(product: Product) {
   if (!product.url) return product.status === "comingSoon" ? "Coming Soon" : "Details";
-  if (product.category === "Tools") return "Buy Pro";
+  if (product.category === "Tools") return "Open Tool";
   if (product.status === "free") return "Download Free";
   if (product.status === "archive") return "Open Archive";
   return "Buy on Gumroad";
@@ -167,12 +167,12 @@ function appActionUrl(product: Product) {
             <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
             {primaryActionLabel(product)}
           </a>
-        ) : (
+        ) : !appActionUrl(product) ? (
           <span class="button secondary is-disabled" aria-disabled="true">
             <i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>
             {primaryActionLabel(product)}
           </span>
-        )}
+        ) : null}
       </div>
     </div>
     <a class="home-latest-art-link" href={product.detailsUrl || appActionUrl(product) || product.url || "/sounds/"} aria-label={`View ${cardTitle(product)}`}>

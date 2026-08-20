@@ -2,8 +2,6 @@
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 
 const appUrl = "/preset-mutator/";
-const gumroadUrl = "https://kreativ.gumroad.com/l/preset-mutator";
-const paypalUrl = "https://www.paypal.com/ncp/payment/RUGQ6S3NW7HE4";
 const softwareSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
@@ -13,22 +11,13 @@ const softwareSchema = {
   description: "Preset Mutator creates Vital preset starting points from scratch ideas, existing Vital presets, or short audio sources. Serum 2 and Pigments 7 support are planned.",
   url: "https://kreativsound.com/tools/preset-mutator/",
   image: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg",
-  offers: [
-    {
-      "@type": "Offer",
-      url: gumroadUrl,
-      price: "19",
-      priceCurrency: "USD",
-      availability: "https://schema.org/InStock"
-    },
-    {
-      "@type": "Offer",
-      url: paypalUrl,
-      price: "19",
-      priceCurrency: "USD",
-      availability: "https://schema.org/InStock"
-    }
-  ],
+  offers: {
+    "@type": "Offer",
+    url: "https://kreativsound.com/preset-mutator/",
+    price: "0",
+    priceCurrency: "EUR",
+    availability: "https://schema.org/InStock"
+  },
   creator: {
     "@type": "Person",
     name: "Andrei Olaru"
@@ -56,8 +45,8 @@ const softwareSchema = {
             <span class="product-spec-value">Vital export</span>
           </div>
           <div class="product-spec-inline">
-            <span class="product-spec-label">Pro price</span>
-            <span class="product-spec-value">$19 one-time</span>
+            <span class="product-spec-label">Access</span>
+            <span class="product-spec-value">Free</span>
           </div>
           <div class="product-spec-inline">
             <span class="product-spec-label">Planned next</span>
@@ -74,18 +63,10 @@ const softwareSchema = {
         <div class="product-media-actions">
           <a class="button primary" href={appUrl}>
             <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
-            Open Free Version
-          </a>
-          <a class="button secondary" data-track="begin_checkout" data-track-product="preset-mutator-pro" data-track-placement="tool_hero" href={gumroadUrl} target="_blank" rel="noopener noreferrer">
-            <i class="fa-solid fa-lock" aria-hidden="true"></i>
-            Buy on Gumroad
-          </a>
-          <a class="button secondary" data-track="begin_checkout" data-track-product="preset-mutator-pro" data-track-placement="tool_hero" href={paypalUrl} target="_blank" rel="noopener noreferrer">
-            <i class="fa-brands fa-paypal" aria-hidden="true"></i>
-            Pay with PayPal
+            Open Preset Mutator
           </a>
         </div>
-        <p class="product-value-line">Free mode generates 3 Vital starts. Pro adds 32-preset packs and ZIP export.</p>
+        <p class="product-value-line">Generate 3 Vital variants per run and download individual `.vital` files.</p>
       </div>
     </section>
 
@@ -99,8 +80,8 @@ const softwareSchema = {
         <p>No AI generation: presets are built from local rules and curated seed data.</p>
       </article>
       <article>
-        <i class="fa-solid fa-key" aria-hidden="true"></i>
-        <p>Purchase-code unlock is used for the Pro version.</p>
+        <i class="fa-solid fa-download" aria-hidden="true"></i>
+        <p>The tool is free to open and exports individual Vital preset files.</p>
       </article>
     </section>
 
@@ -129,24 +110,24 @@ const softwareSchema = {
 
     <section class="preset-mutator-compare" aria-labelledby="preset-mutator-compare-title">
       <div>
-        <p class="product-section-kicker">Free vs Pro</p>
-        <h2 id="preset-mutator-compare-title">Free for small starts. Pro for larger batches and export speed.</h2>
+        <p class="product-section-kicker">Tool scope</p>
+        <h2 id="preset-mutator-compare-title">Focused preset starts in one free browser tool.</h2>
       </div>
       <div class="preset-mutator-compare-grid">
         <article>
-          <h3>Free</h3>
+          <h3>Included</h3>
           <ul>
-            <li>3 Vital preset starts per workflow.</li>
+            <li>3 Vital preset variants per workflow.</li>
             <li>Manual download of generated presets.</li>
             <li>Local browser processing and no account requirement.</li>
           </ul>
         </article>
         <article>
-          <h3>Pro</h3>
+          <h3>Workflow</h3>
           <ul>
-            <li>32-preset pack generation.</li>
-            <li>ZIP export for faster preset collection building.</li>
-            <li>One-time purchase-code unlock for this browser.</li>
+            <li>Use the output as a starting point, not a finished preset bank.</li>
+            <li>Refine the best result inside Vital.</li>
+            <li>Use Scratch, Preset, or Audio mode depending on your source.</li>
           </ul>
         </article>
       </div>
@@ -155,16 +136,12 @@ const softwareSchema = {
     <section class="product-cta-strip">
       <div class="product-cta-copy">
         <p class="product-section-kicker">Release focus</p>
-        <p class="product-cta-line">Use the free version for quick Vital starts, or unlock Pro when you need larger batches and ZIP export.</p>
+        <p class="product-cta-line">Open the free browser tool and create a small set of Vital variants from your current idea or source.</p>
       </div>
       <div class="product-actions">
         <a class="button primary" href={appUrl}>
           <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
           Open Preset Mutator
-        </a>
-        <a class="button secondary" data-track="begin_checkout" data-track-product="preset-mutator-pro" data-track-placement="tool_footer" href={paypalUrl} target="_blank" rel="noopener noreferrer">
-          <i class="fa-brands fa-paypal" aria-hidden="true"></i>
-          Pay with PayPal
         </a>
       </div>
     </section>

@@ -1,31 +1,18 @@
 import { PresetMutatorKnob } from "./preset-mutator-knob.js";
-import { ensureJsZip, familyLabel, noteName, sanitizeFileName } from "./engine/common.js";
+import { familyLabel, noteName } from "./engine/common.js";
 import {
   buildScratchFreePack,
   buildScratchProfile,
-  buildScratchProPack,
   SCRATCH_FREE_VARIANT_LIMIT,
-  SCRATCH_PRO_PACK_COUNT,
 } from "./engine/scratch-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "./engine/vital-export.js";
 import { playPresetPreview } from "./engine/audio-preview.js";
-import {
-  clearLegacyUnlocks,
-  clearLicenseToken,
-  getStoredLicenseToken,
-  hasLegacyUnlock,
-  licenseOwnerLabel,
-  saveLicenseToken,
-  verifyLicenseToken,
-} from "./engine/license.js";
 
 const state = {
   presets: [],
   seedCache: new Map(),
-  proUnlocked: false,
-  license: null,
   isGenerating: false,
-  lastGenerationMode: "free",
+  lastGenerationMode: "standard",
 };
 
 const elements = {
@@ -46,24 +33,13 @@ const elements = {
   widthValue: document.querySelector("#width-value"),
   textureValue: document.querySelector("#texture-value"),
   generateButton: document.querySelector("#generate-button"),
-  generatePack: document.querySelector("#generate-pack"),
-  downloadPack: document.querySelector("#download-pack"),
   status: document.querySelector("#status"),
   profileMetrics: document.querySelector("#profile-metrics"),
   presetList: document.querySelector("#preset-list"),
   presetsPanel: document.querySelector("#presets-panel"),
-  paidFeaturePanel: document.querySelector("#paid-feature-panel"),
-  paidFeatureActions: document.querySelector("#paid-feature-actions"),
-  paidFeatureToggle: document.querySelector("#paid-feature-toggle"),
-  paidFeatureUnlock: document.querySelector("#paid-feature-unlock"),
-  paidFeatureKey: document.querySelector("#paid-feature-key"),
-  paidFeatureUnlockButton: document.querySelector("#paid-feature-unlock-button"),
-  paidFeatureUnlockNote: document.querySelector("#paid-feature-unlock-note"),
-  paidFeaturePreview: document.querySelector("#paid-feature-preview"),
 };
 
 const FREE_VARIANT_LIMIT = SCRATCH_FREE_VARIANT_LIMIT;
-const PRO_PACK_COUNT = SCRATCH_PRO_PACK_COUNT;
 const ANALYTICS_MODE = "scratch";
 
 if ("serviceWorker" in navigator) {
@@ -194,7 +170,7 @@ function renderPresets(presets) {
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
   elements.presetsPanel.classList.toggle("is-pack", presets.length > FREE_VARIANT_LIMIT);
   if (!presets.length) {
-    elements.presetList.innerHTML = `<p class="empty-state">Click <strong>Generate 3 Free Variants</strong> to create from-scratch Vital starting points.</p>`;
+    elements.presetList.innerHTML = `<p class="empty-state">Click <strong>Generate 3 Variants</strong> to create from-scratch Vital starting points.</p>`;
     return;
   }
 
@@ -309,130 +285,27 @@ async function previewPreset(preset) {
   }
 }
 
-async function downloadPack() {
-  if (state.presets.length !== PRO_PACK_COUNT || state.lastGenerationMode !== "pro") {
-    return;
-  }
-
-  try {
-    updateStatus("Preparing the 32-pack ZIP...");
-    const JSZip = await ensureJsZip();
-    const zip = new JSZip();
-    const folderName = sanitizeFileName(elements.intentText.value.trim() || `scratch-${elements.familySelect.value}-${elements.moodSelect.value}`);
-    const folder = zip.folder(folderName);
-    for (const preset of state.presets) {
-      const { fileName, blob } = await buildVitalPresetBlob(preset);
-      folder.file(fileName, blob);
-    }
-    const zipBlob = await zip.generateAsync({ type: "blob" });
-    const url = URL.createObjectURL(zipBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${folderName}-32-pack.zip`;
-    link.click();
-    URL.revokeObjectURL(url);
-    updateStatus("32-pack ZIP ready.");
-    analyticsEvent("download_pack", {
-      generation_mode: "pro",
-      preset_count: state.presets.length,
-      ...currentAnalyticsSelection(),
-    });
-  } catch (error) {
-    updateStatus(error.message || "Could not build the 32-pack ZIP.");
-  }
-}
-
 function setLoading(isLoading) {
   state.isGenerating = isLoading;
   elements.generateButton.disabled = isLoading;
   elements.generateButton.classList.toggle("is-loading", isLoading);
-  if (elements.generatePack) {
-    elements.generatePack.disabled = isLoading || !state.proUnlocked;
-    elements.generatePack.classList.toggle("is-loading", isLoading);
-  }
 }
 
-function generate(mode = "free") {
+function generate() {
   setLoading(true);
-  state.lastGenerationMode = mode;
-  updateStatus(mode === "pro" ? "Building 32 Pro variants..." : "Building 3 free variants...");
+  state.lastGenerationMode = "standard";
+  updateStatus("Building 3 variants...");
   window.setTimeout(() => {
     const profile = currentProfile();
-    state.presets = mode === "pro" ? buildScratchProPack(profile) : buildScratchFreePack(profile);
+    state.presets = buildScratchFreePack(profile);
     renderPresets(state.presets);
-    elements.downloadPack.disabled = mode !== "pro";
-    updateStatus(mode === "pro" ? "32 Pro variants ready." : "3 free variants ready.");
-    analyticsEvent(mode === "pro" ? "generate_pro" : "generate_free", {
+    updateStatus("3 variants ready.");
+    analyticsEvent("generate", {
       preset_count: state.presets.length,
       ...currentAnalyticsSelection(),
     });
     setLoading(false);
   }, 300);
-}
-
-function renderUnlockState() {
-  elements.paidFeaturePanel.classList.toggle("is-unlocked", state.proUnlocked);
-  elements.paidFeatureActions.hidden = state.proUnlocked;
-  elements.paidFeatureUnlock.hidden = true;
-  elements.paidFeaturePreview.hidden = !state.proUnlocked;
-  elements.paidFeatureToggle?.setAttribute("aria-expanded", "false");
-  if (elements.generatePack) {
-    elements.generatePack.disabled = !state.proUnlocked || state.isGenerating;
-  }
-}
-
-function toggleUnlock() {
-  const isOpen = !elements.paidFeatureUnlock.hidden;
-  elements.paidFeatureUnlock.hidden = isOpen;
-  elements.paidFeatureToggle.setAttribute("aria-expanded", String(!isOpen));
-  if (isOpen) {
-    analyticsEvent("unlock_panel_close");
-  } else {
-    analyticsEvent("unlock_panel_open");
-  }
-  if (!isOpen) {
-    elements.paidFeatureKey.focus();
-  }
-}
-
-async function unlockPro() {
-  const code = elements.paidFeatureKey.value.trim();
-  if (!code) {
-    elements.paidFeatureUnlockNote.textContent = "Enter your license token to unlock this browser.";
-    analyticsEvent("unlock_attempt", { result: "empty" });
-    return;
-  }
-  elements.paidFeatureUnlockButton.disabled = true;
-  elements.paidFeatureUnlockNote.textContent = "Checking license token...";
-  const result = await verifyLicenseToken(code);
-  elements.paidFeatureUnlockButton.disabled = false;
-  if (!result.valid) {
-    elements.paidFeatureUnlockNote.textContent = "Invalid license token. Check the token and try again.";
-    analyticsEvent("unlock_attempt", { result: "invalid" });
-    return;
-  }
-  state.proUnlocked = true;
-  state.license = result.payload;
-  saveLicenseToken(code);
-  renderUnlockState();
-  updateStatus(`Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}.`);
-  analyticsEvent("unlock_attempt", { result: "success" });
-}
-
-async function restoreLicense() {
-  const storedLicense = getStoredLicenseToken();
-  if (storedLicense) {
-    const result = await verifyLicenseToken(storedLicense);
-    if (result.valid) {
-      state.proUnlocked = true;
-      state.license = result.payload;
-      return;
-    }
-    clearLicenseToken();
-  }
-  if (hasLegacyUnlock()) {
-    clearLegacyUnlocks();
-  }
 }
 
 function refreshProfile() {
@@ -465,24 +338,7 @@ for (const element of [
   element.addEventListener("change", refreshProfile);
 }
 
-elements.generateButton.addEventListener("click", () => generate("free"));
-elements.generatePack?.addEventListener("click", () => generate("pro"));
-elements.downloadPack?.addEventListener("click", downloadPack);
-elements.paidFeatureToggle?.addEventListener("click", toggleUnlock);
-elements.paidFeatureUnlockButton?.addEventListener("click", () => {
-  unlockPro();
-});
-elements.paidFeatureActions?.addEventListener("click", (event) => {
-  const link = event.target.closest("a");
-  if (!link) {
-    return;
-  }
-  analyticsEvent("pro_cta_click", {
-    checkout: link.href.includes("paypal.com") ? "paypal" : "gumroad",
-  });
-});
+elements.generateButton.addEventListener("click", generate);
 
-await restoreLicense();
 refreshProfile();
 renderPresets([]);
-renderUnlockState();

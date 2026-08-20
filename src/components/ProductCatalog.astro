@@ -87,6 +87,7 @@ function ctaTrackingEvent(product: { status?: string }) {
         <ul class="product-grid">
           {categoryItems.map((item, itemIndex) => {
             const hasPrimaryAction = Boolean(item.url);
+            const hasSecondaryAction = Boolean(item.detailsUrl || item.extraAction?.url);
             const eagerImage = categoryIndex === 0 && itemIndex < 6;
             const fetchPriority = eagerImage ? "high" : "auto";
             const searchText = [item.title, item.format, item.count, item.useCase, categoryLabels[category]].join(" ").toLowerCase();
@@ -137,9 +138,9 @@ function ctaTrackingEvent(product: { status?: string }) {
                       <a class="product-action-link is-primary" data-track={ctaTrackingEvent(item)} data-track-product={item.title} data-track-placement="catalog" href={item.url} target="_blank" rel="noopener noreferrer">
                         {ctaText(item.category)}
                       </a>
-                    ) : (
+                    ) : !hasSecondaryAction ? (
                       <span class="product-action-link is-muted">{unavailableText(item)}</span>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               </div>

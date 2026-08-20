@@ -60,23 +60,22 @@ export const landingCopyOverrides = {
   },
   "preset-mutator": {
     subtitle: "Browser-Based Vital Preset Generator",
-    shortMeta: "Browser tool • Free mode + Pro export • Vital presets",
-    ctaLine: "Open the free version or unlock Pro for larger preset batches and ZIP export.",
-    finalCtaTitle: "Unlock Preset Mutator Pro.",
-    finalCtaText: "Use the free browser version for small Vital starts, or unlock Pro for larger batches and ZIP export.",
+    shortMeta: "Free browser tool • 3 variants per run • Vital presets",
+    ctaLine: "Open the free browser tool and export playable Vital preset variants.",
+    finalCtaTitle: "Open Preset Mutator.",
+    finalCtaText: "Create three Vital preset variants from scratch intent, one source preset, or a short audio source.",
     longDescription: [
       "Preset Mutator creates Vital preset starts from scratch ideas, existing Vital presets, or short audio sources.",
       "It is built for quick sketches: generate a playable direction, then finish the sound inside Vital.",
-      "The tool runs locally in your browser. Free mode creates small batches; Pro adds 32-preset batches and ZIP export."
+      "The tool runs locally in your browser and exports individual `.vital` variants without uploads or accounts."
     ],
     specifications: [
       { label: "Product type", value: "Browser sound-design tool" },
       { label: "Format", value: "Vital preset generation and export" },
-      { label: "Free mode", value: "3 Vital preset starts per workflow" },
-      { label: "Pro mode", value: "32-preset pack generation and ZIP export" },
+      { label: "Output", value: "3 Vital preset variants per run" },
       { label: "Best for", value: "Fast Vital preset starts, preset mutation, audio-to-preset experiments, and sound-design sketching" },
       { label: "Processing", value: "Local browser processing" },
-      { label: "Checkout", value: "Gumroad or PayPal" }
+      { label: "Price", value: "Free" }
     ],
     requirements: [
       "A modern web browser is required to run Preset Mutator.",

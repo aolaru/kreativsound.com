@@ -75,7 +75,7 @@ const staticEntries: SearchEntry[] = [
     url: "/tools/preset-mutator/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
-    description: "Free mode creates 3 Vital starts. Pro unlocks 32-preset batches and ZIP export."
+    description: "Free browser tool for creating 3 Vital preset variants from scratch, one preset, or one audio source."
   },
   {
     title: "Audio to Preset",

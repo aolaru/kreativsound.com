@@ -69,26 +69,22 @@ export const products: Product[] = [
   {
     title: "Preset Mutator - Vital Preset Generator",
     category: "Tools",
-    status: "available",
+    status: "free",
     featuredRank: 3,
-    url: "https://kreativ.gumroad.com/l/preset-mutator",
     detailsUrl: "/sounds/preset-mutator",
     appUrl: "/preset-mutator/",
     badge: "Tool",
     extraAction: {
-      label: "Open Free",
+      label: "Open Tool",
       url: "/preset-mutator/"
     },
     thumbnail: "/assets/thumbs/preset-mutator.webp",
     coverImage: "/assets/thumbs/preset-mutator.webp",
     homeImage: "/assets/home/preset-mutator-720.webp",
     homeImageSrcSet: "/assets/home/preset-mutator-480.webp 480w, /assets/home/preset-mutator-720.webp 720w",
-    format: "Browser tool",
-    count: "Free + Pro",
-    useCase: "Vital preset starts from scratch, preset mutation, and audio sources",
-    price: "$19",
-    priceAmount: 19,
-    priceCurrency: "USD"
+    format: "Free browser tool",
+    count: "3 variants per run",
+    useCase: "Free local-first Vital preset starts from scratch ideas, existing presets, and audio sources"
   },
   {
     title: "JUNO NOCTURNES - 96 Arturia JUN-6 V Presets",

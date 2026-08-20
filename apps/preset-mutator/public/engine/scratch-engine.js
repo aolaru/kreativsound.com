@@ -1,7 +1,6 @@
 import { clamp, familyLabel, lerp, noteName, titleCase, vary } from "./common.js";
 
 export const SCRATCH_FREE_VARIANT_LIMIT = 3;
-export const SCRATCH_PRO_PACK_COUNT = 32;
 
 const MOOD_PROFILE = {
   dark: { brightness: 0.32, body: 0.68, movement: 0.44, noise: 0.34, width: 0.48, sustain: 0.64, wetness: 0.32, drive: 0.18 },
@@ -22,17 +21,6 @@ const REGISTER_PITCH = {
   mid: { pad: 220, pluck: 440, bass: 82, texture: 146 },
   high: { pad: 392, pluck: 660, bass: 110, texture: 262 },
 };
-
-const PRO_RECIPES = [
-  { role: "Closest", brightness: 0, movement: -0.03, width: 0, noise: 0, spread: 0.04 },
-  { role: "Darker", brightness: -0.18, body: 0.08, noise: 0.03, spread: 0.05 },
-  { role: "Brighter", brightness: 0.18, width: 0.04, wetness: 0.04, spread: 0.05 },
-  { role: "More Motion", movement: 0.2, width: 0.08, wetness: 0.06, spread: 0.06 },
-  { role: "Steadier", movement: -0.18, width: -0.04, wetness: -0.04, spread: 0.05 },
-  { role: "Wider", width: 0.2, sustain: 0.05, wetness: 0.06, spread: 0.05 },
-  { role: "Tighter", width: -0.16, sustain: -0.08, wetness: -0.08, spread: 0.05 },
-  { role: "Textured", noise: 0.18, movement: 0.1, drive: 0.08, spread: 0.06 },
-];
 
 function percentValue(value) {
   return Number(value || 0) / 100;
@@ -209,11 +197,4 @@ export function buildScratchFreePack(profile) {
     { role: "Darker", brightness: -0.16, body: 0.06, spread: 0.05 },
     { role: "More Motion", movement: 0.18, width: 0.06, wetness: 0.04, spread: 0.05 },
   ].map((recipe, index) => mapScratchProfileToVital(shapeScratchProfile(profile, recipe, index), index, recipe.role, 0.9));
-}
-
-export function buildScratchProPack(profile) {
-  return Array.from({ length: SCRATCH_PRO_PACK_COUNT }, (_, index) => {
-    const recipe = PRO_RECIPES[index % PRO_RECIPES.length];
-    return mapScratchProfileToVital(shapeScratchProfile(profile, recipe, index), index, recipe.role, 1.15);
-  });
 }

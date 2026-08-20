@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preset Mutator | From Scratch</title>
-    <meta name="description" content="Preset Mutator creates Vital preset starts from scratch intent controls, runs locally in the browser, and exports free or Pro preset variants." />
+    <meta name="description" content="Preset Mutator creates free Vital preset starts from scratch intent controls, runs locally in the browser, and exports playable preset variants." />
     <meta name="theme-color" content="#f8e9e9" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Preset Mutator" />
@@ -28,12 +28,12 @@
         "operatingSystem": "Web browser",
         "url": "https://kreativsound.com/preset-mutator/",
         "image": "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg",
-        "description": "Preset Mutator creates Vital preset starts from scratch ideas, existing presets, or short audio sources. Free mode creates three variants; Pro unlocks 32-preset batches and ZIP export.",
+        "description": "Preset Mutator creates free Vital preset starts from scratch ideas, existing presets, or short audio sources. It runs locally in the browser and exports playable preset variants.",
         "offers": {
           "@type": "Offer",
-          "url": "https://kreativ.gumroad.com/l/preset-mutator",
-          "price": "19",
-          "priceCurrency": "USD",
+          "url": "https://kreativsound.com/preset-mutator/",
+          "price": "0",
+          "priceCurrency": "EUR",
           "availability": "https://schema.org/InStock"
         },
         "creator": {
@@ -70,6 +70,7 @@
           <img class="nav-brand-mark-image" src="/preset-mutator/preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator</strong>
+            <span class="nav-version">v0.4.0 beta</span>
           </span>
         </a>
         <div class="nav-group nav-group-utility">
@@ -115,12 +116,12 @@
             <strong>Intent controls</strong>
           </div>
           <div>
-            <span>Free</span>
-            <strong>3 free variants</strong>
+            <span>Output</span>
+            <strong>3 variants</strong>
           </div>
           <div>
-            <span>Pro output</span>
-            <strong>32 Pro variants + ZIP</strong>
+            <span>Export</span>
+            <strong>Vital .vital files</strong>
           </div>
         </div>
         <div class="local-trust-strip" aria-label="Preset Mutator privacy promises">
@@ -231,12 +232,12 @@
           <div class="actions section-actions">
             <button id="generate-button" type="button">
               <span class="button-spinner" aria-hidden="true"></span>
-              <span class="button-label">Generate 3 Free Variants</span>
+              <span class="button-label">Generate 3 Variants</span>
             </button>
           </div>
 
-          <div class="status" id="status">Choose an intent, then generate 3 free variants.</div>
-          <p class="upgrade-hint">Preset Mutator Pro unlocks 32 Pro variants and ZIP export.</p>
+          <div class="status" id="status">Choose an intent, then generate 3 variants.</div>
+          <p class="upgrade-hint">Download individual `.vital` files and finish the best direction inside Vital.</p>
           </section>
         </section>
       </section>
@@ -247,80 +248,13 @@
           <p class="muted">Exportable `.vital` variants from curated seeds.</p>
         </div>
         <div class="preset-list" id="preset-list">
-          <p class="empty-state">Choose a sound type and mood, then click <strong>Generate 3 Free Variants</strong>. Pro creates 32 Pro variants.</p>
-        </div>
-      </section>
-
-      <section class="panel paid-feature-panel" id="paid-feature-panel" aria-labelledby="paid-feature-title">
-        <div class="paid-feature-copy">
-          <p class="paid-feature-kicker">Preset Mutator Pro</p>
-          <h2 id="paid-feature-title">Unlock more variations and faster export</h2>
-          <p class="paid-feature-price">Launch price: $19</p>
-          <p class="paid-feature-ownership">Pay once. Unlock Pro on this browser with your license token.</p>
-          <div class="paid-benefit-grid" aria-label="Preset Mutator Pro benefits">
-            <div>
-              <strong>More variations</strong>
-              <span>Explore 32 variants from one idea.</span>
-            </div>
-            <div>
-              <strong>Faster exploration</strong>
-              <span>Move through directions quickly.</span>
-            </div>
-            <div>
-              <strong>Export-ready</strong>
-              <span>Download Pro packs as ZIP.</span>
-            </div>
-            <div>
-              <strong>Serious design</strong>
-              <span>Better for focused preset sessions.</span>
-            </div>
-          </div>
-          <ul class="paid-feature-list">
-            <li>3 free Vital preset variants</li>
-            <li>32 Pro variants</li>
-            <li>ZIP export for Pro packs</li>
-          </ul>
-        </div>
-        <div class="paid-feature-actions" id="paid-feature-actions">
-          <a class="button primary" href="https://kreativ.gumroad.com/l/preset-mutator" target="_blank" rel="noopener noreferrer">
-            <i class="fa-solid fa-lock" aria-hidden="true"></i>
-            Buy on Gumroad
-          </a>
-          <a class="button secondary" href="https://www.paypal.com/ncp/payment/RUGQ6S3NW7HE4" target="_blank" rel="noopener noreferrer">
-            <i class="fa-brands fa-paypal" aria-hidden="true"></i>
-            Pay with PayPal
-          </a>
-          <button class="button secondary paid-feature-toggle" id="paid-feature-toggle" type="button" aria-expanded="false" aria-controls="paid-feature-unlock">
-            <i class="fa-solid fa-key" aria-hidden="true"></i>
-            Enter license token
-          </button>
-          <p class="paid-feature-meta">Gumroad is default checkout. PayPal is available if preferred.</p>
-        </div>
-        <div class="paid-feature-unlock" id="paid-feature-unlock" hidden>
-          <label class="sr-only" for="paid-feature-key">Preset Mutator license token</label>
-          <input id="paid-feature-key" type="text" placeholder="Enter your Preset Mutator license token" autocomplete="off" />
-          <button class="button secondary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Unlock Pro</button>
-          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Enter your license token after purchase. No account required.</p>
-        </div>
-        <div class="paid-feature-preview" id="paid-feature-preview" hidden>
-          <p class="paid-feature-preview-badge">Preset Mutator Pro active</p>
-          <p class="paid-feature-preview-note">This browser is unlocked for 32 Pro variants and ZIP export.</p>
-          <div class="paid-feature-preview-actions">
-            <button class="button primary" id="generate-pack" type="button">
-              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-              Generate 32 Pro Variants
-            </button>
-            <button class="button secondary" id="download-pack" type="button" disabled>
-              <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
-              Download 32-Pack (.zip)
-            </button>
-          </div>
+          <p class="empty-state">Choose a sound type and mood, then click <strong>Generate 3 Variants</strong>.</p>
         </div>
       </section>
 
       <footer class="app-footer">
         <p>Kreativ Sound experimental tool surface for synth preset generation. Vital is live first; Serum 2 and Pigments 7 are planned.</p>
-        <p class="app-version">Preset Mutator v0.3 scratch beta</p>
+        <p class="app-version">Preset Mutator v0.4.0 beta</p>
       </footer>
     </main>
 

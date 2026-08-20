@@ -1,6 +1,6 @@
 # Preset Mutator
 
-Preset Mutator is the Kreativ Sound browser app for creating Vital preset variants from scratch intent, existing `.vital` presets, or short audio sources.
+Preset Mutator is a free Kreativ Sound browser app for creating three Vital preset variants from scratch intent, existing `.vital` presets, or short audio sources.
 
 ## Source And Public URL
 
@@ -46,15 +46,9 @@ Run the full site check before publishing:
 npm run check
 ```
 
-## Licensing
+## Workflow
 
-Preset Mutator Pro uses signed per-customer license tokens. Generate a token from the repository root:
-
-```bash
-npm run license:preset-mutator -- --email customer@example.com --order ORDER-ID
-```
-
-The private signing key stays in `private/` and must not be committed or shared. The browser app only contains the public verification key.
+Each mode generates three exportable `.vital` variants. The app runs locally in the browser, with no account, checkout, or license token required.
 
 ## Editing Notes
 

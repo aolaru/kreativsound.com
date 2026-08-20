@@ -1,7 +1,6 @@
 import { clamp, familyLabel, formatHz, lerp, noteName, vary } from "./common.js";
 
 export const AUDIO_FREE_VARIANT_LIMIT = 3;
-export const AUDIO_PRO_PACK_COUNT = 32;
 
 function percentValue(value) {
   return Number(value || 0) / 100;
@@ -257,36 +256,6 @@ export function buildAudioFreePack(profile) {
     const shaped = shapeAudioProfile(profile, recipe, index);
     return mapAudioProfileToVital(shaped, index, {
       amountScale: recipe.amountScale,
-      roleLabel: recipe.role,
-    });
-  });
-}
-
-export function buildAudioProPack(profile) {
-  const recipes = [
-    { role: "Closest", brightness: -0.02, movement: -0.02, spread: 0.04, amountScale: 0.85 },
-    { role: "Closest", brightness: 0.03, width: 0.04, spread: 0.04, amountScale: 0.85 },
-    { role: "Darker", brightness: -0.16, body: 0.08, spread: 0.05, amountScale: 1 },
-    { role: "Darker", brightness: -0.12, sustain: 0.06, noise: 0.03, drive: 0.03, spread: 0.05, amountScale: 1 },
-    { role: "Brighter", brightness: 0.16, body: -0.04, wetness: 0.04, spread: 0.05, amountScale: 1 },
-    { role: "Brighter", brightness: 0.12, width: 0.08, movement: 0.04, wetness: 0.06, spread: 0.05, amountScale: 1 },
-    { role: "Steadier", movement: -0.18, sustain: 0.05, wash: -0.05, spread: 0.05, amountScale: 0.95 },
-    { role: "Steadier", movement: -0.12, width: -0.06, body: 0.05, wetness: -0.04, spread: 0.05, amountScale: 0.95 },
-    { role: "More Motion", movement: 0.2, width: 0.08, wetness: 0.03, spread: 0.06, amountScale: 1.05 },
-    { role: "More Motion", movement: 0.16, brightness: 0.05, noise: 0.04, drive: 0.04, spread: 0.06, amountScale: 1.05 },
-    { role: "Wider", width: 0.18, sustain: 0.04, wetness: 0.04, spread: 0.05, amountScale: 1 },
-    { role: "Wider", width: 0.14, movement: 0.06, brightness: 0.04, wash: 0.05, spread: 0.05, amountScale: 1 },
-    { role: "Tighter", width: -0.14, body: 0.08, wetness: -0.06, wash: -0.05, spread: 0.05, amountScale: 0.95 },
-    { role: "Tighter", width: -0.1, movement: -0.06, attack: 0.05, drive: 0.03, spread: 0.05, amountScale: 0.95 },
-    { role: "Textured", noise: 0.18, movement: 0.08, wash: 0.05, spread: 0.06, amountScale: 1.05 },
-    { role: "Textured", noise: 0.14, brightness: -0.04, width: 0.04, drive: 0.05, spread: 0.06, amountScale: 1.05 },
-  ];
-
-  return Array.from({ length: AUDIO_PRO_PACK_COUNT }, (_, index) => {
-    const recipe = recipes[index % recipes.length];
-    const shaped = shapeAudioProfile(profile, recipe, index);
-    return mapAudioProfileToVital(shaped, index, {
-      amountScale: recipe.amountScale ?? 1,
       roleLabel: recipe.role,
     });
   });

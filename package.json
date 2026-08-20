@@ -22,7 +22,6 @@
     "check:links": "node scripts/check-internal-links.mjs",
     "check:metadata": "node scripts/check-page-metadata.mjs",
     "smoke:preset-mutator": "python3 scripts/smoke-audio-alchemy.py",
-    "license:preset-mutator": "node scripts/preset-mutator-license.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "sitemap:check": "node scripts/generate-sitemap.mjs --check",
     "release:check": "bash scripts/release-gate.sh"

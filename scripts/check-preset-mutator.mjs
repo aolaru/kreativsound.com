@@ -5,23 +5,18 @@ import { fileURLToPath } from "node:url";
 import {
   buildAudioFreePack,
   buildAudioPresetSummary,
-  buildAudioProPack,
   buildAudioProfile,
-  AUDIO_PRO_PACK_COUNT,
 } from "../apps/preset-mutator/public/engine/audio-engine.js";
 import {
   buildPresetMutateStrategy,
   generatePresetVariants,
   parameterConfigForKey,
-  PRESET_MUTATE_PRO_PACK_COUNT,
   presetSummary,
   safeScalarParameterKeys,
 } from "../apps/preset-mutator/public/engine/preset-mutate-engine.js";
 import {
   buildScratchFreePack,
-  buildScratchProPack,
   buildScratchProfile,
-  SCRATCH_PRO_PACK_COUNT,
 } from "../apps/preset-mutator/public/engine/scratch-engine.js";
 import { buildVitalPresetPayload } from "../apps/preset-mutator/public/engine/vital-export.js";
 
@@ -33,10 +28,10 @@ const seedDir = path.join(rootDir, "apps/preset-mutator/public/assets/seeds/vita
 const failures = [];
 
 const modePages = [
-  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "audio-preview.js", "license.js", "vital-export.js"] },
+  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "audio-preview.js", "vital-export.js"] },
   { name: "Scratch route", html: "index.html", app: "scratch/app.js", requiredImports: ["../app.js"] },
-  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "audio-preview.js", "license.js", "vital-export.js"] },
-  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js", "audio-preview.js", "license.js"] },
+  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "audio-preview.js", "vital-export.js"] },
+  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js", "audio-preview.js"] },
 ];
 
 const generatedParameterRanges = {
@@ -169,12 +164,20 @@ async function checkPages() {
     assert(html.includes("local-trust-strip"), `${page.name}: missing compact local trust strip`);
     assert(!html.includes("hero-cover"), `${page.name}: hero cover should not be present in app UI`);
     assert(!html.includes("<h1></h1>"), `${page.name}: empty h1 found`);
-    assert(html.includes("Generate 3 Free Variants"), `${page.name}: free action should use variants language`);
-    assert(html.includes("32 Pro variants"), `${page.name}: Pro output should use variants language`);
-    assert(html.includes("license token"), `${page.name}: Pro unlock copy should use license-token language`);
+    assert(html.includes("Generate 3 Variants"), `${page.name}: main action should use simple variants language`);
+    assert(!html.includes("Generate 3 Free Variants"), `${page.name}: old free-mode action copy is still visible`);
+    assert(!html.includes("Preset Mutator Pro"), `${page.name}: Pro panel should not be visible`);
+    assert(!html.includes("32 Pro variants"), `${page.name}: Pro output copy should not be visible`);
+    assert(!html.includes("license token"), `${page.name}: license-token copy should not be visible`);
+    assert(!html.includes("Buy on Gumroad"), `${page.name}: checkout CTA should not be visible in the free app`);
+    assert(!html.includes("Pay with PayPal"), `${page.name}: PayPal CTA should not be visible in the free app`);
+    assert(!html.includes("Download 32-Pack"), `${page.name}: 32-pack download should not be visible`);
     assert(!html.includes("purchase code"), `${page.name}: purchase-code copy should not be visible`);
     assert(!app.includes("AA-PRO-32-DGTW9930"), `${page.name}: hard-coded Pro unlock code is still present`);
     assert(!app.includes("PURCHASE_CODE"), `${page.name}: hard-coded purchase-code constant is still present`);
+    assert(!app.includes("verifyLicenseToken"), `${page.name}: license verification should not ship in the free app`);
+    assert(!app.includes("generate_pro"), `${page.name}: Pro generation analytics should not ship`);
+    assert(!app.includes("download_pack"), `${page.name}: pack download analytics should not ship`);
     assert(!app.includes("Quality notes"), `${page.name}: generated results should not claim heuristic quality notes`);
     assert(!app.includes("quality_score"), `${page.name}: analytics should not emit heuristic quality scores`);
     for (const rangeInput of html.match(/<input[^>]*type="range"[^>]*>/g) || []) {
@@ -193,7 +196,7 @@ async function checkPages() {
   const serviceWorker = await readText("service-worker.js");
   assert(serviceWorker.includes("cacheShellAssets"), "Service worker: install should use tolerant asset caching");
   assert(!serviceWorker.includes("cache.addAll"), "Service worker: cache.addAll should not block install");
-  assert(serviceWorker.includes("./engine/license.js"), "Service worker: missing license verifier asset");
+  assert(!serviceWorker.includes("./engine/license.js"), "Service worker: license verifier asset should not be cached");
   assert(serviceWorker.includes("./engine/audio-preview.js"), "Service worker: missing browser preview asset");
 }
 
@@ -211,13 +214,11 @@ function checkScratchEngine(seedByFamily) {
     texture: 24,
   });
   const freePack = buildScratchFreePack(profile);
-  const proPack = buildScratchProPack(profile);
 
   assert(freePack.length === 3, `Scratch engine: expected 3 free presets, found ${freePack.length}`);
-  assert(proPack.length === SCRATCH_PRO_PACK_COUNT, `Scratch engine: expected ${SCRATCH_PRO_PACK_COUNT} pro presets, found ${proPack.length}`);
   assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Scratch engine: free roles are inconsistent");
 
-  for (const [index, preset] of [...freePack, ...proPack].entries()) {
+  for (const [index, preset] of freePack.entries()) {
     const label = `Scratch engine preset ${index + 1}`;
     validateGeneratedPresetModel(preset, label);
     validateRenderedGeneratedPreset(seedByFamily[preset.familyKey], preset, label);
@@ -248,14 +249,12 @@ function checkAudioEngine(seedByFamily) {
     mutationAmount: 68,
   });
   const freePack = buildAudioFreePack(profile);
-  const proPack = buildAudioProPack(profile);
 
   assert(freePack.length === 3, `Audio engine: expected 3 free presets, found ${freePack.length}`);
-  assert(proPack.length === AUDIO_PRO_PACK_COUNT, `Audio engine: expected ${AUDIO_PRO_PACK_COUNT} pro presets, found ${proPack.length}`);
   assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Audio engine: free roles are inconsistent");
   assert(buildAudioPresetSummary({ family: "pad", brightness: 0.5, movement: 0.4, width: 0.5, sustain: 0.5, attack: 0.8, register: "C3" }).includes("harder attack"), "Audio engine: high attack summary should say harder attack");
 
-  for (const [index, preset] of [...freePack, ...proPack].entries()) {
+  for (const [index, preset] of freePack.entries()) {
     const label = `Audio engine preset ${index + 1}`;
     validateGeneratedPresetModel(preset, label);
     validateRenderedGeneratedPreset(seedByFamily[preset.familyKey], preset, label);
@@ -280,21 +279,13 @@ function checkPresetMutationEngine(seedFile, seedData) {
   const freeVariants = generatePresetVariants({
     sourcePreset,
     strategy,
-    mode: "free",
-    controls: { amount: 74, tone: -18, motion: 42, attack: 12, space: 24, dirt: 28 },
-  });
-  const proVariants = generatePresetVariants({
-    sourcePreset,
-    strategy,
-    mode: "pro",
     controls: { amount: 74, tone: -18, motion: 42, attack: 12, space: 24, dirt: 28 },
   });
 
   assert(freeVariants.length === 3, `${seedFile}: expected 3 free mutation variants, found ${freeVariants.length}`);
-  assert(proVariants.length === PRESET_MUTATE_PRO_PACK_COUNT, `${seedFile}: expected ${PRESET_MUTATE_PRO_PACK_COUNT} pro mutation variants, found ${proVariants.length}`);
   assert(freeVariants.map((variant) => variant.role.label).join("|") === "Closest|Darker|More Motion", `${seedFile}: free mutation roles are inconsistent`);
 
-  for (const [index, variant] of [...freeVariants, ...proVariants].entries()) {
+  for (const [index, variant] of freeVariants.entries()) {
     validateMutatedVariant(variant, `${seedFile}: mutation variant ${index + 1}`);
   }
 }

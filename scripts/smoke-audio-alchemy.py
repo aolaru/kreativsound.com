@@ -53,10 +53,8 @@ def main() -> int:
             "From Scratch",
             "Create a Vital preset from intent",
             "Preset Intent",
-            "Generate 3 Free Variants",
+            "Generate 3 Variants",
             "Generated Preset Variants",
-            "Preset Mutator Pro",
-            "Download 32-Pack",
         ]:
             require(dom, needle, "/preset-mutator/", errors)
 
@@ -68,9 +66,8 @@ def main() -> int:
             "Scratch",
             "Preset",
             "Audio",
-            "Generate 3 Free Variants",
+            "Generate 3 Variants",
             "Mutation Controls",
-            "Preset Mutator Pro",
             "Kreativ Sound experimental tool surface for preset-driven mutation.",
         ]:
             require(mutate_dom, needle, "/preset-mutator/mutate/", errors)
@@ -84,8 +81,7 @@ def main() -> int:
             "Preset",
             "Audio",
             "Preset Intent",
-            "Generate 3 Free Variants",
-            "Preset Mutator Pro",
+            "Generate 3 Variants",
             "Serum 2 and Pigments 7 are planned.",
         ]:
             require(scratch_dom, needle, "/preset-mutator/scratch/", errors)

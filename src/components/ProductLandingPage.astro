@@ -126,8 +126,8 @@ const breadcrumbSchema = {
       </section>
     ) : null}
 
-    {purchaseActions.length ? (
-      <div class="product-landing-actions" aria-label="Purchase options">
+    {purchaseActions.length || previewAction || toolActions.length ? (
+      <div class="product-landing-actions" aria-label="Product actions">
         {purchaseActions.map((action, index) => (
           <a class={actionClass(index)} data-track="begin_checkout" data-track-product={product.slug} data-track-placement="product_hero" href={action.url} target="_blank" rel="noopener noreferrer">
             <span class={action.icon} aria-hidden="true"></span>
@@ -141,7 +141,7 @@ const breadcrumbSchema = {
           </a>
         ) : null}
         {toolActions.map((action) => (
-          <a class="button secondary" href={action.url}>
+          <a class={purchaseActions.length ? "button secondary" : "button primary"} href={action.url}>
             <span class={action.icon} aria-hidden="true"></span>
             {action.label}
           </a>
@@ -290,7 +290,7 @@ const breadcrumbSchema = {
     <section class="product-final-cta" aria-labelledby="product-final-cta-title">
       <h2 id="product-final-cta-title">{product.finalCtaTitle || `Ready to download ${productName}?`}</h2>
       <p>{product.finalCtaText || product.ctaLine || product.description}</p>
-      {purchaseActions.length ? (
+      {purchaseActions.length || previewAction || toolActions.length ? (
         <div class="product-landing-actions">
           {purchaseActions.map((action, index) => (
             <a class={actionClass(index)} data-track="begin_checkout" data-track-product={product.slug} data-track-placement="product_footer" href={action.url} target="_blank" rel="noopener noreferrer">
@@ -305,7 +305,7 @@ const breadcrumbSchema = {
             </a>
           ) : null}
           {toolActions.map((action) => (
-            <a class="button secondary" href={action.url}>
+            <a class={purchaseActions.length ? "button secondary" : "button primary"} href={action.url}>
               <span class={action.icon} aria-hidden="true"></span>
               {action.label}
             </a>

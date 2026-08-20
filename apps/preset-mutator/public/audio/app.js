@@ -1,17 +1,8 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { clamp, ensureJsZip, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
-import { AUDIO_PRO_PACK_COUNT, buildAudioFreePack, buildAudioProfile as createAudioProfile, buildAudioProPack } from "../engine/audio-engine.js";
+import { clamp, familyLabel, formatHz } from "../engine/common.js";
+import { buildAudioFreePack, buildAudioProfile as createAudioProfile } from "../engine/audio-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "../engine/vital-export.js";
 import { playPresetPreview } from "../engine/audio-preview.js";
-import {
-  clearLegacyUnlocks,
-  clearLicenseToken,
-  getStoredLicenseToken,
-  hasLegacyUnlock,
-  licenseOwnerLabel,
-  saveLicenseToken,
-  verifyLicenseToken,
-} from "../engine/license.js";
 
 const state = {
   audioContext: null,
@@ -25,11 +16,9 @@ const state = {
   profile: null,
   presets: [],
   isGenerating: false,
-  proPreviewUnlocked: false,
-  license: null,
   sourceName: "",
   seedCache: new Map(),
-  lastGenerationMode: "free",
+  lastGenerationMode: "standard",
 };
 
 const elements = {
@@ -68,21 +57,10 @@ const elements = {
   analysisContent: document.querySelector("#analysis-content"),
   presetList: document.querySelector("#preset-list"),
   presetsPanel: document.querySelector("#presets-panel"),
-  paidFeaturePanel: document.querySelector("#paid-feature-panel"),
-  paidFeatureActions: document.querySelector("#paid-feature-actions"),
-  paidFeatureToggle: document.querySelector("#paid-feature-toggle"),
-  paidFeatureUnlock: document.querySelector("#paid-feature-unlock"),
-  paidFeatureKey: document.querySelector("#paid-feature-key"),
-  paidFeatureUnlockButton: document.querySelector("#paid-feature-unlock-button"),
-  paidFeatureUnlockNote: document.querySelector("#paid-feature-unlock-note"),
-  paidFeaturePreview: document.querySelector("#paid-feature-preview"),
-  generatePack: document.querySelector("#generate-pack"),
-  downloadPack: document.querySelector("#download-pack"),
   selfTestNote: document.querySelector("#self-test-note"),
 };
 
 const FREE_VARIANT_LIMIT = 3;
-const PRO_PACK_COUNT = AUDIO_PRO_PACK_COUNT;
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_test") === "1";
 const GENERATE_DELAY_MS = 500;
@@ -212,7 +190,7 @@ function resetLoadedState() {
   state.analysis = null;
   state.profile = null;
   state.presets = [];
-  state.lastGenerationMode = "free";
+  state.lastGenerationMode = "standard";
   state.sourceName = "";
   elements.fileName.textContent = "No file loaded";
   elements.fileDuration.textContent = "0.0s";
@@ -261,24 +239,12 @@ function updateControlLabels() {
 function setReady(enabled) {
   elements.playToggle.disabled = !enabled;
   elements.analyzeGenerate.disabled = !enabled || state.isGenerating;
-  if (elements.generatePack) {
-    elements.generatePack.disabled = !enabled || state.isGenerating || !state.proPreviewUnlocked;
-  }
-  if (elements.downloadPack) {
-    elements.downloadPack.disabled = state.isGenerating || state.lastGenerationMode !== "pro" || state.presets.length !== PRO_PACK_COUNT;
-  }
 }
 
 function setGenerateLoadingState(isLoading) {
   state.isGenerating = isLoading;
   elements.analyzeGenerate.classList.toggle("is-loading", isLoading);
-  elements.analyzeGenerateLabel.textContent = isLoading ? "Analyzing audio..." : "Generate 3 Free Variants";
-  if (elements.generatePack) {
-    elements.generatePack.disabled = !state.originalBuffer || isLoading || !state.proPreviewUnlocked;
-  }
-  if (elements.downloadPack) {
-    elements.downloadPack.disabled = isLoading || state.lastGenerationMode !== "pro" || state.presets.length !== PRO_PACK_COUNT;
-  }
+  elements.analyzeGenerateLabel.textContent = isLoading ? "Analyzing audio..." : "Generate 3 Variants";
   setReady(Boolean(state.originalBuffer));
 }
 
@@ -612,10 +578,6 @@ function buildFreePack(profile) {
   return buildAudioFreePack(profile);
 }
 
-function buildProPack(profile) {
-  return buildAudioProPack(profile);
-}
-
 function variantRole(index, preset) {
   if (preset.roleLabel) {
     return preset.roleLabel;
@@ -895,42 +857,6 @@ async function previewPreset(preset) {
   }
 }
 
-async function downloadPresetPack() {
-  if (state.presets.length !== PRO_PACK_COUNT || state.lastGenerationMode !== "pro") {
-    return;
-  }
-
-  try {
-    updateStatus("Preparing the 32-pack ZIP...");
-    const JSZip = await ensureJsZip();
-    const zip = new JSZip();
-    const folderName = sanitizeFileName(state.sourceName || "preset-mutator-pack");
-    const folder = zip.folder(folderName);
-
-    for (const preset of state.presets) {
-      const { fileName, blob } = await buildVitalPresetBlob(preset);
-      folder.file(fileName, blob);
-    }
-
-    const zipBlob = await zip.generateAsync({ type: "blob" });
-    const url = URL.createObjectURL(zipBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${folderName}-32-pack.zip`;
-    link.click();
-    URL.revokeObjectURL(url);
-    updateStatus("32-pack ZIP ready.");
-    analyticsEvent("download_pack", {
-      generation_mode: "pro",
-      preset_count: state.presets.length,
-      detected_family: state.profile?.family || "unknown",
-      ...currentAnalyticsSelection(),
-    });
-  } catch (error) {
-    updateStatus(error.message || "Could not build the 32-pack ZIP.");
-  }
-}
-
 async function handleFileChange(event) {
   const [file] = event.target.files;
   if (!file) {
@@ -980,7 +906,7 @@ async function loadAudioFile(file, resetInput = false) {
     state.analysis = null;
     state.profile = null;
     state.presets = [];
-    state.lastGenerationMode = "free";
+    state.lastGenerationMode = "standard";
     state.sourceName = file.name.replace(/\.[^.]+$/, "");
 
     elements.fileName.textContent = file.name;
@@ -994,7 +920,7 @@ async function loadAudioFile(file, resetInput = false) {
     renderPresets([]);
     setReady(true);
 
-    updateStatus("Source ready. Generate 3 free variants or unlock the 32-pack.");
+    updateStatus("Source ready. Generate 3 variants.");
     analyticsEvent("source_loaded", {
       source_type: "audio",
       duration_bucket: durationBucket(state.originalBuffer.duration),
@@ -1081,7 +1007,7 @@ function loadSyntheticSource() {
   state.analysis = null;
   state.profile = null;
   state.presets = [];
-  state.lastGenerationMode = "free";
+  state.lastGenerationMode = "standard";
   state.sourceName = "self-test-source";
 
   elements.fileName.textContent = "self-test-source.wav";
@@ -1107,7 +1033,7 @@ function generatePresets() {
   updateStatus("Shaping 3 guided Vital variants...");
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
-  state.lastGenerationMode = "free";
+  state.lastGenerationMode = "standard";
   state.presets = buildFreePack(state.profile);
 
   renderMetricGrid(elements.analysisMetrics, [
@@ -1134,53 +1060,8 @@ function generatePresets() {
   ]);
 
   renderPresets(state.presets);
-  updateStatus("3 free variants ready. Download the ones that feel closest to your track.");
-  analyticsEvent("generate_free", {
-    preset_count: state.presets.length,
-    detected_family: state.profile.family,
-    duration_bucket: durationBucket(state.originalBuffer.duration),
-    ...currentAnalyticsSelection(),
-  });
-  setReady(Boolean(state.originalBuffer));
-}
-
-function generatePresetPack() {
-  if (!state.originalBuffer || !state.proPreviewUnlocked) {
-    return;
-  }
-
-  updateStatus("Shaping 32 Pro variants...");
-  state.analysis = analyzeAudio(state.originalBuffer);
-  state.profile = buildProfile(state.analysis);
-  state.lastGenerationMode = "pro";
-  state.presets = buildProPack(state.profile);
-
-  renderMetricGrid(elements.analysisMetrics, [
-    ["Pitch Center", state.analysis.pitchHz ? `${Math.round(state.analysis.pitchHz)} Hz` : "Unclear"],
-    ["Spectral Centroid", formatHz(state.analysis.centroidHz)],
-    ["RMS", state.analysis.rms.toFixed(3)],
-    ["Peak", state.analysis.peak.toFixed(3)],
-    ["Zero Cross Rate", state.analysis.zeroCrossRate.toFixed(3)],
-    ["Onset Position", formatPercent(state.analysis.onsetRatio)],
-    ["Sustain Ratio", formatPercent(state.analysis.sustainRatio)],
-    ["Stereo Width", formatPercent(state.analysis.stereoWidth)],
-  ]);
-
-  renderMetricGrid(elements.profileMetrics, [
-    ["Detected Family", familyLabel(state.profile.family)],
-    ["Mutation", formatPercent(state.profile.mutationAmount)],
-    ["Brightness", formatPercent(state.profile.brightness)],
-    ["Body", formatPercent(state.profile.body)],
-    ["Attack", formatPercent(state.profile.attack)],
-    ["Sustain", formatPercent(state.profile.sustain)],
-    ["Movement", formatPercent(state.profile.movement)],
-    ["Noise", formatPercent(state.profile.noise)],
-    ["Width", formatPercent(state.profile.width)],
-  ]);
-
-  renderPresets(state.presets);
-  updateStatus("32 Pro variants ready.");
-  analyticsEvent("generate_pro", {
+  updateStatus("3 variants ready. Download the ones that feel closest to your track.");
+  analyticsEvent("generate", {
     preset_count: state.presets.length,
     detected_family: state.profile.family,
     duration_bucket: durationBucket(state.originalBuffer.duration),
@@ -1195,7 +1076,7 @@ async function handleGeneratePresets() {
   }
 
   setGenerateLoadingState(true);
-  updateStatus("Generating 3 free variants...");
+  updateStatus("Generating 3 variants...");
 
   await new Promise((resolve) => {
     window.setTimeout(resolve, GENERATE_DELAY_MS);
@@ -1206,34 +1087,6 @@ async function handleGeneratePresets() {
   } finally {
     setGenerateLoadingState(false);
   }
-}
-
-async function handleGeneratePresetPack() {
-  if (!state.originalBuffer || state.isGenerating || !state.proPreviewUnlocked) {
-    return;
-  }
-
-  setGenerateLoadingState(true);
-  updateStatus("Generating 32 Pro variants...");
-
-  await new Promise((resolve) => {
-    window.setTimeout(resolve, GENERATE_DELAY_MS);
-  });
-
-  try {
-    generatePresetPack();
-  } finally {
-    setGenerateLoadingState(false);
-  }
-}
-
-function renderPaidFeatureState() {
-  const unlocked = state.proPreviewUnlocked;
-  elements.paidFeaturePanel.classList.toggle("is-unlocked", unlocked);
-  elements.paidFeatureActions.hidden = unlocked;
-  elements.paidFeatureUnlock.hidden = true;
-  elements.paidFeaturePreview.hidden = !unlocked;
-  elements.paidFeatureToggle.setAttribute("aria-expanded", "false");
 }
 
 function setAnalysisVisible(visible) {
@@ -1247,65 +1100,6 @@ function toggleAnalysisVisibility() {
   setAnalysisVisible(elements.analysisContent.hidden);
 }
 
-function togglePaidFeatureUnlock() {
-  if (state.proPreviewUnlocked) {
-    return;
-  }
-  const isOpen = !elements.paidFeatureUnlock.hidden;
-  elements.paidFeatureUnlock.hidden = isOpen;
-  elements.paidFeatureToggle.setAttribute("aria-expanded", String(!isOpen));
-  if (isOpen) {
-    analyticsEvent("unlock_panel_close");
-  } else {
-    analyticsEvent("unlock_panel_open");
-  }
-  if (!isOpen) {
-    elements.paidFeatureKey.focus();
-  }
-}
-
-async function handlePaidFeatureUnlock() {
-  const key = elements.paidFeatureKey.value.trim();
-  if (!key) {
-    elements.paidFeatureUnlockNote.textContent = "Enter your license token to unlock this browser.";
-    analyticsEvent("unlock_attempt", { result: "empty" });
-    return;
-  }
-  elements.paidFeatureUnlockButton.disabled = true;
-  elements.paidFeatureUnlockNote.textContent = "Checking license token...";
-  const result = await verifyLicenseToken(key);
-  elements.paidFeatureUnlockButton.disabled = false;
-  if (!result.valid) {
-    elements.paidFeatureUnlockNote.textContent = "Invalid license token. Check the token and try again.";
-    analyticsEvent("unlock_attempt", { result: "invalid" });
-    return;
-  }
-
-  state.proPreviewUnlocked = true;
-  state.license = result.payload;
-  saveLicenseToken(key);
-  renderPaidFeatureState();
-  updateStatus(`Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}.`);
-  setReady(Boolean(state.originalBuffer));
-  analyticsEvent("unlock_attempt", { result: "success" });
-}
-
-async function restoreLicense() {
-  const storedLicense = getStoredLicenseToken();
-  if (storedLicense) {
-    const result = await verifyLicenseToken(storedLicense);
-    if (result.valid) {
-      state.proPreviewUnlocked = true;
-      state.license = result.payload;
-      return;
-    }
-    clearLicenseToken();
-  }
-  if (hasLegacyUnlock()) {
-    clearLegacyUnlocks();
-  }
-}
-
 elements.fileInput.addEventListener("change", handleFileChange);
 elements.waveformPanel.addEventListener("dragenter", handleDropZoneDrag);
 elements.waveformPanel.addEventListener("dragover", handleDropZoneDrag);
@@ -1315,21 +1109,6 @@ elements.waveform.addEventListener("click", handleWaveformSeek);
 elements.playToggle.addEventListener("click", handlePlayToggle);
 elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
 elements.analysisToggle.addEventListener("click", toggleAnalysisVisibility);
-elements.paidFeatureToggle.addEventListener("click", togglePaidFeatureUnlock);
-elements.paidFeatureUnlockButton.addEventListener("click", () => {
-  handlePaidFeatureUnlock();
-});
-  elements.generatePack?.addEventListener("click", handleGeneratePresetPack);
-  elements.downloadPack?.addEventListener("click", downloadPresetPack);
-elements.paidFeatureActions?.addEventListener("click", (event) => {
-  const link = event.target.closest("a");
-  if (!link) {
-    return;
-  }
-  analyticsEvent("pro_cta_click", {
-    checkout: link.href.includes("paypal.com") ? "paypal" : "gumroad",
-  });
-});
 
 new PresetMutatorKnob(elements.mutationKnob, {
   value: Number(elements.mutationAmount.value),
@@ -1352,8 +1131,6 @@ for (const control of [
 }
 
 updateControlLabels();
-await restoreLicense();
-renderPaidFeatureState();
 setAnalysisVisible(false);
 updatePlaybackUI();
 setReady(false);
