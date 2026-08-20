@@ -1,43 +1,46 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[1/13] Building site..."
-PUBLIC_DISABLE_ANALYTICS=true npm run build
+echo "[1/15] Building site..."
+npm run build
 
-echo "[2/13] Checking sitemap freshness..."
+echo "[2/15] Checking sitemap freshness..."
 npm run sitemap:check
 
-echo "[3/13] Checking product data..."
+echo "[3/15] Checking product data..."
 npm run check:products
 
-echo "[4/13] Checking product assets..."
+echo "[4/15] Checking Preset Mutator..."
+npm run check:preset-mutator
+
+echo "[5/15] Checking product assets..."
 python3 scripts/check-product-assets.py
 
-echo "[5/13] Checking thumbnail quality..."
+echo "[6/15] Checking thumbnail quality..."
 npm run check:thumbnails
 
-echo "[6/13] Checking Wave Mutator..."
+echo "[7/15] Checking Wave Mutator..."
 npm run check:wave-mutator
 
-echo "[7/13] Checking search index..."
+echo "[8/15] Checking search index..."
 npm run check:search
 
-echo "[8/13] Checking internal links..."
+echo "[9/15] Checking internal links..."
 npm run check:links
 
-echo "[9/13] Checking page metadata..."
+echo "[10/15] Checking page metadata..."
 npm run check:metadata
 
-echo "[10/13] Running rendered smoke checks..."
+echo "[11/15] Running rendered smoke checks..."
 python3 scripts/smoke-site.py
 
-echo "[11/13] Running Preset Mutator smoke checks..."
+echo "[12/15] Running Preset Mutator smoke checks..."
 npm run smoke:preset-mutator
 
-echo "[12/13] Running Lighthouse..."
+echo "[13/15] Running Lighthouse..."
 bash scripts/lighthouse-check.sh
 
-echo "[13/13] Verifying Lighthouse thresholds..."
+echo "[14/15] Verifying Lighthouse thresholds..."
 python3 scripts/check-lighthouse-thresholds.py
 
-echo "Release gate passed."
+echo "[15/15] Release gate passed."

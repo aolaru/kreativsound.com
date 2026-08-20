@@ -2,10 +2,12 @@
 set -euo pipefail
 
 PORT="${1:-4173}"
-URL="http://127.0.0.1:${PORT}/"
+BASE_URL="http://127.0.0.1:${PORT}"
 REPORT_DIR="reports/lighthouse"
 LOG_FILE="/tmp/kreativsound-http.log"
 DIST_DIR="dist"
+ROUTES=("/" "/sounds/" "/plugins/")
+REPORT_NAMES=("home" "sounds" "plugins")
 
 if ! command -v python3 >/dev/null 2>&1; then
   echo "python3 is required to run a local server."
@@ -32,26 +34,33 @@ cleanup() {
 trap cleanup EXIT
 
 for _ in $(seq 1 20); do
-  if curl --fail --silent --output /dev/null "${URL}"; then
+  if curl --fail --silent --output /dev/null "${BASE_URL}/"; then
     break
   fi
   sleep 0.1
 done
 
-if ! curl --fail --silent --output /dev/null "${URL}"; then
+if ! curl --fail --silent --output /dev/null "${BASE_URL}/"; then
   echo "Local server did not become ready."
   exit 1
 fi
 
-npx --yes --prefer-offline lighthouse "${URL}" \
-  --quiet \
-  --no-enable-error-reporting \
-  --chrome-flags="--headless=new" \
-  --only-categories=performance,accessibility,best-practices,seo \
-  --output=json \
-  --output=html \
-  --output-path="${REPORT_DIR}/latest"
+for index in "${!ROUTES[@]}"; do
+  route="${ROUTES[$index]}"
+  report_name="${REPORT_NAMES[$index]}"
+
+  npx --yes --prefer-offline lighthouse "${BASE_URL}${route}" \
+    --quiet \
+    --no-enable-error-reporting \
+    --chrome-flags="--headless=new" \
+    --only-categories=performance,accessibility,best-practices,seo \
+    --output=json \
+    --output=html \
+    --output-path="${REPORT_DIR}/${report_name}"
+done
 
 echo "Lighthouse reports created:"
-echo "- ${REPORT_DIR}/latest.report.html"
-echo "- ${REPORT_DIR}/latest.report.json"
+for report_name in "${REPORT_NAMES[@]}"; do
+  echo "- ${REPORT_DIR}/${report_name}.report.html"
+  echo "- ${REPORT_DIR}/${report_name}.report.json"
+done

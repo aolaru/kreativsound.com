@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import subprocess
 import sys
-import tempfile
 import threading
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.request import urlopen
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,64 +24,9 @@ class QuietHandler(SimpleHTTPRequestHandler):
             pass
 
 
-def find_chrome() -> str | None:
-    candidates = [
-        "google-chrome",
-        "chromium",
-        "chromium-browser",
-        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    ]
-    for candidate in candidates:
-        result = subprocess.run(
-            ["bash", "-lc", f"command -v '{candidate}'"],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-        )
-        if result.returncode == 0 and result.stdout.strip():
-            return result.stdout.strip()
-    return None
-
-
-def dump_dom(chrome: str, url: str) -> str:
-    last_error = None
-    for headless_mode in ("--headless=new", "--headless"):
-        with tempfile.TemporaryDirectory(prefix="kreativ-smoke-chrome-") as profile_dir:
-            command = [
-                chrome,
-                headless_mode,
-                "--no-sandbox",
-                "--disable-gpu",
-                "--disable-background-networking",
-                "--no-first-run",
-                "--no-default-browser-check",
-                f"--user-data-dir={profile_dir}",
-                "--virtual-time-budget=5000",
-                "--dump-dom",
-                url,
-            ]
-            with tempfile.TemporaryFile(mode="w+", encoding="utf-8") as stdout_file:
-                with tempfile.TemporaryFile(mode="w+", encoding="utf-8") as stderr_file:
-                    try:
-                        result = subprocess.run(
-                            command,
-                            cwd=ROOT,
-                            stdout=stdout_file,
-                            stderr=stderr_file,
-                            text=True,
-                            timeout=30,
-                        )
-                    except subprocess.TimeoutExpired:
-                        last_error = f"Chrome timed out while loading {url}"
-                        continue
-                    stdout_file.seek(0)
-                    stderr_file.seek(0)
-                    stdout = stdout_file.read()
-                    stderr = stderr_file.read()
-            if result.returncode == 0:
-                return stdout
-            last_error = stderr or stdout
-    raise RuntimeError(last_error or f"Failed to dump DOM for {url}")
+def fetch_html(url: str) -> str:
+    with urlopen(url, timeout=10) as response:
+        return response.read().decode("utf-8")
 
 
 def require(dom: str, needle: str, label: str, errors: list[str]) -> None:
@@ -91,11 +35,6 @@ def require(dom: str, needle: str, label: str, errors: list[str]) -> None:
 
 
 def main() -> int:
-    chrome = find_chrome()
-    if not chrome:
-        print("Chrome/Chromium is required for smoke-audio-alchemy.py.")
-        return 1
-
     if not DIST.exists():
         print("dist/ is required for smoke-audio-alchemy.py. Run npm run build first.")
         return 1
@@ -108,7 +47,7 @@ def main() -> int:
     try:
         errors: list[str] = []
 
-        dom = dump_dom(chrome, base_url + "/preset-mutator/?self_test=1")
+        dom = fetch_html(base_url + "/preset-mutator/")
         for needle in [
             "Preset Mutator",
             "From Scratch",
@@ -119,9 +58,9 @@ def main() -> int:
             "Preset Mutator Pro",
             "Download 32-Pack",
         ]:
-            require(dom, needle, "/preset-mutator/?self_test=1", errors)
+            require(dom, needle, "/preset-mutator/", errors)
 
-        mutate_dom = dump_dom(chrome, base_url + "/preset-mutator/mutate/")
+        mutate_dom = fetch_html(base_url + "/preset-mutator/mutate/")
         for needle in [
             "Preset Mutator",
             "Mutate one Vital preset",
@@ -136,7 +75,7 @@ def main() -> int:
         ]:
             require(mutate_dom, needle, "/preset-mutator/mutate/", errors)
 
-        scratch_dom = dump_dom(chrome, base_url + "/preset-mutator/scratch/")
+        scratch_dom = fetch_html(base_url + "/preset-mutator/scratch/")
         for needle in [
             "Preset Mutator",
             "Create a Vital preset from intent",
