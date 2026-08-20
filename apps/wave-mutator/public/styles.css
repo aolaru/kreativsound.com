@@ -173,6 +173,20 @@ code {
   justify-self: end;
 }
 
+.app-version-group {
+  display: inline-flex;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+}
+
+.version-build {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
 .brand-link {
   color: var(--text);
   text-decoration: none;
@@ -1579,6 +1593,10 @@ select {
   }
 
   .app-nav .beta-sticker {
+    justify-self: auto;
+  }
+
+  .app-version-group {
     justify-self: auto;
   }
 
