@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import subprocess
 import sys
 import threading
 from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
-from socketserver import ThreadingMixIn
+from urllib.request import urlopen
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,37 +32,9 @@ class QuietHandler(SimpleHTTPRequestHandler):
             pass
 
 
-def find_chrome() -> str | None:
-    candidates = [
-        "google-chrome",
-        "chromium",
-        "chromium-browser",
-        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    ]
-    for candidate in candidates:
-        result = subprocess.run(
-            ["bash", "-lc", f"command -v '{candidate}'"],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-        )
-        if result.returncode == 0 and result.stdout.strip():
-            return result.stdout.strip()
-    return None
-
-
-def dump_dom(chrome: str, url: str) -> str:
-    commands = [
-        [chrome, "--headless=new", "--no-sandbox", "--disable-gpu", "--virtual-time-budget=5000", "--dump-dom", url],
-        [chrome, "--headless", "--no-sandbox", "--disable-gpu", "--virtual-time-budget=5000", "--dump-dom", url],
-    ]
-    last_error = None
-    for command in commands:
-        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
-        if result.returncode == 0:
-            return result.stdout
-        last_error = result.stderr or result.stdout
-    raise RuntimeError(last_error or f"Failed to dump DOM for {url}")
+def fetch_html(url: str) -> str:
+    with urlopen(url, timeout=10) as response:
+        return response.read().decode("utf-8")
 
 
 def require(dom: str, needle: str, label: str, errors: list[str]) -> None:
@@ -77,11 +48,6 @@ def forbid(dom: str, needle: str, label: str, errors: list[str]) -> None:
 
 
 def main() -> int:
-    chrome = find_chrome()
-    if not chrome:
-        print("Chrome/Chromium is required for smoke-site.py.")
-        return 1
-
     if not DIST.exists():
         print("dist/ is required for smoke-site.py. Run npm run build first.")
         return 1
@@ -97,6 +63,7 @@ def main() -> int:
         pages = {
             "/": ["Sounds", "News", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
             "/news/": ["Sounds", "What changed most recently", "The newest product moves, in order.", "Earlier updates", "Latest Sound Releases", "Practical Sound-Design Guides", "How to Use JUNO NOCTURNES for Dark Ambient"],
+            "/updates/": ["Product updates", "What changed at Kreativ Sound.", "Recent highlights", "Everything new, updated, and fixed.", "Preset Mutator is now fully free", "Wave Mutator beta v0.2.0", "Earlier updates"],
             "/learn/": ["Sounds", "Practical guides now live with News.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
             "/plugins/": ["Plugins", "Kreativ Sound plugins are coming soon.", "Coming soon", "View News", "Browse Sounds"],
@@ -127,7 +94,7 @@ def main() -> int:
         }
 
         for route, needles in pages.items():
-            dom = dump_dom(chrome, base_url + route)
+            dom = fetch_html(base_url + route)
             for needle in needles:
                 require(dom, needle, route, errors)
 

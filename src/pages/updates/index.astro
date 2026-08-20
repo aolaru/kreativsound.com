@@ -1,0 +1,130 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { siteUpdates, type SiteUpdateKind } from "../../lib/site-updates";
+
+const latestUpdates = siteUpdates.slice(0, 10);
+const archivedUpdates = siteUpdates.slice(10);
+const highlights = siteUpdates.slice(1, 4);
+
+const kindLabels: Record<SiteUpdateKind, string> = {
+  new: "New",
+  release: "Release",
+  update: "Update",
+  fix: "Fix"
+};
+
+const kindIcons: Record<SiteUpdateKind, string> = {
+  new: "fa-sparkles",
+  release: "fa-compact-disc",
+  update: "fa-wrench",
+  fix: "fa-shield-halved"
+};
+
+const counts = siteUpdates.reduce<Record<SiteUpdateKind, number>>(
+  (total, item) => ({ ...total, [item.kind]: total[item.kind] + 1 }),
+  { new: 0, release: 0, update: 0, fix: 0 }
+);
+
+function formatDate(date: string) {
+  return new Date(`${date}T12:00:00`).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  });
+}
+---
+<BaseLayout
+  title="Updates | Kreativ Sound"
+  description="Public log of Kreativ Sound additions, releases, improvements, and fixes across the catalog, tools, and website."
+  canonical="https://kreativsound.com/updates/"
+  activeNav="updates"
+>
+  <section class="card page-main updates-page">
+    <header class="updates-hero">
+      <div>
+        <p class="eyebrow">Product updates</p>
+        <h1 class="page-title">What changed at Kreativ Sound.</h1>
+        <p class="page-lead">A public log of new releases, browser tools, catalog improvements, website updates, and fixes. News covers stories and guides; this page records the change itself.</p>
+        <div class="updates-quick-stats" aria-label="Update categories">
+          <a href="#recent-log"><strong>{counts.new}</strong><span>New additions</span></a>
+          <a href="#recent-log"><strong>{counts.release}</strong><span>Releases</span></a>
+          <a href="#recent-log"><strong>{counts.update}</strong><span>Updates</span></a>
+          <a href="#recent-log"><strong>{counts.fix}</strong><span>Fixes</span></a>
+        </div>
+      </div>
+      <aside class="updates-direction" aria-label="Updates page scope">
+        <p class="product-section-kicker">Current scope</p>
+        <h2>Public, practical, and current.</h2>
+        <p>Entries capture visitor-visible changes. Internal experiments and routine maintenance stay out of the log unless they improve the live experience.</p>
+        <a href="/news/">Read release news <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </aside>
+    </header>
+
+    <section class="updates-highlights" aria-labelledby="updates-highlights-title">
+      <div class="updates-section-head">
+        <p class="product-section-kicker">Recent highlights</p>
+        <h2 id="updates-highlights-title">The newest moves, at a glance.</h2>
+      </div>
+      <div class="updates-highlight-list">
+        {highlights.map((item) => (
+          <a class="updates-highlight" href={item.href}>
+            <span class="updates-highlight-meta">
+              <i class:list={["fa-solid", kindIcons[item.kind]]} aria-hidden="true"></i>
+              <span>{kindLabels[item.kind]}</span>
+              <time datetime={item.date}>{item.date}</time>
+            </span>
+            <strong>{item.title}</strong>
+            <span>{item.description}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="updates-log" id="recent-log" aria-labelledby="updates-log-title">
+      <div class="updates-section-head">
+        <p class="product-section-kicker">Recent log</p>
+        <h2 id="updates-log-title">Everything new, updated, and fixed.</h2>
+        <p>The current public change record is kept newest first.</p>
+      </div>
+      <ul class="updates-log-list">
+        {latestUpdates.map((item) => (
+          <li>
+            <a class="updates-log-entry" href={item.href}>
+              <time datetime={item.date}>{formatDate(item.date)}</time>
+              <span class:list={["updates-log-kind", `is-${item.kind}`]}>{kindLabels[item.kind]}</span>
+              <span class="updates-log-copy">
+                <strong>{item.title}</strong>
+                <span>{item.description}</span>
+              </span>
+              <i class="fa-solid fa-arrow-up-right-from-square updates-log-arrow" aria-hidden="true"></i>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <details class="news-archive updates-archive" open>
+        <summary>
+          <span>
+            <strong>Earlier updates</strong>
+            <small>{archivedUpdates.length} previous additions, releases, updates, and fixes</small>
+          </span>
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+        </summary>
+        <ul class="updates-log-list">
+          {archivedUpdates.map((item) => (
+            <li>
+              <a class="updates-log-entry" href={item.href}>
+                <time datetime={item.date}>{formatDate(item.date)}</time>
+                <span class:list={["updates-log-kind", `is-${item.kind}`]}>{kindLabels[item.kind]}</span>
+                <span class="updates-log-copy">
+                  <strong>{item.title}</strong>
+                  <span>{item.description}</span>
+                </span>
+                <i class="fa-solid fa-arrow-up-right-from-square updates-log-arrow" aria-hidden="true"></i>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </details>
+    </section>
+  </section>
+</BaseLayout>

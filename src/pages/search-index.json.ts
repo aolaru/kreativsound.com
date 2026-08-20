@@ -113,6 +113,13 @@ const staticEntries: SearchEntry[] = [
     description: "Release news, practical guides, and selected tool updates from Kreativ Sound."
   },
   {
+    title: "Updates",
+    url: "/updates/",
+    type: "Page",
+    thumbnail: "/logo-128.svg",
+    description: "Public log of Kreativ Sound additions, releases, catalog improvements, website updates, and fixes."
+  },
+  {
     title: "About",
     url: "/about/",
     type: "Page",
