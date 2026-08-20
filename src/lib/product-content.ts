@@ -14,9 +14,9 @@ export const landingCopyOverrides = {
   "kreativ-kollection-v1": {
     subtitle: "9 synth preset banks and 7 WAV sound packs in one native Gumroad bundle.",
     shortMeta: "16 products • 9 preset banks • 7 WAV sound packs • €144 individual value",
-    ctaLine: "Get all 16 products for €49 through August 15, 2026, then €69.",
+    ctaLine: "Get all 16 products for €49 through February 19, 2027, then €69.",
     finalCtaTitle: "Build a broader sound palette for less.",
-    finalCtaText: "Get the €144 collection for €49 through August 15, 2026. The price moves to €69 after the launch period.",
+    finalCtaText: "Get the €144 collection for €49 through February 19, 2027. The price moves to €69 after the introductory period.",
     includedProducts: [
       "juno-nocturnes-jun-6-v-presets",
       "bioforms-synplant-2-presets",
@@ -46,7 +46,7 @@ export const landingCopyOverrides = {
       { label: "Includes", value: "16 products: 9 preset banks and 7 WAV sound packs" },
       { label: "Best for", value: "Ambient, cinematic, electronic, industrial, experimental, and darker production" },
       { label: "Individual value", value: "€144" },
-      { label: "Launch price", value: "€49 through August 15, 2026; €69 afterward" },
+      { label: "Introductory price", value: "€49 through February 19, 2027; €69 afterward" },
       { label: "Delivery", value: "Separate products in your Gumroad library" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Updates", value: "Eligible included-product updates plus Dark Drones 2 as a free future V1 update" },
