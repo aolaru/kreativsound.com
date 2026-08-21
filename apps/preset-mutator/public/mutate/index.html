@@ -148,7 +148,7 @@
                 <button class="button secondary try-example-button" id="try-example-preset" type="button">Load Example Preset</button>
                 <p class="drop-note">Drag and drop a `.vital` preset here.</p>
               </div>
-              <div class="preset-summary" id="preset-summary">
+              <div class="preset-summary" id="preset-summary" hidden>
                 <div>
                   <span class="meta-label">Preset</span>
                   <strong id="preset-name">No preset loaded</strong>
@@ -245,8 +245,18 @@
         </section>
       </section>
 
-      <section class="analysis-grid">
-        <section class="panel analysis-panel">
+      <section class="panel analysis-shell" id="analysis-shell" hidden>
+        <div class="section-head analysis-shell-head">
+          <div>
+            <h2>Source Analysis</h2>
+            <p class="muted">Optional details about the source preset and current mutation strategy.</p>
+          </div>
+          <button class="button secondary analysis-toggle" id="analysis-toggle" type="button" aria-expanded="false" aria-controls="analysis-content">
+            Show analysis
+          </button>
+        </div>
+        <div class="analysis-grid" id="analysis-content" hidden>
+          <section class="panel analysis-panel">
           <div class="section-head">
             <h2>Source Snapshot</h2>
             <p class="muted">High-level preset details read from the uploaded file.</p>
@@ -254,9 +264,9 @@
           <div class="metric-grid" id="source-metrics">
             <p class="empty-state">Load a preset to inspect its current Vital structure.</p>
           </div>
-        </section>
+          </section>
 
-        <section class="panel analysis-panel">
+          <section class="panel analysis-panel">
           <div class="section-head">
             <h2>Mutation Strategy</h2>
             <p class="muted">The controls bias which Vital zones get pushed harder.</p>
@@ -264,7 +274,8 @@
           <div class="metric-grid" id="strategy-metrics">
             <p class="empty-state">Controls will summarize here once a preset is loaded.</p>
           </div>
-        </section>
+          </section>
+        </div>
       </section>
 
       <section class="panel presets-panel" id="presets-panel">

@@ -6,7 +6,6 @@ import {
   SCRATCH_PRO_PACK_COUNT,
 } from "./engine/scratch-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "./engine/vital-export.js";
-import { playPresetPreview } from "./engine/audio-preview.js";
 import {
   clearLegacyUnlocks,
   clearLicenseToken,
@@ -215,17 +214,12 @@ function renderPresets(presets) {
       <p class="preset-quality">Built from the selected intent profile, then biased toward ${preset.roleLabel.toLowerCase()} behavior.</p>
       <div class="param-list">${preset.parameters.map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`).join("")}</div>
       <div class="preset-actions">
-        <button class="preview-button" type="button">
-          <span aria-hidden="true">Play</span>
-          <span>Preview Sound</span>
-        </button>
         <button class="download-button" type="button">
           <span class="download-badge" aria-hidden="true">VITAL</span>
           <span>Download .vital</span>
         </button>
       </div>
     `;
-    card.querySelector(".preview-button").addEventListener("click", () => previewPreset(preset));
     card.querySelector(".download-button").addEventListener("click", () => downloadPreset(preset));
     elements.presetList.appendChild(card);
   }
@@ -289,21 +283,6 @@ async function downloadPreset(preset) {
     });
   } catch (error) {
     updateStatus(error.message || "Could not download preset.");
-  }
-}
-
-async function previewPreset(preset) {
-  try {
-    updateStatus(`Playing a browser preview of ${preset.name}...`);
-    await playPresetPreview(preset);
-    analyticsEvent("preview_preset", {
-      generation_mode: state.lastGenerationMode,
-      preset_role: preset.roleLabel,
-      sound_type: preset.familyKey,
-      ...currentAnalyticsSelection(),
-    });
-  } catch (error) {
-    updateStatus(error.message || "Could not play this browser preview.");
   }
 }
 

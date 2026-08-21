@@ -50,7 +50,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="../styles.css" />
     <script defer src="/kreativ-analytics.js?v=20260819"></script>
   </head>
   <body>
@@ -122,12 +122,48 @@
         </div>
       </section>
 
+      <section class="panel paid-feature-panel workflow-activation" id="paid-feature-panel" aria-labelledby="paid-feature-title">
+        <div class="paid-feature-copy">
+          <p class="paid-feature-kicker">Preset Mutator PRO</p>
+          <h2 id="paid-feature-title">Your 32-variant workflow</h2>
+          <p class="paid-feature-ownership">Load a source, shape the mutation, then generate your Vital pack.</p>
+          <ol class="workflow-steps" aria-label="Preset mutation steps">
+            <li>Load a preset</li>
+            <li>Set mutation</li>
+            <li>Generate and export</li>
+          </ol>
+        </div>
+        <div class="paid-feature-actions" id="paid-feature-actions">
+          <p class="paid-feature-meta">Already own PRO? Enter the signed license token supplied with your purchase.</p>
+        </div>
+        <div class="paid-feature-unlock" id="paid-feature-unlock">
+          <label class="sr-only" for="paid-feature-key">Enter license token for Preset Mutator PRO</label>
+          <input id="paid-feature-key" type="text" placeholder="Enter your Preset Mutator PRO license token" autocomplete="off" />
+          <button class="button primary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Activate PRO</button>
+          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Your token is stored only in this browser. No account required.</p>
+        </div>
+        <div class="paid-feature-preview" id="paid-feature-preview" hidden>
+          <p class="paid-feature-preview-badge">Preset Mutator PRO active</p>
+          <p class="paid-feature-preview-note">Your license is active on this browser. Load a preset, then generate 32 variants and download the ZIP.</p>
+          <div class="paid-feature-preview-actions">
+            <button class="button primary" id="generate-pack" type="button" disabled>
+              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+              Generate 32 PRO Variants
+            </button>
+            <button class="button secondary" id="download-pack" type="button" disabled>
+              <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
+              Download 32-Pack (.zip)
+            </button>
+          </div>
+        </div>
+      </section>
+
       <section class="workflow-grid">
         <section class="panel upload-panel">
           <div class="section-head">
             <div>
               <h2>Source Preset</h2>
-              <p class="muted">Load one `.vital` preset, then shape three related variants from the source.</p>
+              <p class="muted">Load one `.vital` preset, then shape a 32-variant pack from the source.</p>
               <p class="input-note">Vital only for now. Preset data stays local in your browser.</p>
             </div>
           </div>
@@ -142,7 +178,7 @@
                 </label>
                 <p class="drop-note">Drag and drop a `.vital` preset here.</p>
               </div>
-              <div class="preset-summary" id="preset-summary">
+              <div class="preset-summary" id="preset-summary" hidden>
                 <div>
                   <span class="meta-label">Preset</span>
                   <strong id="preset-name">No preset loaded</strong>
@@ -231,8 +267,18 @@
         </section>
       </section>
 
-      <section class="analysis-grid">
-        <section class="panel analysis-panel">
+      <section class="panel analysis-shell" id="analysis-shell" hidden>
+        <div class="section-head analysis-shell-head">
+          <div>
+            <h2>Source Analysis</h2>
+            <p class="muted">Optional details about the source preset and current mutation strategy.</p>
+          </div>
+          <button class="button secondary analysis-toggle" id="analysis-toggle" type="button" aria-expanded="false" aria-controls="analysis-content">
+            Show analysis
+          </button>
+        </div>
+        <div class="analysis-grid" id="analysis-content" hidden>
+          <section class="panel analysis-panel">
           <div class="section-head">
             <h2>Source Snapshot</h2>
             <p class="muted">High-level preset details read from the uploaded file.</p>
@@ -240,9 +286,9 @@
           <div class="metric-grid" id="source-metrics">
             <p class="empty-state">Load a preset to inspect its current Vital structure.</p>
           </div>
-        </section>
+          </section>
 
-        <section class="panel analysis-panel">
+          <section class="panel analysis-panel">
           <div class="section-head">
             <h2>Mutation Strategy</h2>
             <p class="muted">The controls bias which Vital zones get pushed harder.</p>
@@ -250,7 +296,8 @@
           <div class="metric-grid" id="strategy-metrics">
             <p class="empty-state">Controls will summarize here once a preset is loaded.</p>
           </div>
-        </section>
+          </section>
+        </div>
       </section>
 
       <section class="panel presets-panel" id="presets-panel">
@@ -263,67 +310,9 @@
         </div>
       </section>
 
-      <section class="panel suite-panel" id="suite-panel" aria-labelledby="suite-title">
-        <div class="suite-copy">
-          <p class="suite-kicker">Preset Mutator PRO</p>
-          <h2 id="suite-title">Unlock your 32-variant workflow</h2>
-          <p class="suite-ownership">Activate PRO on this browser with your license token.</p>
-          <div class="suite-benefit-grid" aria-label="Preset Mutator PRO benefits">
-            <div>
-              <strong>More variations</strong>
-              <span>Explore 32 variants from one source.</span>
-            </div>
-            <div>
-              <strong>Faster exploration</strong>
-              <span>Move through directions quickly.</span>
-            </div>
-            <div>
-              <strong>Export-ready</strong>
-              <span>Download Pro packs as ZIP.</span>
-            </div>
-            <div>
-              <strong>Serious design</strong>
-              <span>Better for focused preset sessions.</span>
-            </div>
-          </div>
-          <ul class="suite-list">
-            <li>32 Pro variants</li>
-            <li>ZIP export for Pro packs</li>
-          </ul>
-        </div>
-        <div class="suite-actions" id="suite-actions">
-          <button class="button secondary suite-toggle" id="suite-toggle" type="button" aria-expanded="false" aria-controls="suite-unlock">
-            <i class="fa-solid fa-key" aria-hidden="true"></i>
-            Enter license token
-          </button>
-          <p class="suite-meta">PRO access is for verified purchasers. Enter the signed license token supplied with your purchase.</p>
-        </div>
-        <div class="suite-unlock" id="suite-unlock" hidden>
-          <label class="sr-only" for="suite-key">Preset Mutator PRO license token</label>
-          <input id="suite-key" type="text" placeholder="Enter your Preset Mutator PRO license token" autocomplete="off" />
-          <button class="button secondary suite-unlock-button" id="suite-unlock-button" type="button">Unlock Pro</button>
-          <p class="suite-unlock-note" id="suite-unlock-note">Enter your license token after purchase. No account required.</p>
-        </div>
-        <div class="suite-active" id="suite-active" hidden>
-          <p class="suite-active-badge">Preset Mutator PRO active</p>
-          <p class="suite-active-note">This browser is unlocked for 32 Pro variants and ZIP export.</p>
-          <div class="suite-active-actions">
-            <button class="button primary" id="generate-pack" type="button" disabled>
-              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-              Generate 32 PRO Variants
-            </button>
-            <button class="button secondary" id="download-pack" type="button" disabled>
-              <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
-              Download 32-Pack (.zip)
-            </button>
-          </div>
-          <p class="suite-active-meta">Builds 32 variant `.vital` files from the same source preset and downloads them as one ZIP.</p>
-        </div>
-      </section>
-
       <footer class="app-footer">
         <p>Kreativ Sound browser tool for preset-driven mutation.</p>
-        <p class="app-version">Preset Mutator PRO v0.4.1</p>
+        <p class="app-version">Preset Mutator PRO v0.4.2</p>
       </footer>
     </main>
 

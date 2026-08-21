@@ -76,6 +76,10 @@ output {
   font: inherit;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .shell {
   width: min(980px, calc(100vw - 32px));
   margin: 0 auto;
@@ -337,7 +341,7 @@ output {
 
 .mode-proof-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.6rem;
   max-width: 38rem;
   margin: 0.85rem auto 0;
@@ -1163,18 +1167,10 @@ button:disabled {
   opacity: 0.96;
 }
 
-.download-button,
-.preview-button {
+.download-button {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-}
-
-.preview-button {
-  background: rgba(255, 245, 245, 0.78);
-  border-color: rgba(153, 0, 0, 0.18);
-  color: var(--text);
-  font-weight: 700;
 }
 
 .download-badge {
@@ -1880,6 +1876,12 @@ button:disabled {
   .meta-grid,
   .control-grid,
   .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .workflow-grid .mutation-macro,
+  .workflow-grid .control-grid,
+  .workflow-grid .meta-grid {
     grid-template-columns: 1fr;
   }
 

@@ -26,6 +26,7 @@ const elements = {
   presetModulations: document.querySelector("#preset-modulations"),
   presetWavetables: document.querySelector("#preset-wavetables"),
   presetFile: document.querySelector("#preset-file"),
+  presetSummary: document.querySelector("#preset-summary"),
   mutationKnob: document.querySelector("#mutation-knob"),
   amountRange: document.querySelector("#amount-range"),
   brightnessRange: document.querySelector("#brightness-range"),
@@ -43,6 +44,9 @@ const elements = {
   status: document.querySelector("#status"),
   sourceMetrics: document.querySelector("#source-metrics"),
   strategyMetrics: document.querySelector("#strategy-metrics"),
+  analysisShell: document.querySelector("#analysis-shell"),
+  analysisToggle: document.querySelector("#analysis-toggle"),
+  analysisContent: document.querySelector("#analysis-content"),
   presetList: document.querySelector("#preset-list"),
   tryExampleButton: document.querySelector("#try-example-preset"),
   resultSetToolbar: document.querySelector("#result-set-toolbar"),
@@ -244,6 +248,9 @@ function updateSourceUi() {
     elements.presetModulations.textContent = "-";
     elements.presetWavetables.textContent = "-";
     elements.presetFile.textContent = "No file loaded";
+    elements.presetSummary.hidden = true;
+    elements.analysisShell.hidden = true;
+    setAnalysisVisible(false);
     elements.generateButton.disabled = true;
     renderSourceMetrics();
     renderStrategyMetrics();
@@ -258,6 +265,8 @@ function updateSourceUi() {
   elements.presetModulations.textContent = String(summary.modulationCount);
   elements.presetWavetables.textContent = String(summary.wavetableCount);
   elements.presetFile.textContent = state.sourceFile.name;
+  elements.presetSummary.hidden = false;
+  elements.analysisShell.hidden = false;
   elements.generateButton.disabled = state.isGenerating ? true : false;
   renderSourceMetrics();
   renderStrategyMetrics();
@@ -601,6 +610,13 @@ function bindDropZone() {
   });
 }
 
+function setAnalysisVisible(visible) {
+  elements.analysisContent.hidden = !visible;
+  elements.analysisToggle.setAttribute("aria-expanded", String(visible));
+  elements.analysisToggle.textContent = visible ? "Hide analysis" : "Show analysis";
+  elements.analysisShell.classList.toggle("is-open", visible);
+}
+
 elements.fileInput.addEventListener("change", (event) => {
   const [file] = event.target.files || [];
   if (file) {
@@ -637,6 +653,9 @@ elements.newSetButton.addEventListener("click", handleGenerate);
 elements.previousSetButton.addEventListener("click", () => showResultSet(state.activeSetIndex - 1));
 elements.latestSetButton.addEventListener("click", () => showResultSet(state.resultSets.length - 1));
 elements.tryExampleButton.addEventListener("click", loadExamplePreset);
+elements.analysisToggle.addEventListener("click", () => {
+  setAnalysisVisible(elements.analysisContent.hidden);
+});
 document.querySelectorAll("[data-pro-upsell]").forEach((link) => {
   link.addEventListener("click", () => {
     analyticsEvent("pro_upsell_click", { source: link.dataset.proUpsell });
@@ -655,6 +674,7 @@ new PresetMutatorKnob(elements.mutationKnob, {
 });
 
 updateControlLabels();
+setAnalysisVisible(false);
 updateSourceUi();
 renderVariants();
 renderResultSetToolbar();

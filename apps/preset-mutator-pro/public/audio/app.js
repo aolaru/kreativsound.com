@@ -2,7 +2,6 @@ import { PresetMutatorKnob } from "../preset-mutator-knob.js";
 import { clamp, ensureJsZip, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
 import { AUDIO_PRO_PACK_COUNT, buildAudioProfile as createAudioProfile, buildAudioProPack } from "../engine/audio-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "../engine/vital-export.js";
-import { playPresetPreview } from "../engine/audio-preview.js";
 import {
   clearLegacyUnlocks,
   clearLicenseToken,
@@ -216,6 +215,7 @@ function resetLoadedState() {
   elements.fileChannels.textContent = "-";
   renderMetricGrid(elements.analysisMetrics, []);
   renderMetricGrid(elements.profileMetrics, []);
+  elements.analysisShell.hidden = true;
   setAnalysisVisible(false);
   renderPresets([]);
   elements.waveform.getContext("2d").clearRect(0, 0, elements.waveform.width, elements.waveform.height);
@@ -784,17 +784,12 @@ function buildPresetCard(preset, role, totalCount) {
       <p class="preset-quality">Why this result: ${buildPresetReason(preset, role)}</p>
       <div class="param-list">${paramRows}</div>
       <div class="preset-actions">
-        <button class="preview-button" type="button">
-          <span aria-hidden="true">Play</span>
-          <span>Preview Sound</span>
-        </button>
         <button class="download-button" type="button">
           <span class="download-badge" aria-hidden="true">VITAL</span>
           <span>Download .vital</span>
         </button>
       </div>
     `;
-    card.querySelector(".preview-button").addEventListener("click", () => previewPreset(preset));
     card.querySelector(".download-button").addEventListener("click", () => downloadPreset(preset));
     return card;
   }
@@ -860,21 +855,6 @@ async function downloadPreset(preset) {
     });
   } catch (error) {
     updateStatus(error.message || "Could not download preset.");
-  }
-}
-
-async function previewPreset(preset) {
-  try {
-    updateStatus(`Playing a browser preview of ${preset.name}...`);
-    await playPresetPreview(preset);
-    analyticsEvent("preview_preset", {
-      generation_mode: state.lastGenerationMode,
-      preset_role: preset.roleLabel,
-      detected_family: preset.familyKey,
-      ...currentAnalyticsSelection(),
-    });
-  } catch (error) {
-    updateStatus(error.message || "Could not play this browser preview.");
   }
 }
 
@@ -974,6 +954,8 @@ async function loadAudioFile(file, resetInput = false) {
     drawWaveform(state.originalBuffer);
     renderMetricGrid(elements.analysisMetrics, []);
     renderMetricGrid(elements.profileMetrics, []);
+    elements.analysisShell.hidden = false;
+    setAnalysisVisible(false);
     renderPresets([]);
     setReady(true);
 
@@ -1076,6 +1058,8 @@ function loadSyntheticSource() {
   drawWaveform(state.originalBuffer);
   renderMetricGrid(elements.analysisMetrics, []);
   renderMetricGrid(elements.profileMetrics, []);
+  elements.analysisShell.hidden = false;
+  setAnalysisVisible(false);
   renderPresets([]);
   setReady(true);
   updateStatus("Self-test source ready. Enter your PRO license token to unlock generation.");

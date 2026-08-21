@@ -207,6 +207,7 @@ function resetLoadedState() {
   elements.fileChannels.textContent = "-";
   renderMetricGrid(elements.analysisMetrics, []);
   renderMetricGrid(elements.profileMetrics, []);
+  elements.analysisShell.hidden = true;
   setAnalysisVisible(false);
   renderPresets([]);
   elements.waveform.getContext("2d").clearRect(0, 0, elements.waveform.width, elements.waveform.height);
@@ -950,6 +951,8 @@ async function loadAudioFile(file, resetInput = false) {
     drawWaveform(state.originalBuffer);
     renderMetricGrid(elements.analysisMetrics, []);
     renderMetricGrid(elements.profileMetrics, []);
+    elements.analysisShell.hidden = false;
+    setAnalysisVisible(false);
     renderPresets([]);
     setReady(true);
 
@@ -1053,6 +1056,8 @@ function loadSyntheticSource() {
   drawWaveform(state.originalBuffer);
   renderMetricGrid(elements.analysisMetrics, []);
   renderMetricGrid(elements.profileMetrics, []);
+  elements.analysisShell.hidden = false;
+  setAnalysisVisible(false);
   renderPresets([]);
   setReady(true);
   updateStatus("Example source ready. Generating presets...");

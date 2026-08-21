@@ -6,7 +6,6 @@ import {
   PRESET_MUTATE_PRO_PACK_COUNT,
   presetSummary as summarizeVitalPreset,
 } from "../engine/preset-mutate-engine.js";
-import { playPresetPreview } from "../engine/audio-preview.js";
 import {
   clearLegacyUnlocks,
   clearLicenseToken,
@@ -37,6 +36,7 @@ const elements = {
   presetModulations: document.querySelector("#preset-modulations"),
   presetWavetables: document.querySelector("#preset-wavetables"),
   presetFile: document.querySelector("#preset-file"),
+  presetSummary: document.querySelector("#preset-summary"),
   mutationKnob: document.querySelector("#mutation-knob"),
   amountRange: document.querySelector("#amount-range"),
   amountValue: document.querySelector("#amount-value"),
@@ -51,18 +51,20 @@ const elements = {
   dirtRange: document.querySelector("#dirt-range"),
   dirtValue: document.querySelector("#dirt-value"),
   status: document.querySelector("#status"),
-  suitePanel: document.querySelector("#suite-panel"),
-  suiteActions: document.querySelector("#suite-actions"),
-  suiteToggle: document.querySelector("#suite-toggle"),
-  suiteUnlock: document.querySelector("#suite-unlock"),
-  suiteKey: document.querySelector("#suite-key"),
-  suiteUnlockButton: document.querySelector("#suite-unlock-button"),
-  suiteUnlockNote: document.querySelector("#suite-unlock-note"),
-  suiteActive: document.querySelector("#suite-active"),
+  paidFeaturePanel: document.querySelector("#paid-feature-panel"),
+  paidFeatureActions: document.querySelector("#paid-feature-actions"),
+  paidFeatureUnlock: document.querySelector("#paid-feature-unlock"),
+  paidFeatureKey: document.querySelector("#paid-feature-key"),
+  paidFeatureUnlockButton: document.querySelector("#paid-feature-unlock-button"),
+  paidFeatureUnlockNote: document.querySelector("#paid-feature-unlock-note"),
+  paidFeaturePreview: document.querySelector("#paid-feature-preview"),
   generatePack: document.querySelector("#generate-pack"),
   downloadPack: document.querySelector("#download-pack"),
   sourceMetrics: document.querySelector("#source-metrics"),
   strategyMetrics: document.querySelector("#strategy-metrics"),
+  analysisShell: document.querySelector("#analysis-shell"),
+  analysisToggle: document.querySelector("#analysis-toggle"),
+  analysisContent: document.querySelector("#analysis-content"),
   presetList: document.querySelector("#preset-list"),
 };
 
@@ -260,6 +262,9 @@ function updateSourceUi() {
     elements.presetModulations.textContent = "-";
     elements.presetWavetables.textContent = "-";
     elements.presetFile.textContent = "No file loaded";
+    elements.presetSummary.hidden = true;
+    elements.analysisShell.hidden = true;
+    setAnalysisVisible(false);
     if (elements.generatePack) {
       elements.generatePack.disabled = true;
     }
@@ -279,6 +284,8 @@ function updateSourceUi() {
   elements.presetModulations.textContent = String(summary.modulationCount);
   elements.presetWavetables.textContent = String(summary.wavetableCount);
   elements.presetFile.textContent = state.sourceFile.name;
+  elements.presetSummary.hidden = false;
+  elements.analysisShell.hidden = false;
   if (elements.generatePack) {
     elements.generatePack.disabled = !state.suiteUnlocked || state.isGenerating;
   }
@@ -333,22 +340,6 @@ function downloadVariant(variant) {
     changed_parameters_bucket: countBucket(variant.changedParameters.length),
     ...currentAnalyticsSelection(),
   });
-}
-
-async function previewVariant(variant) {
-  try {
-    elements.status.textContent = `Playing a browser preview of ${variant.name}...`;
-    await playPresetPreview({ data: variant.data });
-    analyticsEvent("preview_preset", {
-      generation_mode: state.lastGenerationMode,
-      preset_role: variant.role.label,
-      preset_group: variant.groupKey,
-      changed_parameters_bucket: countBucket(variant.changedParameters.length),
-      ...currentAnalyticsSelection(),
-    });
-  } catch (error) {
-    elements.status.textContent = error.message || "Could not play this browser preview.";
-  }
 }
 
 async function downloadVariantPack() {
@@ -460,17 +451,12 @@ function renderVariants() {
           </div>
         </div>
         <div class="preset-actions">
-          <button class="preview-button" type="button">
-            <span aria-hidden="true">Play</span>
-            <span>Preview Sound</span>
-          </button>
           <button class="download-button" type="button">
             <span class="download-badge">VITAL</span>
             <span>Download .vital</span>
           </button>
         </div>
       `;
-      card.querySelector(".preview-button").addEventListener("click", () => previewVariant(variant));
       card.querySelector(".download-button").addEventListener("click", () => downloadVariant(variant));
       list.appendChild(card);
     }
@@ -624,12 +610,11 @@ function bindDropZone() {
   });
 }
 
-function renderSuiteState() {
-  elements.suitePanel.classList.toggle("is-unlocked", state.suiteUnlocked);
-  elements.suiteActions.hidden = state.suiteUnlocked;
-  elements.suiteUnlock.hidden = true;
-  elements.suiteActive.hidden = !state.suiteUnlocked;
-  elements.suiteToggle?.setAttribute("aria-expanded", "false");
+function renderPaidFeatureState() {
+  elements.paidFeaturePanel.classList.toggle("is-unlocked", state.suiteUnlocked);
+  elements.paidFeatureActions.hidden = state.suiteUnlocked;
+  elements.paidFeatureUnlock.hidden = state.suiteUnlocked;
+  elements.paidFeaturePreview.hidden = !state.suiteUnlocked;
   if (elements.generatePack) {
     elements.generatePack.disabled = !state.suiteUnlocked || !state.sourcePreset || state.isGenerating;
   }
@@ -638,36 +623,26 @@ function renderSuiteState() {
   }
 }
 
-function toggleSuiteUnlock() {
-  if (state.suiteUnlocked) {
-    return;
-  }
-  const isOpen = !elements.suiteUnlock.hidden;
-  elements.suiteUnlock.hidden = isOpen;
-  elements.suiteToggle.setAttribute("aria-expanded", String(!isOpen));
-  if (isOpen) {
-    analyticsEvent("unlock_panel_close");
-  } else {
-    analyticsEvent("unlock_panel_open");
-  }
-  if (!isOpen) {
-    elements.suiteKey.focus();
-  }
+function setAnalysisVisible(visible) {
+  elements.analysisContent.hidden = !visible;
+  elements.analysisToggle.setAttribute("aria-expanded", String(visible));
+  elements.analysisToggle.textContent = visible ? "Hide analysis" : "Show analysis";
+  elements.analysisShell.classList.toggle("is-open", visible);
 }
 
-async function handleSuiteUnlock() {
-  const key = elements.suiteKey.value.trim();
+async function handlePaidFeatureUnlock() {
+  const key = elements.paidFeatureKey.value.trim();
   if (!key) {
-    elements.suiteUnlockNote.textContent = "Enter your license token to unlock this browser.";
+    elements.paidFeatureUnlockNote.textContent = "Enter your license token to unlock this browser.";
     analyticsEvent("unlock_attempt", { result: "empty" });
     return;
   }
-  elements.suiteUnlockButton.disabled = true;
-  elements.suiteUnlockNote.textContent = "Checking license token...";
+  elements.paidFeatureUnlockButton.disabled = true;
+  elements.paidFeatureUnlockNote.textContent = "Checking license token...";
   const result = await verifyLicenseToken(key);
-  elements.suiteUnlockButton.disabled = false;
+  elements.paidFeatureUnlockButton.disabled = false;
   if (!result.valid) {
-    elements.suiteUnlockNote.textContent = "Invalid license token. Check the token and try again.";
+    elements.paidFeatureUnlockNote.textContent = "Invalid license token. Check the token and try again.";
     analyticsEvent("unlock_attempt", { result: "invalid" });
     return;
   }
@@ -675,7 +650,7 @@ async function handleSuiteUnlock() {
   state.suiteUnlocked = true;
   state.license = result.payload;
   saveLicenseToken(key);
-  renderSuiteState();
+  renderPaidFeatureState();
   elements.status.textContent = state.sourcePreset
     ? `Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}. Generate 32 PRO variants when ready.`
     : `Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}.`;
@@ -731,11 +706,13 @@ elements.dirtRange.addEventListener("input", () => {
 });
 elements.generatePack?.addEventListener("click", handleGenerate);
 elements.downloadPack?.addEventListener("click", downloadVariantPack);
-elements.suiteToggle?.addEventListener("click", toggleSuiteUnlock);
-elements.suiteUnlockButton?.addEventListener("click", () => {
-  handleSuiteUnlock();
+elements.analysisToggle?.addEventListener("click", () => {
+  setAnalysisVisible(elements.analysisContent.hidden);
 });
-elements.suiteActions?.addEventListener("click", (event) => {
+elements.paidFeatureUnlockButton?.addEventListener("click", () => {
+  handlePaidFeatureUnlock();
+});
+elements.paidFeatureActions?.addEventListener("click", (event) => {
   const link = event.target.closest("a");
   if (!link) {
     return;
@@ -761,4 +738,4 @@ updateSourceUi();
 renderVariants();
 bindDropZone();
 await restoreLicense();
-renderSuiteState();
+renderPaidFeatureState();
