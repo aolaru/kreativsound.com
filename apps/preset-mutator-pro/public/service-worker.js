@@ -1,6 +1,7 @@
-const CACHE_NAME = "preset-mutator-pro-shell-v5";
+const CACHE_NAME = "preset-mutator-pro-shell-v6";
 const SHELL_ASSETS = [
   "./index.html",
+  "./changelog/index.html",
   "./styles.css",
   "./app.js",
   "./preset-mutator-knob.js",

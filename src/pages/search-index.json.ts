@@ -78,6 +78,13 @@ const staticEntries: SearchEntry[] = [
     description: "A concise public record of Preset Mutator Free improvements, fixes, and release versions."
   },
   {
+    title: "Preset Mutator PRO Changelog",
+    url: "/preset-mutator-pro/changelog/",
+    type: "Tool",
+    thumbnail: "/preset-mutator-pro/preset-mutator-mark.svg",
+    description: "A concise public record of Preset Mutator PRO improvements, fixes, and release versions."
+  },
+  {
     title: "Preset Mutator Product Details",
     url: "/tools/preset-mutator/",
     type: "Tool",

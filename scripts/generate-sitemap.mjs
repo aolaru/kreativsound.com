@@ -118,6 +118,9 @@ function sourcePathsForRoute(route) {
   if (route === "/preset-mutator/mutate/") {
     return ["apps/preset-mutator/public/mutate/index.html"];
   }
+  if (route === "/preset-mutator-pro/changelog/") {
+    return ["apps/preset-mutator-pro/public/changelog/index.html"];
+  }
   if (route === "/tools/wave-mutator/") {
     return ["apps/wave-mutator/public/index.html"];
   }
@@ -131,7 +134,7 @@ function shouldIndexRoute(route) {
   if (route === "/learn/") {
     return false;
   }
-  if (route.startsWith("/preset-mutator-pro/")) {
+  if (route.startsWith("/preset-mutator-pro/") && route !== "/preset-mutator-pro/changelog/") {
     return false;
   }
   if (route.startsWith("/posts/") && route.endsWith(".html")) {
@@ -170,7 +173,7 @@ function lastmodForRoute(route) {
 function priorityForRoute(route) {
   if (route === "/") return "1.0";
   if (route === "/sounds/") return "0.9";
-  if (route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) return "0.8";
+  if (route === "/preset-mutator/" || route.startsWith("/preset-mutator/") || route === "/preset-mutator-pro/changelog/") return "0.8";
   if (route === "/updates/" || route === "/tools/" || route === "/plugins/") return "0.8";
   if (route.startsWith("/tools/")) return "0.8";
   if (route.startsWith("/sounds/")) return "0.8";
@@ -179,7 +182,7 @@ function priorityForRoute(route) {
 }
 
 function changefreqForRoute(route) {
-  if (route === "/" || route === "/sounds/" || route === "/updates/" || route === "/tools/" || route === "/plugins/" || route.startsWith("/tools/") || route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) {
+  if (route === "/" || route === "/sounds/" || route === "/updates/" || route === "/tools/" || route === "/plugins/" || route.startsWith("/tools/") || route === "/preset-mutator/" || route.startsWith("/preset-mutator/") || route === "/preset-mutator-pro/changelog/") {
     return "weekly";
   }
   return "monthly";
