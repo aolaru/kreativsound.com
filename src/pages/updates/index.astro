@@ -9,7 +9,7 @@ const guidePosts = posts.filter((post) => post.data.section === "learn");
 const releasePosts = posts.filter((post) => post.data.section === "news" && post.data.kind === "release");
 const latestUpdates = siteUpdates.slice(0, 10);
 const archivedUpdates = siteUpdates.slice(10);
-const highlights = siteUpdates.slice(1, 4);
+const highlights = siteUpdates.slice(0, 3);
 
 const kindLabels: Record<SiteUpdateKind, string> = {
   new: "New",

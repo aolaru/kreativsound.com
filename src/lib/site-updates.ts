@@ -9,6 +9,7 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-08-22", kind: "update", title: "Preset Mutator Free v0.4.2", description: "A public changelog now records Free workflow improvements and fixes, with direct links from every mode.", href: "/preset-mutator/changelog/" },
   { date: "2026-08-21", kind: "update", title: "Wave Mutator beta v0.2.1", description: "Four local Delivery Profiles now set practical cleanup, export, naming, pack, and preview defaults for sample packs, music, game SFX, and store previews.", href: "/tools/wave-mutator/" },
   { date: "2026-08-21", kind: "update", title: "Preset Mutator PRO v0.4.2", description: "The three PRO workflows now share a clearer activation path, cleaner source states, and a more consistent layout across Scratch, Preset, and Audio mode.", href: "https://kreativ.gumroad.com/l/preset-mutator" },
   { date: "2026-08-21", kind: "update", title: "Preset Mutator Free v0.4.1", description: "The free Vital workflow creates three downloadable variants per run with no account or purchase required.", href: "/tools/preset-mutator/" },
