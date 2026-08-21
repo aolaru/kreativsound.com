@@ -3151,6 +3151,97 @@ a:focus-visible,
   padding-top: 0.25rem;
 }
 
+.updates-tools {
+  display: grid;
+  gap: 0.85rem;
+  padding-top: 1.05rem;
+  border-top: 1px solid rgba(228, 171, 171, 0.18);
+}
+
+.updates-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.updates-tool-card {
+  display: grid;
+  align-content: start;
+  gap: 0.7rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid rgba(228, 171, 171, 0.16);
+  border-radius: 8px;
+  background: rgba(153, 0, 0, 0.035);
+}
+
+.updates-tool-card.is-pro {
+  border-color: rgba(228, 171, 171, 0.38);
+  background:
+    linear-gradient(135deg, rgba(153, 0, 0, 0.14), transparent 70%),
+    rgba(153, 0, 0, 0.045);
+}
+
+.updates-tool-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.updates-tool-version,
+.updates-tool-status {
+  min-width: 0;
+}
+
+.updates-tool-status {
+  color: var(--accent-strong);
+  text-align: right;
+}
+
+.updates-tool-card h3 {
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.updates-tool-card > p {
+  color: var(--muted);
+  line-height: 1.48;
+}
+
+.updates-tool-card ul {
+  display: grid;
+  gap: 0.32rem;
+  margin: 0;
+  padding-left: 1.05rem;
+  color: var(--soft);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.updates-tool-card code {
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.92em;
+}
+
+.updates-tool-card > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  width: max-content;
+  max-width: 100%;
+  color: var(--accent-strong);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
 .news-sections {
   display: grid;
   gap: 1rem;
@@ -4872,6 +4963,10 @@ a:focus-visible,
   .updates-quick-stats,
   .updates-highlight-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .updates-tool-grid {
+    grid-template-columns: 1fr;
   }
 
   .updates-quick-stats a:last-child {

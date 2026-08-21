@@ -12,10 +12,11 @@ const softwareSchema = {
   url: "https://kreativsound.com/tools/preset-mutator/",
   image: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg",
   offers: {
-    "@type": "Offer",
-    url: "https://kreativsound.com/preset-mutator/",
-    price: "0",
+    "@type": "AggregateOffer",
+    lowPrice: "0",
+    highPrice: "19",
     priceCurrency: "EUR",
+    offerCount: 2,
     availability: "https://schema.org/InStock"
   },
   creator: {
@@ -46,7 +47,7 @@ const softwareSchema = {
           </div>
           <div class="product-spec-inline">
             <span class="product-spec-label">Access</span>
-            <span class="product-spec-value">Free</span>
+            <span class="product-spec-value">Free + PRO</span>
           </div>
           <div class="product-spec-inline">
             <span class="product-spec-label">Planned next</span>
@@ -65,8 +66,12 @@ const softwareSchema = {
             <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
             Open Preset Mutator
           </a>
+          <a class="button secondary" href="https://kreativ.gumroad.com/l/preset-mutator" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+            Get PRO for €19
+          </a>
         </div>
-        <p class="product-value-line">Generate 3 Vital variants per run and download individual `.vital` files.</p>
+        <p class="product-value-line">Free creates 3 individual Vital variants. PRO creates 32 variants and exports the complete ZIP pack.</p>
       </div>
     </section>
 
@@ -81,7 +86,7 @@ const softwareSchema = {
       </article>
       <article>
         <i class="fa-solid fa-download" aria-hidden="true"></i>
-        <p>The tool is free to open and exports individual Vital preset files.</p>
+        <p>The free tool exports individual Vital files; PRO expands the same workflow into a 32-variant ZIP pack.</p>
       </article>
     </section>
 
@@ -111,11 +116,11 @@ const softwareSchema = {
     <section class="preset-mutator-compare" aria-labelledby="preset-mutator-compare-title">
       <div>
         <p class="product-section-kicker">Tool scope</p>
-        <h2 id="preset-mutator-compare-title">Focused preset starts in one free browser tool.</h2>
+        <h2 id="preset-mutator-compare-title">Choose a quick free start or a larger PRO pack.</h2>
       </div>
       <div class="preset-mutator-compare-grid">
         <article>
-          <h3>Included</h3>
+          <h3>Free · v0.4.0 beta</h3>
           <ul>
             <li>3 Vital preset variants per workflow.</li>
             <li>Manual download of generated presets.</li>
@@ -123,11 +128,11 @@ const softwareSchema = {
           </ul>
         </article>
         <article>
-          <h3>Workflow</h3>
+          <h3>PRO · v0.3.0</h3>
           <ul>
-            <li>Use the output as a starting point, not a finished preset bank.</li>
-            <li>Refine the best result inside Vital.</li>
-            <li>Use Scratch, Preset, or Audio mode depending on your source.</li>
+            <li>32 Vital preset variants per workflow.</li>
+            <li>Full 32-preset ZIP export.</li>
+            <li>One-time €19 purchase with local token activation.</li>
           </ul>
         </article>
       </div>
@@ -136,12 +141,16 @@ const softwareSchema = {
     <section class="product-cta-strip">
       <div class="product-cta-copy">
         <p class="product-section-kicker">Release focus</p>
-        <p class="product-cta-line">Open the free browser tool and create a small set of Vital variants from your current idea or source.</p>
+        <p class="product-cta-line">Start free for a focused three-variant set, or use PRO when the session needs a full 32-preset Vital pack.</p>
       </div>
       <div class="product-actions">
         <a class="button primary" href={appUrl}>
           <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
           Open Preset Mutator
+        </a>
+        <a class="button secondary" href="https://kreativ.gumroad.com/l/preset-mutator" target="_blank" rel="noopener noreferrer">
+          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+          Get PRO for €19
         </a>
       </div>
     </section>
