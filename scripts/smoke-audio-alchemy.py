@@ -68,7 +68,7 @@ def main() -> int:
             "Audio",
             "Generate 3 Variants",
             "Mutation Controls",
-            "Kreativ Sound experimental tool surface for preset-driven mutation.",
+            "Kreativ Sound browser tool for preset-driven mutation.",
         ]:
             require(mutate_dom, needle, "/preset-mutator/mutate/", errors)
 
