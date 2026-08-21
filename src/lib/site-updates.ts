@@ -9,6 +9,7 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-08-21", kind: "update", title: "Wave Mutator beta v0.2.1", description: "Four local Delivery Profiles now set practical cleanup, export, naming, pack, and preview defaults for sample packs, music, game SFX, and store previews.", href: "/tools/wave-mutator/" },
   { date: "2026-08-21", kind: "release", title: "Preset Mutator PRO v0.4.1", description: "The paid Vital workflow creates 32 variants from Scratch, Preset, or Audio mode and exports the complete pack as a ZIP locally in the browser.", href: "https://kreativ.gumroad.com/l/preset-mutator" },
   { date: "2026-08-21", kind: "update", title: "Preset Mutator Free v0.4.1", description: "The free Vital workflow creates three downloadable variants per run with no account or purchase required.", href: "/tools/preset-mutator/" },
   { date: "2026-08-20", kind: "new", title: "Public Updates log added", description: "Kreativ Sound now keeps a dedicated public record of visitor-visible catalog, tool, site, and reliability changes.", href: "/updates/" },

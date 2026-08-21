@@ -1328,6 +1328,35 @@ select {
   max-width: 980px;
 }
 
+.delivery-profile-panel {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, 0.42fr);
+  align-items: end;
+  gap: 18px;
+  border: 1px solid rgba(82, 240, 170, 0.3);
+  border-radius: 8px;
+  padding: 0.92rem;
+  background:
+    linear-gradient(135deg, rgba(82, 240, 170, 0.12), rgba(74, 74, 255, 0.12)),
+    rgba(8, 11, 19, 0.24);
+}
+
+.delivery-profile-panel > div {
+  display: grid;
+  gap: 5px;
+}
+
+.delivery-profile-panel h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.delivery-profile-panel .section-note {
+  max-width: 620px;
+  margin: 0;
+}
+
 .field-control {
   display: grid;
   gap: 7px;
@@ -1632,7 +1661,8 @@ select {
 
   .tool-detail-grid,
   .manual-trim-panel,
-  .export-controls {
+  .export-controls,
+  .delivery-profile-panel {
     grid-template-columns: 1fr;
   }
 

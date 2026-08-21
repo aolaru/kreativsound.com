@@ -105,6 +105,8 @@ const elements = {
   exportMp3Button: document.querySelector("#export-mp3-button"),
   exportManifestButton: document.querySelector("#export-manifest-button"),
   cancelExportButton: document.querySelector("#cancel-export-button"),
+  deliveryProfile: document.querySelector("#delivery-profile"),
+  deliveryProfileSummary: document.querySelector("#delivery-profile-summary"),
   namingTemplate: document.querySelector("#naming-template"),
   packName: document.querySelector("#pack-name"),
   bitDepth: document.querySelector("#bit-depth"),
@@ -128,6 +130,7 @@ const MAX_INPUT_BYTES = 1024 * 1024 * 1024;
 const MAX_DECODED_BYTES = 1536 * 1024 * 1024;
 const DEFAULT_TRIM_WINDOW_MS = 10;
 const HISTORY_LIMIT = 40;
+const APP_VERSION = "0.2.1";
 const SUPPORTED_AUDIO_FORMATS = {
   wav: { label: "WAV", extensions: [".wav"], types: ["audio/wav", "audio/wave", "audio/x-wav"] },
   aiff: { label: "AIFF", extensions: [".aif", ".aiff"], types: ["audio/aiff", "audio/x-aiff"] },
@@ -179,6 +182,101 @@ const CLEANUP_PRESETS = {
     fadeMs: 15,
     normalizeEnabled: true,
     targetPeakDb: -1,
+  },
+};
+
+const DELIVERY_PROFILES = {
+  "sample-pack": {
+    label: "Sample Pack One-Shots",
+    cleanup: {
+      trimSilence: true,
+      trimThresholdDb: -60,
+      trimMinSilenceMs: 60,
+      trimPaddingMs: 20,
+      fadeEnabled: true,
+      fadeMs: 10,
+      normalizeEnabled: true,
+      targetPeakDb: -1,
+      detectClipping: true,
+    },
+    export: {
+      bitDepth: "24",
+      sampleRateMode: "original",
+      channelMode: "original",
+      namingTemplate: "{name}_clean",
+      packName: "wave-mutator-one-shots",
+    },
+    montage: { clipSeconds: 3, gapSeconds: 0.35 },
+    summary: "24-bit WAV at the original sample rate, preserved channels, -1 dB peak, and concise one-shot previews.",
+  },
+  "music-pack": {
+    label: "Music Pack",
+    cleanup: {
+      trimSilence: true,
+      trimThresholdDb: -60,
+      trimMinSilenceMs: 60,
+      trimPaddingMs: 20,
+      fadeEnabled: true,
+      fadeMs: 10,
+      normalizeEnabled: true,
+      targetPeakDb: -1,
+      detectClipping: true,
+    },
+    export: {
+      bitDepth: "16",
+      sampleRateMode: "44100",
+      channelMode: "original",
+      namingTemplate: "{name}_music",
+      packName: "wave-mutator-music",
+    },
+    montage: { clipSeconds: 5, gapSeconds: 0.5 },
+    summary: "16-bit, 44.1 kHz WAV delivery with longer preview clips for music-focused sound packs.",
+  },
+  "game-sfx": {
+    label: "Video / Game SFX",
+    cleanup: {
+      trimSilence: true,
+      trimThresholdDb: -54,
+      trimMinSilenceMs: 40,
+      trimPaddingMs: 12,
+      fadeEnabled: true,
+      fadeMs: 12,
+      normalizeEnabled: true,
+      targetPeakDb: -1,
+      detectClipping: true,
+    },
+    export: {
+      bitDepth: "24",
+      sampleRateMode: "48000",
+      channelMode: "original",
+      namingTemplate: "{name}_sfx",
+      packName: "wave-mutator-game-sfx",
+    },
+    montage: { clipSeconds: 3, gapSeconds: 0.3 },
+    summary: "Tighter cleanup with 24-bit, 48 kHz WAV output for video and game-audio workflows.",
+  },
+  "store-preview": {
+    label: "Store Preview",
+    cleanup: {
+      trimSilence: true,
+      trimThresholdDb: -60,
+      trimMinSilenceMs: 60,
+      trimPaddingMs: 20,
+      fadeEnabled: true,
+      fadeMs: 10,
+      normalizeEnabled: true,
+      targetPeakDb: -1,
+      detectClipping: true,
+    },
+    export: {
+      bitDepth: "16",
+      sampleRateMode: "44100",
+      channelMode: "original",
+      namingTemplate: "{name}_preview",
+      packName: "wave-mutator-store-preview",
+    },
+    montage: { clipSeconds: 4, gapSeconds: 0.5 },
+    summary: "16-bit, 44.1 kHz WAV settings with paced clips for local store-preview montage export.",
   },
 };
 
@@ -362,6 +460,8 @@ function applySettingsToControls(settings) {
 function captureWorkspaceState() {
   return {
     settings: getSettings(),
+    exportSettings: getRawExportSettings(),
+    montageSettings: getMontageSettings(),
     selectedId: state.selectedId,
     files: state.files.map((file) => ({
       id: file.id,
@@ -419,6 +519,7 @@ function invalidateProcessedPreviews() {
 
 function restoreWorkspaceState(snapshot) {
   applySettingsToControls(snapshot.settings);
+  applyExportSettingsToControls(snapshot.exportSettings, snapshot.montageSettings);
   const currentFiles = [...state.files];
   const savedFiles = new Map(snapshot.files.map((file) => [file.id, file]));
   state.files = snapshot.files
@@ -470,7 +571,7 @@ function getSettingsForFile(file) {
   return file?.settingsOverride ? { ...file.settingsOverride } : getSettings();
 }
 
-function getExportSettings() {
+function getRawExportSettings() {
   return {
     bitDepth: elements.bitDepth.value,
     sampleRateMode: elements.sampleRateMode.value,
@@ -478,6 +579,78 @@ function getExportSettings() {
     namingTemplate: elements.namingTemplate.value.trim() || "{name}_clean",
     packName: sanitizeFileBaseName(elements.packName.value || "wave-mutator-pack"),
   };
+}
+
+function exportSettingsMatchProfile(exportSettings, profileExport) {
+  return exportSettings.bitDepth === profileExport.bitDepth
+    && exportSettings.sampleRateMode === profileExport.sampleRateMode
+    && exportSettings.channelMode === profileExport.channelMode
+    && exportSettings.namingTemplate === profileExport.namingTemplate
+    && exportSettings.packName === profileExport.packName;
+}
+
+function montageSettingsMatchProfile(montageSettings, profileMontage) {
+  return montageSettings.clipSeconds === profileMontage.clipSeconds
+    && montageSettings.gapSeconds === profileMontage.gapSeconds;
+}
+
+function getMatchingDeliveryProfile() {
+  const cleanupSettings = getSettings();
+  const exportSettings = getRawExportSettings();
+  const montageSettings = getMontageSettings();
+  return Object.entries(DELIVERY_PROFILES).find(([, profile]) => {
+    return settingsMatchPreset(cleanupSettings, profile.cleanup)
+      && cleanupSettings.detectClipping === profile.cleanup.detectClipping
+      && exportSettingsMatchProfile(exportSettings, profile.export)
+      && montageSettingsMatchProfile(montageSettings, profile.montage);
+  })?.[0] || "custom";
+}
+
+function getExportSettings() {
+  const exportSettings = getRawExportSettings();
+  const profileId = getMatchingDeliveryProfile();
+  return {
+    ...exportSettings,
+    deliveryProfileId: profileId,
+    deliveryProfileLabel: DELIVERY_PROFILES[profileId]?.label || "Custom",
+  };
+}
+
+function applyExportSettingsToControls(exportSettings, montageSettings) {
+  if (exportSettings) {
+    elements.bitDepth.value = exportSettings.bitDepth;
+    elements.sampleRateMode.value = exportSettings.sampleRateMode;
+    elements.channelMode.value = exportSettings.channelMode;
+    elements.namingTemplate.value = exportSettings.namingTemplate;
+    elements.packName.value = exportSettings.packName;
+  }
+  if (montageSettings) {
+    elements.montageSeconds.value = montageSettings.clipSeconds;
+    elements.montageGap.value = montageSettings.gapSeconds;
+  }
+  updateControlLabels();
+}
+
+function renderDeliveryProfile() {
+  const profileId = getMatchingDeliveryProfile();
+  const profile = DELIVERY_PROFILES[profileId];
+  elements.deliveryProfile.value = profileId;
+  elements.deliveryProfileSummary.textContent = profile
+    ? profile.summary
+    : "Custom settings are active. Select a delivery profile to restore a release-ready target.";
+}
+
+function applyDeliveryProfile(profileId) {
+  const profile = DELIVERY_PROFILES[profileId];
+  if (!profile || isExportBusy()) {
+    return;
+  }
+  const historySnapshot = captureWorkspaceState();
+  applySettingsToControls(profile.cleanup);
+  applyExportSettingsToControls(profile.export, profile.montage);
+  clearGlobalProcessedPreviews(`${profile.label} delivery profile applied.`);
+  pushWorkspaceHistory(historySnapshot, "delivery profile");
+  updateUi();
 }
 
 function getMontageSettings() {
@@ -2048,6 +2221,7 @@ function updateUi() {
   renderCleanedOutputs();
   renderPreflight();
   updateControlLabels();
+  renderDeliveryProfile();
   renderBatchProgress();
   syncCleanupPresetUi();
   updateTransportButtons();
@@ -2074,6 +2248,7 @@ function updateUi() {
   elements.resetFileOverrideButton.disabled = !selected?.settingsOverride || busy;
   elements.exportSettingsButton.disabled = busy;
   elements.importSettingsButton.disabled = busy;
+  elements.deliveryProfile.disabled = busy;
   setButtonLoading(
     elements.applyButton,
     state.processingMode === "preview" ? "Processing preview..." : "Apply processing preview",
@@ -2196,9 +2371,12 @@ function resetSettingsForSelectedFile() {
 function exportCleanupSettings() {
   const payload = {
     tool: "Wave Mutator",
-    version: "0.2.0",
+    version: APP_VERSION,
     exportedAt: new Date().toISOString(),
     cleanup: getSettings(),
+    deliveryProfile: getMatchingDeliveryProfile(),
+    export: getRawExportSettings(),
+    montage: getMontageSettings(),
   };
   downloadBlob(
     new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }),
@@ -2213,6 +2391,21 @@ function isValidImportedSettings(value) {
     && ["trimThresholdDb", "trimMinSilenceMs", "trimPaddingMs", "fadeMs", "targetPeakDb"].every((key) => Number.isFinite(Number(value[key])));
 }
 
+function isValidImportedExportSettings(value) {
+  return value && typeof value === "object"
+    && ["16", "24", "32f"].includes(value.bitDepth)
+    && ["original", "44100", "48000"].includes(value.sampleRateMode)
+    && ["original", "mono"].includes(value.channelMode)
+    && typeof value.namingTemplate === "string"
+    && typeof value.packName === "string";
+}
+
+function isValidImportedMontageSettings(value) {
+  return value && typeof value === "object"
+    && Number.isFinite(Number(value.clipSeconds))
+    && Number.isFinite(Number(value.gapSeconds));
+}
+
 async function importCleanupSettings(file) {
   if (!file || isExportBusy()) {
     return;
@@ -2223,8 +2416,17 @@ async function importCleanupSettings(file) {
     if (!isValidImportedSettings(settings)) {
       throw new Error("The file does not contain a valid Wave Mutator cleanup configuration.");
     }
+    if (parsed.export && !isValidImportedExportSettings(parsed.export)) {
+      throw new Error("The file does not contain valid Wave Mutator export settings.");
+    }
+    if (parsed.montage && !isValidImportedMontageSettings(parsed.montage)) {
+      throw new Error("The file does not contain valid Wave Mutator montage settings.");
+    }
     const historySnapshot = captureWorkspaceState();
     applySettingsToControls(settings);
+    if (parsed.export || parsed.montage) {
+      applyExportSettingsToControls(parsed.export || getRawExportSettings(), parsed.montage || getMontageSettings());
+    }
     invalidateProcessedPreviews();
     pushWorkspaceHistory(historySnapshot, "imported cleanup settings");
     setStatus("Imported cleanup settings locally. Processed previews were marked stale.", "success");
@@ -2516,6 +2718,7 @@ function createManifestText(files, exportSettings = getExportSettings()) {
     "Wave Mutator free pack report",
     `Created locally: ${new Date().toISOString()}`,
     `Pack: ${exportSettings.packName}`,
+    `Delivery profile: ${exportSettings.deliveryProfileLabel}`,
     `Files: ${files.length} | Combined cleaned duration: ${formatDuration(totalDuration)} | Review items: ${reviewFiles.length} | Files with clipping: ${clippedFiles.length}`,
     `Naming: ${exportSettings.namingTemplate}`,
     "All measurements and cleanup are local browser analysis. Estimated true peak is a guide, not certified true-peak metering.",
@@ -3165,6 +3368,11 @@ function bindEvents() {
   elements.exportSettingsButton.addEventListener("click", exportCleanupSettings);
   elements.importSettingsButton.addEventListener("click", () => elements.settingsFileInput.click());
   elements.settingsFileInput.addEventListener("change", (event) => importCleanupSettings(event.target.files[0]));
+  elements.deliveryProfile.addEventListener("input", () => {
+    if (elements.deliveryProfile.value !== "custom") {
+      applyDeliveryProfile(elements.deliveryProfile.value);
+    }
+  });
   elements.previewOriginalButton.addEventListener("click", () => showPreviewMode("original"));
   elements.previewProcessedButton.addEventListener("click", () => showPreviewMode("processed"));
   elements.manualTrimReset.addEventListener("click", resetManualTrim);

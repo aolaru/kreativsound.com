@@ -45,6 +45,9 @@ if (!errors.length) {
     "snapRatioToZeroCrossing",
     "exportCleanupSettings",
     "reorderQueue",
+    "DELIVERY_PROFILES",
+    "applyDeliveryProfile",
+    "renderDeliveryProfile",
   ]) {
     if (!app.includes(expectedFeature)) {
       fail(`Wave Mutator app is missing expected release feature: ${expectedFeature}.`);

@@ -49,6 +49,7 @@ The root `predev` and `prebuild` scripts copy this source folder into `public/to
 - Export an MP3 preview montage through a bundled local MP3 encoder; no browser recorder support is required.
 - Naming templates with `{name}`, `{index}`, and `{i}` tokens.
 - Export quality controls for 16-bit PCM, 24-bit PCM, 32-bit float, mono sum, and optional 44.1/48 kHz resampling.
+- Built-in Delivery Profiles for Sample Pack One-Shots, Music Pack, Video / Game SFX, and Store Preview. Manual changes show as Custom settings.
 - Pack-wide preflight table with export selection, format, peak, estimated true peak, and review states.
 - Queue controls: include/exclude, remove, clear, cancel a running batch, and save custom cleanup settings per file.
 - Drag-to-reorder queue for ZIP and preview-montage sequencing.
@@ -56,6 +57,7 @@ The root `predev` and `prebuild` scripts copy this source folder into `public/to
 - Undo/redo for cleanup settings, manual trim, per-file settings, queue selection, and reordering.
 - Keyboard transport: Space play/pause, S stop, Left/Right seek one second, Shift+Left/Right seek five seconds.
 - Export/import cleanup settings as local JSON files.
+- Settings JSON includes delivery profile, export, and montage values for local reuse.
 - Expanded free pack report with source format, output target, cleanup details, QA state, clipping, and duration summary.
 - Guardrails for queue count, input size, and decoded-audio memory use.
 

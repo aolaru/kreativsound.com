@@ -23,9 +23,9 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="stylesheet" href="./styles.css?v=9" />
+    <link rel="stylesheet" href="./styles.css?v=14" />
     <script src="./vendor/lame.min.js" defer></script>
-    <script src="./app.js?v=13" defer></script>
+    <script src="./app.js?v=14" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -59,9 +59,9 @@
             <span class="app-brand-mark" aria-hidden="true">WM</span>
             <strong>Wave Mutator</strong>
           </div>
-          <div class="app-version-group" aria-label="Wave Mutator beta version 0.2.0">
+          <div class="app-version-group" aria-label="Wave Mutator beta version 0.2.1">
             <span class="version-pill beta-sticker">BETA</span>
-            <span class="version-build">v0.2.0</span>
+            <span class="version-build">v0.2.1</span>
           </div>
         </div>
         <div class="hero-copy">
@@ -513,13 +513,30 @@
             </p>
           </div>
           <div class="export-controls">
+            <section class="delivery-profile-panel" aria-labelledby="delivery-profile-title">
+              <div>
+                <p class="section-kicker">Delivery profile</p>
+                <h3 id="delivery-profile-title">Release target</h3>
+                <p id="delivery-profile-summary" class="section-note" aria-live="polite">Select a delivery target to apply its local export settings.</p>
+              </div>
+              <label class="field-control" for="delivery-profile">
+                <span>Profile</span>
+                <select id="delivery-profile">
+                  <option value="sample-pack">Sample Pack One-Shots</option>
+                  <option value="music-pack">Music Pack</option>
+                  <option value="game-sfx">Video / Game SFX</option>
+                  <option value="store-preview">Store Preview</option>
+                  <option value="custom" disabled>Custom settings</option>
+                </select>
+              </label>
+            </section>
             <label class="field-control" for="naming-template">
               <span>Naming template</span>
               <input id="naming-template" type="text" value="{name}_clean" />
             </label>
             <label class="field-control" for="pack-name">
               <span>ZIP pack name</span>
-              <input id="pack-name" type="text" value="wave-mutator-pack" />
+              <input id="pack-name" type="text" value="wave-mutator-one-shots" />
             </label>
             <label class="field-control" for="bit-depth">
               <span>WAV format
@@ -527,7 +544,7 @@
               </span>
               <select id="bit-depth">
                 <option value="16">16-bit PCM</option>
-                <option value="24">24-bit PCM</option>
+                <option value="24" selected>24-bit PCM</option>
                 <option value="32f">32-bit float</option>
               </select>
             </label>
@@ -561,11 +578,11 @@
               <span>Montage clip length
                 <button class="info-tooltip" type="button" aria-label="Explain montage clip length" data-tooltip="Controls how much of each cleaned file appears in the MP3 preview montage.">?</button>
               </span>
-              <input id="montage-seconds" type="number" min="1" max="12" step="0.5" value="4" />
+              <input id="montage-seconds" type="number" min="1" max="12" step="0.5" value="3" />
             </label>
             <label class="field-control" for="montage-gap">
               <span>Montage gap</span>
-              <input id="montage-gap" type="number" min="0" max="3" step="0.1" value="0.4" />
+              <input id="montage-gap" type="number" min="0" max="3" step="0.1" value="0.35" />
             </label>
             <div id="batch-progress" class="batch-progress" aria-live="polite">
               <div class="batch-progress-head">
@@ -609,6 +626,6 @@
       </section>
     </main>
 
-    <footer class="app-footer">A Kreativ Sound tool — Wave Mutator beta v0.2.0</footer>
+    <footer class="app-footer">A Kreativ Sound tool — Wave Mutator beta v0.2.1</footer>
   </body>
 </html>
