@@ -28,10 +28,10 @@ const seedDir = path.join(rootDir, "apps/preset-mutator/public/assets/seeds/vita
 const failures = [];
 
 const modePages = [
-  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "audio-preview.js", "vital-export.js"] },
+  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "vital-export.js"] },
   { name: "Scratch route", html: "index.html", app: "scratch/app.js", requiredImports: ["../app.js"] },
-  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "audio-preview.js", "vital-export.js"] },
-  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js", "audio-preview.js"] },
+  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "vital-export.js"] },
+  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js"] },
 ];
 
 const generatedParameterRanges = {
@@ -177,7 +177,8 @@ async function checkPages() {
     assert(!html.includes("purchase code"), `${page.name}: purchase-code copy should not be visible`);
     assert(html.includes("advanced-controls"), `${page.name}: fine-tune controls should use progressive disclosure`);
     assert(html.includes("result-set-toolbar"), `${page.name}: result-set comparison controls are missing`);
-    assert(renderedApp.includes("Hear Direction Preview"), `${page.name}: preview should be labelled as a direction preview`);
+    assert(!renderedApp.includes("Hear Direction Preview"), `${page.name}: generated preview action should not be visible`);
+    assert(!renderedApp.includes("preview_preset"), `${page.name}: generated preview analytics should not ship`);
     assert(html.includes('role="status"'), `${page.name}: generation status should be announced accessibly`);
     assert(!app.includes("AA-PRO-32-DGTW9930"), `${page.name}: hard-coded Pro unlock code is still present`);
     assert(!app.includes("PURCHASE_CODE"), `${page.name}: hard-coded purchase-code constant is still present`);
@@ -211,7 +212,7 @@ async function checkPages() {
   assert(serviceWorker.includes("cacheShellAssets"), "Service worker: install should use tolerant asset caching");
   assert(!serviceWorker.includes("cache.addAll"), "Service worker: cache.addAll should not block install");
   assert(!serviceWorker.includes("./engine/license.js"), "Service worker: license verifier asset should not be cached");
-  assert(serviceWorker.includes("./engine/audio-preview.js"), "Service worker: missing browser preview asset");
+  assert(!serviceWorker.includes("./engine/audio-preview.js"), "Service worker: removed preview asset should not be cached");
 }
 
 function checkScratchEngine(seedByFamily) {

@@ -4,7 +4,6 @@ import {
   generatePresetVariants as createPresetVariants,
   presetSummary as summarizeVitalPreset,
 } from "../engine/preset-mutate-engine.js";
-import { playPresetPreview } from "../engine/audio-preview.js";
 
 const state = {
   sourcePreset: null,
@@ -310,22 +309,6 @@ function downloadVariant(variant) {
   });
 }
 
-async function previewVariant(variant) {
-  try {
-    elements.status.textContent = `Playing a direction preview of ${variant.name}...`;
-    await playPresetPreview({ data: variant.data });
-    analyticsEvent("preview_preset", {
-      generation_mode: state.lastGenerationMode,
-      preset_role: variant.role.label,
-      preset_group: variant.groupKey,
-      changed_parameters_bucket: countBucket(variant.changedParameters.length),
-      ...currentAnalyticsSelection(),
-    });
-  } catch (error) {
-    elements.status.textContent = error.message || "Could not play this browser preview.";
-  }
-}
-
 function renderVariants() {
   if (!state.generatedVariants.length) {
     elements.presetList.innerHTML = `<p class="empty-state">Choose one <strong>.vital</strong> preset, then click <strong>${currentActionLabel()}</strong> to create new playable mutations.</p>`;
@@ -401,17 +384,12 @@ function renderVariants() {
           </div>
         </div>
         <div class="preset-actions">
-          <button class="preview-button" type="button">
-            <span aria-hidden="true">Play</span>
-            <span>Hear Direction Preview</span>
-          </button>
           <button class="download-button" type="button">
             <span class="download-badge">VITAL</span>
             <span>Download .vital</span>
           </button>
         </div>
       `;
-      card.querySelector(".preview-button").addEventListener("click", () => previewVariant(variant));
       card.querySelector(".download-button").addEventListener("click", () => downloadVariant(variant));
       list.appendChild(card);
     }

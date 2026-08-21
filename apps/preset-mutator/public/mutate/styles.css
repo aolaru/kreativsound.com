@@ -1229,8 +1229,7 @@ button.is-loading .button-spinner {
   gap: 10px;
 }
 
-.download-button,
-.preview-button {
+.download-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1244,12 +1243,6 @@ button.is-loading .button-spinner {
   color: #fff7f7;
   text-decoration: none;
   cursor: pointer;
-}
-
-.preview-button {
-  background: rgba(255, 245, 245, 0.75);
-  color: var(--text);
-  font-weight: 700;
 }
 
 .button {

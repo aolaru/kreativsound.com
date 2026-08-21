@@ -1284,18 +1284,10 @@ button:disabled {
   opacity: 0.96;
 }
 
-.download-button,
-.preview-button {
+.download-button {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-}
-
-.preview-button {
-  background: rgba(255, 245, 245, 0.78);
-  border-color: rgba(153, 0, 0, 0.18);
-  color: var(--text);
-  font-weight: 700;
 }
 
 .download-badge {
