@@ -48,7 +48,7 @@ npm run check
 
 ## Versioning
 
-The repository pre-commit hook bumps the Free app patch version when staged changes include `apps/preset-mutator/public/`. It updates the version shown in all three Free modes and stages those changes in the same commit.
+Free versions are updated deliberately for Free releases. The repository hook only manages Preset Mutator PRO versioning.
 
 Install the hook after cloning:
 
