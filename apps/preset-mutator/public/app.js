@@ -339,6 +339,11 @@ for (const element of [
 }
 
 elements.generateButton.addEventListener("click", generate);
+document.querySelectorAll("[data-pro-upsell]").forEach((link) => {
+  link.addEventListener("click", () => {
+    analyticsEvent("pro_upsell_click", { source: link.dataset.proUpsell });
+  });
+});
 
 refreshProfile();
 renderPresets([]);

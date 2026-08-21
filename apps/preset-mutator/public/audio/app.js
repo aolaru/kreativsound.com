@@ -1109,6 +1109,11 @@ elements.waveform.addEventListener("click", handleWaveformSeek);
 elements.playToggle.addEventListener("click", handlePlayToggle);
 elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
 elements.analysisToggle.addEventListener("click", toggleAnalysisVisibility);
+document.querySelectorAll("[data-pro-upsell]").forEach((link) => {
+  link.addEventListener("click", () => {
+    analyticsEvent("pro_upsell_click", { source: link.dataset.proUpsell });
+  });
+});
 
 new PresetMutatorKnob(elements.mutationKnob, {
   value: Number(elements.mutationAmount.value),

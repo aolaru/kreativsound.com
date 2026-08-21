@@ -583,6 +583,11 @@ elements.dirtRange.addEventListener("input", () => {
   renderStrategyMetrics();
 });
 elements.generateButton.addEventListener("click", handleGenerate);
+document.querySelectorAll("[data-pro-upsell]").forEach((link) => {
+  link.addEventListener("click", () => {
+    analyticsEvent("pro_upsell_click", { source: link.dataset.proUpsell });
+  });
+});
 
 new PresetMutatorKnob(elements.mutationKnob, {
   value: Number(elements.amountRange.value),

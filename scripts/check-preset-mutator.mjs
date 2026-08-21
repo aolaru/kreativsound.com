@@ -166,10 +166,11 @@ async function checkPages() {
     assert(!html.includes("<h1></h1>"), `${page.name}: empty h1 found`);
     assert(html.includes("Generate 3 Variants"), `${page.name}: main action should use simple variants language`);
     assert(!html.includes("Generate 3 Free Variants"), `${page.name}: old free-mode action copy is still visible`);
-    assert(!html.includes("Preset Mutator Pro"), `${page.name}: Pro panel should not be visible`);
-    assert(!html.includes("32 Pro variants"), `${page.name}: Pro output copy should not be visible`);
+    assert(html.includes("Preset Mutator PRO"), `${page.name}: PRO upgrade should be visible`);
+    assert(html.includes("Get Preset Mutator PRO for €19"), `${page.name}: PRO Gumroad CTA is missing`);
+    assert(html.includes("https://kreativ.gumroad.com/l/preset-mutator"), `${page.name}: PRO Gumroad URL is missing`);
+    assert(html.includes("Already purchased? Open PRO"), `${page.name}: PRO access link is missing`);
     assert(!html.includes("license token"), `${page.name}: license-token copy should not be visible`);
-    assert(!html.includes("Buy on Gumroad"), `${page.name}: checkout CTA should not be visible in the free app`);
     assert(!html.includes("Pay with PayPal"), `${page.name}: PayPal CTA should not be visible in the free app`);
     assert(!html.includes("Download 32-Pack"), `${page.name}: 32-pack download should not be visible`);
     assert(!html.includes("purchase code"), `${page.name}: purchase-code copy should not be visible`);

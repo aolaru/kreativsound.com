@@ -922,6 +922,86 @@ button.is-loading .button-spinner {
   font-size: 0.84rem;
 }
 
+.pro-upsell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px 28px;
+  margin-bottom: 20px;
+  padding: 22px 24px;
+  border-color: rgba(153, 0, 0, 0.24);
+  background:
+    radial-gradient(520px 220px at 8% 0%, rgba(22, 143, 202, 0.09), transparent 66%),
+    radial-gradient(420px 220px at 92% 100%, rgba(215, 53, 135, 0.11), transparent 62%),
+    var(--panel-strong);
+}
+
+.pro-upsell-copy {
+  max-width: 36rem;
+}
+
+.pro-upsell-kicker {
+  margin: 0 0 0.35rem;
+  color: var(--accent-strong);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pro-upsell h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+  line-height: 1.05;
+}
+
+.pro-upsell-copy > p:last-child {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.pro-upsell-actions {
+  display: grid;
+  justify-items: start;
+  gap: 0.6rem;
+  flex: 0 0 auto;
+}
+
+.pro-upsell-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 46px;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(176, 38, 38, 0.96), rgba(123, 7, 7, 0.99));
+  box-shadow: 0 12px 24px rgba(127, 0, 0, 0.2);
+  color: #fff8f8;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pro-upsell-link:hover {
+  transform: translateY(-1px);
+  color: #fff;
+  text-decoration: none;
+}
+
+.pro-upsell-link:focus-visible,
+.pro-upsell-access:focus-visible {
+  outline: 3px solid rgba(176, 38, 38, 0.3);
+  outline-offset: 3px;
+}
+
+.pro-upsell-access {
+  color: var(--accent-strong);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
 .analysis-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1518,4 +1598,11 @@ textarea::placeholder {
 [data-theme="dark"] input::placeholder,
 [data-theme="dark"] textarea::placeholder {
   color: rgba(245, 219, 222, 0.36);
+}
+
+@media (max-width: 960px) {
+  .pro-upsell {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
