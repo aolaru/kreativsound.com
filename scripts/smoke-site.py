@@ -63,7 +63,7 @@ def main() -> int:
         pages = {
             "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
             "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
-            "/updates/": ["Kreativ Sound updates", "Releases, updates, and practical guides.", "Recent highlights", "Everything new, updated, and fixed.", "Preset Mutator PRO v0.4.1", "Preset Mutator Free v0.4.1", "Wave Mutator beta v0.2.0", "Earlier updates", "Release notes", "Practical sound-design guides.", "The current browser-tool line", "32 variants per run", "Plugins"],
+            "/updates/": ["Kreativ Sound Updates and Changelog", "Changes, releases, and practical guides.", "Recent highlights", "Everything new, updated, and fixed.", "Preset Mutator PRO v0.4.2", "Preset Mutator Free v0.4.1", "Wave Mutator beta v0.2.0", "Earlier updates", "Release notes", "Practical sound-design guides.", "The current browser-tool line", "32 variants per run", "Plugins"],
             "/tools/": ["Preset Mutator", "3 free / 32 PRO", "Free + PRO", "Get PRO for €19", "Wave Mutator"],
             "/tools/preset-mutator/": ["Preset Mutator", "Free + PRO", "Get PRO for €19", "Free", "PRO", "32 Vital preset variants per workflow."],
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],

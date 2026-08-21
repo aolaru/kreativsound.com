@@ -1954,6 +1954,142 @@ button:disabled {
   color: rgba(88, 60, 64, 0.72);
 }
 
+.app-version a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.app-version a:hover,
+.app-version a:focus-visible {
+  color: var(--accent-strong);
+}
+
+.changelog-page {
+  padding-top: 1.4rem;
+}
+
+.changelog-hero {
+  max-width: 42rem;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.changelog-hero h1 {
+  margin: 0;
+  font-size: clamp(2.1rem, 5vw, 3.8rem);
+  line-height: 0.98;
+}
+
+.changelog-hero p:last-child {
+  max-width: 36rem;
+  margin: 0.8rem auto 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.changelog-list {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.changelog-entry {
+  padding: 1.35rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 22px;
+  background: var(--panel);
+  box-shadow: var(--shadow-soft);
+}
+
+.changelog-entry-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(153, 0, 0, 0.12);
+}
+
+.changelog-entry h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.changelog-entry time {
+  flex: 0 0 auto;
+  color: var(--soft);
+  font-size: 0.82rem;
+}
+
+.changelog-entry p {
+  margin: 0.85rem 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.changelog-entry ul {
+  display: grid;
+  gap: 0.48rem;
+  margin: 0.9rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.changelog-entry li::marker {
+  color: var(--accent);
+}
+
+.changelog-entry.is-current {
+  border-color: rgba(153, 0, 0, 0.36);
+  background: linear-gradient(135deg, rgba(245, 220, 220, 0.9), var(--panel));
+}
+
+.changelog-current-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.7rem;
+  margin-bottom: 0.65rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(169, 20, 16, 0.1);
+  color: var(--accent-strong);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+[data-theme="dark"] .app-version {
+  color: var(--soft);
+}
+
+[data-theme="dark"] .changelog-entry.is-current {
+  background: linear-gradient(135deg, rgba(82, 34, 45, 0.92), var(--panel));
+}
+
+@media (max-width: 560px) {
+  .changelog-page {
+    padding-top: 0.8rem;
+  }
+
+  .changelog-entry {
+    padding: 1.1rem;
+    border-radius: 18px;
+  }
+
+  .changelog-entry-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
+
 @media (max-width: 960px) {
   .site-nav {
     grid-template-columns: 1fr;

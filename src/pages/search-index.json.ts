@@ -106,11 +106,11 @@ const staticEntries: SearchEntry[] = [
     description: "Olaru releases built from the same dark ambient and cinematic sound palette."
   },
   {
-    title: "Updates",
+    title: "Updates & Changelog",
     url: "/updates/",
     type: "Page",
     thumbnail: "/assets/thumbs/juno-nocturnes.webp",
-    description: "Kreativ Sound releases, practical guides, and the public log of catalog, tool, website, and reliability updates."
+    description: "Kreativ Sound updates and public changelog: releases, fixes, catalog and tool changes, plus practical sound-design guides."
   },
   {
     title: "About",

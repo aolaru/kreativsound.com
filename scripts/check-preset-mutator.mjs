@@ -177,6 +177,7 @@ async function checkPages() {
     assert(!html.includes("purchase code"), `${page.name}: purchase-code copy should not be visible`);
     assert(html.includes("advanced-controls"), `${page.name}: fine-tune controls should use progressive disclosure`);
     assert(html.includes("result-set-toolbar"), `${page.name}: result-set comparison controls are missing`);
+    assert(html.includes('href="/preset-mutator/changelog/"'), `${page.name}: changelog link is missing from the footer`);
     assert(!renderedApp.includes("Hear Direction Preview"), `${page.name}: generated preview action should not be visible`);
     assert(!renderedApp.includes("preview_preset"), `${page.name}: generated preview analytics should not ship`);
     assert(html.includes('role="status"'), `${page.name}: generation status should be announced accessibly`);
@@ -208,11 +209,17 @@ async function checkPages() {
   const audioHtml = await readText("audio/index.html");
   assert(audioHtml.includes("Try Example Sound"), "Audio mode: included example sound action is missing");
 
+  const changelogHtml = await readText("changelog/index.html");
+  assert(changelogHtml.includes("Preset Mutator Changelog"), "Changelog: page title is missing");
+  assert(changelogHtml.includes("v0.4.2"), "Changelog: current version is missing");
+  assert(changelogHtml.includes("Current release"), "Changelog: current release marker is missing");
+
   const serviceWorker = await readText("service-worker.js");
   assert(serviceWorker.includes("cacheShellAssets"), "Service worker: install should use tolerant asset caching");
   assert(!serviceWorker.includes("cache.addAll"), "Service worker: cache.addAll should not block install");
   assert(!serviceWorker.includes("./engine/license.js"), "Service worker: license verifier asset should not be cached");
   assert(!serviceWorker.includes("./engine/audio-preview.js"), "Service worker: removed preview asset should not be cached");
+  assert(serviceWorker.includes("./changelog/index.html"), "Service worker: changelog should be cached");
 }
 
 function checkScratchEngine(seedByFamily) {

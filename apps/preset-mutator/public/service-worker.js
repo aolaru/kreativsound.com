@@ -1,4 +1,4 @@
-const CACHE_NAME = "preset-mutator-shell-v13";
+const CACHE_NAME = "preset-mutator-shell-v14";
 const SHELL_ASSETS = [
   "./index.html",
   "./styles.css",
@@ -12,6 +12,7 @@ const SHELL_ASSETS = [
   "./mutate/app.js",
   "./audio/index.html",
   "./audio/app.js",
+  "./changelog/index.html",
   "./engine/common.js",
   "./engine/scratch-engine.js",
   "./engine/audio-engine.js",
