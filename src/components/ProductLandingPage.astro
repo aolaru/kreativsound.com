@@ -112,20 +112,6 @@ const breadcrumbSchema = {
     <h1 class="page-title">{productName}</h1>
     <p class="page-lead">{product.subtitle}</p>
 
-    <figure class="product-landing-media">
-      <img class="product-landing-image" src={product.image} width="1040" height="585" alt={product.imageAlt} />
-    </figure>
-
-    {hasDemo ? (
-      <section class="product-landing-demo" aria-label="Audio demo">
-        <h2>{product.demo.label || "Audio demo"}</h2>
-        {product.demoBlurb ? <p>{product.demoBlurb}</p> : null}
-        <audio class="product-card-demo-player" controls preload="metadata">
-          <source src={product.demo.src} type={product.demo.type} />
-        </audio>
-      </section>
-    ) : null}
-
     {purchaseActions.length || previewAction || toolActions.length ? (
       <div class="product-landing-actions" aria-label="Product actions">
         {purchaseActions.map((action, index) => (
@@ -149,8 +135,27 @@ const breadcrumbSchema = {
       </div>
     ) : null}
 
-    {product.price ? <p class="product-price-line"><strong>{product.price}</strong> - Instant download</p> : null}
+    {product.price ? (
+      <p class="product-price-line">
+        <strong>{product.price}</strong> - Instant download{product.slug === "kreativ-kollection-v1" ? " • Commercial-use license included" : ""}
+      </p>
+    ) : null}
     {product.shortMeta ? <p class="product-landing-meta">{product.shortMeta}</p> : null}
+
+    <figure class="product-landing-media">
+      <img class="product-landing-image" src={product.image} width="1040" height="585" alt={product.imageAlt} />
+    </figure>
+
+    {hasDemo ? (
+      <section class="product-landing-demo" aria-label="Audio demo">
+        <h2>{product.demo.label || "Audio demo"}</h2>
+        {product.demoBlurb ? <p>{product.demoBlurb}</p> : null}
+        <audio class="product-card-demo-player" controls preload="metadata">
+          <source src={product.demo.src} type={product.demo.type} />
+        </audio>
+      </section>
+    ) : null}
+
   </header>
 
   {product.longDescription.length ? (

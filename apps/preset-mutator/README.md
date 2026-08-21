@@ -46,6 +46,16 @@ Run the full site check before publishing:
 npm run check
 ```
 
+## Versioning
+
+The repository pre-commit hook bumps the Free app patch version when staged changes include `apps/preset-mutator/public/`. It updates the version shown in all three Free modes and stages those changes in the same commit.
+
+Install the hook after cloning:
+
+```bash
+npm run setup:git-hooks
+```
+
 ## Workflow
 
 Each mode generates three exportable `.vital` variants. The app runs locally in the browser, with no account, checkout, or license token required.

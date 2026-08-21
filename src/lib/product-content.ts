@@ -13,7 +13,7 @@ export type ProductLandingCopy = {
 export const landingCopyOverrides = {
   "kreativ-kollection-v1": {
     subtitle: "9 synth preset banks and 7 WAV sound packs in one native Gumroad bundle.",
-    shortMeta: "16 products • 9 preset banks • 7 WAV sound packs • €144 individual value",
+    shortMeta: "16 products • 9 preset banks • 7 WAV sound packs • €144 value • €69 later",
     ctaLine: "Get all 16 products for €49 through February 19, 2027, then €69.",
     finalCtaTitle: "Build a broader sound palette for less.",
     finalCtaText: "Get the €144 collection for €49 through February 19, 2027. The price moves to €69 after the introductory period.",
@@ -38,7 +38,7 @@ export const landingCopyOverrides = {
     longDescription: [
       "Kreativ Kollection V1 brings together 16 complete Kreativ Sound releases: 9 synth preset banks and 7 WAV sound packs spanning dark ambient, cinematic, industrial, experimental, and electronic production.",
       "The preset side covers Arturia JUN-6 V and Pigments, Native Instruments FM8, Vital, Synplant 2, Softube Synth Models, FabFilter One, Moog Model D, and Animoog Z. The WAV side adds percussion, transitions, atmospheres, noise, subs, horror textures, and experimental sound material that works in any modern DAW.",
-      "Each included product is delivered separately through your Gumroad library, so you can download only what a project needs and receive eligible product updates in the same place. Dark Drones 2 will also be added as a free future V1 update."
+      "Each included product is delivered separately through your Gumroad library, so you can download only what a project needs and receive eligible product updates in the same place. Dark Drones 2 will be added free to every Kreativ Kollection V1 owner's Gumroad library when it is released."
     ],
     specifications: [
       { label: "Product type", value: "Native Gumroad product bundle" },
@@ -49,7 +49,7 @@ export const landingCopyOverrides = {
       { label: "Introductory price", value: "€49 through February 19, 2027; €69 afterward" },
       { label: "Delivery", value: "Separate products in your Gumroad library" },
       { label: "License", value: "Personal and commercial music production use" },
-      { label: "Updates", value: "Eligible included-product updates plus Dark Drones 2 as a free future V1 update" },
+      { label: "Updates", value: "Eligible included-product updates plus Dark Drones 2 free for every V1 owner when released" },
       { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [

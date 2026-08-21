@@ -63,7 +63,7 @@
           <img class="nav-brand-mark-image" src="../preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator</strong>
-            <span class="nav-version">v0.4.0 beta</span>
+            <span class="nav-version">v0.4.1</span>
           </span>
         </a>
         <div class="nav-group nav-group-utility">
@@ -77,7 +77,7 @@
       </nav>
 
       <section class="hero">
-        <p class="eyebrow">Preset Mutation beta</p>
+        <p class="eyebrow">Preset Mutation</p>
         <h1 class="hero-title-balanced">
           <span>Mutate one Vital preset</span>
           <span>into new variants</span>
@@ -145,6 +145,7 @@
                   <span>Choose .vital preset</span>
                   <input id="file-input" type="file" accept=".vital,application/json" />
                 </label>
+                <button class="button secondary try-example-button" id="try-example-preset" type="button">Load Example Preset</button>
                 <p class="drop-note">Drag and drop a `.vital` preset here.</p>
               </div>
               <div class="preset-summary" id="preset-summary">
@@ -193,12 +194,11 @@
             <div id="mutation-knob" class="mutation-knob-mount"></div>
           </div>
 
-          <div class="control-grid">
-            <label class="control is-hidden">
-              <span>Mutation Amount</span>
-              <output id="amount-value">Medium</output>
-              <input id="amount-range" type="range" min="0" max="100" step="1" value="45" aria-label="Mutation amount" />
-            </label>
+          <input id="amount-range" type="hidden" value="45" />
+
+          <details class="advanced-controls">
+            <summary>Fine tune the direction <span>Optional sliders</span></summary>
+            <div class="control-grid">
 
             <label class="control">
               <span>Darker / Brighter</span>
@@ -229,7 +229,8 @@
               <output id="dirt-value">0%</output>
               <input id="dirt-range" type="range" min="-100" max="100" step="1" value="0" aria-label="Cleaner or dirtier" />
             </label>
-          </div>
+            </div>
+          </details>
 
           <div class="actions">
             <button id="generate-button" type="button" disabled>
@@ -238,7 +239,7 @@
             </button>
           </div>
 
-          <div class="status" id="status">Load one Vital preset to generate 3 variants.</div>
+          <div class="status" id="status" role="status">Load one Vital preset to generate 3 variants.</div>
           <p class="upgrade-hint">Download individual `.vital` files and refine the best mutation inside Vital.</p>
           </section>
         </section>
@@ -269,7 +270,15 @@
       <section class="panel presets-panel" id="presets-panel">
         <div class="section-head">
           <h2>Generated Preset Variants</h2>
-          <p class="muted">Each export is a real `.vital` preset built from your uploaded source file.</p>
+          <p class="muted">Browser previews are direction approximations. Open the exported file in Vital to hear the final patch.</p>
+        </div>
+        <div class="result-set-toolbar" id="result-set-toolbar" hidden>
+          <p id="result-set-label"></p>
+          <div>
+            <button class="button secondary" id="new-set-button" type="button">Generate New Set</button>
+            <button class="button secondary" id="previous-set-button" type="button">View Previous Set</button>
+            <button class="button secondary" id="latest-set-button" type="button" hidden>View Latest Set</button>
+          </div>
         </div>
         <div class="preset-list" id="preset-list">
           <p class="empty-state">Choose one `.vital` preset, then click <strong>Generate 3 Variants</strong>.</p>
@@ -292,8 +301,8 @@
       </aside>
 
       <footer class="app-footer">
-        <p>Kreativ Sound experimental tool surface for preset-driven mutation.</p>
-        <p class="app-version">Preset Mutator v0.4.0 beta</p>
+        <p>Kreativ Sound browser tool for preset-driven mutation.</p>
+        <p class="app-version">Preset Mutator v0.4.1</p>
       </footer>
     </main>
 

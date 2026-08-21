@@ -9,8 +9,8 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
-  { date: "2026-08-21", kind: "release", title: "Preset Mutator PRO beta v0.3.0", description: "The paid Vital workflow creates 32 variants from Scratch, Preset, or Audio mode and exports the complete pack as a ZIP locally in the browser.", href: "https://kreativ.gumroad.com/l/preset-mutator" },
-  { date: "2026-08-21", kind: "update", title: "Preset Mutator Free v0.4.0 beta", description: "The free Vital workflow creates three downloadable variants per run with no account or purchase required.", href: "/tools/preset-mutator/" },
+  { date: "2026-08-21", kind: "release", title: "Preset Mutator PRO v0.4.1", description: "The paid Vital workflow creates 32 variants from Scratch, Preset, or Audio mode and exports the complete pack as a ZIP locally in the browser.", href: "https://kreativ.gumroad.com/l/preset-mutator" },
+  { date: "2026-08-21", kind: "update", title: "Preset Mutator Free v0.4.0", description: "The free Vital workflow creates three downloadable variants per run with no account or purchase required.", href: "/tools/preset-mutator/" },
   { date: "2026-08-20", kind: "new", title: "Public Updates log added", description: "Kreativ Sound now keeps a dedicated public record of visitor-visible catalog, tool, site, and reliability changes.", href: "/updates/" },
   { date: "2026-08-20", kind: "release", title: "Wave Mutator beta v0.2.0", description: "Wave Mutator now supports cleaner WAV workflows, ZIP pack export, and locally encoded MP3 preview montages.", href: "/tools/wave-mutator/" },
   { date: "2026-08-20", kind: "new", title: "Plugins section added", description: "A dedicated Plugins page is live to establish the upcoming instrument and effect release area.", href: "/plugins/" },

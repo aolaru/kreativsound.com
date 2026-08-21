@@ -63,9 +63,9 @@ def main() -> int:
         pages = {
             "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
             "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
-            "/updates/": ["Kreativ Sound updates", "Releases, updates, and practical guides.", "Recent highlights", "Everything new, updated, and fixed.", "Preset Mutator PRO beta v0.3.0", "Preset Mutator Free v0.4.0 beta", "Wave Mutator beta v0.2.0", "Earlier updates", "Release notes", "Practical sound-design guides.", "The current browser-tool line", "32 variants per run", "Plugins"],
+            "/updates/": ["Kreativ Sound updates", "Releases, updates, and practical guides.", "Recent highlights", "Everything new, updated, and fixed.", "Preset Mutator PRO v0.4.1", "Preset Mutator Free v0.4.0", "Wave Mutator beta v0.2.0", "Earlier updates", "Release notes", "Practical sound-design guides.", "The current browser-tool line", "32 variants per run", "Plugins"],
             "/tools/": ["Preset Mutator", "3 free / 32 PRO", "Free + PRO", "Get PRO for €19", "Wave Mutator"],
-            "/tools/preset-mutator/": ["Preset Mutator", "Free + PRO", "Get PRO for €19", "Free · v0.4.0 beta", "PRO · v0.3.0", "32 Vital preset variants per workflow."],
+            "/tools/preset-mutator/": ["Preset Mutator", "Free + PRO", "Get PRO for €19", "Free · v0.4.0", "PRO · v0.4.1", "32 Vital preset variants per workflow."],
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
             "/plugins/": ["Plugins", "Kreativ Sound plugins are coming soon.", "Coming soon", "View Updates", "Browse Sounds"],

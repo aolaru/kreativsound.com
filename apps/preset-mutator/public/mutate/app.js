@@ -10,6 +10,9 @@ const state = {
   sourcePreset: null,
   sourceFile: null,
   generatedVariants: [],
+  resultSets: [],
+  activeSetIndex: -1,
+  variationSeed: 0,
   isGenerating: false,
   lastGenerationMode: "standard",
 };
@@ -26,7 +29,6 @@ const elements = {
   presetFile: document.querySelector("#preset-file"),
   mutationKnob: document.querySelector("#mutation-knob"),
   amountRange: document.querySelector("#amount-range"),
-  amountValue: document.querySelector("#amount-value"),
   brightnessRange: document.querySelector("#brightness-range"),
   brightnessValue: document.querySelector("#brightness-value"),
   motionRange: document.querySelector("#motion-range"),
@@ -43,6 +45,12 @@ const elements = {
   sourceMetrics: document.querySelector("#source-metrics"),
   strategyMetrics: document.querySelector("#strategy-metrics"),
   presetList: document.querySelector("#preset-list"),
+  tryExampleButton: document.querySelector("#try-example-preset"),
+  resultSetToolbar: document.querySelector("#result-set-toolbar"),
+  resultSetLabel: document.querySelector("#result-set-label"),
+  newSetButton: document.querySelector("#new-set-button"),
+  previousSetButton: document.querySelector("#previous-set-button"),
+  latestSetButton: document.querySelector("#latest-set-button"),
 };
 
 const ANALYTICS_MODE = "preset";
@@ -134,7 +142,6 @@ function currentActionLabel() {
 }
 
 function updateControlLabels() {
-  elements.amountValue.textContent = amountLabel(elements.amountRange.value);
   elements.brightnessValue.textContent = toPercent(elements.brightnessRange.value);
   elements.motionValue.textContent = toPercent(elements.motionRange.value);
   elements.attackValue.textContent = toPercent(elements.attackRange.value);
@@ -272,6 +279,7 @@ function generateVariants() {
   return createPresetVariants({
     sourcePreset: state.sourcePreset,
     strategy: buildStrategyWeights(),
+    variationSeed: state.variationSeed,
     controls: {
       amount: elements.amountRange.value,
       tone: elements.brightnessRange.value,
@@ -304,7 +312,7 @@ function downloadVariant(variant) {
 
 async function previewVariant(variant) {
   try {
-    elements.status.textContent = `Playing a browser preview of ${variant.name}...`;
+    elements.status.textContent = `Playing a direction preview of ${variant.name}...`;
     await playPresetPreview({ data: variant.data });
     analyticsEvent("preview_preset", {
       generation_mode: state.lastGenerationMode,
@@ -395,7 +403,7 @@ function renderVariants() {
         <div class="preset-actions">
           <button class="preview-button" type="button">
             <span aria-hidden="true">Play</span>
-            <span>Preview Sound</span>
+            <span>Hear Direction Preview</span>
           </button>
           <button class="download-button" type="button">
             <span class="download-badge">VITAL</span>
@@ -419,6 +427,49 @@ function renderVariants() {
 
     elements.presetList.appendChild(section);
   }
+}
+
+function renderResultSetToolbar() {
+  const hasSets = state.resultSets.length > 0;
+  elements.resultSetToolbar.hidden = !hasSets;
+  if (!hasSets) {
+    return;
+  }
+
+  const current = state.activeSetIndex + 1;
+  const total = state.resultSets.length;
+  const isLatest = state.activeSetIndex === total - 1;
+  elements.resultSetLabel.textContent = `Set ${current} of ${total} for this preset`;
+  elements.previousSetButton.disabled = state.activeSetIndex <= 0;
+  elements.latestSetButton.hidden = isLatest;
+}
+
+function clearResultSets() {
+  state.resultSets = [];
+  state.activeSetIndex = -1;
+  state.variationSeed = 0;
+  renderResultSetToolbar();
+}
+
+function storeResultSet(variants) {
+  state.resultSets.push({ seed: state.variationSeed, variants });
+  if (state.resultSets.length > 3) {
+    state.resultSets.shift();
+  }
+  state.activeSetIndex = state.resultSets.length - 1;
+  state.generatedVariants = variants;
+  renderResultSetToolbar();
+}
+
+function showResultSet(index) {
+  if (index < 0 || index >= state.resultSets.length) {
+    return;
+  }
+  state.activeSetIndex = index;
+  state.generatedVariants = state.resultSets[index].variants;
+  renderVariants();
+  renderResultSetToolbar();
+  elements.status.textContent = `Showing set ${index + 1} of ${state.resultSets.length}.`;
 }
 
 function bestUseForVariant(variant) {
@@ -449,6 +500,7 @@ async function loadPreset(file) {
     state.sourcePreset = null;
     state.sourceFile = null;
     state.generatedVariants = [];
+    clearResultSets();
     setUploadMessage("Unsupported file type. Please use a valid .vital preset.");
     updateSourceUi();
     renderVariants();
@@ -470,6 +522,7 @@ async function loadPreset(file) {
     state.sourcePreset = { data, summary, fileName: file.name };
     state.sourceFile = file;
     state.generatedVariants = [];
+    clearResultSets();
     state.lastGenerationMode = "standard";
     setUploadMessage("");
     updateSourceUi();
@@ -486,6 +539,7 @@ async function loadPreset(file) {
     state.sourcePreset = null;
     state.sourceFile = null;
     state.generatedVariants = [];
+    clearResultSets();
     setUploadMessage(error.message || "Unsupported or unreadable preset file.");
     updateSourceUi();
     renderVariants();
@@ -509,16 +563,34 @@ async function handleGenerate() {
 
   try {
     await new Promise((resolve) => window.setTimeout(resolve, 520));
-    state.generatedVariants = generateVariants();
+    state.variationSeed += 1;
+    const variants = generateVariants();
+    storeResultSet(variants);
     state.lastGenerationMode = "standard";
     renderVariants();
     elements.status.textContent = "3 variants ready. Download the one that feels closest.";
     analyticsEvent("generate", {
-      preset_count: state.generatedVariants.length,
+      preset_count: variants.length,
+      variation_set: state.variationSeed,
       ...currentAnalyticsSelection(),
     });
   } finally {
     setGenerationLoadingState(false);
+  }
+}
+
+async function loadExamplePreset() {
+  try {
+    elements.status.textContent = "Loading an included Vital example...";
+    const response = await fetch(new URL("../assets/seeds/vital/raw/KS%20Dread%20Lantern.vital", import.meta.url));
+    if (!response.ok) {
+      throw new Error("Could not load the included Vital example.");
+    }
+    const file = new File([await response.blob()], "KS Dread Lantern.vital", { type: "application/json" });
+    await loadPreset(file);
+    analyticsEvent("example_loaded", { source_type: "vital_preset" });
+  } catch (error) {
+    elements.status.textContent = error.message || "Could not load the included Vital example.";
   }
 }
 
@@ -583,6 +655,10 @@ elements.dirtRange.addEventListener("input", () => {
   renderStrategyMetrics();
 });
 elements.generateButton.addEventListener("click", handleGenerate);
+elements.newSetButton.addEventListener("click", handleGenerate);
+elements.previousSetButton.addEventListener("click", () => showResultSet(state.activeSetIndex - 1));
+elements.latestSetButton.addEventListener("click", () => showResultSet(state.resultSets.length - 1));
+elements.tryExampleButton.addEventListener("click", loadExamplePreset);
 document.querySelectorAll("[data-pro-upsell]").forEach((link) => {
   link.addEventListener("click", () => {
     analyticsEvent("pro_upsell_click", { source: link.dataset.proUpsell });
@@ -603,4 +679,5 @@ new PresetMutatorKnob(elements.mutationKnob, {
 updateControlLabels();
 updateSourceUi();
 renderVariants();
+renderResultSetToolbar();
 bindDropZone();

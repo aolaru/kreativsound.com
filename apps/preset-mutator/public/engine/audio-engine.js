@@ -123,14 +123,15 @@ export function buildAudioPresetSummary({ family, brightness, movement, width, s
 export function mapAudioProfileToVital(profile, index, options = {}) {
   const amountScale = options.amountScale ?? 1;
   const roleLabel = options.roleLabel ?? null;
+  const variationIndex = index + (options.variationSeed ?? 0) * 31;
   const family = profile.family;
-  const brightness = vary(profile.brightness, 0.08 * amountScale, index, 1);
-  const body = vary(profile.body, 0.08 * amountScale, index, 2);
-  const attack = vary(profile.attack, 0.1 * amountScale, index, 3);
-  const sustain = vary(profile.sustain, 0.08 * amountScale, index, 4);
-  const movement = vary(profile.movement, 0.12 * amountScale, index, 5);
-  const noise = vary(profile.noise, 0.08 * amountScale, index, 6);
-  const width = vary(profile.width, 0.1 * amountScale, index, 7);
+  const brightness = vary(profile.brightness, 0.08 * amountScale, variationIndex, 1);
+  const body = vary(profile.body, 0.08 * amountScale, variationIndex, 2);
+  const attack = vary(profile.attack, 0.1 * amountScale, variationIndex, 3);
+  const sustain = vary(profile.sustain, 0.08 * amountScale, variationIndex, 4);
+  const movement = vary(profile.movement, 0.12 * amountScale, variationIndex, 5);
+  const noise = vary(profile.noise, 0.08 * amountScale, variationIndex, 6);
+  const width = vary(profile.width, 0.1 * amountScale, variationIndex, 7);
 
   const oscMode = chooseOscillator(family, brightness, noise);
   const voices = family === "bass" ? Math.round(lerp(1, 3, width)) : Math.round(lerp(2, 8, width));
@@ -225,27 +226,28 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
   };
 }
 
-export function shapeAudioProfile(baseProfile, recipe, index) {
+export function shapeAudioProfile(baseProfile, recipe, index, variationSeed = 0) {
   const mutationScale = 0.55 + (baseProfile.mutationAmount ?? 0.5) * 1.15;
   const spread = (fallback) => fallback * mutationScale;
+  const variationIndex = index + variationSeed * 31;
 
   return {
     ...baseProfile,
     family: recipe.family || baseProfile.family,
-    brightness: vary(clamp(baseProfile.brightness + (recipe.brightness ?? 0)), spread(recipe.spread ?? 0.07), index, 21),
-    body: vary(clamp(baseProfile.body + (recipe.body ?? 0)), spread(recipe.spread ?? 0.06), index, 22),
-    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0)), spread(recipe.spread ?? 0.08), index, 23),
-    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0)), spread(recipe.spread ?? 0.07), index, 24),
-    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0)), spread(recipe.spread ?? 0.09), index, 25),
-    noise: vary(clamp(baseProfile.noise + (recipe.noise ?? 0) + (baseProfile.dirtBias ?? 0) * 0.18), spread(recipe.spread ?? 0.07), index, 26),
-    width: vary(clamp(baseProfile.width + (recipe.width ?? 0) + (baseProfile.widthBias ?? 0) * 0.18), spread(recipe.spread ?? 0.08), index, 27),
-    wetness: vary(clamp((baseProfile.wetness ?? 0.18) + (recipe.wetness ?? 0)), spread(recipe.spread ?? 0.05), index, 28),
-    wash: vary(clamp((baseProfile.wash ?? 0.12) + (recipe.wash ?? 0)), spread(recipe.spread ?? 0.05), index, 29),
-    drive: vary(clamp((baseProfile.drive ?? 0.08) + (recipe.drive ?? 0)), spread(recipe.spread ?? 0.05), index, 30),
+    brightness: vary(clamp(baseProfile.brightness + (recipe.brightness ?? 0)), spread(recipe.spread ?? 0.07), variationIndex, 21),
+    body: vary(clamp(baseProfile.body + (recipe.body ?? 0)), spread(recipe.spread ?? 0.06), variationIndex, 22),
+    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0)), spread(recipe.spread ?? 0.08), variationIndex, 23),
+    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0)), spread(recipe.spread ?? 0.07), variationIndex, 24),
+    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0)), spread(recipe.spread ?? 0.09), variationIndex, 25),
+    noise: vary(clamp(baseProfile.noise + (recipe.noise ?? 0) + (baseProfile.dirtBias ?? 0) * 0.18), spread(recipe.spread ?? 0.07), variationIndex, 26),
+    width: vary(clamp(baseProfile.width + (recipe.width ?? 0) + (baseProfile.widthBias ?? 0) * 0.18), spread(recipe.spread ?? 0.08), variationIndex, 27),
+    wetness: vary(clamp((baseProfile.wetness ?? 0.18) + (recipe.wetness ?? 0)), spread(recipe.spread ?? 0.05), variationIndex, 28),
+    wash: vary(clamp((baseProfile.wash ?? 0.12) + (recipe.wash ?? 0)), spread(recipe.spread ?? 0.05), variationIndex, 29),
+    drive: vary(clamp((baseProfile.drive ?? 0.08) + (recipe.drive ?? 0)), spread(recipe.spread ?? 0.05), variationIndex, 30),
   };
 }
 
-export function buildAudioFreePack(profile) {
+export function buildAudioFreePack(profile, variationSeed = 0) {
   const recipes = [
     { role: "Closest", brightness: -0.01, movement: -0.02, spread: 0.035, amountScale: 0.82 },
     { role: "Darker", brightness: -0.15, body: 0.06, movement: -0.03, spread: 0.04, amountScale: 0.9 },
@@ -253,10 +255,11 @@ export function buildAudioFreePack(profile) {
   ];
 
   return recipes.map((recipe, index) => {
-    const shaped = shapeAudioProfile(profile, recipe, index);
+    const shaped = shapeAudioProfile(profile, recipe, index, variationSeed);
     return mapAudioProfileToVital(shaped, index, {
       amountScale: recipe.amountScale,
       roleLabel: recipe.role,
+      variationSeed,
     });
   });
 }

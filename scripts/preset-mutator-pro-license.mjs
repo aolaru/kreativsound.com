@@ -22,7 +22,7 @@ function base64Url(bytes) {
 }
 
 function printHelp() {
-  console.log("Usage: npm run license:preset-mutator-legacy-pro -- --email customer@example.com --order ORDER-ID [--expires YYYY-MM-DD]");
+  console.log("Usage: npm run license:preset-mutator-pro -- --email customer@example.com --order ORDER-ID [--expires YYYY-MM-DD]");
 }
 
 const email = argValue("--email");

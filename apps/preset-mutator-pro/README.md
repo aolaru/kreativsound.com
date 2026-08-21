@@ -15,7 +15,7 @@ The app is `noindex` and must not be linked from the public site, product catalo
 Generate a signed token after verifying the customer's Gumroad order:
 
 ```bash
-npm run license:preset-mutator-legacy-pro -- --email customer@example.com --order ORDER-ID
+npm run license:preset-mutator-pro -- --email customer@example.com --order ORDER-ID
 ```
 
 The private signing key is stored under `private/` and is intentionally not committed. Send the resulting token directly to the customer along with the Preset Mutator PRO URL.

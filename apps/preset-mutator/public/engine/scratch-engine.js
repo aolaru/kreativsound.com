@@ -96,16 +96,17 @@ export function buildScratchPresetSummary({ family, brightness, movement, width,
   return `${tone.charAt(0).toUpperCase() + tone.slice(1)} pad around ${register} with ${motion} movement and a ${tail}.`;
 }
 
-export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1) {
-  const brightness = vary(profile.brightness, 0.08 * spread, index, 1);
-  const body = vary(profile.body, 0.07 * spread, index, 2);
-  const attack = vary(profile.attack, 0.08 * spread, index, 3);
-  const sustain = vary(profile.sustain, 0.08 * spread, index, 4);
-  const movement = vary(profile.movement, 0.11 * spread, index, 5);
-  const noise = vary(profile.noise, 0.08 * spread, index, 6);
-  const width = vary(profile.width, 0.09 * spread, index, 7);
-  const wetness = vary(profile.wetness, 0.06 * spread, index, 8);
-  const drive = vary(profile.drive, 0.05 * spread, index, 9);
+export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1, variationSeed = 0) {
+  const variationIndex = index + variationSeed * 31;
+  const brightness = vary(profile.brightness, 0.08 * spread, variationIndex, 1);
+  const body = vary(profile.body, 0.07 * spread, variationIndex, 2);
+  const attack = vary(profile.attack, 0.08 * spread, variationIndex, 3);
+  const sustain = vary(profile.sustain, 0.08 * spread, variationIndex, 4);
+  const movement = vary(profile.movement, 0.11 * spread, variationIndex, 5);
+  const noise = vary(profile.noise, 0.08 * spread, variationIndex, 6);
+  const width = vary(profile.width, 0.09 * spread, variationIndex, 7);
+  const wetness = vary(profile.wetness, 0.06 * spread, variationIndex, 8);
+  const drive = vary(profile.drive, 0.05 * spread, variationIndex, 9);
   const family = profile.family;
   const voices = family === "bass" ? Math.round(lerp(1, 3, width)) : Math.round(lerp(2, 8, width));
   const detune = family === "bass" ? lerp(0.02, 0.1, width) : lerp(0.05, 0.28, width);
@@ -173,28 +174,29 @@ export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1) 
   };
 }
 
-export function shapeScratchProfile(base, recipe, index) {
+export function shapeScratchProfile(base, recipe, index, variationSeed = 0) {
   const mutationScale = 0.55 + (base.mutationAmount ?? 0.5) * 1.15;
   const spread = (recipe.spread ?? 0.06) * mutationScale;
+  const variationIndex = index + variationSeed * 31;
 
   return {
     ...base,
-    brightness: vary(clamp(base.brightness + (recipe.brightness ?? 0)), spread, index, 11),
-    body: vary(clamp(base.body + (recipe.body ?? 0)), spread, index, 12),
-    attack: vary(clamp(base.attack + (recipe.attack ?? 0)), spread, index, 13),
-    sustain: vary(clamp(base.sustain + (recipe.sustain ?? 0)), spread, index, 14),
-    movement: vary(clamp(base.movement + (recipe.movement ?? 0)), spread, index, 15),
-    noise: vary(clamp(base.noise + (recipe.noise ?? 0)), spread, index, 16),
-    width: vary(clamp(base.width + (recipe.width ?? 0)), spread, index, 17),
-    wetness: vary(clamp(base.wetness + (recipe.wetness ?? 0)), spread, index, 18),
-    drive: vary(clamp(base.drive + (recipe.drive ?? 0)), spread, index, 19),
+    brightness: vary(clamp(base.brightness + (recipe.brightness ?? 0)), spread, variationIndex, 11),
+    body: vary(clamp(base.body + (recipe.body ?? 0)), spread, variationIndex, 12),
+    attack: vary(clamp(base.attack + (recipe.attack ?? 0)), spread, variationIndex, 13),
+    sustain: vary(clamp(base.sustain + (recipe.sustain ?? 0)), spread, variationIndex, 14),
+    movement: vary(clamp(base.movement + (recipe.movement ?? 0)), spread, variationIndex, 15),
+    noise: vary(clamp(base.noise + (recipe.noise ?? 0)), spread, variationIndex, 16),
+    width: vary(clamp(base.width + (recipe.width ?? 0)), spread, variationIndex, 17),
+    wetness: vary(clamp(base.wetness + (recipe.wetness ?? 0)), spread, variationIndex, 18),
+    drive: vary(clamp(base.drive + (recipe.drive ?? 0)), spread, variationIndex, 19),
   };
 }
 
-export function buildScratchFreePack(profile) {
+export function buildScratchFreePack(profile, variationSeed = 0) {
   return [
     { role: "Closest", spread: 0.04 },
     { role: "Darker", brightness: -0.16, body: 0.06, spread: 0.05 },
     { role: "More Motion", movement: 0.18, width: 0.06, wetness: 0.04, spread: 0.05 },
-  ].map((recipe, index) => mapScratchProfileToVital(shapeScratchProfile(profile, recipe, index), index, recipe.role, 0.9));
+  ].map((recipe, index) => mapScratchProfileToVital(shapeScratchProfile(profile, recipe, index, variationSeed), index, recipe.role, 0.9, variationSeed));
 }

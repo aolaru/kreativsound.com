@@ -70,7 +70,7 @@
           <img class="nav-brand-mark-image" src="/preset-mutator/preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator</strong>
-            <span class="nav-version">v0.4.0 beta</span>
+            <span class="nav-version">v0.4.1</span>
           </span>
         </a>
         <div class="nav-group nav-group-utility">
@@ -84,7 +84,7 @@
       </nav>
 
       <section class="hero">
-        <p class="eyebrow">From Scratch beta</p>
+        <p class="eyebrow">From Scratch</p>
         <h1>Create a Vital preset from intent</h1>
         <p class="lede">Choose a direction, shape the feel, and export playable Vital starting points.</p>
         <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator source">
@@ -137,7 +137,7 @@
             <div class="section-head">
               <div>
                 <h2>Preset Intent</h2>
-                <p class="muted">Set the type, mood, register, and a short intent.</p>
+                <p class="muted">Choose a sound type, mood, register, and optional direction keywords.</p>
                 <p class="input-note">Vital is live now. Serum 2 and Pigments 7 are planned.</p>
               </div>
             </div>
@@ -173,10 +173,17 @@
               </label>
 
               <label class="control intent-text-control">
-                <span class="control-label">Short Intent</span>
+                <span class="control-label">Direction Keywords</span>
                 <textarea id="intent-text" rows="4" maxlength="180" placeholder="Example: dark evolving key for a tense intro"></textarea>
-                <span class="control-note">Optional keywords bias tone, movement, and texture. Example: dark, evolving, glass, dirty, steady.</span>
+                <span class="control-note">Optional. These keywords bias brightness, motion, and texture; they do not generate from full natural-language prompts.</span>
               </label>
+              <div class="keyword-chips" aria-label="Quick direction keywords">
+                <button type="button" data-intent-keyword="dark" aria-pressed="false">Dark</button>
+                <button type="button" data-intent-keyword="evolving" aria-pressed="false">Evolving</button>
+                <button type="button" data-intent-keyword="glass" aria-pressed="false">Glass</button>
+                <button type="button" data-intent-keyword="dirty" aria-pressed="false">Dirty</button>
+                <button type="button" data-intent-keyword="steady" aria-pressed="false">Steady</button>
+              </div>
             </div>
           </section>
 
@@ -201,7 +208,9 @@
             <input id="mutation-amount" type="hidden" value="50" />
           </div>
 
-          <div class="control-grid">
+          <details class="advanced-controls">
+            <summary>Fine tune the direction <span>Optional sliders</span></summary>
+            <div class="control-grid">
             <label class="control">
               <span class="control-label">Darker / Brighter</span>
               <output id="brightness-value">0%</output>
@@ -227,7 +236,8 @@
               <output id="texture-value">0%</output>
               <input id="texture-range" type="range" min="-100" max="100" step="1" value="0" aria-label="Cleaner or dirtier" />
             </label>
-          </div>
+            </div>
+          </details>
 
           <div class="actions section-actions">
             <button id="generate-button" type="button">
@@ -236,7 +246,7 @@
             </button>
           </div>
 
-          <div class="status" id="status">Choose an intent, then generate 3 variants.</div>
+          <div class="status" id="status" role="status">Choose an intent, then generate 3 variants.</div>
           <p class="upgrade-hint">Download individual `.vital` files and finish the best direction inside Vital.</p>
           </section>
         </section>
@@ -245,7 +255,15 @@
       <section class="panel presets-panel" id="presets-panel">
         <div class="section-head">
           <h2>Generated Preset Variants</h2>
-          <p class="muted">Exportable `.vital` variants from curated seeds.</p>
+          <p class="muted">Browser previews are direction approximations. Open the exported file in Vital to hear the final patch.</p>
+        </div>
+        <div class="result-set-toolbar" id="result-set-toolbar" hidden>
+          <p id="result-set-label"></p>
+          <div>
+            <button class="button secondary" id="new-set-button" type="button">Generate New Set</button>
+            <button class="button secondary" id="previous-set-button" type="button">View Previous Set</button>
+            <button class="button secondary" id="latest-set-button" type="button" hidden>View Latest Set</button>
+          </div>
         </div>
         <div class="preset-list" id="preset-list">
           <p class="empty-state">Choose a sound type and mood, then click <strong>Generate 3 Variants</strong>.</p>
@@ -268,8 +286,8 @@
       </aside>
 
       <footer class="app-footer">
-        <p>Kreativ Sound experimental tool surface for synth preset generation. Vital is live first; Serum 2 and Pigments 7 are planned.</p>
-        <p class="app-version">Preset Mutator v0.4.0 beta</p>
+        <p>Kreativ Sound browser tool for synth preset generation. Vital is live first; Serum 2 and Pigments 7 are planned.</p>
+        <p class="app-version">Preset Mutator v0.4.1</p>
       </footer>
     </main>
 

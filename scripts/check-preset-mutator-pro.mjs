@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
-const appDir = path.join(rootDir, "apps/preset-mutator-legacy-pro/public");
+const appDir = path.join(rootDir, "apps/preset-mutator-pro/public");
 const failures = [];
 
 function assert(condition, message) {
@@ -55,16 +55,16 @@ const [manifest, serviceWorker, licenseScript] = await Promise.all([
 ]);
 
 assert(manifest.includes('"scope": "/preset-mutator-pro/"'), "Manifest: legacy route scope is incorrect");
-assert(serviceWorker.includes("preset-mutator-legacy-pro-shell"), "Service worker: legacy cache namespace is missing");
+assert(serviceWorker.includes("preset-mutator-pro-shell"), "Service worker: PRO cache namespace is missing");
 assert(licenseScript.includes('LICENSE_PRODUCT = "preset-mutator-pro"'), "License verifier: product identifier changed unexpectedly");
 assert(await exists("assets/seeds/vital/raw/KS Dread Lantern.vital"), "Legacy Pro: missing Vital seed assets");
 
 if (failures.length) {
-  console.error("Preset Mutator Legacy Pro QA failed:");
+  console.error("Preset Mutator PRO QA failed:");
   for (const failure of failures) {
     console.error(`- ${failure}`);
   }
   process.exit(1);
 }
 
-console.log("Preset Mutator Legacy Pro QA passed.");
+console.log("Preset Mutator PRO QA passed.");

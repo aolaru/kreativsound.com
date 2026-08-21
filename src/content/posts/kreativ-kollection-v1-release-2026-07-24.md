@@ -13,7 +13,9 @@ draft: false
 
 <p>The collection brings together 9 synth preset banks for Arturia JUN-6 V and Pigments, Native Instruments FM8, Vital, Synplant 2, Softube Synth Models, FabFilter One, Moog Model D, and Animoog Z. Seven WAV sound packs add percussion, transitions, atmospheres, noise, subs, horror textures, and experimental sound material.</p>
 
-<p>Each included release is delivered as a separate product in the buyer's Gumroad library. The collection has a €144 individual value and is available for €49 through August 15, 2026. The regular price will be €69.</p>
+<p>Each included release is delivered as a separate product in the buyer's Gumroad library. The collection has a €144 individual value and is available for €49 through February 19, 2027. The regular price will be €69.</p>
+
+<p>Dark Drones 2 will be added free to every Kreativ Kollection V1 owner's Gumroad library when it is released.</p>
 
 <div class="article-cta">
   <a class="button primary" href="https://kreativ.gumroad.com/l/kreativ-kollection-v1" target="_blank" rel="noopener noreferrer">Get Kreativ Kollection V1</a>

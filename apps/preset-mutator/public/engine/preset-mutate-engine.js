@@ -217,7 +217,7 @@ function controlValue(controls, key, fallback) {
   return String(controls?.[key] ?? Math.round(fallback * 100));
 }
 
-export function generatePresetVariants({ sourcePreset, strategy, controls = {} }) {
+export function generatePresetVariants({ sourcePreset, strategy, controls = {}, variationSeed = 0 }) {
   const source = sourcePreset;
   if (!source?.data?.settings) {
     return [];
@@ -235,7 +235,7 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {} }
   const dirtValue = controlValue(controls, "dirt", strategy.dirt);
 
   return roles.map((role, index) => {
-    const rng = createRng(hashString(`standard:${source.fileName}:${role.key}:${amountValue}:${toneValue}:${motionValue}:${attackValue}:${spaceValue}:${dirtValue}`));
+    const rng = createRng(hashString(`standard:${source.fileName}:${role.key}:${amountValue}:${toneValue}:${motionValue}:${attackValue}:${spaceValue}:${dirtValue}:${variationSeed}`));
     const data = cloneJson(source.data);
     const settings = data.settings;
     const baseChanges = 8;

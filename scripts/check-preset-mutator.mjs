@@ -160,6 +160,7 @@ async function checkPages() {
   for (const page of modePages) {
     const html = await readText(page.html);
     const app = await readText(page.app);
+    const renderedApp = page.name === "Scratch route" ? await readText("app.js") : app;
     assert(html.includes("id=\"mutation-knob\""), `${page.name}: missing Mutation Amount knob mount`);
     assert(html.includes("local-trust-strip"), `${page.name}: missing compact local trust strip`);
     assert(!html.includes("hero-cover"), `${page.name}: hero cover should not be present in app UI`);
@@ -174,6 +175,10 @@ async function checkPages() {
     assert(!html.includes("Pay with PayPal"), `${page.name}: PayPal CTA should not be visible in the free app`);
     assert(!html.includes("Download 32-Pack"), `${page.name}: 32-pack download should not be visible`);
     assert(!html.includes("purchase code"), `${page.name}: purchase-code copy should not be visible`);
+    assert(html.includes("advanced-controls"), `${page.name}: fine-tune controls should use progressive disclosure`);
+    assert(html.includes("result-set-toolbar"), `${page.name}: result-set comparison controls are missing`);
+    assert(renderedApp.includes("Hear Direction Preview"), `${page.name}: preview should be labelled as a direction preview`);
+    assert(html.includes('role="status"'), `${page.name}: generation status should be announced accessibly`);
     assert(!app.includes("AA-PRO-32-DGTW9930"), `${page.name}: hard-coded Pro unlock code is still present`);
     assert(!app.includes("PURCHASE_CODE"), `${page.name}: hard-coded purchase-code constant is still present`);
     assert(!app.includes("verifyLicenseToken"), `${page.name}: license verification should not ship in the free app`);
@@ -193,6 +198,14 @@ async function checkPages() {
   const mutateHtml = await readText("mutate/index.html");
   assert(!mutateHtml.includes("trust-panel"), "Preset mode: Local Processing panel should stay removed");
   assert(!mutateHtml.includes("insight-panel"), "Preset mode: tips panel should stay removed");
+  assert(mutateHtml.includes("Load Example Preset"), "Preset mode: included example preset action is missing");
+
+  const scratchHtml = await readText("index.html");
+  assert(scratchHtml.includes("Direction Keywords"), "Scratch mode: keyword direction input is missing");
+  assert(scratchHtml.includes("data-intent-keyword"), "Scratch mode: quick direction keywords are missing");
+
+  const audioHtml = await readText("audio/index.html");
+  assert(audioHtml.includes("Try Example Sound"), "Audio mode: included example sound action is missing");
 
   const serviceWorker = await readText("service-worker.js");
   assert(serviceWorker.includes("cacheShellAssets"), "Service worker: install should use tolerant asset caching");
@@ -215,9 +228,11 @@ function checkScratchEngine(seedByFamily) {
     texture: 24,
   });
   const freePack = buildScratchFreePack(profile);
+  const alternatePack = buildScratchFreePack(profile, 1);
 
   assert(freePack.length === 3, `Scratch engine: expected 3 free presets, found ${freePack.length}`);
   assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Scratch engine: free roles are inconsistent");
+  assert(JSON.stringify(freePack[0].parameterMap) !== JSON.stringify(alternatePack[0].parameterMap), "Scratch engine: a new variation seed should produce a distinct set");
 
   for (const [index, preset] of freePack.entries()) {
     const label = `Scratch engine preset ${index + 1}`;
@@ -250,9 +265,11 @@ function checkAudioEngine(seedByFamily) {
     mutationAmount: 68,
   });
   const freePack = buildAudioFreePack(profile);
+  const alternatePack = buildAudioFreePack(profile, 1);
 
   assert(freePack.length === 3, `Audio engine: expected 3 free presets, found ${freePack.length}`);
   assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Audio engine: free roles are inconsistent");
+  assert(JSON.stringify(freePack[0].parameterMap) !== JSON.stringify(alternatePack[0].parameterMap), "Audio engine: a new variation seed should produce a distinct set");
   assert(buildAudioPresetSummary({ family: "pad", brightness: 0.5, movement: 0.4, width: 0.5, sustain: 0.5, attack: 0.8, register: "C3" }).includes("harder attack"), "Audio engine: high attack summary should say harder attack");
 
   for (const [index, preset] of freePack.entries()) {
@@ -282,9 +299,16 @@ function checkPresetMutationEngine(seedFile, seedData) {
     strategy,
     controls: { amount: 74, tone: -18, motion: 42, attack: 12, space: 24, dirt: 28 },
   });
+  const alternateVariants = generatePresetVariants({
+    sourcePreset,
+    strategy,
+    controls: { amount: 74, tone: -18, motion: 42, attack: 12, space: 24, dirt: 28 },
+    variationSeed: 1,
+  });
 
   assert(freeVariants.length === 3, `${seedFile}: expected 3 free mutation variants, found ${freeVariants.length}`);
   assert(freeVariants.map((variant) => variant.role.label).join("|") === "Closest|Darker|More Motion", `${seedFile}: free mutation roles are inconsistent`);
+  assert(JSON.stringify(freeVariants[0].data.settings) !== JSON.stringify(alternateVariants[0].data.settings), `${seedFile}: a new variation seed should produce distinct mutations`);
 
   for (const [index, variant] of freeVariants.entries()) {
     validateMutatedVariant(variant, `${seedFile}: mutation variant ${index + 1}`);

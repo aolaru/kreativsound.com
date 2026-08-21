@@ -15,6 +15,9 @@ const state = {
   analysis: null,
   profile: null,
   presets: [],
+  resultSets: [],
+  activeSetIndex: -1,
+  variationSeed: 0,
   isGenerating: false,
   sourceName: "",
   seedCache: new Map(),
@@ -58,6 +61,12 @@ const elements = {
   presetList: document.querySelector("#preset-list"),
   presetsPanel: document.querySelector("#presets-panel"),
   selfTestNote: document.querySelector("#self-test-note"),
+  tryExampleButton: document.querySelector("#try-example-audio"),
+  resultSetToolbar: document.querySelector("#result-set-toolbar"),
+  resultSetLabel: document.querySelector("#result-set-label"),
+  newSetButton: document.querySelector("#new-set-button"),
+  previousSetButton: document.querySelector("#previous-set-button"),
+  latestSetButton: document.querySelector("#latest-set-button"),
 };
 
 const FREE_VARIANT_LIMIT = 3;
@@ -190,6 +199,7 @@ function resetLoadedState() {
   state.analysis = null;
   state.profile = null;
   state.presets = [];
+  clearResultSets();
   state.lastGenerationMode = "standard";
   state.sourceName = "";
   elements.fileName.textContent = "No file loaded";
@@ -758,7 +768,7 @@ function buildPresetCard(preset, role, totalCount) {
       <div class="preset-actions">
         <button class="preview-button" type="button">
           <span aria-hidden="true">Play</span>
-          <span>Preview Sound</span>
+          <span>Hear Direction Preview</span>
         </button>
         <button class="download-button" type="button">
           <span class="download-badge" aria-hidden="true">VITAL</span>
@@ -797,6 +807,49 @@ function buildPresetTags(preset, role) {
   }
 
   return tags.slice(0, 3);
+}
+
+function renderResultSetToolbar() {
+  const hasSets = state.resultSets.length > 0;
+  elements.resultSetToolbar.hidden = !hasSets;
+  if (!hasSets) {
+    return;
+  }
+
+  const current = state.activeSetIndex + 1;
+  const total = state.resultSets.length;
+  const isLatest = state.activeSetIndex === total - 1;
+  elements.resultSetLabel.textContent = `Set ${current} of ${total} for this source`;
+  elements.previousSetButton.disabled = state.activeSetIndex <= 0;
+  elements.latestSetButton.hidden = isLatest;
+}
+
+function clearResultSets() {
+  state.resultSets = [];
+  state.activeSetIndex = -1;
+  state.variationSeed = 0;
+  renderResultSetToolbar();
+}
+
+function storeResultSet(presets) {
+  state.resultSets.push({ seed: state.variationSeed, presets });
+  if (state.resultSets.length > 3) {
+    state.resultSets.shift();
+  }
+  state.activeSetIndex = state.resultSets.length - 1;
+  state.presets = presets;
+  renderResultSetToolbar();
+}
+
+function showResultSet(index) {
+  if (index < 0 || index >= state.resultSets.length) {
+    return;
+  }
+  state.activeSetIndex = index;
+  state.presets = state.resultSets[index].presets;
+  renderPresets(state.presets);
+  renderResultSetToolbar();
+  updateStatus(`Showing set ${index + 1} of ${state.resultSets.length}.`);
 }
 
 function selectFreeCardParameters(parameters) {
@@ -906,6 +959,7 @@ async function loadAudioFile(file, resetInput = false) {
     state.analysis = null;
     state.profile = null;
     state.presets = [];
+    clearResultSets();
     state.lastGenerationMode = "standard";
     state.sourceName = file.name.replace(/\.[^.]+$/, "");
 
@@ -1007,6 +1061,7 @@ function loadSyntheticSource() {
   state.analysis = null;
   state.profile = null;
   state.presets = [];
+  clearResultSets();
   state.lastGenerationMode = "standard";
   state.sourceName = "self-test-source";
 
@@ -1021,7 +1076,8 @@ function loadSyntheticSource() {
   renderMetricGrid(elements.profileMetrics, []);
   renderPresets([]);
   setReady(true);
-  updateStatus("Self-test source ready. Generating presets...");
+  updateStatus("Example source ready. Generating presets...");
+  analyticsEvent("example_loaded", { source_type: "synthetic_audio" });
   generatePresets();
 }
 
@@ -1034,7 +1090,9 @@ function generatePresets() {
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
   state.lastGenerationMode = "standard";
-  state.presets = buildFreePack(state.profile);
+  state.variationSeed += 1;
+  const presets = buildFreePack(state.profile, state.variationSeed);
+  storeResultSet(presets);
 
   renderMetricGrid(elements.analysisMetrics, [
     ["Pitch Center", state.analysis.pitchHz ? `${Math.round(state.analysis.pitchHz)} Hz` : "Unclear"],
@@ -1059,10 +1117,11 @@ function generatePresets() {
     ["Width", formatPercent(state.profile.width)],
   ]);
 
-  renderPresets(state.presets);
+  renderPresets(presets);
   updateStatus("3 variants ready. Download the ones that feel closest to your track.");
   analyticsEvent("generate", {
-    preset_count: state.presets.length,
+    preset_count: presets.length,
+    variation_set: state.variationSeed,
     detected_family: state.profile.family,
     duration_bucket: durationBucket(state.originalBuffer.duration),
     ...currentAnalyticsSelection(),
@@ -1108,6 +1167,10 @@ elements.waveformPanel.addEventListener("drop", handleDropZoneDrop);
 elements.waveform.addEventListener("click", handleWaveformSeek);
 elements.playToggle.addEventListener("click", handlePlayToggle);
 elements.analyzeGenerate.addEventListener("click", handleGeneratePresets);
+elements.newSetButton.addEventListener("click", handleGeneratePresets);
+elements.previousSetButton.addEventListener("click", () => showResultSet(state.activeSetIndex - 1));
+elements.latestSetButton.addEventListener("click", () => showResultSet(state.resultSets.length - 1));
+elements.tryExampleButton.addEventListener("click", loadSyntheticSource);
 elements.analysisToggle.addEventListener("click", toggleAnalysisVisibility);
 document.querySelectorAll("[data-pro-upsell]").forEach((link) => {
   link.addEventListener("click", () => {
@@ -1139,6 +1202,7 @@ updateControlLabels();
 setAnalysisVisible(false);
 updatePlaybackUI();
 setReady(false);
+renderResultSetToolbar();
 if (SELF_TEST_ENABLED) {
   loadSyntheticSource();
 }

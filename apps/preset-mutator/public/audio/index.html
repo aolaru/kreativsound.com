@@ -63,7 +63,7 @@
           <img class="nav-brand-mark-image" src="../preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator</strong>
-            <span class="nav-version">v0.4.0 beta</span>
+            <span class="nav-version">v0.4.1</span>
           </span>
         </a>
         <div class="nav-group nav-group-utility">
@@ -77,7 +77,7 @@
       </nav>
 
       <section class="hero">
-        <p class="eyebrow">Audio to Preset beta</p>
+        <p class="eyebrow">Audio to Preset</p>
         <h1>Turn audio into Vital preset variants</h1>
         <p class="lede">Load one short source sound, shape the mapping, and export playable Vital variants.</p>
         <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator source">
@@ -147,6 +147,7 @@
                   <span>Choose audio file</span>
                   <input id="file-input" type="file" accept="audio/*" />
                 </label>
+                <button class="button secondary try-example-button" id="try-example-audio" type="button">Try Example Sound</button>
                 <p class="waveform-empty-note" id="waveform-empty-note">Drop an audio file here to preview its waveform.</p>
               </div>
             </div>
@@ -200,22 +201,20 @@
               <input id="mutation-amount" type="hidden" value="50" />
             </div>
 
-            <div class="control-grid">
-              <label class="control">
-                <span class="control-label">Sound Type
-                  <button class="info-tooltip" type="button" aria-label="Explain Sound Type" data-tooltip="Chooses how the source should be interpreted before mapping. Auto Detect lets Preset Mutator decide between pad, pluck, bass, or texture.">
-                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-                  </button>
-                </span>
-                <select id="input-mode">
-                  <option value="auto">Auto Detect</option>
-                  <option value="pad">Pad / Atmosphere</option>
-                  <option value="pluck">Pluck / Keys</option>
-                  <option value="bass">Bass</option>
-                  <option value="texture">Drone / Texture</option>
-                </select>
-              </label>
+            <label class="control interpretation-control">
+              <span class="control-label">Interpret source as</span>
+              <select id="input-mode">
+                <option value="auto">Auto Detect</option>
+                <option value="pad">Pad / Atmosphere</option>
+                <option value="pluck">Pluck / Keys</option>
+                <option value="bass">Bass</option>
+                <option value="texture">Drone / Texture</option>
+              </select>
+            </label>
 
+            <details class="advanced-controls">
+              <summary>Fine tune the direction <span>Optional sliders</span></summary>
+              <div class="control-grid">
               <label class="control">
                 <span class="control-label">Darker / Brighter
                   <button class="info-tooltip" type="button" aria-label="Explain Darker / Brighter" data-tooltip="Biases the generated tone toward lower or higher filter cutoff, upper harmonics, and overall brightness.">
@@ -265,7 +264,8 @@
                 <output id="dirt-bias-value">0%</output>
                 <input id="dirt-bias" type="range" min="-100" max="100" step="1" value="0" aria-label="Cleaner or dirtier" />
               </label>
-            </div>
+              </div>
+            </details>
 
             <div class="actions section-actions">
               <button id="analyze-generate" type="button" disabled>
@@ -275,8 +275,8 @@
             </div>
           </section>
 
-          <div class="status" id="status">Load a short audio file, then generate 3 variants.</div>
-          <p class="upgrade-hint">Mutate Preset and From Scratch are available as Vital betas.</p>
+          <div class="status" id="status" role="status">Load a short audio file, then generate 3 variants.</div>
+          <p class="upgrade-hint">Mutate Preset and From Scratch are also available for Vital.</p>
           </section>
         </section>
       </section>
@@ -315,7 +315,15 @@
           <h2>Generated Preset Variants</h2>
           <p class="muted">Preview the generated directions, then download real `.vital` files built from curated Vital seeds.</p>
         </div>
-        <p class="self-test-note" id="self-test-note" hidden>Self-test mode generated synthetic demo variants.</p>
+        <p class="self-test-note" id="self-test-note" hidden>Example sound is synthetic; use your own audio for production results.</p>
+        <div class="result-set-toolbar" id="result-set-toolbar" hidden>
+          <p id="result-set-label"></p>
+          <div>
+            <button class="button secondary" id="new-set-button" type="button">Generate New Set</button>
+            <button class="button secondary" id="previous-set-button" type="button">View Previous Set</button>
+            <button class="button secondary" id="latest-set-button" type="button" hidden>View Latest Set</button>
+          </div>
+        </div>
         <div class="preset-list" id="preset-list">
         <p class="empty-state">Choose a short source sound, then click <strong>Generate 3 Variants</strong>.</p>
         </div>
@@ -337,8 +345,8 @@
       </aside>
 
       <footer class="app-footer">
-        <p>Kreativ Sound experimental tool surface for Vital preset generation. Serum 2 and Pigments 7 are planned.</p>
-        <p class="app-version">Preset Mutator v0.4.0 beta</p>
+        <p>Kreativ Sound browser tool for Vital preset generation. Serum 2 and Pigments 7 are planned.</p>
+        <p class="app-version">Preset Mutator v0.4.1</p>
       </footer>
     </main>
 

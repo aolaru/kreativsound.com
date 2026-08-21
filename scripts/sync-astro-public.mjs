@@ -5,8 +5,8 @@ const rootDir = process.cwd();
 const publicDir = path.join(rootDir, "public");
 const presetMutatorSourceDir = path.join(rootDir, "apps/preset-mutator/public");
 const presetMutatorPublicDir = path.join(publicDir, "preset-mutator");
-const presetMutatorLegacyProSourceDir = path.join(rootDir, "apps/preset-mutator-legacy-pro/public");
-const presetMutatorLegacyProPublicDir = path.join(publicDir, "preset-mutator-pro");
+const presetMutatorProSourceDir = path.join(rootDir, "apps/preset-mutator-pro/public");
+const presetMutatorProPublicDir = path.join(publicDir, "preset-mutator-pro");
 const presetMutatorLegacyPublicDir = path.join(publicDir, "apps/preset-mutator");
 const presetMutatorLegacyUiDir = path.join(presetMutatorLegacyPublicDir, "ui");
 const waveMutatorSourceDir = path.join(rootDir, "apps/wave-mutator/public");
@@ -44,8 +44,8 @@ if (!fs.existsSync(presetMutatorSourceDir)) {
   throw new Error("Missing apps/preset-mutator/public. Preset Mutator source must be available before syncing public assets.");
 }
 
-if (!fs.existsSync(presetMutatorLegacyProSourceDir)) {
-  throw new Error("Missing apps/preset-mutator-legacy-pro/public. Legacy Pro source must be available before syncing public assets.");
+if (!fs.existsSync(presetMutatorProSourceDir)) {
+  throw new Error("Missing apps/preset-mutator-pro/public. Preset Mutator PRO source must be available before syncing public assets.");
 }
 
 if (!fs.existsSync(waveMutatorSourceDir)) {
@@ -145,13 +145,13 @@ fs.copyFileSync(
   path.join(presetMutatorPublicDir, "scratch/index.html")
 );
 
-fs.rmSync(presetMutatorLegacyProPublicDir, { recursive: true, force: true });
-fs.mkdirSync(path.dirname(presetMutatorLegacyProPublicDir), { recursive: true });
-fs.cpSync(presetMutatorLegacyProSourceDir, presetMutatorLegacyProPublicDir, { recursive: true });
-fs.mkdirSync(path.join(presetMutatorLegacyProPublicDir, "scratch"), { recursive: true });
+fs.rmSync(presetMutatorProPublicDir, { recursive: true, force: true });
+fs.mkdirSync(path.dirname(presetMutatorProPublicDir), { recursive: true });
+fs.cpSync(presetMutatorProSourceDir, presetMutatorProPublicDir, { recursive: true });
+fs.mkdirSync(path.join(presetMutatorProPublicDir, "scratch"), { recursive: true });
 fs.copyFileSync(
-  path.join(presetMutatorLegacyProSourceDir, "index.html"),
-  path.join(presetMutatorLegacyProPublicDir, "scratch/index.html")
+  path.join(presetMutatorProSourceDir, "index.html"),
+  path.join(presetMutatorProPublicDir, "scratch/index.html")
 );
 writeLegacyPresetMutatorRedirects();
 

@@ -10,6 +10,9 @@ import { playPresetPreview } from "./engine/audio-preview.js";
 
 const state = {
   presets: [],
+  resultSets: [],
+  activeSetIndex: -1,
+  variationSeed: 0,
   seedCache: new Map(),
   isGenerating: false,
   lastGenerationMode: "standard",
@@ -37,6 +40,11 @@ const elements = {
   profileMetrics: document.querySelector("#profile-metrics"),
   presetList: document.querySelector("#preset-list"),
   presetsPanel: document.querySelector("#presets-panel"),
+  resultSetToolbar: document.querySelector("#result-set-toolbar"),
+  resultSetLabel: document.querySelector("#result-set-label"),
+  newSetButton: document.querySelector("#new-set-button"),
+  previousSetButton: document.querySelector("#previous-set-button"),
+  latestSetButton: document.querySelector("#latest-set-button"),
 };
 
 const FREE_VARIANT_LIMIT = SCRATCH_FREE_VARIANT_LIMIT;
@@ -195,7 +203,7 @@ function renderPresets(presets) {
       <div class="preset-actions">
         <button class="preview-button" type="button">
           <span aria-hidden="true">Play</span>
-          <span>Preview Sound</span>
+          <span>Hear Direction Preview</span>
         </button>
         <button class="download-button" type="button">
           <span class="download-badge" aria-hidden="true">VITAL</span>
@@ -207,6 +215,42 @@ function renderPresets(presets) {
     card.querySelector(".download-button").addEventListener("click", () => downloadPreset(preset));
     elements.presetList.appendChild(card);
   }
+}
+
+function renderResultSetToolbar() {
+  const hasSets = state.resultSets.length > 0;
+  elements.resultSetToolbar.hidden = !hasSets;
+  if (!hasSets) {
+    return;
+  }
+
+  const current = state.activeSetIndex + 1;
+  const total = state.resultSets.length;
+  const isLatest = state.activeSetIndex === total - 1;
+  elements.resultSetLabel.textContent = `Set ${current} of ${total} in this browser session`;
+  elements.previousSetButton.disabled = state.activeSetIndex <= 0;
+  elements.latestSetButton.hidden = isLatest;
+}
+
+function storeResultSet(presets) {
+  state.resultSets.push({ seed: state.variationSeed, presets });
+  if (state.resultSets.length > 3) {
+    state.resultSets.shift();
+  }
+  state.activeSetIndex = state.resultSets.length - 1;
+  state.presets = presets;
+  renderResultSetToolbar();
+}
+
+function showResultSet(index) {
+  if (index < 0 || index >= state.resultSets.length) {
+    return;
+  }
+  state.activeSetIndex = index;
+  state.presets = state.resultSets[index].presets;
+  renderPresets(state.presets);
+  renderResultSetToolbar();
+  updateStatus(`Showing set ${index + 1} of ${state.resultSets.length}.`);
 }
 
 function bestUseForPreset(preset) {
@@ -297,11 +341,14 @@ function generate() {
   updateStatus("Building 3 variants...");
   window.setTimeout(() => {
     const profile = currentProfile();
-    state.presets = buildScratchFreePack(profile);
-    renderPresets(state.presets);
+    state.variationSeed += 1;
+    const presets = buildScratchFreePack(profile, state.variationSeed);
+    storeResultSet(presets);
+    renderPresets(presets);
     updateStatus("3 variants ready.");
     analyticsEvent("generate", {
-      preset_count: state.presets.length,
+      preset_count: presets.length,
+      variation_set: state.variationSeed,
       ...currentAnalyticsSelection(),
     });
     setLoading(false);
@@ -311,6 +358,25 @@ function generate() {
 function refreshProfile() {
   updateControlLabels();
   renderProfile(currentProfile());
+  syncIntentKeywords();
+}
+
+function syncIntentKeywords() {
+  const value = elements.intentText.value.toLowerCase();
+  document.querySelectorAll("[data-intent-keyword]").forEach((button) => {
+    const keyword = button.dataset.intentKeyword;
+    button.setAttribute("aria-pressed", String(new RegExp(`\\b${keyword}\\b`, "i").test(value)));
+  });
+}
+
+function toggleIntentKeyword(keyword) {
+  const expression = new RegExp(`\\b${keyword}\\b`, "ig");
+  const current = elements.intentText.value.trim();
+  const next = expression.test(current)
+    ? current.replace(expression, "").replace(/\s{2,}/g, " ").trim()
+    : `${current}${current ? " " : ""}${keyword}`;
+  elements.intentText.value = next;
+  refreshProfile();
 }
 
 new PresetMutatorKnob(elements.mutationKnob, {
@@ -339,6 +405,12 @@ for (const element of [
 }
 
 elements.generateButton.addEventListener("click", generate);
+elements.newSetButton.addEventListener("click", generate);
+elements.previousSetButton.addEventListener("click", () => showResultSet(state.activeSetIndex - 1));
+elements.latestSetButton.addEventListener("click", () => showResultSet(state.resultSets.length - 1));
+document.querySelectorAll("[data-intent-keyword]").forEach((button) => {
+  button.addEventListener("click", () => toggleIntentKeyword(button.dataset.intentKeyword));
+});
 document.querySelectorAll("[data-pro-upsell]").forEach((link) => {
   link.addEventListener("click", () => {
     analyticsEvent("pro_upsell_click", { source: link.dataset.proUpsell });
@@ -347,3 +419,4 @@ document.querySelectorAll("[data-pro-upsell]").forEach((link) => {
 
 refreshProfile();
 renderPresets([]);
+renderResultSetToolbar();
