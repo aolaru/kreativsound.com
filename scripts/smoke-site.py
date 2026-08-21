@@ -61,12 +61,12 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "News", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
-            "/news/": ["Sounds", "What changed most recently", "The newest product moves, in order.", "Earlier updates", "Latest Sound Releases", "Practical Sound-Design Guides", "How to Use JUNO NOCTURNES for Dark Ambient"],
-            "/updates/": ["Product updates", "What changed at Kreativ Sound.", "Recent highlights", "Everything new, updated, and fixed.", "Preset Mutator is now fully free", "Wave Mutator beta v0.2.0", "Earlier updates"],
-            "/learn/": ["Sounds", "Practical guides now live with News.", "Browse practical guides", "Search guides"],
+            "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
+            "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
+            "/updates/": ["Kreativ Sound updates", "Releases, updates, and practical guides.", "Recent highlights", "Everything new, updated, and fixed.", "Preset Mutator is now fully free", "Wave Mutator beta v0.2.0", "Earlier updates", "Release notes", "Practical sound-design guides."],
+            "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
-            "/plugins/": ["Plugins", "Kreativ Sound plugins are coming soon.", "Coming soon", "View News", "Browse Sounds"],
+            "/plugins/": ["Plugins", "Kreativ Sound plugins are coming soon.", "Coming soon", "View Updates", "Browse Sounds"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
             "/privacy/": ["Privacy Policy", "Optional analytics", "Google Analytics", "Cloudflare Web Analytics"],

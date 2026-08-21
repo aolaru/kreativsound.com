@@ -66,7 +66,7 @@ function routeFromFile(filePath) {
     if (route === "/tools/kreativ-sample-prep/") {
       return null;
     }
-    if (route === "/sound/" || route.startsWith("/products/")) {
+    if (route === "/sound/" || route === "/news/" || route.startsWith("/products/")) {
       return null;
     }
     if (route.startsWith("/sounds/") && route !== "/sounds/") {
@@ -171,7 +171,7 @@ function priorityForRoute(route) {
   if (route === "/") return "1.0";
   if (route === "/sounds/") return "0.9";
   if (route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) return "0.8";
-  if (route === "/news/" || route === "/tools/" || route === "/plugins/") return "0.8";
+  if (route === "/updates/" || route === "/tools/" || route === "/plugins/") return "0.8";
   if (route.startsWith("/tools/")) return "0.8";
   if (route.startsWith("/sounds/")) return "0.8";
   if (route.startsWith("/posts/")) return "0.7";
@@ -179,14 +179,14 @@ function priorityForRoute(route) {
 }
 
 function changefreqForRoute(route) {
-  if (route === "/" || route === "/sounds/" || route === "/news/" || route === "/tools/" || route === "/plugins/" || route.startsWith("/tools/") || route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) {
+  if (route === "/" || route === "/sounds/" || route === "/updates/" || route === "/tools/" || route === "/plugins/" || route.startsWith("/tools/") || route === "/preset-mutator/" || route.startsWith("/preset-mutator/")) {
     return "weekly";
   }
   return "monthly";
 }
 
 function sortRoutes(a, b) {
-  const order = ["/", "/sounds/", "/news/", "/tools/", "/plugins/", "/preset-mutator/", "/preset-mutator/audio/", "/preset-mutator/mutate/", "/music/", "/about/", "/contact/"];
+  const order = ["/", "/sounds/", "/updates/", "/tools/", "/plugins/", "/preset-mutator/", "/preset-mutator/audio/", "/preset-mutator/mutate/", "/music/", "/about/", "/contact/"];
   const aIndex = order.indexOf(a);
   const bIndex = order.indexOf(b);
   if (aIndex !== -1 || bIndex !== -1) {

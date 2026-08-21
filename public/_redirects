@@ -1,5 +1,7 @@
 /sound /sounds/ 301!
 /sound/ /sounds/ 301!
+/news /updates/ 301!
+/news/ /updates/ 301!
 /sounds/:slug/ /sounds/:slug 301!
 /products/:slug /sounds/:slug 301!
 /products/:slug/ /sounds/:slug 301!

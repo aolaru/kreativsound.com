@@ -1,7 +1,12 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { siteUpdates, type SiteUpdateKind } from "../../lib/site-updates";
 
+const posts = (await getCollection("posts", ({ data }) => !data.draft))
+  .sort((a, b) => (b.data.published || "").localeCompare(a.data.published || ""));
+const guidePosts = posts.filter((post) => post.data.section === "learn");
+const releasePosts = posts.filter((post) => post.data.section === "news" && post.data.kind === "release");
 const latestUpdates = siteUpdates.slice(0, 10);
 const archivedUpdates = siteUpdates.slice(10);
 const highlights = siteUpdates.slice(1, 4);
@@ -32,31 +37,41 @@ function formatDate(date: string) {
     year: "numeric"
   });
 }
+
+function hrefFor(post: (typeof posts)[number]) {
+  return `/posts/${post.id.replace(/\.md$/, "")}.html`;
+}
+
+function imageFor(post: (typeof posts)[number]) {
+  return new URL(post.data.ogImage || "https://kreativsound.com/og-image.svg").pathname;
+}
 ---
 <BaseLayout
   title="Updates | Kreativ Sound"
-  description="Public log of Kreativ Sound additions, releases, improvements, and fixes across the catalog, tools, and website."
+  description="Kreativ Sound releases, practical sound-design guides, and the public log of catalog, tool, website, and reliability updates."
   canonical="https://kreativsound.com/updates/"
   activeNav="updates"
+  ogImage="https://kreativsound.com/assets/thumbs/juno-nocturnes.webp"
 >
   <section class="card page-main updates-page">
     <header class="updates-hero">
       <div>
-        <p class="eyebrow">Product updates</p>
-        <h1 class="page-title">What changed at Kreativ Sound.</h1>
-        <p class="page-lead">A public log of new releases, browser tools, catalog improvements, website updates, and fixes. News covers stories and guides; this page records the change itself.</p>
-        <div class="updates-quick-stats" aria-label="Update categories">
+        <p class="eyebrow">Kreativ Sound updates</p>
+        <h1 class="page-title">Releases, updates, and practical guides.</h1>
+        <p class="page-lead">The public home for new sound packs, browser tools, catalog improvements, website fixes, release notes, and focused sound-design workflows.</p>
+        <div class="updates-quick-stats" aria-label="Updates categories">
           <a href="#recent-log"><strong>{counts.new}</strong><span>New additions</span></a>
           <a href="#recent-log"><strong>{counts.release}</strong><span>Releases</span></a>
           <a href="#recent-log"><strong>{counts.update}</strong><span>Updates</span></a>
           <a href="#recent-log"><strong>{counts.fix}</strong><span>Fixes</span></a>
+          <a href="#guides"><strong>{guidePosts.length}</strong><span>Guides</span></a>
         </div>
       </div>
       <aside class="updates-direction" aria-label="Updates page scope">
-        <p class="product-section-kicker">Current scope</p>
-        <h2>Public, practical, and current.</h2>
-        <p>Entries capture visitor-visible changes. Internal experiments and routine maintenance stay out of the log unless they improve the live experience.</p>
-        <a href="/news/">Read release news <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        <p class="product-section-kicker">One shared record</p>
+        <h2>What changed, plus how to use it.</h2>
+        <p>Use the log for concise changes, release notes for context, and guides for practical sound-design decisions around the current catalog.</p>
+        <a href="#releases">Browse release notes <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
       </aside>
     </header>
 
@@ -82,9 +97,9 @@ function formatDate(date: string) {
 
     <section class="updates-log" id="recent-log" aria-labelledby="updates-log-title">
       <div class="updates-section-head">
-        <p class="product-section-kicker">Recent log</p>
+        <p class="product-section-kicker">Change log</p>
         <h2 id="updates-log-title">Everything new, updated, and fixed.</h2>
-        <p>The current public change record is kept newest first.</p>
+        <p>The public change record stays concise and newest first.</p>
       </div>
       <ul class="updates-log-list">
         {latestUpdates.map((item) => (
@@ -126,5 +141,61 @@ function formatDate(date: string) {
         </ul>
       </details>
     </section>
+
+    <div class="news-sections updates-editorial">
+      <section class="news-panel" id="releases" aria-labelledby="release-notes-title">
+        <div class="news-panel-head">
+          <p class="product-section-kicker">Release notes</p>
+          <h2 id="release-notes-title">The story behind recent releases.</h2>
+          <p>Launch context, catalog direction, and the details behind current sound packs and free drops.</p>
+        </div>
+        <ul class="news-card-list" id="release-notes-list" data-content-list>
+          {releasePosts.map((post) => (
+            <li>
+              <a class="news-card news-card-release" href={hrefFor(post)}>
+                <img class="news-card-art" src={imageFor(post)} alt={`${post.data.title} artwork`} width="96" height="96" loading="lazy" decoding="async" />
+                <span class="news-card-copy">
+                  <time datetime={post.data.published}>{formatDate(post.data.published)}</time>
+                  <span class="news-card-title">{post.data.title}</span>
+                  <span class="news-card-summary">{post.data.description}</span>
+                  <span class="news-card-action">Read release note <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <button class="button secondary content-list-toggle" type="button" data-content-toggle aria-controls="release-notes-list" aria-expanded="false" hidden>
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          <span>Show more release notes</span>
+        </button>
+      </section>
+
+      <section class="news-panel" id="guides" aria-labelledby="practical-guides-title">
+        <div class="news-panel-head">
+          <p class="product-section-kicker">Guides</p>
+          <h2 id="practical-guides-title">Practical sound-design guides.</h2>
+          <p>Direct workflows tied to current products, synths, and production decisions.</p>
+        </div>
+        <ul class="news-card-list" id="guide-list" data-content-list>
+          {guidePosts.map((post) => (
+            <li>
+              <a class="news-card news-card-release" href={hrefFor(post)}>
+                <img class="news-card-art" src={imageFor(post)} alt={`${post.data.title} artwork`} width="96" height="96" loading="lazy" decoding="async" />
+                <span class="news-card-copy">
+                  {post.data.published ? <time datetime={post.data.published}>{formatDate(post.data.published)}</time> : null}
+                  <span class="news-card-title">{post.data.title}</span>
+                  <span class="news-card-summary">{post.data.description}</span>
+                  <span class="news-card-action">Read guide <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <button class="button secondary content-list-toggle" type="button" data-content-toggle aria-controls="guide-list" aria-expanded="false" hidden>
+          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+          <span>Show more guides</span>
+        </button>
+      </section>
+    </div>
   </section>
 </BaseLayout>
