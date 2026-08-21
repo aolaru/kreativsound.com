@@ -53,7 +53,7 @@ jobs:
         run: npm run check:preset-mutator
 
       - name: Check Preset Mutator PRO
-        run: npm run check:preset-mutator-legacy-pro
+        run: npm run check:preset-mutator-pro
 
       - name: Check product assets
         run: python3 scripts/check-product-assets.py

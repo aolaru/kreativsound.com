@@ -1,6 +1,6 @@
 # Preset Mutator PRO
 
-This unlisted app preserves the paid Preset Mutator PRO workflow for verified customers who purchased it before the public tool became free.
+This unlisted app provides the paid Preset Mutator PRO workflow for verified customers.
 
 ## Public URL
 
@@ -8,7 +8,7 @@ This unlisted app preserves the paid Preset Mutator PRO workflow for verified cu
 /preset-mutator-pro/
 ```
 
-The app is `noindex` and must not be linked from the public site, product catalog, or Gumroad sales page.
+The app is `noindex`. Customers open it at this URL after purchasing and receiving their activation token.
 
 ## Customer License Token
 
@@ -23,5 +23,9 @@ The private signing key is stored under `private/` and is intentionally not comm
 ## Editing Notes
 
 - Keep this app isolated from `apps/preset-mutator/public/`, which is the free public tool.
-- Do not add checkout links to this legacy app.
-- Keep the signed-token verification path until all eligible Preset Mutator PRO customers have been fulfilled.
+- Do not add checkout links to this customer app.
+- Keep the signed-token verification path for all Preset Mutator PRO customers.
+
+## Versioning
+
+The repository pre-commit hook bumps the PRO patch version when staged changes include `apps/preset-mutator-pro/public/`. It updates all three PRO mode labels in the same commit. A deliberately staged version change is preserved, so release notes can set the version explicitly before commit.

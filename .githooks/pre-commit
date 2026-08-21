@@ -2,4 +2,4 @@
 
 set -eu
 
-node scripts/bump-preset-mutator-free-version.mjs --staged
+node scripts/bump-preset-mutator-pro-version.mjs --staged
