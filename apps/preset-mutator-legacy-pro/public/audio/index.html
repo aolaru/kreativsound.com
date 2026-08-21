@@ -119,6 +119,42 @@
         </div>
       </section>
 
+      <section class="panel paid-feature-panel workflow-activation" id="paid-feature-panel" aria-labelledby="paid-feature-title">
+        <div class="paid-feature-copy">
+          <p class="paid-feature-kicker">Preset Mutator PRO</p>
+          <h2 id="paid-feature-title">Your 32-variant workflow</h2>
+          <p class="paid-feature-ownership">Load a source, shape the mapping, then generate your Vital pack.</p>
+          <ol class="workflow-steps" aria-label="Preset generation steps">
+            <li>Load audio</li>
+            <li>Set mutation</li>
+            <li>Generate and export</li>
+          </ol>
+        </div>
+        <div class="paid-feature-actions" id="paid-feature-actions">
+          <p class="paid-feature-meta">Already own PRO? Enter the signed license token supplied with your purchase.</p>
+        </div>
+        <div class="paid-feature-unlock" id="paid-feature-unlock">
+          <label class="sr-only" for="paid-feature-key">Enter license token for Preset Mutator PRO</label>
+          <input id="paid-feature-key" type="text" placeholder="Enter your Preset Mutator PRO license token" autocomplete="off" />
+          <button class="button primary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Activate PRO</button>
+          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Your token is stored only in this browser. No account required.</p>
+        </div>
+        <div class="paid-feature-preview" id="paid-feature-preview" hidden>
+          <p class="paid-feature-preview-badge">Preset Mutator PRO active</p>
+          <p class="paid-feature-preview-note">Your license is active on this browser. Load audio, then generate 32 variants and download the ZIP.</p>
+          <div class="paid-feature-preview-actions">
+            <button class="button primary" id="generate-pack" type="button" disabled>
+              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+              Generate 32 PRO Variants
+            </button>
+            <button class="button secondary" id="download-pack" type="button" disabled>
+              <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
+              Download 32-Pack (.zip)
+            </button>
+          </div>
+        </div>
+      </section>
+
       <section class="workflow-grid workflow-grid-audio">
         <section class="panel upload-panel">
           <div class="section-head">
@@ -178,12 +214,6 @@
             <h2>Mutation Controls</h2>
             <p class="muted">Guide how the source gets interpreted. The variants stay inspired by the upload, not matched one-to-one.</p>
           </div>
-
-          <section class="control-section control-section-pro" aria-labelledby="pro-control-title">
-            <div class="control-section-head">
-              <p class="control-section-kicker">PRO controls</p>
-              <h3 id="pro-control-title">Source controls</h3>
-            </div>
 
             <div class="mutation-macro" aria-labelledby="mutation-amount-heading">
               <div class="mutation-macro-copy">
@@ -262,8 +292,6 @@
               </label>
             </div>
 
-          </section>
-
           <div class="status" id="status">Load a short audio file, then enter your PRO license token to unlock 32-variant generation.</div>
           </section>
         </section>
@@ -305,67 +333,7 @@
         </div>
         <p class="self-test-note" id="self-test-note" hidden>Self-test mode generated synthetic demo variants.</p>
         <div class="preset-list" id="preset-list">
-        <p class="empty-state">Load a short source sound, unlock PRO, then generate a 32-variant Vital preset pack.</p>
-        </div>
-      </section>
-
-      <section class="panel paid-feature-panel" id="paid-feature-panel" aria-labelledby="paid-feature-title">
-        <div class="paid-feature-copy">
-          <p class="paid-feature-kicker">Preset Mutator PRO</p>
-          <h2 id="paid-feature-title">Unlock your 32-variant workflow</h2>
-          <p class="paid-feature-ownership">Activate PRO on this browser with your license token.</p>
-          <div class="paid-benefit-grid" aria-label="Preset Mutator PRO benefits">
-            <div>
-              <strong>More variations</strong>
-              <span>Explore 32 variants from one source.</span>
-            </div>
-            <div>
-              <strong>Faster exploration</strong>
-              <span>Move through directions quickly.</span>
-            </div>
-            <div>
-              <strong>Export-ready</strong>
-              <span>Download Pro packs as ZIP.</span>
-            </div>
-            <div>
-              <strong>Serious design</strong>
-              <span>Better for focused preset sessions.</span>
-            </div>
-          </div>
-          <ul class="paid-feature-list">
-            <li>Audio to Preset 32 Pro variant generation</li>
-            <li>Preset mutation mode</li>
-            <li>From-scratch creation mode</li>
-            <li>One ZIP export</li>
-          </ul>
-        </div>
-        <div class="paid-feature-actions" id="paid-feature-actions">
-          <button class="button secondary paid-feature-toggle" id="paid-feature-toggle" type="button" aria-expanded="false" aria-controls="paid-feature-unlock">
-            <i class="fa-solid fa-key" aria-hidden="true"></i>
-            Enter license token
-          </button>
-          <p class="paid-feature-meta">PRO access is for verified purchasers. Enter the signed license token supplied with your purchase.</p>
-        </div>
-        <div class="paid-feature-unlock" id="paid-feature-unlock" hidden>
-          <label class="sr-only" for="paid-feature-key">Preset Mutator license token</label>
-          <input id="paid-feature-key" type="text" placeholder="Enter your Preset Mutator license token" autocomplete="off" />
-          <button class="button secondary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Unlock Pro</button>
-          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Enter your license token after purchase. No account required.</p>
-        </div>
-        <div class="paid-feature-preview" id="paid-feature-preview" hidden>
-          <p class="paid-feature-preview-badge">Preset Mutator PRO active</p>
-          <p class="paid-feature-preview-note">This browser is unlocked for Preset Mutator PRO.</p>
-          <div class="paid-feature-preview-actions">
-            <button class="button primary" id="generate-pack" type="button" disabled>
-              <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-              Generate 32 PRO Variants
-            </button>
-            <button class="button secondary" id="download-pack" type="button" disabled>
-              <i class="fa-solid fa-file-zipper" aria-hidden="true"></i>
-              Download 32-Pack (.zip)
-            </button>
-            <p class="paid-feature-download-note">Downloads 32 `.vital` files in one ZIP.</p>
-          </div>
+        <p class="empty-state">Load a short source sound, activate PRO, then generate a 32-variant Vital preset pack.</p>
         </div>
       </section>
 

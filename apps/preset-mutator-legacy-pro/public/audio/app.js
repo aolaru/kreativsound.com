@@ -68,7 +68,6 @@ const elements = {
   presetsPanel: document.querySelector("#presets-panel"),
   paidFeaturePanel: document.querySelector("#paid-feature-panel"),
   paidFeatureActions: document.querySelector("#paid-feature-actions"),
-  paidFeatureToggle: document.querySelector("#paid-feature-toggle"),
   paidFeatureUnlock: document.querySelector("#paid-feature-unlock"),
   paidFeatureKey: document.querySelector("#paid-feature-key"),
   paidFeatureUnlockButton: document.querySelector("#paid-feature-unlock-button"),
@@ -697,7 +696,12 @@ function renderPresets(presets) {
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
   elements.presetsPanel.classList.toggle("is-pack", presets.length > 0);
   if (!presets.length) {
-    elements.presetList.innerHTML = `<p class="empty-state">No variants generated yet.</p>`;
+    const emptyMessage = !state.originalBuffer
+      ? "Load a short source sound to begin."
+      : state.proPreviewUnlocked
+        ? "Source ready. Generate a 32-variant Vital preset pack."
+        : "Source ready. Activate PRO to generate a 32-variant Vital preset pack.";
+    elements.presetList.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
     return;
   }
 
@@ -1145,9 +1149,17 @@ function renderPaidFeatureState() {
   const unlocked = state.proPreviewUnlocked;
   elements.paidFeaturePanel.classList.toggle("is-unlocked", unlocked);
   elements.paidFeatureActions.hidden = unlocked;
-  elements.paidFeatureUnlock.hidden = true;
+  elements.paidFeatureUnlock.hidden = unlocked;
   elements.paidFeaturePreview.hidden = !unlocked;
-  elements.paidFeatureToggle.setAttribute("aria-expanded", "false");
+  updateStatus(
+    unlocked
+      ? state.originalBuffer
+        ? "PRO is active. Source ready for 32-variant generation."
+        : "PRO is active. Load a short audio file to begin."
+      : state.originalBuffer
+        ? "Source ready. Activate PRO to generate 32 variants."
+        : "Load a short audio file, activate PRO, then generate 32 variants.",
+  );
 }
 
 function setAnalysisVisible(visible) {
@@ -1159,23 +1171,6 @@ function setAnalysisVisible(visible) {
 
 function toggleAnalysisVisibility() {
   setAnalysisVisible(elements.analysisContent.hidden);
-}
-
-function togglePaidFeatureUnlock() {
-  if (state.proPreviewUnlocked) {
-    return;
-  }
-  const isOpen = !elements.paidFeatureUnlock.hidden;
-  elements.paidFeatureUnlock.hidden = isOpen;
-  elements.paidFeatureToggle.setAttribute("aria-expanded", String(!isOpen));
-  if (isOpen) {
-    analyticsEvent("unlock_panel_close");
-  } else {
-    analyticsEvent("unlock_panel_open");
-  }
-  if (!isOpen) {
-    elements.paidFeatureKey.focus();
-  }
 }
 
 async function handlePaidFeatureUnlock() {
@@ -1199,6 +1194,7 @@ async function handlePaidFeatureUnlock() {
   state.license = result.payload;
   saveLicenseToken(key);
   renderPaidFeatureState();
+  renderPresets(state.presets);
   updateStatus(`Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}.`);
   setReady(Boolean(state.originalBuffer));
   analyticsEvent("unlock_attempt", { result: "success" });
@@ -1228,7 +1224,6 @@ elements.waveformPanel.addEventListener("drop", handleDropZoneDrop);
 elements.waveform.addEventListener("click", handleWaveformSeek);
 elements.playToggle.addEventListener("click", handlePlayToggle);
 elements.analysisToggle.addEventListener("click", toggleAnalysisVisibility);
-elements.paidFeatureToggle.addEventListener("click", togglePaidFeatureUnlock);
 elements.paidFeatureUnlockButton.addEventListener("click", () => {
   handlePaidFeatureUnlock();
 });
@@ -1267,6 +1262,7 @@ for (const control of [
 updateControlLabels();
 await restoreLicense();
 renderPaidFeatureState();
+renderPresets([]);
 setAnalysisVisible(false);
 updatePlaybackUI();
 setReady(false);

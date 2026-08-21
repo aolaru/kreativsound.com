@@ -51,7 +51,6 @@ const elements = {
   presetsPanel: document.querySelector("#presets-panel"),
   paidFeaturePanel: document.querySelector("#paid-feature-panel"),
   paidFeatureActions: document.querySelector("#paid-feature-actions"),
-  paidFeatureToggle: document.querySelector("#paid-feature-toggle"),
   paidFeatureUnlock: document.querySelector("#paid-feature-unlock"),
   paidFeatureKey: document.querySelector("#paid-feature-key"),
   paidFeatureUnlockButton: document.querySelector("#paid-feature-unlock-button"),
@@ -190,7 +189,10 @@ function renderPresets(presets) {
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
   elements.presetsPanel.classList.toggle("is-pack", presets.length > 0);
   if (!presets.length) {
-    elements.presetList.innerHTML = `<p class="empty-state">Unlock PRO, then generate a 32-variant Vital preset pack from your selected direction.</p>`;
+    const emptyMessage = state.proUnlocked
+      ? "Choose your direction, then generate a 32-variant Vital preset pack."
+      : "Activate PRO, then generate a 32-variant Vital preset pack from your selected direction.";
+    elements.presetList.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
     return;
   }
 
@@ -370,25 +372,15 @@ function generate() {
 function renderUnlockState() {
   elements.paidFeaturePanel.classList.toggle("is-unlocked", state.proUnlocked);
   elements.paidFeatureActions.hidden = state.proUnlocked;
-  elements.paidFeatureUnlock.hidden = true;
+  elements.paidFeatureUnlock.hidden = state.proUnlocked;
   elements.paidFeaturePreview.hidden = !state.proUnlocked;
-  elements.paidFeatureToggle?.setAttribute("aria-expanded", "false");
+  updateStatus(
+    state.proUnlocked
+      ? "PRO is active. Generate your 32-variant Vital preset pack when ready."
+      : "Set your direction, activate PRO, then generate your 32-variant Vital preset pack.",
+  );
   if (elements.generatePack) {
     elements.generatePack.disabled = !state.proUnlocked || state.isGenerating;
-  }
-}
-
-function toggleUnlock() {
-  const isOpen = !elements.paidFeatureUnlock.hidden;
-  elements.paidFeatureUnlock.hidden = isOpen;
-  elements.paidFeatureToggle.setAttribute("aria-expanded", String(!isOpen));
-  if (isOpen) {
-    analyticsEvent("unlock_panel_close");
-  } else {
-    analyticsEvent("unlock_panel_open");
-  }
-  if (!isOpen) {
-    elements.paidFeatureKey.focus();
   }
 }
 
@@ -412,6 +404,7 @@ async function unlockPro() {
   state.license = result.payload;
   saveLicenseToken(code);
   renderUnlockState();
+  renderPresets(state.presets);
   updateStatus(`Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}.`);
   analyticsEvent("unlock_attempt", { result: "success" });
 }
@@ -464,7 +457,6 @@ for (const element of [
 
 elements.generatePack?.addEventListener("click", generate);
 elements.downloadPack?.addEventListener("click", downloadPack);
-elements.paidFeatureToggle?.addEventListener("click", toggleUnlock);
 elements.paidFeatureUnlockButton?.addEventListener("click", () => {
   unlockPro();
 });
