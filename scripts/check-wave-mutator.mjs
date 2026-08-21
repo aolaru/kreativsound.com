@@ -40,6 +40,11 @@ if (!errors.length) {
     "cancelBatch",
     "createManifestText",
     "MAX_QUEUE_FILES",
+    "SUPPORTED_AUDIO_FORMATS",
+    "undoWorkspaceEdit",
+    "snapRatioToZeroCrossing",
+    "exportCleanupSettings",
+    "reorderQueue",
   ]) {
     if (!app.includes(expectedFeature)) {
       fail(`Wave Mutator app is missing expected release feature: ${expectedFeature}.`);

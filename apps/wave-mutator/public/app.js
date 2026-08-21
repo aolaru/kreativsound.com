@@ -24,6 +24,12 @@ const state = {
   montageOutput: null,
   cancelRequested: false,
   queueLimitNotice: "",
+  waveformZoom: 1,
+  waveformViewStart: 0,
+  undoStack: [],
+  redoStack: [],
+  pendingHistory: null,
+  queueDragId: null,
 };
 
 const elements = {
@@ -37,6 +43,12 @@ const elements = {
   clearQueueButton: document.querySelector("#clear-queue-button"),
   statusMessage: document.querySelector("#status-message"),
   waveform: document.querySelector("#waveform"),
+  waveformZoomOut: document.querySelector("#waveform-zoom-out"),
+  waveformZoomIn: document.querySelector("#waveform-zoom-in"),
+  waveformZoomFit: document.querySelector("#waveform-zoom-fit"),
+  waveformZoomValue: document.querySelector("#waveform-zoom-value"),
+  undoButton: document.querySelector("#undo-button"),
+  redoButton: document.querySelector("#redo-button"),
   progressFill: document.querySelector("#progress-fill"),
   playPauseButton: document.querySelector("#play-pause-button"),
   stopButton: document.querySelector("#stop-button"),
@@ -59,6 +71,7 @@ const elements = {
   trimStartTime: document.querySelector("#trim-start-time"),
   trimEndTime: document.querySelector("#trim-end-time"),
   manualTrimReset: document.querySelector("#manual-trim-reset"),
+  snapZeroCrossings: document.querySelector("#snap-zero-crossings"),
   trimSilence: document.querySelector("#trim-silence"),
   trimThreshold: document.querySelector("#trim-threshold"),
   trimThresholdValue: document.querySelector("#trim-threshold-value"),
@@ -75,6 +88,11 @@ const elements = {
   resetPreviewButton: document.querySelector("#reset-preview-button"),
   saveFileOverrideButton: document.querySelector("#save-file-override-button"),
   resetFileOverrideButton: document.querySelector("#reset-file-override-button"),
+  applySuggestionButton: document.querySelector("#apply-suggestion-button"),
+  cleanupSuggestionText: document.querySelector("#cleanup-suggestion-text"),
+  exportSettingsButton: document.querySelector("#export-settings-button"),
+  importSettingsButton: document.querySelector("#import-settings-button"),
+  settingsFileInput: document.querySelector("#settings-file-input"),
   analysisWarnings: document.querySelector("#analysis-warnings"),
   reportTrimmed: document.querySelector("#report-trimmed"),
   reportFade: document.querySelector("#report-fade"),
@@ -109,6 +127,13 @@ const MAX_QUEUE_FILES = 120;
 const MAX_INPUT_BYTES = 1024 * 1024 * 1024;
 const MAX_DECODED_BYTES = 1536 * 1024 * 1024;
 const DEFAULT_TRIM_WINDOW_MS = 10;
+const HISTORY_LIMIT = 40;
+const SUPPORTED_AUDIO_FORMATS = {
+  wav: { label: "WAV", extensions: [".wav"], types: ["audio/wav", "audio/wave", "audio/x-wav"] },
+  aiff: { label: "AIFF", extensions: [".aif", ".aiff"], types: ["audio/aiff", "audio/x-aiff"] },
+  flac: { label: "FLAC", extensions: [".flac"], types: ["audio/flac"] },
+  mp3: { label: "MP3", extensions: [".mp3"], types: ["audio/mpeg", "audio/mp3"] },
+};
 
 const CLEANUP_PRESETS = {
   gentle: {
@@ -257,9 +282,21 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
-function isLikelyWav(file) {
+function getSupportedAudioFormat(file) {
+  const fileName = file.name.toLowerCase();
   const type = file.type.toLowerCase();
-  return file.name.toLowerCase().endsWith(".wav") || type === "audio/wav" || type === "audio/wave" || type === "audio/x-wav";
+  return Object.entries(SUPPORTED_AUDIO_FORMATS).find(([, format]) => {
+    return format.extensions.some((extension) => fileName.endsWith(extension)) || format.types.includes(type);
+  })?.[0] || null;
+}
+
+function getAudioFormatLabel(file) {
+  const format = getSupportedAudioFormat(file);
+  return format ? SUPPORTED_AUDIO_FORMATS[format].label : "Audio";
+}
+
+function isLikelySupportedAudio(file) {
+  return Boolean(getSupportedAudioFormat(file));
 }
 
 function getSelectedFile() {
@@ -306,6 +343,127 @@ function getSettings() {
     targetPeakDb,
     detectClipping: elements.detectClipping.checked,
   };
+}
+
+function applySettingsToControls(settings) {
+  elements.trimSilence.checked = Boolean(settings.trimSilence);
+  elements.trimThreshold.value = clamp(Number(settings.trimThresholdDb), -80, -20);
+  elements.trimMinSilence.value = clamp(Number(settings.trimMinSilenceMs), 10, 1000);
+  elements.trimPadding.value = clamp(Number(settings.trimPaddingMs), 0, 500);
+  elements.fadeEnabled.checked = Boolean(settings.fadeEnabled);
+  elements.fadeMs.value = clamp(Number(settings.fadeMs), 0, 500);
+  elements.normalizeEnabled.checked = Boolean(settings.normalizeEnabled);
+  elements.targetPeak.value = clamp(Number(settings.targetPeakDb), -24, 0);
+  elements.detectClipping.checked = Boolean(settings.detectClipping);
+  updateControlLabels();
+  syncCleanupPresetUi();
+}
+
+function captureWorkspaceState() {
+  return {
+    settings: getSettings(),
+    selectedId: state.selectedId,
+    files: state.files.map((file) => ({
+      id: file.id,
+      trimStartRatio: file.trimStartRatio ?? 0,
+      trimEndRatio: file.trimEndRatio ?? 1,
+      exportSelected: file.exportSelected !== false,
+      settingsOverride: file.settingsOverride ? { ...file.settingsOverride } : null,
+    })),
+  };
+}
+
+function workspaceStatesMatch(left, right) {
+  return JSON.stringify(left) === JSON.stringify(right);
+}
+
+function pushWorkspaceHistory(snapshot, label) {
+  if (workspaceStatesMatch(snapshot, captureWorkspaceState())) {
+    return;
+  }
+  state.undoStack.push({ label, snapshot });
+  if (state.undoStack.length > HISTORY_LIMIT) {
+    state.undoStack.shift();
+  }
+  state.redoStack = [];
+}
+
+function beginWorkspaceEdit(label) {
+  if (isExportBusy() || state.pendingHistory) {
+    return;
+  }
+  state.pendingHistory = { label, snapshot: captureWorkspaceState() };
+}
+
+function commitWorkspaceEdit() {
+  const pending = state.pendingHistory;
+  state.pendingHistory = null;
+  if (!pending) {
+    return;
+  }
+  pushWorkspaceHistory(pending.snapshot, pending.label);
+}
+
+function invalidateProcessedPreviews() {
+  stopPlayback();
+  for (const file of state.files) {
+    file.processedBuffer = null;
+    file.processedAnalysis = null;
+    file.processReport = null;
+    file.waveformCache.processed = null;
+    file.batchStatus = "ready";
+  }
+  state.previewMode = "original";
+  state.montageOutput = null;
+}
+
+function restoreWorkspaceState(snapshot) {
+  applySettingsToControls(snapshot.settings);
+  const currentFiles = [...state.files];
+  const savedFiles = new Map(snapshot.files.map((file) => [file.id, file]));
+  state.files = snapshot.files
+    .map((savedFile) => {
+      const current = currentFiles.find((file) => file.id === savedFile.id);
+      if (!current) {
+        return null;
+      }
+      current.trimStartRatio = savedFile.trimStartRatio;
+      current.trimEndRatio = savedFile.trimEndRatio;
+      current.exportSelected = savedFile.exportSelected;
+      current.settingsOverride = savedFile.settingsOverride ? { ...savedFile.settingsOverride } : null;
+      return current;
+    })
+    .filter(Boolean);
+  // Keep files added after a history entry, but do not lose their decoded local audio.
+  for (const file of currentFiles.filter((file) => !savedFiles.has(file.id))) {
+    state.files.push(file);
+  }
+  state.selectedId = state.files.some((file) => file.id === snapshot.selectedId)
+    ? snapshot.selectedId
+    : state.files[0]?.id || null;
+  invalidateProcessedPreviews();
+}
+
+function undoWorkspaceEdit() {
+  if (isExportBusy() || !state.undoStack.length) {
+    return;
+  }
+  const entry = state.undoStack.pop();
+  state.redoStack.push({ label: entry.label, snapshot: captureWorkspaceState() });
+  restoreWorkspaceState(entry.snapshot);
+  setStatus(`Undid ${entry.label}.`);
+  updateUi();
+}
+
+function redoWorkspaceEdit() {
+  if (isExportBusy() || !state.redoStack.length) {
+    return;
+  }
+  const entry = state.redoStack.pop();
+  state.undoStack.push({ label: entry.label, snapshot: captureWorkspaceState() });
+  restoreWorkspaceState(entry.snapshot);
+  setStatus(`Redid ${entry.label}.`);
+  updateUi();
 }
 
 function getSettingsForFile(file) {
@@ -378,6 +536,7 @@ function applyCleanupPreset(presetName) {
     return;
   }
 
+  const historySnapshot = captureWorkspaceState();
   elements.trimSilence.checked = preset.trimSilence;
   elements.trimThreshold.value = preset.trimThresholdDb;
   elements.trimMinSilence.value = preset.trimMinSilenceMs;
@@ -393,11 +552,59 @@ function applyCleanupPreset(presetName) {
   const selected = getSelectedFile();
   if (selected) {
     clearProcessedPreview(`Cleanup Strength set to ${preset.label}. Apply processing preview to audition it.`);
+    pushWorkspaceHistory(historySnapshot, "cleanup preset");
+    updateUi();
     return;
   }
 
-  setStatus(`Cleanup Strength set to ${preset.label}. Load a WAV file to audition it.`);
+  setStatus(`Cleanup Strength set to ${preset.label}. Load an audio file to audition it.`);
+  pushWorkspaceHistory(historySnapshot, "cleanup preset");
   updateUi();
+}
+
+function getCleanupSuggestion(file = getSelectedFile()) {
+  if (!file?.originalAnalysis) {
+    return null;
+  }
+  const analysis = file.originalAnalysis;
+  const edgeSilence = analysis.leadingSilenceSeconds + analysis.trailingSilenceSeconds;
+  if (analysis.clippedSamples > 0) {
+    return {
+      preset: "gentle",
+      text: "Gentle is recommended: clipping is present, so preserve the source while cleaning its edges.",
+    };
+  }
+  if (edgeSilence > 0.35) {
+    return {
+      preset: "tight",
+      text: "Tight is recommended: this file has noticeable silence at its edges.",
+    };
+  }
+  if (analysis.rmsDb < -36) {
+    return {
+      preset: "standard",
+      text: "Standard is recommended: normalization can improve its peak level while retaining a safe tail.",
+    };
+  }
+  return {
+    preset: "standard",
+    text: "Standard is recommended as a balanced local cleanup starting point.",
+  };
+}
+
+function renderCleanupSuggestion() {
+  const suggestion = getCleanupSuggestion();
+  elements.applySuggestionButton.disabled = !suggestion || isExportBusy();
+  elements.cleanupSuggestionText.textContent = suggestion?.text || "Load an audio file to get a local suggestion.";
+  elements.applySuggestionButton.textContent = suggestion ? `Use ${CLEANUP_PRESETS[suggestion.preset].label}` : "Use suggestion";
+}
+
+function applyCleanupSuggestion() {
+  const suggestion = getCleanupSuggestion();
+  if (!suggestion) {
+    return;
+  }
+  applyCleanupPreset(suggestion.preset);
 }
 
 function scrollToWorkflowTarget(targetSelector) {
@@ -469,7 +676,7 @@ function getQueueDecodedBytes() {
 
 function canAddFile(file, queuedCount = state.files.length, queuedBytes = getQueueInputBytes()) {
   if (queuedCount >= MAX_QUEUE_FILES) {
-    return `Queue limit reached: ${MAX_QUEUE_FILES} WAV files maximum.`;
+    return `Queue limit reached: ${MAX_QUEUE_FILES} audio files maximum.`;
   }
   if (queuedBytes + file.size > MAX_INPUT_BYTES) {
     return `Queue limit reached: input files are capped at ${formatBytes(MAX_INPUT_BYTES)}.`;
@@ -483,11 +690,11 @@ async function loadFiles(fileList) {
     return;
   }
 
-  const wavFiles = files.filter(isLikelyWav);
-  const rejectedCount = files.length - wavFiles.length;
+  const audioFiles = files.filter(isLikelySupportedAudio);
+  const rejectedCount = files.length - audioFiles.length;
 
-  if (!wavFiles.length) {
-    setStatus("No WAV files found. This beta currently accepts WAV files only.", "error");
+  if (!audioFiles.length) {
+    setStatus("No supported audio files found. Choose WAV, AIFF, FLAC, or MP3 files.", "error");
     return;
   }
 
@@ -495,7 +702,7 @@ async function loadFiles(fileList) {
   let limitMessage = "";
   let queuedCount = state.files.length;
   let queuedBytes = getQueueInputBytes();
-  for (const file of wavFiles) {
+  for (const file of audioFiles) {
     const reason = canAddFile(file, queuedCount, queuedBytes);
     if (reason) {
       limitMessage = reason;
@@ -511,7 +718,7 @@ async function loadFiles(fileList) {
     return;
   }
 
-  setStatus(`Decoding ${acceptedFiles.length} WAV ${acceptedFiles.length === 1 ? "file" : "files"} locally...`);
+  setStatus(`Decoding ${acceptedFiles.length} audio ${acceptedFiles.length === 1 ? "file" : "files"} locally...`);
   state.montageOutput = null;
   state.queueLimitNotice = "";
 
@@ -523,6 +730,7 @@ async function loadFiles(fileList) {
         id: state.nextId,
         file,
         name: file.name,
+        format: getAudioFormatLabel(file),
         size: file.size,
         audioBuffer,
         originalAnalysis: analyzeBuffer(audioBuffer),
@@ -553,7 +761,7 @@ async function loadFiles(fileList) {
       }
     } catch (error) {
       console.error(error);
-      setStatus(`Could not decode "${file.name}". Try a standard PCM WAV file.`, "error");
+      setStatus(`Could not decode "${file.name}". Browser audio support varies by format; try WAV or AIFF for the most reliable import.`, "error");
     }
   }
 
@@ -561,10 +769,12 @@ async function loadFiles(fileList) {
     selectFile(state.files[0].id);
   }
 
-  const rejectedMessage = rejectedCount ? ` ${rejectedCount} non-WAV ${rejectedCount === 1 ? "file was" : "files were"} skipped.` : "";
+  const rejectedMessage = rejectedCount ? ` ${rejectedCount} unsupported ${rejectedCount === 1 ? "file was" : "files were"} skipped.` : "";
   if (loadedCount) {
     const limitSuffix = limitMessage || state.queueLimitNotice ? ` ${limitMessage || state.queueLimitNotice}` : "";
-    setStatus(`Loaded ${loadedCount} WAV ${loadedCount === 1 ? "file" : "files"}.${rejectedMessage}${limitSuffix}`, "success");
+    const lossyCount = state.files.filter((sampleFile) => sampleFile.format === "MP3").length;
+    const lossySuffix = lossyCount ? ` ${lossyCount} MP3 ${lossyCount === 1 ? "source is" : "sources are"} lossy and will export as WAV.` : "";
+    setStatus(`Loaded ${loadedCount} audio ${loadedCount === 1 ? "file" : "files"}.${rejectedMessage}${lossySuffix}${limitSuffix}`, "success");
   }
 
   elements.fileInput.value = "";
@@ -595,6 +805,38 @@ function renderFileList() {
 
   for (const file of state.files) {
     const item = document.createElement("li");
+    item.draggable = !isExportBusy();
+    item.classList.toggle("is-dragging", state.queueDragId === file.id);
+    item.dataset.fileId = String(file.id);
+    item.title = "Drag to change the queue order.";
+    item.addEventListener("dragstart", (event) => {
+      if (isExportBusy()) {
+        event.preventDefault();
+        return;
+      }
+      beginWorkspaceEdit("queue order");
+      state.queueDragId = file.id;
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", String(file.id));
+      item.classList.add("is-dragging");
+    });
+    item.addEventListener("dragover", (event) => {
+      if (state.queueDragId && state.queueDragId !== file.id) {
+        event.preventDefault();
+        item.classList.add("is-drag-over");
+      }
+    });
+    item.addEventListener("dragleave", () => item.classList.remove("is-drag-over"));
+    item.addEventListener("drop", (event) => {
+      event.preventDefault();
+      item.classList.remove("is-drag-over");
+      reorderQueue(state.queueDragId, file.id);
+    });
+    item.addEventListener("dragend", () => {
+      state.queueDragId = null;
+      commitWorkspaceEdit();
+      updateUi();
+    });
     const button = document.createElement("button");
     button.type = "button";
     button.classList.toggle("is-selected", file.id === state.selectedId);
@@ -609,7 +851,7 @@ function renderFileList() {
 
     const meta = document.createElement("span");
     meta.className = "file-meta";
-    meta.textContent = `${formatDuration(file.audioBuffer.duration)} | ${file.audioBuffer.sampleRate.toLocaleString()} Hz | ${file.audioBuffer.numberOfChannels} ${file.audioBuffer.numberOfChannels === 1 ? "channel" : "channels"}`;
+    meta.textContent = `${file.format || "Audio"} | ${formatDuration(file.audioBuffer.duration)} | ${file.audioBuffer.sampleRate.toLocaleString()} Hz | ${file.audioBuffer.numberOfChannels} ${file.audioBuffer.numberOfChannels === 1 ? "channel" : "channels"}`;
 
     const badges = document.createElement("span");
     badges.className = "file-badges";
@@ -633,7 +875,9 @@ function renderFileList() {
     include.checked = file.exportSelected !== false;
     include.setAttribute("aria-label", `Include ${file.name} in batch export`);
     include.addEventListener("change", () => {
+      beginWorkspaceEdit("export selection");
       file.exportSelected = include.checked;
+      commitWorkspaceEdit();
       updateUi();
     });
     includeLabel.append(include, document.createTextNode("Export"));
@@ -649,6 +893,22 @@ function renderFileList() {
     item.append(button, queueActions);
     elements.fileList.appendChild(item);
   }
+}
+
+function reorderQueue(sourceId, targetId) {
+  if (isExportBusy() || !sourceId || sourceId === targetId) {
+    return;
+  }
+  const sourceIndex = state.files.findIndex((file) => file.id === sourceId);
+  const targetIndex = state.files.findIndex((file) => file.id === targetId);
+  if (sourceIndex < 0 || targetIndex < 0) {
+    return;
+  }
+  const [movedFile] = state.files.splice(sourceIndex, 1);
+  const insertionIndex = sourceIndex < targetIndex ? targetIndex - 1 : targetIndex;
+  state.files.splice(insertionIndex, 0, movedFile);
+  state.montageOutput = null;
+  setStatus(`Moved ${movedFile.name} in the export queue.`);
 }
 
 function removeFile(id) {
@@ -698,12 +958,16 @@ function getFileBadges(file) {
   };
   const badges = [statusMap[status] || statusMap.ready];
 
+  if (file.exportSelected === false) {
+    badges.unshift({ label: "Excluded", type: "neutral" });
+  }
+
   if (file.originalAnalysis?.clippedSamples > 0) {
-    badges.push({ label: "Clips", type: "danger" });
+    badges.push({ label: "Clipping", type: "danger" });
   }
 
   if ((file.trimStartRatio ?? 0) > 0 || (file.trimEndRatio ?? 1) < 1) {
-    badges.push({ label: "Trim", type: "warning" });
+    badges.push({ label: "Manual trim", type: "warning" });
   }
 
   if (file.settingsOverride) {
@@ -927,7 +1191,7 @@ function renderPreflight() {
   const selectedFiles = getSelectedExportFiles();
 
   if (!state.files.length) {
-    elements.preflightSummary.textContent = "Load WAV files to check the pack.";
+    elements.preflightSummary.textContent = "Load audio files to check the pack.";
     const emptyRow = document.createElement("tr");
     const emptyCell = appendPreflightCell(emptyRow, "No files loaded yet.", "empty-state");
     emptyCell.colSpan = 7;
@@ -1252,14 +1516,38 @@ function processAudioBuffer(inputBuffer, settings = getSettings(), trimRange = {
   };
 }
 
-function buildWaveformPeaks(buffer, width) {
+function getWaveformView() {
+  const zoom = clamp(state.waveformZoom, 1, 16);
+  const viewLength = 1 / zoom;
+  return {
+    start: clamp(state.waveformViewStart, 0, 1 - viewLength),
+    end: clamp(state.waveformViewStart, 0, 1 - viewLength) + viewLength,
+    length: viewLength,
+  };
+}
+
+function setWaveformZoom(nextZoom) {
+  const file = getSelectedFile();
+  const oldView = getWaveformView();
+  const focus = file
+    ? clamp((getPlaybackPosition() / Math.max(file.audioBuffer.duration, 0.001)) || (oldView.start + oldView.length / 2), 0, 1)
+    : 0.5;
+  state.waveformZoom = clamp(nextZoom, 1, 16);
+  const nextLength = 1 / state.waveformZoom;
+  state.waveformViewStart = clamp(focus - nextLength / 2, 0, 1 - nextLength);
+  updateUi();
+}
+
+function buildWaveformPeaks(buffer, width, startRatio = 0, endRatio = 1) {
   const pointCount = Math.max(1, Math.floor(width));
-  const samplesPerPoint = Math.max(1, Math.floor(buffer.length / pointCount));
+  const sourceStart = clamp(Math.floor(startRatio * buffer.length), 0, buffer.length - 1);
+  const sourceEnd = clamp(Math.ceil(endRatio * buffer.length), sourceStart + 1, buffer.length);
+  const samplesPerPoint = Math.max(1, Math.floor((sourceEnd - sourceStart) / pointCount));
   const peaks = new Array(pointCount);
 
   for (let point = 0; point < pointCount; point += 1) {
-    const start = point * samplesPerPoint;
-    const end = point === pointCount - 1 ? buffer.length : Math.min(buffer.length, start + samplesPerPoint);
+    const start = sourceStart + point * samplesPerPoint;
+    const end = point === pointCount - 1 ? sourceEnd : Math.min(sourceEnd, start + samplesPerPoint);
     let min = 1;
     let max = -1;
 
@@ -1288,7 +1576,10 @@ function buildWaveformPeaks(buffer, width) {
   };
 }
 
-function getWaveformPeaks(file, buffer, mode, width) {
+function getWaveformPeaks(file, buffer, mode, width, view) {
+  if (state.waveformZoom > 1) {
+    return buildWaveformPeaks(buffer, width, view.start, view.end).peaks;
+  }
   const cache = file.waveformCache[mode];
   const pointWidth = Math.max(1, Math.floor(width));
   if (cache && cache.width === pointWidth) {
@@ -1351,7 +1642,8 @@ function drawWaveform() {
   context.clearRect(0, 0, width, height);
 
   const mode = state.previewMode === "processed" && file.processedBuffer ? "processed" : "original";
-  const peaks = getWaveformPeaks(file, buffer, mode, width);
+  const view = getWaveformView();
+  const peaks = getWaveformPeaks(file, buffer, mode, width, view);
   const center = height / 2;
   const verticalScale = height * 0.43;
 
@@ -1389,36 +1681,46 @@ function drawWaveform() {
   context.stroke();
 
   const trimRange = getManualTrimRange(file);
-  const startX = trimRange.startRatio * width;
-  const endX = trimRange.endRatio * width;
+  const startX = ((trimRange.startRatio - view.start) / view.length) * width;
+  const endX = ((trimRange.endRatio - view.start) / view.length) * width;
   context.fillStyle = "rgba(255, 51, 102, 0.18)";
-  context.fillRect(0, 0, startX, height);
-  context.fillRect(endX, 0, width - endX, height);
+  context.fillRect(0, 0, clamp(startX, 0, width), height);
+  context.fillRect(clamp(endX, 0, width), 0, Math.max(0, width - endX), height);
   context.fillStyle = "rgba(74, 74, 255, 0.12)";
-  context.fillRect(startX, 0, Math.max(0, endX - startX), height);
+  context.fillRect(clamp(startX, 0, width), 0, Math.max(0, clamp(endX, 0, width) - clamp(startX, 0, width)), height);
   context.strokeStyle = "#4a4aff";
   context.lineWidth = 3;
   context.beginPath();
-  context.moveTo(startX, 0);
-  context.lineTo(startX, height);
-  context.moveTo(endX, 0);
-  context.lineTo(endX, height);
+  if (startX >= 0 && startX <= width) {
+    context.moveTo(startX, 0);
+    context.lineTo(startX, height);
+  }
+  if (endX >= 0 && endX <= width) {
+    context.moveTo(endX, 0);
+    context.lineTo(endX, height);
+  }
   context.stroke();
 
   context.fillStyle = "#ffffff";
-  context.fillRect(startX - 4, 10, 8, 34);
-  context.fillRect(endX - 4, 10, 8, 34);
+  if (startX >= 0 && startX <= width) {
+    context.fillRect(startX - 4, 10, 8, 34);
+  }
+  if (endX >= 0 && endX <= width) {
+    context.fillRect(endX - 4, 10, 8, 34);
+  }
 
   const progress = buffer.duration > 0 ? getPlaybackPosition() / buffer.duration : 0;
-  const progressX = clamp(progress, 0, 1) * width;
+  const progressX = ((clamp(progress, 0, 1) - view.start) / view.length) * width;
   context.fillStyle = "rgba(255, 51, 102, 0.16)";
-  context.fillRect(0, 0, progressX, height);
+  context.fillRect(0, 0, clamp(progressX, 0, width), height);
 
   context.strokeStyle = "#ff3366";
   context.lineWidth = 2;
   context.beginPath();
-  context.moveTo(progressX, 0);
-  context.lineTo(progressX, height);
+  if (progressX >= 0 && progressX <= width) {
+    context.moveTo(progressX, 0);
+    context.lineTo(progressX, height);
+  }
   context.stroke();
 }
 
@@ -1621,7 +1923,7 @@ function renderWarnings() {
   if (!file || !analysis) {
     const empty = document.createElement("p");
     empty.className = "empty-state";
-    empty.textContent = "Load a WAV file to see clipping and processing notes.";
+    empty.textContent = "Load an audio file to see clipping and processing notes.";
     elements.analysisWarnings.appendChild(empty);
     renderReport(null);
     return;
@@ -1742,6 +2044,7 @@ function updateUi() {
   renderFileList();
   renderMeta();
   renderWarnings();
+  renderCleanupSuggestion();
   renderCleanedOutputs();
   renderPreflight();
   updateControlLabels();
@@ -1755,6 +2058,12 @@ function updateUi() {
   elements.applyButton.disabled = !selected || busy;
   elements.resetPreviewButton.disabled = !selected || state.previewMode !== "processed" || busy;
   elements.manualTrimReset.disabled = !selected || busy || ((selected.trimStartRatio ?? 0) === 0 && (selected.trimEndRatio ?? 1) === 1);
+  elements.waveformZoomOut.disabled = state.waveformZoom <= 1 || busy;
+  elements.waveformZoomIn.disabled = !selected || state.waveformZoom >= 16 || busy;
+  elements.waveformZoomFit.disabled = state.waveformZoom <= 1 || busy;
+  elements.waveformZoomValue.textContent = `${Math.round(state.waveformZoom * 100)}%`;
+  elements.undoButton.disabled = !state.undoStack.length || busy;
+  elements.redoButton.disabled = !state.redoStack.length || busy;
   elements.exportButton.disabled = !selected || busy;
   elements.exportZipButton.disabled = !getSelectedExportFiles().length || busy;
   elements.exportMp3Button.disabled = !getSelectedExportFiles().length || busy || !window.lamejs?.Mp3Encoder;
@@ -1763,6 +2072,8 @@ function updateUi() {
   elements.clearQueueButton.disabled = !state.files.length || busy;
   elements.saveFileOverrideButton.disabled = !selected || busy;
   elements.resetFileOverrideButton.disabled = !selected?.settingsOverride || busy;
+  elements.exportSettingsButton.disabled = busy;
+  elements.importSettingsButton.disabled = busy;
   setButtonLoading(
     elements.applyButton,
     state.processingMode === "preview" ? "Processing preview..." : "Apply processing preview",
@@ -1797,7 +2108,7 @@ function updateUi() {
 
 function getPreviewStateText(file, hasProcessedPreview) {
   if (!file) {
-    return "Load a WAV file to compare the original and processed preview.";
+    return "Load an audio file to compare the original and processed preview.";
   }
   if (state.previewMode === "processed" && hasProcessedPreview) {
     return "Previewing the processed result that will be used for export.";
@@ -1842,7 +2153,7 @@ async function applyProcessingPreview() {
     setStatus("Processing preview updated. Export will use these cleanup settings.", "success");
   } catch (error) {
     console.error(error);
-    setStatus("Processing failed. Try a shorter WAV file or less aggressive settings.", "error");
+    setStatus("Processing failed. Try a shorter audio file or less aggressive settings.", "error");
   } finally {
     setProcessingMode(null);
   }
@@ -1865,7 +2176,9 @@ function saveSettingsForSelectedFile() {
   if (!file || isExportBusy()) {
     return;
   }
+  const historySnapshot = captureWorkspaceState();
   file.settingsOverride = { ...getSettings() };
+  pushWorkspaceHistory(historySnapshot, "file cleanup settings");
   clearProcessedPreview(`Saved custom cleanup settings for ${file.name}. Apply the preview to audition them.`);
 }
 
@@ -1874,8 +2187,54 @@ function resetSettingsForSelectedFile() {
   if (!file || isExportBusy()) {
     return;
   }
+  const historySnapshot = captureWorkspaceState();
   file.settingsOverride = null;
+  pushWorkspaceHistory(historySnapshot, "global cleanup settings");
   clearProcessedPreview(`Restored global cleanup settings for ${file.name}.`);
+}
+
+function exportCleanupSettings() {
+  const payload = {
+    tool: "Wave Mutator",
+    version: "0.2.0",
+    exportedAt: new Date().toISOString(),
+    cleanup: getSettings(),
+  };
+  downloadBlob(
+    new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }),
+    "wave-mutator-cleanup-settings.json",
+  );
+  setStatus("Downloaded local cleanup settings.", "success");
+}
+
+function isValidImportedSettings(value) {
+  return value && typeof value === "object"
+    && ["trimSilence", "fadeEnabled", "normalizeEnabled", "detectClipping"].every((key) => typeof value[key] === "boolean")
+    && ["trimThresholdDb", "trimMinSilenceMs", "trimPaddingMs", "fadeMs", "targetPeakDb"].every((key) => Number.isFinite(Number(value[key])));
+}
+
+async function importCleanupSettings(file) {
+  if (!file || isExportBusy()) {
+    return;
+  }
+  try {
+    const parsed = JSON.parse(await file.text());
+    const settings = parsed.cleanup || parsed;
+    if (!isValidImportedSettings(settings)) {
+      throw new Error("The file does not contain a valid Wave Mutator cleanup configuration.");
+    }
+    const historySnapshot = captureWorkspaceState();
+    applySettingsToControls(settings);
+    invalidateProcessedPreviews();
+    pushWorkspaceHistory(historySnapshot, "imported cleanup settings");
+    setStatus("Imported cleanup settings locally. Processed previews were marked stale.", "success");
+    updateUi();
+  } catch (error) {
+    console.error(error);
+    setStatus("Could not import cleanup settings. Choose a valid Wave Mutator JSON settings file.", "error");
+  } finally {
+    elements.settingsFileInput.value = "";
+  }
 }
 
 function sanitizeFileBaseName(name) {
@@ -2132,23 +2491,34 @@ function downloadBlob(blob, fileName) {
 }
 
 function createManifestText(files, exportSettings = getExportSettings()) {
+  const reviewFiles = files.filter((file) => getPreflightStatus(file).type !== "good");
+  const clippedFiles = files.filter((file) => (file.processedAnalysis || file.originalAnalysis).clippedSamples > 0);
+  const totalDuration = files.reduce((total, file) => total + (file.processedBuffer || file.audioBuffer).duration, 0);
   const rows = files.map((file, index) => {
     const outputBuffer = file.processedBuffer || file.audioBuffer;
     const analysis = file.processedAnalysis || file.originalAnalysis;
     const settings = getSettingsForFile(file);
+    const report = file.processReport;
+    const status = getPreflightStatus(file);
     return [
       `${index + 1}. ${makeExportFileName(file.name, index + 1, exportSettings)}`,
-      `   Source: ${file.name}`,
-      `   Duration: ${formatDuration(outputBuffer.duration)} | ${outputBuffer.sampleRate} Hz | ${outputBuffer.numberOfChannels} channel(s)`,
-      `   Peak: ${formatDb(analysis.peakDb)} | Estimated true peak: ${formatDb(gainToDb(analysis.truePeakEstimate))}`,
-      `   Trim: ${settings.trimSilence ? `${settings.trimThresholdDb} dB, ${settings.trimMinSilenceMs} ms minimum, ${settings.trimPaddingMs} ms padding` : "off"}`,
-      `   Fade: ${settings.fadeEnabled ? `${settings.fadeMs} ms` : "off"} | Normalize: ${settings.normalizeEnabled ? `${settings.targetPeakDb} dBFS` : "off"}`,
+      `   Source: ${file.name} (${file.format || "Audio"})`,
+      `   Source duration: ${formatDuration(file.audioBuffer.duration)} | Output duration: ${formatDuration(outputBuffer.duration)}`,
+      `   Source format: ${file.audioBuffer.sampleRate} Hz | ${file.audioBuffer.numberOfChannels} channel(s)`,
+      `   Export target: ${exportSettings.bitDepth === "32f" ? "32-bit float" : `${exportSettings.bitDepth}-bit PCM`} | ${exportSettings.sampleRateMode === "original" ? "original sample rate" : `${Number(exportSettings.sampleRateMode) / 1000} kHz`} | ${exportSettings.channelMode === "mono" ? "mono sum" : "original channels"}`,
+      `   Peak: ${formatDb(analysis.peakDb)} | Estimated true peak: ${formatDb(gainToDb(analysis.truePeakEstimate))} | Clipping: ${analysis.clippedSamples ? `${analysis.clippedSamples.toLocaleString()} samples` : "none"}`,
+      `   Cleanup: Trim ${settings.trimSilence ? `${settings.trimThresholdDb} dB, ${settings.trimMinSilenceMs} ms minimum, ${settings.trimPaddingMs} ms padding` : "off"} | Fade ${settings.fadeEnabled ? `${settings.fadeMs} ms` : "off"} | Normalize ${settings.normalizeEnabled ? `${settings.targetPeakDb} dBFS` : "off"}`,
+      `   Edits: Manual trim ${report?.manualTrimmedSamples ? formatDuration(report.manualTrimmedSamples / file.audioBuffer.sampleRate) : "none"} | Auto trim ${report?.trimSkipped ? "skipped" : report?.trimmedSamples ? formatDuration(report.trimmedSamples / file.audioBuffer.sampleRate) : report ? "none" : "not previewed"} | Settings ${file.settingsOverride ? "custom" : "global"}`,
+      `   QA: ${status.label}${file.exportSelected === false ? " | Excluded from selected export scope" : ""}`,
     ].join("\n");
   });
   return [
-    "Wave Mutator export manifest",
+    "Wave Mutator free pack report",
     `Created locally: ${new Date().toISOString()}`,
     `Pack: ${exportSettings.packName}`,
+    `Files: ${files.length} | Combined cleaned duration: ${formatDuration(totalDuration)} | Review items: ${reviewFiles.length} | Files with clipping: ${clippedFiles.length}`,
+    `Naming: ${exportSettings.namingTemplate}`,
+    "All measurements and cleanup are local browser analysis. Estimated true peak is a guide, not certified true-peak metering.",
     "",
     ...rows,
     "",
@@ -2521,7 +2891,9 @@ async function runSelfTestFixture() {
 
 function waveformRatioFromEvent(event) {
   const rect = elements.waveform.getBoundingClientRect();
-  return clamp((event.clientX - rect.left) / rect.width, 0, 1);
+  const view = getWaveformView();
+  const localRatio = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+  return view.start + localRatio * view.length;
 }
 
 function trimHandleFromEvent(event) {
@@ -2533,8 +2905,9 @@ function trimHandleFromEvent(event) {
   const rect = elements.waveform.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const trimRange = getManualTrimRange(file);
-  const startX = trimRange.startRatio * rect.width;
-  const endX = trimRange.endRatio * rect.width;
+  const view = getWaveformView();
+  const startX = ((trimRange.startRatio - view.start) / view.length) * rect.width;
+  const endX = ((trimRange.endRatio - view.start) / view.length) * rect.width;
   const hitSize = 14;
 
   if (Math.abs(x - startX) <= hitSize) {
@@ -2559,6 +2932,35 @@ function clearProcessedForManualEdit() {
   state.previewMode = "original";
 }
 
+function snapRatioToZeroCrossing(file, ratio) {
+  if (!elements.snapZeroCrossings.checked) {
+    return ratio;
+  }
+  const data = file.audioBuffer.getChannelData(0);
+  const target = clamp(Math.round(ratio * (data.length - 1)), 0, data.length - 1);
+  const searchRadius = Math.max(1, Math.round(file.audioBuffer.sampleRate * 0.012));
+  let nearest = target;
+  let nearestDistance = Infinity;
+
+  for (let distance = 0; distance <= searchRadius; distance += 1) {
+    for (const index of [target - distance, target + distance]) {
+      if (index < 1 || index >= data.length) {
+        continue;
+      }
+      const crossedZero = (data[index - 1] <= 0 && data[index] >= 0) || (data[index - 1] >= 0 && data[index] <= 0);
+      if (crossedZero && distance < nearestDistance) {
+        nearest = index;
+        nearestDistance = distance;
+      }
+    }
+    if (nearestDistance !== Infinity) {
+      break;
+    }
+  }
+
+  return nearest / Math.max(1, data.length - 1);
+}
+
 function updateManualTrim(handle, ratio) {
   const file = getSelectedFile();
   if (!file) {
@@ -2568,10 +2970,11 @@ function updateManualTrim(handle, ratio) {
   const minGap = Math.max(1 / file.audioBuffer.length, 0.002);
   clearProcessedForManualEdit();
 
+  const snappedRatio = snapRatioToZeroCrossing(file, ratio);
   if (handle === "start") {
-    file.trimStartRatio = clamp(ratio, 0, file.trimEndRatio - minGap);
+    file.trimStartRatio = clamp(snappedRatio, 0, file.trimEndRatio - minGap);
   } else {
-    file.trimEndRatio = clamp(ratio, file.trimStartRatio + minGap, 1);
+    file.trimEndRatio = clamp(snappedRatio, file.trimStartRatio + minGap, 1);
   }
 
   state.playbackOffset = 0;
@@ -2584,9 +2987,11 @@ function resetManualTrim() {
     return;
   }
   stopPlayback();
+  const historySnapshot = captureWorkspaceState();
   clearProcessedForManualEdit();
   file.trimStartRatio = 0;
   file.trimEndRatio = 1;
+  pushWorkspaceHistory(historySnapshot, "manual trim reset");
   setStatus("Manual trim reset for the selected file.");
   updateUi();
 }
@@ -2599,6 +3004,7 @@ function handleWaveformPointerDown(event) {
 
   event.preventDefault();
   stopPlayback();
+  beginWorkspaceEdit("manual trim");
   state.trimDragHandle = handle;
   state.suppressNextWaveformClick = true;
   elements.waveform.setPointerCapture?.(event.pointerId);
@@ -2620,7 +3026,9 @@ function handleWaveformPointerUp(event) {
   event.preventDefault();
   elements.waveform.releasePointerCapture?.(event.pointerId);
   state.trimDragHandle = null;
+  commitWorkspaceEdit();
   setStatus("Manual trim updated. Apply processing preview to audition the result.");
+  updateUi();
 }
 
 function handleWaveformClick(event) {
@@ -2628,9 +3036,58 @@ function handleWaveformClick(event) {
     state.suppressNextWaveformClick = false;
     return;
   }
-  const rect = elements.waveform.getBoundingClientRect();
-  const ratio = (event.clientX - rect.left) / rect.width;
-  seekToRatio(ratio);
+  seekToRatio(waveformRatioFromEvent(event));
+}
+
+function handleKeyboardShortcut(event) {
+  const target = event.target;
+  const isFormControl = target instanceof HTMLInputElement
+    || target instanceof HTMLSelectElement
+    || target instanceof HTMLTextAreaElement
+    || target?.isContentEditable;
+  if (isFormControl || isExportBusy()) {
+    return;
+  }
+
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z") {
+    event.preventDefault();
+    if (event.shiftKey) {
+      redoWorkspaceEdit();
+    } else {
+      undoWorkspaceEdit();
+    }
+    return;
+  }
+
+  if (event.code === "Space") {
+    event.preventDefault();
+    if (state.isPlaying) {
+      pausePlayback();
+    } else {
+      playFrom(state.playbackOffset).catch((error) => {
+        console.error(error);
+        setStatus("Playback could not start. Check your browser audio permissions and try again.", "error");
+      });
+    }
+    return;
+  }
+
+  if (event.key.toLowerCase() === "s") {
+    event.preventDefault();
+    stopPlayback();
+    return;
+  }
+
+  if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+    const buffer = getActiveBuffer();
+    if (!buffer) {
+      return;
+    }
+    event.preventDefault();
+    const seconds = event.shiftKey ? 5 : 1;
+    const direction = event.key === "ArrowLeft" ? -1 : 1;
+    seekToRatio((getPlaybackPosition() + direction * seconds) / buffer.duration);
+  }
 }
 
 function bindEvents() {
@@ -2645,6 +3102,11 @@ function bindEvents() {
 
   elements.fileInput.addEventListener("change", (event) => loadFiles(event.target.files));
   elements.waveformEmptyButton.addEventListener("click", () => elements.fileInput.click());
+  elements.waveformZoomOut.addEventListener("click", () => setWaveformZoom(state.waveformZoom / 2));
+  elements.waveformZoomIn.addEventListener("click", () => setWaveformZoom(state.waveformZoom * 2));
+  elements.waveformZoomFit.addEventListener("click", () => setWaveformZoom(1));
+  elements.undoButton.addEventListener("click", undoWorkspaceEdit);
+  elements.redoButton.addEventListener("click", redoWorkspaceEdit);
 
   elements.dropZone.addEventListener("click", (event) => {
     if (event.target !== elements.fileInput && !event.target.closest?.(".file-button")) {
@@ -2699,6 +3161,10 @@ function bindEvents() {
   elements.resetPreviewButton.addEventListener("click", resetPreview);
   elements.saveFileOverrideButton.addEventListener("click", saveSettingsForSelectedFile);
   elements.resetFileOverrideButton.addEventListener("click", resetSettingsForSelectedFile);
+  elements.applySuggestionButton.addEventListener("click", applyCleanupSuggestion);
+  elements.exportSettingsButton.addEventListener("click", exportCleanupSettings);
+  elements.importSettingsButton.addEventListener("click", () => elements.settingsFileInput.click());
+  elements.settingsFileInput.addEventListener("change", (event) => importCleanupSettings(event.target.files[0]));
   elements.previewOriginalButton.addEventListener("click", () => showPreviewMode("original"));
   elements.previewProcessedButton.addEventListener("click", () => showPreviewMode("processed"));
   elements.manualTrimReset.addEventListener("click", resetManualTrim);
@@ -2718,9 +3184,13 @@ function bindEvents() {
     elements.fadeMs,
     elements.normalizeEnabled,
     elements.targetPeak,
+    elements.detectClipping,
     elements.montageSeconds,
     elements.montageGap,
   ].forEach((control) => {
+    control.addEventListener("pointerdown", () => beginWorkspaceEdit("cleanup settings"));
+    control.addEventListener("focus", () => beginWorkspaceEdit("cleanup settings"));
+    control.addEventListener("keydown", () => beginWorkspaceEdit("cleanup settings"));
     control.addEventListener("input", () => {
       updateControlLabels();
       if (control === elements.montageSeconds || control === elements.montageGap) {
@@ -2734,7 +3204,17 @@ function bindEvents() {
       if (getSelectedFile()) {
         clearGlobalProcessedPreviews("Global processing settings changed.");
       } else {
-        setStatus("Processing settings updated. Load a WAV file to audition them.");
+        setStatus("Processing settings updated. Load an audio file to audition them.");
+        updateUi();
+      }
+    });
+    control.addEventListener("change", () => {
+      commitWorkspaceEdit();
+      updateUi();
+    });
+    control.addEventListener("blur", () => {
+      if (state.pendingHistory) {
+        commitWorkspaceEdit();
         updateUi();
       }
     });
@@ -2751,7 +3231,7 @@ function bindEvents() {
     control.addEventListener("input", updateUi);
   });
 
-  elements.detectClipping.addEventListener("input", updateUi);
+  window.addEventListener("keydown", handleKeyboardShortcut);
   window.addEventListener("resize", drawWaveform);
 }
 

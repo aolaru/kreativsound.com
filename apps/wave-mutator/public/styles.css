@@ -611,6 +611,18 @@ h3 {
   align-items: stretch;
 }
 
+.file-list li[draggable="true"] {
+  cursor: grab;
+}
+
+.file-list li.is-dragging {
+  opacity: 0.45;
+}
+
+.file-list li.is-drag-over {
+  border-top: 2px solid var(--green);
+}
+
 .file-list button {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(116px, auto);
@@ -747,6 +759,43 @@ h3 {
   display: none;
 }
 
+.waveform-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 0 0;
+}
+
+.waveform-zoom-controls,
+.history-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.waveform-zoom-controls button,
+.history-controls button {
+  min-height: 36px;
+  padding: 0.42rem 0.66rem;
+  font-size: 0.82rem;
+}
+
+.waveform-zoom-controls button:first-child,
+.waveform-zoom-controls button:nth-child(3) {
+  width: 36px;
+  padding: 0;
+  font-size: 1.1rem;
+}
+
+.waveform-zoom-controls output {
+  min-width: 54px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
 .progress-track {
   height: 8px;
   margin: 14px 0;
@@ -843,6 +892,25 @@ h3 {
   color: var(--text);
 }
 
+.snap-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.snap-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--blue);
+}
+
 .meta-grid,
 .process-report {
   display: grid;
@@ -895,6 +963,31 @@ dd {
 .cleanup-strength > div:first-child {
   display: grid;
   gap: 6px;
+}
+
+.cleanup-suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid rgba(82, 240, 170, 0.24);
+  border-radius: 8px;
+  padding: 0.92rem;
+  background: rgba(82, 240, 170, 0.06);
+}
+
+.cleanup-suggestion > div {
+  display: grid;
+  gap: 5px;
+}
+
+.cleanup-suggestion h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.cleanup-suggestion .section-note {
+  margin: 0;
 }
 
 .strength-options {
@@ -1579,6 +1672,12 @@ select {
   .export-panel,
   .preview-toggle-row,
   .manual-trim-panel {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .waveform-tools,
+  .cleanup-suggestion {
     align-items: flex-start;
     flex-direction: column;
   }

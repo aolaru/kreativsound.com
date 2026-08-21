@@ -13,19 +13,19 @@
     <meta property="og:site_name" content="Kreativ Sound" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Wave Mutator | Kreativ Sound" />
-    <meta property="og:description" content="Clean messy WAV files, export sample packs, and build short preview montages locally in the browser." />
+    <meta property="og:description" content="Clean messy audio files, export WAV sample packs, and build short preview montages locally in the browser." />
     <meta property="og:url" content="https://kreativsound.com/tools/wave-mutator/" />
     <meta property="og:image" content="https://kreativsound.com/assets/thumbs/wave-mutator.jpg" />
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content="Wave Mutator | Kreativ Sound" />
-    <meta property="twitter:description" content="Clean messy WAV files, export sample packs, and build short preview montages locally in the browser." />
+    <meta property="twitter:description" content="Clean messy audio files, export WAV sample packs, and build short preview montages locally in the browser." />
     <meta name="theme-color" content="#121622" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="stylesheet" href="./styles.css?v=7" />
+    <link rel="stylesheet" href="./styles.css?v=9" />
     <script src="./vendor/lame.min.js" defer></script>
-    <script src="./app.js?v=7" defer></script>
+    <script src="./app.js?v=13" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -35,7 +35,7 @@
         "operatingSystem": "Web browser",
         "url": "https://kreativsound.com/tools/wave-mutator/",
         "image": "https://kreativsound.com/assets/thumbs/wave-mutator.jpg",
-        "description": "Wave Mutator cleans messy WAV files, exports sample packs, and creates short preview montages locally in the browser.",
+        "description": "Wave Mutator cleans messy audio files, exports WAV sample packs, and creates short preview montages locally in the browser.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -67,13 +67,13 @@
         <div class="hero-copy">
           <p class="kicker">Local sample cleanup</p>
           <h1>Wave Mutator</h1>
-          <p class="subtitle">Drop in messy WAV files. Export cleaner samples, ZIP packs, and browser-made preview montages.</p>
+          <p class="subtitle">Drop in messy audio files. Export cleaner WAV samples, ZIP packs, and browser-made preview montages.</p>
         </div>
 
         <div class="workflow-tabs" aria-label="Wave Mutator workflow">
           <button class="workflow-tab is-active" type="button" data-scroll-target="#load-title">
             <span aria-hidden="true">01</span>
-            <strong>Clean WAV</strong>
+            <strong>Clean Audio</strong>
             <small>Load and preview</small>
           </button>
           <button class="workflow-tab" type="button" data-scroll-target="#export-title">
@@ -91,7 +91,7 @@
         <div class="tool-proof-grid" aria-label="Wave Mutator summary">
           <div>
             <span>Input</span>
-            <strong>WAV files</strong>
+            <strong>Audio files</strong>
           </div>
           <div>
             <span>Processing</span>
@@ -117,7 +117,7 @@
       <section class="tool-detail-panel" aria-labelledby="tool-detail-title">
         <div class="tool-detail-copy">
           <p class="section-kicker">Beta tool</p>
-          <h2 id="tool-detail-title">Drop in messy WAV files. Export cleaner samples and pack previews.</h2>
+          <h2 id="tool-detail-title">Drop in messy audio files. Export cleaner samples and pack previews.</h2>
           <p>
             Wave Mutator is built for preparing sample-pack material, preset-source audio, one-shots,
             loops, noise layers, and sound-product demos. It trims silence, adds short fades,
@@ -136,7 +136,7 @@
           </article>
           <article>
             <span>Formats</span>
-            <strong>WAV input. WAV/ZIP/MP3 export. MP3 encoding is bundled locally.</strong>
+            <strong>WAV, AIFF, FLAC, or MP3 input. WAV/ZIP/MP3 export.</strong>
           </article>
           <article>
             <span>Beta limits</span>
@@ -150,26 +150,26 @@
           <div class="section-head">
             <div>
               <p class="section-kicker">Input</p>
-              <h2 id="load-title">Drop WAV files</h2>
+              <h2 id="load-title">Drop audio files</h2>
             </div>
-            <p class="section-note">WAV is the first supported input format for this beta.</p>
+            <p class="section-note">WAV, AIFF, FLAC, and MP3 decode locally when supported by your browser.</p>
           </div>
 
-          <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Choose or drop WAV files">
+          <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Choose or drop audio files">
             <input
               id="file-input"
               type="file"
-              accept=".wav,audio/wav,audio/wave,audio/x-wav"
+              accept=".wav,.aif,.aiff,.flac,.mp3,audio/wav,audio/wave,audio/x-wav,audio/aiff,audio/x-aiff,audio/flac,audio/mpeg"
               multiple
             />
             <div class="drop-zone-copy">
-              <strong>Drop messy WAV files here</strong>
+              <strong>Drop messy audio files here</strong>
               <span>or choose files from your computer</span>
             </div>
-            <label class="file-button" for="file-input">Choose WAV files</label>
+            <label class="file-button" for="file-input">Choose audio files</label>
           </div>
 
-          <p id="status-message" class="status-message" role="status">Load one or more WAV files to begin.</p>
+          <p id="status-message" class="status-message" role="status">Load one or more audio files to begin.</p>
 
           <div class="file-list-block">
             <div class="mini-head">
@@ -197,8 +197,21 @@
           <div class="waveform-frame">
             <canvas id="waveform" width="1200" height="260" aria-label="Audio waveform"></canvas>
             <button id="waveform-empty-button" class="waveform-empty-button" type="button">
-              Choose a WAV file
+              Choose an audio file
             </button>
+          </div>
+
+          <div class="waveform-tools" aria-label="Waveform view controls">
+            <div class="waveform-zoom-controls">
+              <button id="waveform-zoom-out" type="button" aria-label="Zoom waveform out" title="Zoom out">-</button>
+              <output id="waveform-zoom-value" aria-live="polite">100%</output>
+              <button id="waveform-zoom-in" type="button" aria-label="Zoom waveform in" title="Zoom in">+</button>
+              <button id="waveform-zoom-fit" type="button" title="Show full waveform">Fit</button>
+            </div>
+            <div class="history-controls">
+              <button id="undo-button" type="button" aria-label="Undo last edit" title="Undo">Undo</button>
+              <button id="redo-button" type="button" aria-label="Redo last edit" title="Redo">Redo</button>
+            </div>
           </div>
 
           <div class="progress-track" aria-hidden="true">
@@ -224,11 +237,15 @@
           <div class="manual-trim-panel" aria-label="Manual trim selection">
             <div>
               <p class="section-kicker">Manual trim</p>
-              <p class="section-note">Drag the blue start/end handles on the waveform to fine-tune the active region.</p>
+              <p class="section-note">Drag the blue start/end handles to fine-tune the active region. Zoom for detailed edits.</p>
             </div>
             <div class="manual-trim-readout">
               <span>Start <strong id="trim-start-time">0:00.000</strong></span>
               <span>End <strong id="trim-end-time">0:00.000</strong></span>
+              <label class="snap-toggle" for="snap-zero-crossings">
+                <input id="snap-zero-crossings" type="checkbox" checked />
+                <span>Snap</span>
+              </label>
               <button id="manual-trim-reset" type="button" disabled>Reset trim</button>
             </div>
           </div>
@@ -297,6 +314,15 @@
                   <span>Release polish</span>
                 </button>
               </div>
+            </section>
+
+            <section class="cleanup-suggestion" aria-labelledby="cleanup-suggestion-title">
+              <div>
+                <p class="section-kicker">Quick start</p>
+                <h3 id="cleanup-suggestion-title">Suggested cleanup</h3>
+                <p id="cleanup-suggestion-text" class="section-note">Load an audio file to get a local suggestion.</p>
+              </div>
+              <button id="apply-suggestion-button" type="button" disabled>Use suggestion</button>
             </section>
 
             <label class="toggle-row" for="trim-silence">
@@ -374,6 +400,9 @@
             <button id="reset-preview-button" type="button" disabled>Show original</button>
             <button id="save-file-override-button" type="button" disabled>Save settings for this file</button>
             <button id="reset-file-override-button" type="button" disabled>Use global settings</button>
+            <button id="export-settings-button" type="button">Export settings</button>
+            <button id="import-settings-button" type="button">Import settings</button>
+            <input id="settings-file-input" type="file" accept="application/json,.json" hidden />
           </div>
         </section>
 
@@ -386,7 +415,7 @@
           </div>
 
           <div id="analysis-warnings" class="analysis-warnings" aria-live="polite">
-            <p class="empty-state">Load a WAV file to see clipping and processing notes.</p>
+            <p class="empty-state">Load an audio file to see clipping and processing notes.</p>
           </div>
 
           <details class="advanced-analysis">
@@ -451,7 +480,7 @@
               <p class="section-kicker">Pack QA</p>
               <h2 id="preflight-title">Preflight report</h2>
             </div>
-            <span id="preflight-summary" class="preflight-summary">Load WAV files to check the pack.</span>
+            <span id="preflight-summary" class="preflight-summary">Load audio files to check the pack.</span>
           </div>
           <p class="section-note">Review the full selected export queue before rendering. Warnings stay local and do not block export.</p>
           <div id="preflight-warnings" class="preflight-warnings" aria-live="polite"></div>
