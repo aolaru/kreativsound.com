@@ -93,10 +93,17 @@
           </div>
           <div id="pattern-meta" class="pattern-meta">Choose a direction, then generate.</div>
         </div>
-        <div id="piano-roll" class="piano-roll empty" aria-live="polite">
+        <div id="piano-roll" class="piano-roll empty" aria-label="Editable piano roll. Click empty space to add a note; drag a note to move it; drag its right edge to resize it." tabindex="0" aria-live="polite">
           <div class="empty-pattern">Your generated MIDI pattern will appear here.</div>
         </div>
         <div class="legend"><span><i class="note-dot"></i> Note</span><span><i class="bar-line"></i> Bar division</span><span>One visual phrase shown; export contains the full selected length.</span></div>
+        <div class="editor-toolbar" aria-label="Piano roll editing controls">
+          <p><strong>Free piano roll:</strong> Click an empty grid cell to add a scale-safe note. Drag a note to move it, or drag its right edge to resize it.</p>
+          <div class="editor-controls">
+            <label class="velocity-control" for="note-velocity"><span>Selected velocity</span><output id="note-velocity-value">—</output><input id="note-velocity" type="range" min="1" max="127" value="92" disabled /></label>
+            <button id="delete-note" class="quiet-button" type="button" disabled>Delete selected</button>
+          </div>
+        </div>
       </section>
 
       <section class="mutation-panel panel" aria-labelledby="mutation-title">
@@ -122,12 +129,12 @@
       </section>
 
       <section class="draft-note">
-        <p><strong>First draft scope:</strong> melody, bass, chords, and arps; fixed musical lengths; local audition; and editable MIDI export. Drum generation, DAW plugin formats, and saved history can come next.</p>
+        <p><strong>Free scope:</strong> melody, bass, chords, and arps; fixed musical lengths; an editable piano roll; local audition; and MIDI export. Drum generation, DAW plugin formats, and saved history can come next.</p>
       </section>
 
       <footer class="app-footer">
         <p>Kreativ Sound browser tool for controlled MIDI pattern generation.</p>
-        <p class="app-version">Pattern Mutator v0.1.1 <span aria-hidden="true">·</span> <a href="/tools/pattern-mutator/changelog/">Changelog</a></p>
+        <p class="app-version">Pattern Mutator v0.2.0 <span aria-hidden="true">·</span> <a href="/tools/pattern-mutator/changelog/">Changelog</a></p>
       </footer>
     </main>
   </body>

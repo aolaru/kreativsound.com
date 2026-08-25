@@ -65,7 +65,7 @@ def main() -> int:
             "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
             "/updates/": ["Kreativ Sound Updates and Changelog", "Changes, releases, and practical guides.", "Recent highlights", "Everything new, updated, and fixed.", "Preset Mutator PRO v0.4.3", "Preset Mutator Free v0.4.2", "Wave Mutator beta v0.2.1", "Earlier updates", "Release notes", "Practical sound-design guides.", "The current browser-tool line", "32 variants per run", "Plugins"],
             "/tools/": ["Preset Mutator", "3 free / 32 PRO", "Free + PRO", "Get PRO for €19", "Wave Mutator", "Pattern Mutator"],
-            "/tools/pattern-mutator/": ["Pattern Mutator", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "First draft scope"],
+            "/tools/pattern-mutator/": ["Pattern Mutator", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "Free piano roll"],
             "/tools/pattern-mutator/changelog/": ["Pattern Mutator", "Changelog", "Current release", "v0.1.1", "Back to Pattern Mutator"],
             "/tools/preset-mutator/": ["Preset Mutator", "Free + PRO", "Get PRO for €19", "Free", "PRO", "32 Vital preset variants per workflow."],
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
