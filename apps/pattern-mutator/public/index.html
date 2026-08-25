@@ -104,6 +104,10 @@
             <button id="delete-note" class="quiet-button" type="button" disabled>Delete selected</button>
           </div>
         </div>
+        <div class="piano-transport" aria-label="Pattern audition controls">
+          <button id="audition" class="primary-button" type="button" disabled>▶ Play Pattern</button>
+          <button id="stop" class="quiet-button" type="button" disabled>■ Stop</button>
+        </div>
       </section>
 
       <section class="mutation-panel panel" aria-labelledby="mutation-title">
@@ -121,8 +125,6 @@
         </div>
         <div class="mutation-actions">
           <button id="mutate" class="primary-button" type="button" disabled>Mutate Unlocked Parts <span aria-hidden="true">⟲</span></button>
-          <button id="audition" class="quiet-button" type="button" disabled>▶ Audition</button>
-          <button id="stop" class="quiet-button" type="button" disabled>■ Stop</button>
           <button id="download" class="export-button" type="button" disabled>Download MIDI <span>.mid</span></button>
         </div>
         <p id="status" class="status" role="status">Ready when you are.</p>
