@@ -91,6 +91,66 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
           <img src="/assets/thumbs/wave-mutator.jpg" width="1440" height="810" alt="Wave Mutator cover artwork showing waveform cleanup and sample export" loading="lazy" decoding="async" />
         </a>
       </section>
+
+      <section class="tools-feature-card pattern-mutator-tool-card" aria-labelledby="pattern-mutator-title">
+        <div class="tools-feature-copy">
+          <p class="product-kicker tools-kicker-row">
+            <span>First draft</span>
+            <span class="tools-beta-sticker">PROTOTYPE</span>
+          </p>
+          <h2 id="pattern-mutator-title" class="page-title">Pattern Mutator</h2>
+          <p class="page-lead">Generate a MIDI pattern, lock the parts you like, and mutate the rest.</p>
+          <p class="product-summary">Start scale-aware melodies, basslines, chords, and arpeggios from scratch. Set an exact 1–32 bar length, audition locally, and export a Standard MIDI file for your DAW.</p>
+          <dl class="tools-feature-meta" aria-label="Pattern Mutator facts">
+            <div>
+              <dt>Format</dt>
+              <dd>Browser tool</dd>
+            </div>
+            <div>
+              <dt>Output</dt>
+              <dd>Editable MIDI</dd>
+            </div>
+            <div>
+              <dt>Length</dt>
+              <dd>1–32 bars</dd>
+            </div>
+            <div>
+              <dt>Privacy</dt>
+              <dd>Local only</dd>
+            </div>
+          </dl>
+          <div class="product-actions tools-feature-actions">
+            <a class="button primary" href="/tools/pattern-mutator/">
+              <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+              Open Pattern Mutator
+            </a>
+          </div>
+        </div>
+        <a class="tools-feature-media pattern-mutator-tool-preview" href="/tools/pattern-mutator/" aria-label="Open Pattern Mutator">
+          <span class="pattern-preview-name">PM</span>
+          <span class="pattern-preview-grid" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </span>
+          <span class="pattern-preview-caption">GENERATE · LOCK · MUTATE</span>
+        </a>
+      </section>
     </div>
   </section>
+  <style>
+    .pattern-mutator-tool-preview {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 310px;
+      overflow: hidden;
+      color: #fff4eb;
+      background: radial-gradient(circle at 76% 24%, rgba(213, 92, 219, .65), transparent 24%), radial-gradient(circle at 18% 86%, rgba(239, 107, 69, .72), transparent 31%), #201d27;
+    }
+    .pattern-preview-name { position: relative; z-index: 1; font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 900; letter-spacing: -.1em; }
+    .pattern-preview-grid { position: absolute; inset: 20% 13%; display: grid; grid-template-columns: repeat(8, 1fr); align-items: end; gap: 4%; opacity: .86; }
+    .pattern-preview-grid::before { content: ""; position: absolute; inset: 0; border: 1px solid rgba(255,255,255,.2); border-radius: 10px; background: repeating-linear-gradient(to bottom, transparent 0, transparent 12%, rgba(255,255,255,.1) 12.5%); }
+    .pattern-preview-grid i { position: relative; z-index: 1; display: block; border-radius: 4px 4px 2px 2px; background: linear-gradient(#ffb27a, #ed6a46); box-shadow: 0 5px 13px rgba(0,0,0,.18); }
+    .pattern-preview-grid i:nth-child(1) { height: 29%; }.pattern-preview-grid i:nth-child(2) { height: 51%; }.pattern-preview-grid i:nth-child(3) { height: 38%; }.pattern-preview-grid i:nth-child(4) { height: 69%; }.pattern-preview-grid i:nth-child(5) { height: 42%; }.pattern-preview-grid i:nth-child(6) { height: 78%; }.pattern-preview-grid i:nth-child(7) { height: 59%; }.pattern-preview-grid i:nth-child(8) { height: 33%; }
+    .pattern-preview-caption { position: absolute; right: 1.2rem; bottom: 1rem; font-size: .62rem; font-weight: 800; letter-spacing: .13em; }
+  </style>
 </BaseLayout>

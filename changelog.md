@@ -4,7 +4,9 @@ All notable changes to this website are documented in this file.
 
 ## [Unreleased]
 
-- Add upcoming entries here before release.
+### Added
+
+- Pattern Mutator, a free local browser tool for generating scale-aware MIDI patterns, locking useful dimensions, mutating variations, and exporting Standard MIDI files.
 
 ## [2026-02-26]
 

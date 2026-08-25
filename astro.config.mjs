@@ -58,6 +58,19 @@ function presetMutatorDevRoutes() {
             return;
           }
 
+          if (pathname === "/tools/pattern-mutator" || pathname === "/tools/pattern-mutator/") {
+            fs.readFile(path.join(rootDir, "apps/pattern-mutator/public/index.html"), "utf8", (error, html) => {
+              if (error) {
+                next(error);
+                return;
+              }
+              response.statusCode = 200;
+              response.setHeader("Content-Type", "text/html; charset=utf-8");
+              response.end(html);
+            });
+            return;
+          }
+
           next();
           return;
         }

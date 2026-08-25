@@ -9,6 +9,7 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-08-25", kind: "new", title: "Pattern Mutator first draft released", description: "A free browser tool now generates scale-aware MIDI melodies, basslines, chords, and arpeggios, with locks, mutation, audition, and MIDI export.", href: "/tools/pattern-mutator/" },
   { date: "2026-08-22", kind: "update", title: "Preset Mutator PRO v0.4.3", description: "A public changelog now records PRO workflow improvements and fixes, with direct links from every mode.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-08-22", kind: "update", title: "Preset Mutator Free v0.4.2", description: "A public changelog now records Free workflow improvements and fixes, with direct links from every mode.", href: "/preset-mutator/changelog/" },
   { date: "2026-08-21", kind: "update", title: "Wave Mutator beta v0.2.1", description: "Four local Delivery Profiles now set practical cleanup, export, naming, pack, and preview defaults for sample packs, music, game SFX, and store previews.", href: "/tools/wave-mutator/" },

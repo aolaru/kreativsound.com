@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pattern Mutator | Kreativ Sound</title>
+    <meta name="description" content="Generate scale-aware MIDI patterns, lock the parts that work, mutate the rest, and export a Standard MIDI file locally in your browser." />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#15131b" />
+    <link rel="canonical" href="https://kreativsound.com/tools/pattern-mutator/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <nav class="app-nav" aria-label="Pattern Mutator navigation">
+          <a class="back-link" href="https://kreativsound.com/tools/">Back to Kreativ Sound</a>
+          <div class="brand"><span aria-hidden="true">PM</span><strong>Pattern Mutator</strong></div>
+          <span class="draft-pill">FIRST DRAFT</span>
+        </nav>
+        <div class="hero-copy">
+          <p class="kicker">Local MIDI idea generator</p>
+          <h1>Generate. Lock. Mutate.</h1>
+          <p>Start a scale-aware MIDI pattern from nothing, keep the parts that land, and reshape only the rest.</p>
+        </div>
+        <div class="workflow" aria-label="Pattern Mutator workflow">
+          <span><b>01</b> Set direction</span>
+          <span><b>02</b> Generate a pattern</span>
+          <span><b>03</b> Lock what works</span>
+          <span><b>04</b> Mutate and export</span>
+        </div>
+      </header>
+
+      <section class="control-panel panel" aria-labelledby="direction-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Direction</p>
+            <h2 id="direction-title">Set the musical boundaries</h2>
+          </div>
+          <p class="section-note">Every result is created locally. No account, uploads, or cloud generation.</p>
+        </div>
+        <div class="control-grid">
+          <label>Root note
+            <select id="root-note" aria-label="Root note"></select>
+          </label>
+          <label>Scale
+            <select id="scale" aria-label="Scale">
+              <option value="minor" selected>Natural minor</option>
+              <option value="dorian">Dorian</option>
+              <option value="major">Major</option>
+              <option value="mixolydian">Mixolydian</option>
+              <option value="phrygian">Phrygian</option>
+              <option value="pentatonic">Minor pentatonic</option>
+            </select>
+          </label>
+          <label>Pattern role
+            <select id="role" aria-label="Pattern role">
+              <option value="melody" selected>Melody</option>
+              <option value="bass">Bassline</option>
+              <option value="chords">Chords</option>
+              <option value="arp">Arpeggio</option>
+            </select>
+          </label>
+          <label>Length
+            <select id="bars" aria-label="Pattern length in bars">
+              <option value="1">1 bar</option>
+              <option value="2">2 bars</option>
+              <option value="4" selected>4 bars</option>
+              <option value="8">8 bars</option>
+              <option value="16">16 bars</option>
+              <option value="32">32 bars</option>
+            </select>
+          </label>
+        </div>
+        <div class="range-grid">
+          <label class="range-control" for="complexity"><span>Complexity</span><output id="complexity-value">52%</output><input id="complexity" type="range" min="0" max="100" value="52" /></label>
+          <label class="range-control" for="variation"><span>Variation</span><output id="variation-value">38%</output><input id="variation" type="range" min="0" max="100" value="38" /></label>
+          <label class="range-control" for="tempo"><span>Tempo</span><output id="tempo-value">122 BPM</output><input id="tempo" type="range" min="70" max="160" value="122" /></label>
+        </div>
+        <div class="main-actions">
+          <button id="generate" class="primary-button" type="button">Generate Pattern <span aria-hidden="true">↗</span></button>
+          <button id="surprise" class="quiet-button" type="button">Surprise me</button>
+        </div>
+      </section>
+
+      <section class="pattern-panel panel" aria-labelledby="pattern-title">
+        <div class="section-heading output-heading">
+          <div>
+            <p class="section-kicker">Current idea</p>
+            <h2 id="pattern-title">Nothing generated yet</h2>
+          </div>
+          <div id="pattern-meta" class="pattern-meta">Choose a direction, then generate.</div>
+        </div>
+        <div id="piano-roll" class="piano-roll empty" aria-live="polite">
+          <div class="empty-pattern">Your generated MIDI pattern will appear here.</div>
+        </div>
+        <div class="legend"><span><i class="note-dot"></i> Note</span><span><i class="bar-line"></i> Bar division</span><span>One visual phrase shown; export contains the full selected length.</span></div>
+      </section>
+
+      <section class="mutation-panel panel" aria-labelledby="mutation-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Controlled chaos</p>
+            <h2 id="mutation-title">Lock the parts you want to keep</h2>
+          </div>
+          <p class="section-note">Locked dimensions carry into the next result. Unlocked ones get a fresh variation.</p>
+        </div>
+        <div class="lock-grid" role="group" aria-label="Mutation locks">
+          <button class="lock-button" type="button" data-lock="rhythm" aria-pressed="false"><span class="lock-icon" aria-hidden="true">⌁</span><b>Rhythm</b><small>Timing &amp; density</small></button>
+          <button class="lock-button" type="button" data-lock="notes" aria-pressed="false"><span class="lock-icon" aria-hidden="true">♬</span><b>Notes</b><small>Pitch &amp; contour</small></button>
+          <button class="lock-button" type="button" data-lock="expression" aria-pressed="false"><span class="lock-icon" aria-hidden="true">⌁</span><b>Expression</b><small>Velocity &amp; length</small></button>
+        </div>
+        <div class="mutation-actions">
+          <button id="mutate" class="primary-button" type="button" disabled>Mutate Unlocked Parts <span aria-hidden="true">⟲</span></button>
+          <button id="audition" class="quiet-button" type="button" disabled>▶ Audition</button>
+          <button id="stop" class="quiet-button" type="button" disabled>■ Stop</button>
+          <button id="download" class="export-button" type="button" disabled>Download MIDI <span>.mid</span></button>
+        </div>
+        <p id="status" class="status" role="status">Ready when you are.</p>
+      </section>
+
+      <section class="draft-note">
+        <p><strong>First draft scope:</strong> melody, bass, chords, and arps; fixed musical lengths; local audition; and editable MIDI export. Drum generation, DAW plugin formats, and saved history can come next.</p>
+      </section>
+    </main>
+  </body>
+</html>

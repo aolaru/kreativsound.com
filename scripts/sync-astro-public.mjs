@@ -11,6 +11,8 @@ const presetMutatorLegacyPublicDir = path.join(publicDir, "apps/preset-mutator")
 const presetMutatorLegacyUiDir = path.join(presetMutatorLegacyPublicDir, "ui");
 const waveMutatorSourceDir = path.join(rootDir, "apps/wave-mutator/public");
 const waveMutatorPublicDir = path.join(publicDir, "tools/wave-mutator");
+const patternMutatorSourceDir = path.join(rootDir, "apps/pattern-mutator/public");
+const patternMutatorPublicDir = path.join(publicDir, "tools/pattern-mutator");
 
 const requiredPublicEntries = [
   "favicon.svg",
@@ -50,6 +52,10 @@ if (!fs.existsSync(presetMutatorProSourceDir)) {
 
 if (!fs.existsSync(waveMutatorSourceDir)) {
   throw new Error("Missing apps/wave-mutator/public. Wave Mutator source must be available before syncing public assets.");
+}
+
+if (!fs.existsSync(patternMutatorSourceDir)) {
+  throw new Error("Missing apps/pattern-mutator/public. Pattern Mutator source must be available before syncing public assets.");
 }
 
 function redirectPage(target, message) {
@@ -158,6 +164,10 @@ writeLegacyPresetMutatorRedirects();
 fs.rmSync(waveMutatorPublicDir, { recursive: true, force: true });
 fs.mkdirSync(path.dirname(waveMutatorPublicDir), { recursive: true });
 fs.cpSync(waveMutatorSourceDir, waveMutatorPublicDir, { recursive: true });
+
+fs.rmSync(patternMutatorPublicDir, { recursive: true, force: true });
+fs.mkdirSync(path.dirname(patternMutatorPublicDir), { recursive: true });
+fs.cpSync(patternMutatorSourceDir, patternMutatorPublicDir, { recursive: true });
 
 const missing = requiredPublicEntries.filter((entry) => !fs.existsSync(path.join(publicDir, entry)));
 if (missing.length) {
