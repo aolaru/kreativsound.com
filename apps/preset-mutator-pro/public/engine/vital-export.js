@@ -7,6 +7,26 @@ export const SEED_BY_FAMILY = {
   texture: "KS Shadow Archive.vital",
 };
 
+function clearInheritedModulations(settings) {
+  if (!Array.isArray(settings.modulations)) {
+    return;
+  }
+
+  // The family seeds are expressive patches. Their LFO and macro routes must
+  // not override the explicit parameter map of a newly generated preset.
+  settings.modulations = settings.modulations.map((modulation) => {
+    if (!modulation || typeof modulation !== "object") {
+      return modulation;
+    }
+
+    return {
+      ...modulation,
+      destination: "",
+      source: "",
+    };
+  });
+}
+
 export function applyParameterMapToPreset(seedData, preset) {
   const rendered = cloneJson(seedData);
   const settings = rendered.settings || {};
@@ -24,9 +44,17 @@ export function applyParameterMapToPreset(seedData, preset) {
     }
   }
 
+  clearInheritedModulations(settings);
   settings.osc_1_on = 1;
   settings.osc_2_on = 1;
+  settings.osc_3_on = 0;
+  settings.sample_on = 0;
+  settings.sample_level = 0;
+  settings.filter_2_on = 0;
   settings.filter_1_on = 1;
+  settings.flanger_dry_wet = 0;
+  settings.phaser_dry_wet = 0;
+  settings.compressor_mix = 0;
   settings.chorus_on = settings.chorus_dry_wet > 0.01 ? 1 : 0;
   settings.reverb_on = settings.reverb_dry_wet > 0.01 ? 1 : 0;
   settings.distortion_on = settings.distortion_mix > 0.01 ? 1 : 0;

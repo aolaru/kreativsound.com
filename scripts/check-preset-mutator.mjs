@@ -115,6 +115,15 @@ function validateRenderedGeneratedPreset(seed, preset, label) {
   assert(payload.fileName.endsWith(".vital"), `${label}: rendered filename should be .vital`);
   validatePresetShape(payload.data, `${label}: rendered`);
 
+  const settings = payload.data.settings;
+  const activeModulations = Array.isArray(settings.modulations)
+    ? settings.modulations.filter((modulation) => modulation?.destination || modulation?.source)
+    : [];
+  assert(activeModulations.length === 0, `${label}: generated preset should not inherit seed modulation routes`);
+  assert(settings.osc_3_on === 0, `${label}: generated preset should disable the unused third oscillator`);
+  assert(settings.sample_on === 0 && settings.sample_level === 0, `${label}: generated preset should disable inherited samples`);
+  assert(settings.filter_2_on === 0, `${label}: generated preset should disable the unused second filter`);
+
   for (const [key, range] of Object.entries(generatedParameterRanges)) {
     validateRange(`${label}: rendered`, key, payload.data.settings[key], range);
   }
@@ -211,7 +220,7 @@ async function checkPages() {
 
   const changelogHtml = await readText("changelog/index.html");
   assert(changelogHtml.includes("Preset Mutator Changelog"), "Changelog: page title is missing");
-  assert(changelogHtml.includes("v0.4.2"), "Changelog: current version is missing");
+  assert(changelogHtml.includes("v0.4.3"), "Changelog: current version is missing");
   assert(changelogHtml.includes("Current release"), "Changelog: current release marker is missing");
 
   const serviceWorker = await readText("service-worker.js");
