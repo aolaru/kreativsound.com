@@ -93,6 +93,65 @@ export function createRng(seed) {
   };
 }
 
+const DIVERSITY_PARAMETERS = [
+  ["filter_1_cutoff", 100],
+  ["filter_1_resonance", 1],
+  ["osc_1_level", 1],
+  ["osc_2_level", 1],
+  ["osc_3_level", 1],
+  ["noise_level", 1],
+  ["reverb_dry_wet", 1],
+  ["delay_dry_wet", 1],
+  ["delay_feedback", 1],
+  ["distortion_mix", 1],
+  ["macro_control_1", 1],
+  ["macro_control_2", 1],
+  ["macro_control_3", 1],
+  ["macro_control_4", 1],
+  ["lfo_1_frequency", 8],
+];
+
+export function presetParameterDistance(left, right) {
+  if (left.topology !== right.topology) {
+    return 1;
+  }
+
+  const leftMap = left.parameterMap || left.data?.settings || {};
+  const rightMap = right.parameterMap || right.data?.settings || {};
+  const total = DIVERSITY_PARAMETERS.reduce((sum, [key, scale]) => {
+    return sum + Math.abs(Number(leftMap[key] || 0) - Number(rightMap[key] || 0)) / scale;
+  }, 0);
+  return total / DIVERSITY_PARAMETERS.length;
+}
+
+function nearestDistance(candidate, selected) {
+  return selected.reduce((minimum, existing) => Math.min(minimum, presetParameterDistance(existing, candidate)), 1);
+}
+
+export function buildDiversePack(count, createCandidate, minimumDistance = 0.01) {
+  const selected = [];
+
+  for (let index = 0; index < count; index += 1) {
+    let bestCandidate = createCandidate(index, 0);
+    let bestDistance = nearestDistance(bestCandidate, selected);
+    let bestAttempt = 0;
+
+    for (let attempt = 1; attempt <= 12 && bestDistance < minimumDistance; attempt += 1) {
+      const candidate = createCandidate(index, attempt);
+      const distance = nearestDistance(candidate, selected);
+      if (distance > bestDistance) {
+        bestCandidate = candidate;
+        bestDistance = distance;
+        bestAttempt = attempt;
+      }
+    }
+
+    selected.push({ ...bestCandidate, diversityRetries: bestAttempt, diversityDistance: bestDistance });
+  }
+
+  return selected;
+}
+
 export function countBucket(count) {
   if (count <= 8) {
     return "small";

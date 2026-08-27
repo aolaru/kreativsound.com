@@ -1,4 +1,4 @@
-import { clamp, familyLabel, lerp, noteName, titleCase, vary } from "./common.js";
+import { buildDiversePack, clamp, familyLabel, lerp, noteName, titleCase, vary } from "./common.js";
 import { chooseVelvetTemplate } from "./velvet-template-library.js";
 
 export const SCRATCH_PRO_PACK_COUNT = 32;
@@ -37,20 +37,20 @@ const PRO_RECIPES = [
 const PRO_TOPOLOGIES = ["foundation", "layered", "textural", "focused"];
 
 const FAMILY_MIX_LIMITS = {
-  pad: { volume: 5600, reverb: 0.62, delay: 0.3, distortion: 0.34, compressor: 0.46 },
-  pluck: { volume: 5200, reverb: 0.36, delay: 0.26, distortion: 0.3, compressor: 0.4 },
-  bass: { volume: 5000, reverb: 0.18, delay: 0.12, distortion: 0.44, compressor: 0.54 },
-  texture: { volume: 5400, reverb: 0.68, delay: 0.38, distortion: 0.4, compressor: 0.42 },
+  pad: { volume: 5600, reverb: 0.62, delay: 0.3, feedback: 0.48, distortion: 0.34, compressor: 0.46 },
+  pluck: { volume: 5200, reverb: 0.36, delay: 0.26, feedback: 0.34, distortion: 0.3, compressor: 0.4 },
+  bass: { volume: 5000, reverb: 0.18, delay: 0.12, feedback: 0.24, distortion: 0.44, compressor: 0.54 },
+  texture: { volume: 5400, reverb: 0.68, delay: 0.38, feedback: 0.56, distortion: 0.4, compressor: 0.42 },
 };
 
 function topologyMap(family, topology, { movement, noise, width, brightness }) {
   const layerLevel = family === "bass" ? 0.1 : 0.16 + movement * 0.14;
   const textureLevel = 0.04 + noise * 0.24;
   const maps = {
-    foundation: { osc_3_level: layerLevel * 0.45, noise_level: textureLevel * 0.35, flanger_dry_wet: 0.03 + movement * 0.06, phaser_dry_wet: 0.02 + movement * 0.05 },
-    layered: { osc_3_level: layerLevel, osc_3_stereo_spread: clamp(width * 0.82), noise_level: textureLevel * 0.45, flanger_dry_wet: 0.04 + movement * 0.08, phaser_dry_wet: 0.02 + movement * 0.06 },
-    textural: { osc_3_level: layerLevel * 0.72, noise_level: textureLevel, flanger_dry_wet: 0.05 + movement * 0.14, phaser_dry_wet: 0.04 + noise * 0.14 },
-    focused: { osc_3_level: layerLevel * 0.28, noise_level: textureLevel * 0.18, osc_2_level: family === "bass" ? 0.18 + brightness * 0.16 : 0.2 + brightness * 0.34, flanger_dry_wet: 0.02, phaser_dry_wet: 0.01 },
+    foundation: { osc_3_level: layerLevel * 0.45, noise_level: textureLevel * 0.35, flanger_dry_wet: 0.03 + movement * 0.06, phaser_dry_wet: 0.02 + movement * 0.05, macro_control_1: 0.46, macro_control_2: 0.34, macro_control_3: 0.4, macro_control_4: 0.32, lfo_1_frequency: 0.24 + movement * 0.42 },
+    layered: { osc_3_level: layerLevel, osc_3_stereo_spread: clamp(width * 0.82), noise_level: textureLevel * 0.45, flanger_dry_wet: 0.04 + movement * 0.08, phaser_dry_wet: 0.02 + movement * 0.06, macro_control_1: 0.58, macro_control_2: 0.5, macro_control_3: 0.66, macro_control_4: 0.36, lfo_1_frequency: 0.36 + movement * 0.64 },
+    textural: { osc_3_level: layerLevel * 0.72, noise_level: textureLevel, flanger_dry_wet: 0.05 + movement * 0.14, phaser_dry_wet: 0.04 + noise * 0.14, macro_control_1: 0.42, macro_control_2: 0.72, macro_control_3: 0.58, macro_control_4: 0.6, lfo_1_frequency: 0.52 + movement * 0.96 },
+    focused: { osc_3_level: layerLevel * 0.28, noise_level: textureLevel * 0.18, osc_2_level: family === "bass" ? 0.18 + brightness * 0.16 : 0.2 + brightness * 0.34, flanger_dry_wet: 0.02, phaser_dry_wet: 0.01, macro_control_1: 0.34, macro_control_2: 0.22, macro_control_3: 0.3, macro_control_4: 0.24, lfo_1_frequency: 0.16 + movement * 0.28 },
   };
   return maps[topology] || maps.foundation;
 }
@@ -193,7 +193,7 @@ export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1) 
       reverb_size: clamp(0.3 + sustain * 0.6, 0, 1),
       reverb_decay_time: clamp(0.22 + sustain * 0.72, 0, 1),
       delay_dry_wet: Math.min(delayMix, limits.delay),
-      delay_feedback: clamp(0.16 + movement * 0.28, 0, 0.95),
+      delay_feedback: Math.min(clamp(0.16 + movement * 0.28, 0, 0.95), limits.feedback),
       delay_filter_cutoff: clamp(36 + brightness * 44 + drive * 6, 0, 127),
       distortion_mix: Math.min(distortion, limits.distortion),
       distortion_drive: lerp(0.1, 4, clamp(distortion + drive * 0.18)),
@@ -231,8 +231,8 @@ export function shapeScratchProfile(base, recipe, index) {
 }
 
 export function buildScratchProPack(profile, generationSeed = 0) {
-  const seededProfile = { ...profile, generationSeed };
-  return Array.from({ length: SCRATCH_PRO_PACK_COUNT }, (_, index) => {
+  return buildDiversePack(SCRATCH_PRO_PACK_COUNT, (index, retry) => {
+    const seededProfile = { ...profile, generationSeed: generationSeed + retry * 7919 };
     const recipe = PRO_RECIPES[index % PRO_RECIPES.length];
     const topology = PRO_TOPOLOGIES[Math.floor(index / PRO_RECIPES.length) % PRO_TOPOLOGIES.length];
     return mapScratchProfileToVital({ ...shapeScratchProfile(seededProfile, recipe, index), topology }, index, recipe.role, 1.15);

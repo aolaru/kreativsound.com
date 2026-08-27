@@ -9,6 +9,10 @@ const versionFiles = [
   "apps/preset-mutator-pro/public/audio/index.html",
   "apps/preset-mutator-pro/public/mutate/index.html",
 ];
+const companionFiles = [
+  "apps/preset-mutator-pro/public/changelog/index.html",
+  "scripts/check-preset-mutator-pro.mjs",
+];
 
 function stagedProAppChanged() {
   const stagedFiles = execFileSync("git", ["diff", "--cached", "--name-only", "--diff-filter=ACMR"], {
@@ -65,7 +69,13 @@ async function bumpVersion() {
       writeFile(path.join(rootDir, file), content.split(currentVersion).join(nextVersion)),
     ),
   );
-  execFileSync("git", ["add", "--", ...versionFiles], { cwd: rootDir, stdio: "inherit" });
+  await Promise.all(
+    companionFiles.map(async (file) => {
+      const content = await readFile(path.join(rootDir, file), "utf8");
+      await writeFile(path.join(rootDir, file), content.split(currentVersion).join(nextVersion));
+    }),
+  );
+  execFileSync("git", ["add", "--", ...versionFiles, ...companionFiles], { cwd: rootDir, stdio: "inherit" });
   console.log(`Preset Mutator PRO version: ${currentVersion} -> ${nextVersion}`);
 }
 

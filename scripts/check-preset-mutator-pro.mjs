@@ -3,7 +3,8 @@ import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
-import { buildAudioProPack } from "../apps/preset-mutator-pro/public/engine/audio-engine.js";
+import { buildAudioProPack, buildAudioProfile } from "../apps/preset-mutator-pro/public/engine/audio-engine.js";
+import { presetParameterDistance } from "../apps/preset-mutator-pro/public/engine/common.js";
 import { generatePresetVariants, presetSummary } from "../apps/preset-mutator-pro/public/engine/preset-mutate-engine.js";
 import { buildScratchProfile, buildScratchProPack } from "../apps/preset-mutator-pro/public/engine/scratch-engine.js";
 import { VELVET_TEMPLATE_LIBRARY } from "../apps/preset-mutator-pro/public/engine/velvet-template-library.js";
@@ -44,7 +45,7 @@ for (const page of pages) {
   const [html, app] = await Promise.all([read(page.html), read(page.app)]);
   assert(html.includes('content="noindex, nofollow"'), `${page.name}: legacy page must stay out of search indexes`);
   assert(html.includes("Preset Mutator PRO"), `${page.name}: PRO access must be clearly labelled`);
-  assert(html.includes("v0.4.5"), `${page.name}: release version should be v0.4.5`);
+  assert(html.includes("v0.4.7"), `${page.name}: release version should be v0.4.7`);
   assert(html.includes("Gumroad license key"), `${page.name}: Gumroad license key entry is missing`);
   assert(html.includes("Generate 32 PRO Variants"), `${page.name}: PRO batch action is missing`);
   assert(!/\bfree\b/i.test(html), `${page.name}: free-tier copy must not appear in the PRO app`);
@@ -79,7 +80,7 @@ assert(licenseScript.includes('GUMROAD_PRODUCT_ID = "-A9fzCUAIYZ0QZKoRvyOQA=="')
 assert(licenseScript.includes("GUMROAD_VERIFY_URL"), "License verifier: Gumroad verification endpoint is missing");
 assert(await exists("assets/seeds/vital/raw/KS Dread Lantern.vital"), "Legacy Pro: missing Vital seed assets");
 assert(changelogHtml.includes("Preset Mutator PRO Changelog"), "Changelog: page title is missing");
-assert(changelogHtml.includes("v0.4.5"), "Changelog: current version is missing");
+assert(changelogHtml.includes("v0.4.7"), "Changelog: current version is missing");
 assert(changelogHtml.includes("Current release"), "Changelog: current release marker is missing");
 
 const templateFiles = Object.values(VELVET_TEMPLATE_LIBRARY).flat();
@@ -94,6 +95,8 @@ const nextScratchPack = buildScratchProPack(scratchProfile, 93614);
 assert(scratchPack.length === 32, "Scratch: expected a 32-preset PRO pack");
 assert(new Set(scratchPack.map((preset) => preset.templateFile)).size >= 3, "Scratch: pack should use multiple Velvet structures");
 assert(new Set(scratchPack.map((preset) => preset.topology)).size === 4, "Scratch: pack should balance four sound topologies");
+assert(new Set(scratchPack.map((preset) => preset.parameterMap.macro_control_1)).size === 4, "Scratch: topology should vary macro behavior");
+assert(scratchPack.every((preset) => preset.parameterMap.delay_feedback <= 0.56), "Scratch: delay feedback should respect family limits");
 assert(
   JSON.stringify(scratchPack.map((preset) => preset.parameterMap)) !== JSON.stringify(nextScratchPack.map((preset) => preset.parameterMap)),
   "Scratch: a new run seed must change generated parameters",
@@ -115,6 +118,12 @@ const audioPack = buildAudioProPack(audioProfile, 48271);
 assert(audioPack.length === 32, "Audio: expected a 32-preset PRO pack");
 assert(new Set(audioPack.map((preset) => preset.templateFile)).size >= 3, "Audio: pack should use multiple Velvet structures");
 assert(new Set(audioPack.map((preset) => preset.topology)).size === 4, "Audio: pack should balance four sound topologies");
+assert(new Set(audioPack.map((preset) => preset.parameterMap.macro_control_1)).size === 4, "Audio: topology should vary macro behavior");
+assert(audioPack.every((preset) => preset.parameterMap.delay_feedback <= 0.56), "Audio: delay feedback should respect family limits");
+
+const shortAudioProfile = buildAudioProfile({ centroidHz: 2400, pitchHz: 146, onsetRatio: 0.22, sustainRatio: 0.58, movement: 0.32, flatness: 0.18, zeroCrossRate: 0.04, stereoWidth: 0.5, duration: 1.2 });
+const longAudioProfile = buildAudioProfile({ centroidHz: 2400, pitchHz: 146, onsetRatio: 0.22, sustainRatio: 0.58, movement: 0.32, flatness: 0.18, zeroCrossRate: 0.04, stereoWidth: 0.5, duration: 12 });
+assert(longAudioProfile.sustain > shortAudioProfile.sustain && longAudioProfile.wash > shortAudioProfile.wash, "Audio: duration should influence sustained space decisions");
 
 const templateData = JSON.parse(await readFile(path.join(appDir, "assets/seeds/vital/velvet-ruins/KS Burial Bloom.vital"), "utf8"));
 const renderedTemplate = applyParameterMapToPreset(templateData, scratchPack[0]);
@@ -129,6 +138,8 @@ const firstMutations = generatePresetVariants({ sourcePreset, strategy: mutation
 const nextMutations = generatePresetVariants({ sourcePreset, strategy: mutationStrategy, generationSeed: 93614 });
 assert(firstMutations.length === 32, "Preset: expected a 32-preset PRO pack");
 assert(new Set(firstMutations.map((preset) => preset.mutationLane)).size === 4, "Preset: pack should balance four mutation lanes");
+assert(firstMutations.every((preset) => preset.diversityRetries >= 0), "Preset: variants should record diversity checks");
+assert(firstMutations.every((preset, index) => firstMutations.slice(0, index).every((earlier) => presetParameterDistance(earlier, preset) >= 0.01)), "Preset: pack should not contain near-duplicate candidates");
 assert(
   firstMutations.some((preset) => preset.changedParameters.some((key) => /^(osc_3|noise|distortion|compressor|flanger|phaser)_/.test(key))),
   "Preset: corpus-informed expressive parameter areas should be eligible for mutation",

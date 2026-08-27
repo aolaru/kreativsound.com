@@ -1,4 +1,4 @@
-import { clamp, cloneJson, createRng, hashString, slugifyFilename } from "./common.js";
+import { buildDiversePack, clamp, cloneJson, createRng, hashString, slugifyFilename } from "./common.js";
 import { velvetPriorityScore } from "./velvet-template-library.js";
 
 function createPackRole(group, index, config = {}) {
@@ -327,9 +327,11 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {}, 
   const spaceValue = controlValue(controls, "space", strategy.space);
   const dirtValue = controlValue(controls, "dirt", strategy.dirt);
 
-  return roles.map((role, index) => {
+  return buildDiversePack(roles.length, (index, retry) => {
+    const role = roles[index];
     const lane = DIVERSITY_LANES[index % DIVERSITY_LANES.length];
-    const rng = createRng(hashString(`pro:${source.fileName}:${role.key}:${amountValue}:${toneValue}:${motionValue}:${attackValue}:${spaceValue}:${dirtValue}:${generationSeed}`));
+    const variantSeed = generationSeed + retry * 7919;
+    const rng = createRng(hashString(`pro:${source.fileName}:${role.key}:${amountValue}:${toneValue}:${motionValue}:${attackValue}:${spaceValue}:${dirtValue}:${variantSeed}`));
     const data = cloneJson(source.data);
     const settings = data.settings;
     const baseChanges = 10;

@@ -176,7 +176,7 @@ async function checkPages() {
     assert(!html.includes("hero-cover"), `${page.name}: hero cover should not be present in app UI`);
     assert(!html.includes("<h1></h1>"), `${page.name}: empty h1 found`);
     assert(html.includes("Generate 3 Variants"), `${page.name}: main action should use simple variants language`);
-    assert(html.includes("v0.4.4"), `${page.name}: release version should be v0.4.4`);
+    assert(html.includes("v0.4.6"), `${page.name}: release version should be v0.4.6`);
     assert(!html.includes("Generate 3 Free Variants"), `${page.name}: old free-mode action copy is still visible`);
     assert(html.includes("Preset Mutator PRO"), `${page.name}: PRO upgrade should be visible`);
     assert(html.includes("Get Preset Mutator PRO for €19"), `${page.name}: PRO Gumroad CTA is missing`);
@@ -222,7 +222,7 @@ async function checkPages() {
 
   const changelogHtml = await readText("changelog/index.html");
   assert(changelogHtml.includes("Preset Mutator Changelog"), "Changelog: page title is missing");
-  assert(changelogHtml.includes("v0.4.4"), "Changelog: current version is missing");
+  assert(changelogHtml.includes("v0.4.6"), "Changelog: current version is missing");
   assert(changelogHtml.includes("Current release"), "Changelog: current release marker is missing");
 
   const serviceWorker = await readText("service-worker.js");
@@ -292,6 +292,8 @@ function checkAudioEngine(seedByFamily) {
   assert(freePack.length === 3, `Audio engine: expected 3 free presets, found ${freePack.length}`);
   assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Audio engine: free roles are inconsistent");
   assert(new Set(freePack.map((preset) => preset.architecture)).size === 3, "Audio engine: each free role should use a distinct sound architecture");
+  const longerProfile = buildAudioProfile({ ...analysis, duration: 12 }, { inputMode: "auto" });
+  assert(longerProfile.sustain > profile.sustain && longerProfile.wash > profile.wash, "Audio engine: duration should influence sustained space decisions");
   assert(JSON.stringify(freePack[0].parameterMap) !== JSON.stringify(alternatePack[0].parameterMap), "Audio engine: a new variation seed should produce a distinct set");
   assert(buildAudioPresetSummary({ family: "pad", brightness: 0.5, movement: 0.4, width: 0.5, sustain: 0.5, attack: 0.8, register: "C3" }).includes("harder attack"), "Audio engine: high attack summary should say harder attack");
 

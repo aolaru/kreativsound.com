@@ -2,7 +2,7 @@ import { clamp, familyLabel, formatHz, lerp, noteName, vary } from "./common.js"
 
 export const AUDIO_FREE_VARIANT_LIMIT = 3;
 
-const FREE_ARCHITECTURES = ["foundation", "layered", "noise-bed", "focused"];
+const FREE_ARCHITECTURES = ["foundation", "layered", "noise-bed", "space-wash", "focused"];
 
 function architectureFor(family, index, variationSeed) {
   const offset = (variationSeed + (family === "texture" ? 1 : family === "bass" ? 2 : 0)) % FREE_ARCHITECTURES.length;
@@ -16,6 +16,7 @@ function architectureMap(family, architecture, { brightness, movement, noise, wi
     foundation: { osc_3_on: 0, osc_3_level: 0, noise_on: noise > 0.52 ? 1 : 0, noise_level: noise > 0.52 ? noiseLevel * 0.45 : 0, flanger_dry_wet: 0, phaser_dry_wet: 0 },
     layered: { osc_3_on: 1, osc_3_level: layerLevel, osc_3_stereo_spread: clamp(width * 0.7), noise_on: 0, noise_level: 0, flanger_dry_wet: 0, phaser_dry_wet: 0.02 + movement * 0.06 },
     "noise-bed": { osc_3_on: family === "bass" ? 0 : 1, osc_3_level: layerLevel * 0.6, noise_on: 1, noise_level: noiseLevel, flanger_dry_wet: 0.03 + movement * 0.09, phaser_dry_wet: 0.02 + noise * 0.08 },
+    "space-wash": { osc_3_on: family === "bass" ? 0 : 1, osc_3_level: layerLevel * 0.48, noise_on: 0, noise_level: 0, reverb_dry_wet: family === "pluck" ? 0.3 : 0.48 + movement * 0.12, reverb_size: 0.68, reverb_decay_time: 0.72, delay_dry_wet: family === "bass" ? 0.08 : 0.14 + movement * 0.1, delay_feedback: family === "bass" ? 0.2 : 0.34 + movement * 0.12, flanger_dry_wet: 0, phaser_dry_wet: 0.02 + movement * 0.05 },
     focused: { osc_3_on: 0, osc_3_level: 0, osc_2_level: family === "bass" ? 0.16 + brightness * 0.14 : 0.18 + brightness * 0.3, noise_on: 0, noise_level: 0, flanger_dry_wet: 0, phaser_dry_wet: 0 },
   };
   return maps[architecture] || maps.foundation;
@@ -47,16 +48,19 @@ export function buildAudioProfile(analysis, options = {}) {
   const movementBias = percentValue(options.movementBias);
   const attackBias = percentValue(options.attackBias);
   const family = determineAudioFamily(analysis, options.inputMode || "auto");
+  const durationShape = clamp((Number(analysis.duration) || 0) / 14);
 
   return {
     family,
     brightness: clamp(analysis.centroidHz / 6000 + brightnessBias * 0.35),
     body: clamp(1 - analysis.centroidHz / 9000 + (analysis.pitchHz > 0 && analysis.pitchHz < 220 ? 0.12 : 0)),
     attack: clamp(1 - analysis.onsetRatio + attackBias * 0.3),
-    sustain: clamp(analysis.sustainRatio),
+    sustain: clamp(analysis.sustainRatio + (durationShape - 0.32) * 0.18),
     movement: clamp(analysis.movement * 1.4 + movementBias * 0.35),
     noise: clamp(analysis.flatness * 1.8 + analysis.zeroCrossRate * 8),
     width: clamp(analysis.stereoWidth * 1.2),
+    wetness: clamp(0.1 + durationShape * 0.22),
+    wash: clamp(0.04 + durationShape * 0.2),
     mutationAmount: Number(options.mutationAmount ?? 50) / 100,
     dirtBias: percentValue(options.dirtBias),
     widthBias: percentValue(options.widthBias),

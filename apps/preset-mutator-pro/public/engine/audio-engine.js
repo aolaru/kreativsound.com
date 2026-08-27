@@ -1,4 +1,4 @@
-import { clamp, familyLabel, formatHz, lerp, noteName, vary } from "./common.js";
+import { buildDiversePack, clamp, familyLabel, formatHz, lerp, noteName, vary } from "./common.js";
 import { chooseVelvetTemplate } from "./velvet-template-library.js";
 
 export const AUDIO_PRO_PACK_COUNT = 32;
@@ -6,20 +6,20 @@ export const AUDIO_PRO_PACK_COUNT = 32;
 const PRO_TOPOLOGIES = ["foundation", "layered", "textural", "focused"];
 
 const FAMILY_MIX_LIMITS = {
-  pad: { volume: 5600, reverb: 0.62, delay: 0.3, distortion: 0.34, compressor: 0.46 },
-  pluck: { volume: 5200, reverb: 0.36, delay: 0.26, distortion: 0.3, compressor: 0.4 },
-  bass: { volume: 5000, reverb: 0.18, delay: 0.12, distortion: 0.44, compressor: 0.54 },
-  texture: { volume: 5400, reverb: 0.68, delay: 0.38, distortion: 0.4, compressor: 0.42 },
+  pad: { volume: 5600, reverb: 0.62, delay: 0.3, feedback: 0.48, distortion: 0.34, compressor: 0.46 },
+  pluck: { volume: 5200, reverb: 0.36, delay: 0.26, feedback: 0.34, distortion: 0.3, compressor: 0.4 },
+  bass: { volume: 5000, reverb: 0.18, delay: 0.12, feedback: 0.24, distortion: 0.44, compressor: 0.54 },
+  texture: { volume: 5400, reverb: 0.68, delay: 0.38, feedback: 0.56, distortion: 0.4, compressor: 0.42 },
 };
 
 function topologyMap(family, topology, { movement, noise, width, brightness }) {
   const layerLevel = family === "bass" ? 0.1 : 0.16 + movement * 0.14;
   const textureLevel = 0.04 + noise * 0.24;
   const maps = {
-    foundation: { osc_3_level: layerLevel * 0.45, noise_level: textureLevel * 0.35, flanger_dry_wet: 0.03 + movement * 0.06, phaser_dry_wet: 0.02 + movement * 0.05 },
-    layered: { osc_3_level: layerLevel, osc_3_stereo_spread: clamp(width * 0.82), noise_level: textureLevel * 0.45, flanger_dry_wet: 0.04 + movement * 0.08, phaser_dry_wet: 0.02 + movement * 0.06 },
-    textural: { osc_3_level: layerLevel * 0.72, noise_level: textureLevel, flanger_dry_wet: 0.05 + movement * 0.14, phaser_dry_wet: 0.04 + noise * 0.14 },
-    focused: { osc_3_level: layerLevel * 0.28, noise_level: textureLevel * 0.18, osc_2_level: family === "bass" ? 0.18 + brightness * 0.16 : 0.2 + brightness * 0.34, flanger_dry_wet: 0.02, phaser_dry_wet: 0.01 },
+    foundation: { osc_3_level: layerLevel * 0.45, noise_level: textureLevel * 0.35, flanger_dry_wet: 0.03 + movement * 0.06, phaser_dry_wet: 0.02 + movement * 0.05, macro_control_1: 0.46, macro_control_2: 0.34, macro_control_3: 0.4, macro_control_4: 0.32, lfo_1_frequency: 0.24 + movement * 0.42 },
+    layered: { osc_3_level: layerLevel, osc_3_stereo_spread: clamp(width * 0.82), noise_level: textureLevel * 0.45, flanger_dry_wet: 0.04 + movement * 0.08, phaser_dry_wet: 0.02 + movement * 0.06, macro_control_1: 0.58, macro_control_2: 0.5, macro_control_3: 0.66, macro_control_4: 0.36, lfo_1_frequency: 0.36 + movement * 0.64 },
+    textural: { osc_3_level: layerLevel * 0.72, noise_level: textureLevel, flanger_dry_wet: 0.05 + movement * 0.14, phaser_dry_wet: 0.04 + noise * 0.14, macro_control_1: 0.42, macro_control_2: 0.72, macro_control_3: 0.58, macro_control_4: 0.6, lfo_1_frequency: 0.52 + movement * 0.96 },
+    focused: { osc_3_level: layerLevel * 0.28, noise_level: textureLevel * 0.18, osc_2_level: family === "bass" ? 0.18 + brightness * 0.16 : 0.2 + brightness * 0.34, flanger_dry_wet: 0.02, phaser_dry_wet: 0.01, macro_control_1: 0.34, macro_control_2: 0.22, macro_control_3: 0.3, macro_control_4: 0.24, lfo_1_frequency: 0.16 + movement * 0.28 },
   };
   return maps[topology] || maps.foundation;
 }
@@ -51,15 +51,18 @@ export function buildAudioProfile(analysis, options = {}) {
   const attackBias = percentValue(options.attackBias);
   const family = determineAudioFamily(analysis, options.inputMode || "auto");
 
+  const durationShape = clamp((Number(analysis.duration) || 0) / 14);
   return {
     family,
     brightness: clamp(analysis.centroidHz / 6000 + brightnessBias * 0.35),
     body: clamp(1 - analysis.centroidHz / 9000 + (analysis.pitchHz > 0 && analysis.pitchHz < 220 ? 0.12 : 0)),
     attack: clamp(1 - analysis.onsetRatio + attackBias * 0.3),
-    sustain: clamp(analysis.sustainRatio),
+    sustain: clamp(analysis.sustainRatio + (durationShape - 0.32) * 0.18),
     movement: clamp(analysis.movement * 1.4 + movementBias * 0.35),
     noise: clamp(analysis.flatness * 1.8 + analysis.zeroCrossRate * 8),
     width: clamp(analysis.stereoWidth * 1.2),
+    wetness: clamp(0.1 + durationShape * 0.22),
+    wash: clamp(0.04 + durationShape * 0.2),
     mutationAmount: Number(options.mutationAmount ?? 50) / 100,
     dirtBias: percentValue(options.dirtBias),
     widthBias: percentValue(options.widthBias),
@@ -223,7 +226,7 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
       reverb_size: clamp(0.3 + sustain * 0.6 + (profile.wash ?? 0) * 0.16, 0, 1),
       reverb_decay_time: clamp(0.22 + sustain * 0.72 + (profile.wash ?? 0) * 0.2, 0, 1),
       delay_dry_wet: Math.min(delayMix, limits.delay),
-      delay_feedback: clamp(0.16 + movement * 0.28 + Math.max(0, profile.wash ?? 0) * 0.16, 0, 0.95),
+      delay_feedback: Math.min(clamp(0.16 + movement * 0.28 + Math.max(0, profile.wash ?? 0) * 0.16, 0, 0.95), limits.feedback),
       delay_filter_cutoff: clamp(36 + brightness * 44 + (profile.drive ?? 0) * 6, 0, 127),
       distortion_mix: Math.min(distortion, limits.distortion),
       distortion_drive: lerp(0.1, 4, clamp(distortion + Math.max(0, profile.drive ?? 0) * 0.18)),
@@ -275,7 +278,6 @@ export function shapeAudioProfile(baseProfile, recipe, index) {
 }
 
 export function buildAudioProPack(profile, generationSeed = 0) {
-  const seededProfile = { ...profile, generationSeed };
   const recipes = [
     { role: "Closest", brightness: -0.02, movement: -0.02, spread: 0.04, amountScale: 0.85 },
     { role: "Closest", brightness: 0.03, width: 0.04, spread: 0.04, amountScale: 0.85 },
@@ -295,7 +297,8 @@ export function buildAudioProPack(profile, generationSeed = 0) {
     { role: "Textured", noise: 0.14, brightness: -0.04, width: 0.04, drive: 0.05, spread: 0.06, amountScale: 1.05 },
   ];
 
-  return Array.from({ length: AUDIO_PRO_PACK_COUNT }, (_, index) => {
+  return buildDiversePack(AUDIO_PRO_PACK_COUNT, (index, retry) => {
+    const seededProfile = { ...profile, generationSeed: generationSeed + retry * 7919 };
     const recipe = recipes[index % recipes.length];
     const topology = PRO_TOPOLOGIES[Math.floor(index / (recipes.length / PRO_TOPOLOGIES.length)) % PRO_TOPOLOGIES.length];
     const shaped = { ...shapeAudioProfile(seededProfile, recipe, index), topology };
