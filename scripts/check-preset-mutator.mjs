@@ -37,6 +37,7 @@ const modePages = [
 const generatedParameterRanges = {
   osc_1_level: [0, 1],
   osc_2_level: [0, 1],
+  volume: [0, 16000],
   osc_1_unison_voices: [1, 8],
   osc_2_unison_voices: [1, 8],
   osc_1_unison_detune: [0, 1],
@@ -251,6 +252,8 @@ function checkScratchEngine(seedByFamily) {
   assert(freePack.length === 3, `Scratch engine: expected 3 free presets, found ${freePack.length}`);
   assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Scratch engine: free roles are inconsistent");
   assert(JSON.stringify(freePack[0].parameterMap) !== JSON.stringify(alternatePack[0].parameterMap), "Scratch engine: a new variation seed should produce a distinct set");
+  assert(freePack.every((preset) => preset.parameterMap.volume === 7200), "Scratch engine: generated presets should use the normalized output level");
+  assert(freePack.every((preset) => preset.parameterMap.filter_1_cutoff >= 42), "Scratch engine: non-bass presets should retain the open-filter baseline");
 
   for (const [index, preset] of freePack.entries()) {
     const label = `Scratch engine preset ${index + 1}`;

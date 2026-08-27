@@ -136,7 +136,7 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
   const oscMode = chooseOscillator(family, brightness, noise);
   const voices = family === "bass" ? Math.round(lerp(1, 3, width)) : Math.round(lerp(2, 8, width));
   const detune = family === "bass" ? lerp(0.02, 0.1, width) : lerp(0.05, 0.28, width);
-  const filterCutoff = family === "bass" ? lerp(120, 2200, brightness) : lerp(320, 14000, brightness);
+  const filterCutoff = family === "bass" ? lerp(220, 3400, brightness) : lerp(900, 17000, brightness);
   const resonance = lerp(0.08, 0.45, 1 - body);
   const envAttack = family === "pluck" ? lerp(0.001, 0.08, 1 - attack) : lerp(0.01, 2.4, 1 - attack);
   const envDecay = family === "pluck" ? lerp(0.08, 1.4, sustain) : lerp(0.3, 3.4, sustain);
@@ -173,13 +173,16 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
     parameterMap: {
       osc_1_level: family === "bass" ? lerp(0.78, 0.98, body) : lerp(0.48, 0.86, body),
       osc_2_level: family === "bass" ? lerp(0.18, 0.42, brightness) : lerp(0.24, 0.72, brightness),
+      volume: 7200,
       osc_1_unison_voices: voices,
       osc_2_unison_voices: Math.max(1, voices - (family === "bass" ? 1 : 0)),
       osc_1_unison_detune: detune,
       osc_2_unison_detune: clamp(detune * 1.14, 0.02, 0.35),
       osc_1_stereo_spread: width,
       osc_2_stereo_spread: clamp(width * 0.92, 0, 1),
-      filter_1_cutoff: lerp(18, 92, cutoffNormalized),
+      filter_1_cutoff: family === "bass"
+        ? lerp(30, 68, brightness)
+        : lerp(42, 108, cutoffNormalized),
       filter_1_resonance: resonance,
       filter_1_drive: lerp(0.2, 3.2, body * 0.5 + noise * 0.5),
       filter_1_keytrack: family === "bass" ? 0.75 : lerp(0.12, 0.52, brightness),
