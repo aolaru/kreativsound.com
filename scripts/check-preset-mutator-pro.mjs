@@ -36,6 +36,7 @@ for (const page of pages) {
   const [html, app] = await Promise.all([read(page.html), read(page.app)]);
   assert(html.includes('content="noindex, nofollow"'), `${page.name}: legacy page must stay out of search indexes`);
   assert(html.includes("Preset Mutator PRO"), `${page.name}: PRO access must be clearly labelled`);
+  assert(html.includes("v0.4.4"), `${page.name}: release version should be v0.4.4`);
   assert(html.includes("Enter license token"), `${page.name}: license token entry is missing`);
   assert(html.includes("Generate 32 PRO Variants"), `${page.name}: PRO batch action is missing`);
   assert(!/\bfree\b/i.test(html), `${page.name}: free-tier copy must not appear in the PRO app`);
@@ -62,7 +63,7 @@ assert(serviceWorker.includes("./changelog/index.html"), "Service worker: change
 assert(licenseScript.includes('LICENSE_PRODUCT = "preset-mutator-pro"'), "License verifier: product identifier changed unexpectedly");
 assert(await exists("assets/seeds/vital/raw/KS Dread Lantern.vital"), "Legacy Pro: missing Vital seed assets");
 assert(changelogHtml.includes("Preset Mutator PRO Changelog"), "Changelog: page title is missing");
-assert(changelogHtml.includes("v0.4.3"), "Changelog: current version is missing");
+assert(changelogHtml.includes("v0.4.4"), "Changelog: current version is missing");
 assert(changelogHtml.includes("Current release"), "Changelog: current release marker is missing");
 
 if (failures.length) {

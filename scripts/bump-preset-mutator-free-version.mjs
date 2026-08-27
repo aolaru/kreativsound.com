@@ -5,12 +5,12 @@ import { fileURLToPath } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const versionFiles = [
-  "apps/preset-mutator-pro/public/index.html",
-  "apps/preset-mutator-pro/public/audio/index.html",
-  "apps/preset-mutator-pro/public/mutate/index.html",
+  "apps/preset-mutator/public/index.html",
+  "apps/preset-mutator/public/audio/index.html",
+  "apps/preset-mutator/public/mutate/index.html",
 ];
 
-function stagedProAppChanged() {
+function stagedFreeAppChanged() {
   const stagedFiles = execFileSync("git", ["diff", "--cached", "--name-only", "--diff-filter=ACMR"], {
     cwd: rootDir,
     encoding: "utf8",
@@ -19,7 +19,7 @@ function stagedProAppChanged() {
     .filter(Boolean);
 
   return stagedFiles.some(
-    (file) => file.startsWith("apps/preset-mutator-pro/public/") && !file.startsWith("apps/preset-mutator-pro/public/changelog/"),
+    (file) => file.startsWith("apps/preset-mutator/public/") && !file.startsWith("apps/preset-mutator/public/changelog/"),
   );
 }
 
@@ -29,13 +29,13 @@ function stagedVersionChanged() {
     encoding: "utf8",
   });
 
-  return /^[-+](?![-+]).*Preset Mutator PRO v\d+\.\d+\.\d+/m.test(diff);
+  return /^[-+](?![-+]).*Preset Mutator v\d+\.\d+\.\d+/m.test(diff);
 }
 
 function nextPatchVersion(version) {
   const match = /^v(\d+)\.(\d+)\.(\d+)$/.exec(version);
   if (!match) {
-    throw new Error(`Unsupported Preset Mutator PRO version: ${version}`);
+    throw new Error(`Unsupported Preset Mutator version: ${version}`);
   }
 
   const [, major, minor, patch] = match;
@@ -54,7 +54,7 @@ async function bumpVersion() {
   );
 
   if (versions.size !== 1) {
-    throw new Error(`Preset Mutator PRO version files are out of sync: ${[...versions].join(", ") || "none found"}`);
+    throw new Error(`Preset Mutator version files are out of sync: ${[...versions].join(", ") || "none found"}`);
   }
 
   const [currentVersion] = versions;
@@ -66,9 +66,9 @@ async function bumpVersion() {
     ),
   );
   execFileSync("git", ["add", "--", ...versionFiles], { cwd: rootDir, stdio: "inherit" });
-  console.log(`Preset Mutator PRO version: ${currentVersion} -> ${nextVersion}`);
+  console.log(`Preset Mutator version: ${currentVersion} -> ${nextVersion}`);
 }
 
-if (!process.argv.includes("--staged") || (stagedProAppChanged() && !stagedVersionChanged())) {
+if (!process.argv.includes("--staged") || (stagedFreeAppChanged() && !stagedVersionChanged())) {
   await bumpVersion();
 }

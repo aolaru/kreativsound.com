@@ -175,6 +175,7 @@ async function checkPages() {
     assert(!html.includes("hero-cover"), `${page.name}: hero cover should not be present in app UI`);
     assert(!html.includes("<h1></h1>"), `${page.name}: empty h1 found`);
     assert(html.includes("Generate 3 Variants"), `${page.name}: main action should use simple variants language`);
+    assert(html.includes("v0.4.3"), `${page.name}: release version should be v0.4.3`);
     assert(!html.includes("Generate 3 Free Variants"), `${page.name}: old free-mode action copy is still visible`);
     assert(html.includes("Preset Mutator PRO"), `${page.name}: PRO upgrade should be visible`);
     assert(html.includes("Get Preset Mutator PRO for €19"), `${page.name}: PRO Gumroad CTA is missing`);
