@@ -1,9 +1,9 @@
 import { clamp, cloneJson, createRng, hashString, slugifyFilename } from "./common.js";
 
 export const FREE_VARIANT_ROLES = [
-  { key: "closest", label: "Closest", multiplier: 0.7, nameSuffix: "Closest" },
-  { key: "darker", label: "Darker", multiplier: 1, nameSuffix: "Darker", toneBias: -0.75, motionBias: -0.08, dirtBias: 0.12, spaceBias: -0.08 },
-  { key: "more-motion", label: "More Motion", multiplier: 1.18, nameSuffix: "More Motion", toneBias: 0.02, motionBias: 0.86, dirtBias: 0.05, spaceBias: 0.16 },
+  { key: "closest", label: "Closest", multiplier: 0.7, nameSuffix: "Closest", preferredZones: ["tone", "attack"] },
+  { key: "darker", label: "Darker", multiplier: 1, nameSuffix: "Darker", toneBias: -0.75, motionBias: -0.08, dirtBias: 0.12, spaceBias: -0.08, preferredZones: ["tone", "dirt"], preferredPrefixes: ["filter_", "osc_3_", "distortion_"] },
+  { key: "more-motion", label: "More Motion", multiplier: 1.18, nameSuffix: "More Motion", toneBias: 0.02, motionBias: 0.86, dirtBias: 0.05, spaceBias: 0.16, preferredZones: ["motion", "space"], preferredPrefixes: ["osc_3_", "flanger_", "phaser_", "delay_"] },
 ];
 
 export const SAFE_PARAMETER_BOUNDS = {
@@ -41,6 +41,12 @@ export const SAFE_PARAMETER_BOUNDS = {
 const SAFE_PARAMETER_PREFIXES = [
   "osc_1_",
   "osc_2_",
+  "osc_3_",
+  "noise_",
+  "distortion_",
+  "compressor_",
+  "flanger_",
+  "phaser_",
   "filter_1_",
   "filter_2_",
   "env_1_",
@@ -149,7 +155,7 @@ function mutateValue(key, value, config, rng, strategy, intensity, role) {
   return config.integral ? Math.round(mutated) : mutated;
 }
 
-function chooseParameterPool(keys, strategy) {
+function chooseParameterPool(keys, strategy, role) {
   const scored = keys.map((key) => {
     const config = parameterConfigForKey(key);
     let score = 1;
@@ -167,6 +173,12 @@ function chooseParameterPool(keys, strategy) {
     }
     if (config?.zone === "space") {
       score += Math.abs(strategy.space) * 1.5;
+    }
+    if (role?.preferredZones?.includes(config?.zone)) {
+      score += 1.15;
+    }
+    if (role?.preferredPrefixes?.some((prefix) => key.startsWith(prefix))) {
+      score += 0.85;
     }
     return { key, score };
   });
@@ -225,7 +237,6 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {}, 
 
   const summary = source.summary || presetSummary(source.data);
   const scalarKeys = summary.scalarKeys || safeScalarParameterKeys(source.data.settings);
-  const pool = chooseParameterPool(scalarKeys, strategy);
   const roles = FREE_VARIANT_ROLES;
   const amountValue = controlValue(controls, "amount", strategy.amount);
   const toneValue = controlValue(controls, "tone", strategy.tone);
@@ -240,7 +251,7 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {}, 
     const settings = data.settings;
     const baseChanges = 8;
     const changeCount = clamp(Math.round(baseChanges + strategy.amount * 16 + (index % 4) * 2), 6, 22);
-    const candidateKeys = pool.slice(0, Math.max(changeCount * 2, 12));
+    const candidateKeys = chooseParameterPool(scalarKeys, strategy, role).slice(0, Math.max(changeCount * 2, 12));
     const chosen = [];
 
     while (chosen.length < Math.min(changeCount, candidateKeys.length)) {

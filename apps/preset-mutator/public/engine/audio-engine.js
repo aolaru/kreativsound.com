@@ -2,6 +2,25 @@ import { clamp, familyLabel, formatHz, lerp, noteName, vary } from "./common.js"
 
 export const AUDIO_FREE_VARIANT_LIMIT = 3;
 
+const FREE_ARCHITECTURES = ["foundation", "layered", "noise-bed", "focused"];
+
+function architectureFor(family, index, variationSeed) {
+  const offset = (variationSeed + (family === "texture" ? 1 : family === "bass" ? 2 : 0)) % FREE_ARCHITECTURES.length;
+  return FREE_ARCHITECTURES[(index + offset) % FREE_ARCHITECTURES.length];
+}
+
+function architectureMap(family, architecture, { brightness, movement, noise, width }) {
+  const layerLevel = family === "bass" ? 0.08 : 0.12 + movement * 0.12;
+  const noiseLevel = 0.03 + noise * 0.2;
+  const maps = {
+    foundation: { osc_3_on: 0, osc_3_level: 0, noise_on: noise > 0.52 ? 1 : 0, noise_level: noise > 0.52 ? noiseLevel * 0.45 : 0, flanger_dry_wet: 0, phaser_dry_wet: 0 },
+    layered: { osc_3_on: 1, osc_3_level: layerLevel, osc_3_stereo_spread: clamp(width * 0.7), noise_on: 0, noise_level: 0, flanger_dry_wet: 0, phaser_dry_wet: 0.02 + movement * 0.06 },
+    "noise-bed": { osc_3_on: family === "bass" ? 0 : 1, osc_3_level: layerLevel * 0.6, noise_on: 1, noise_level: noiseLevel, flanger_dry_wet: 0.03 + movement * 0.09, phaser_dry_wet: 0.02 + noise * 0.08 },
+    focused: { osc_3_on: 0, osc_3_level: 0, osc_2_level: family === "bass" ? 0.16 + brightness * 0.14 : 0.18 + brightness * 0.3, noise_on: 0, noise_level: 0, flanger_dry_wet: 0, phaser_dry_wet: 0 },
+  };
+  return maps[architecture] || maps.foundation;
+}
+
 function percentValue(value) {
   return Number(value || 0) / 100;
 }
@@ -151,6 +170,7 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
   const noiseLevel = lerp(0, 0.34, noise);
   const cutoffNormalized = clamp((filterCutoff - 120) / (14000 - 120));
   const register = profile.pitchHz > 0 ? noteName(profile.pitchHz) : "Unknown";
+  const architecture = profile.architecture || architectureFor(family, index, options.variationSeed ?? 0);
   const name = buildAudioVariantName({
     family,
     index,
@@ -169,6 +189,7 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
     roleLabel,
     family: familyLabel(family),
     familyKey: family,
+    architecture,
     summary: buildAudioPresetSummary({ family, brightness, movement, width, sustain, attack, register }),
     parameterMap: {
       osc_1_level: family === "bass" ? lerp(0.78, 0.98, body) : lerp(0.48, 0.86, body),
@@ -205,8 +226,7 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
       filter_fx_cutoff: lerp(26, 86, brightness) - (profile.drive ?? 0) * 8,
       filter_fx_resonance: clamp(0.08 + noise * 0.26 + Math.max(0, profile.drive ?? 0) * 0.12, 0, 1),
       sample_on: 0,
-      noise_on: noiseLevel > 0.03 ? 1 : 0,
-      noise_level: noiseLevel,
+      ...architectureMap(family, architecture, { brightness, movement, noise, width }),
     },
     parameters: [
       ["Oscillator", oscMode],
@@ -258,7 +278,8 @@ export function buildAudioFreePack(profile, variationSeed = 0) {
   ];
 
   return recipes.map((recipe, index) => {
-    const shaped = shapeAudioProfile(profile, recipe, index, variationSeed);
+    const architecture = architectureFor(profile.family, index, variationSeed);
+    const shaped = { ...shapeAudioProfile(profile, recipe, index, variationSeed), architecture };
     return mapAudioProfileToVital(shaped, index, {
       amountScale: recipe.amountScale,
       roleLabel: recipe.role,

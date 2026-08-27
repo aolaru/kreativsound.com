@@ -3,6 +3,27 @@ import { chooseVelvetTemplate } from "./velvet-template-library.js";
 
 export const AUDIO_PRO_PACK_COUNT = 32;
 
+const PRO_TOPOLOGIES = ["foundation", "layered", "textural", "focused"];
+
+const FAMILY_MIX_LIMITS = {
+  pad: { volume: 5600, reverb: 0.62, delay: 0.3, distortion: 0.34, compressor: 0.46 },
+  pluck: { volume: 5200, reverb: 0.36, delay: 0.26, distortion: 0.3, compressor: 0.4 },
+  bass: { volume: 5000, reverb: 0.18, delay: 0.12, distortion: 0.44, compressor: 0.54 },
+  texture: { volume: 5400, reverb: 0.68, delay: 0.38, distortion: 0.4, compressor: 0.42 },
+};
+
+function topologyMap(family, topology, { movement, noise, width, brightness }) {
+  const layerLevel = family === "bass" ? 0.1 : 0.16 + movement * 0.14;
+  const textureLevel = 0.04 + noise * 0.24;
+  const maps = {
+    foundation: { osc_3_level: layerLevel * 0.45, noise_level: textureLevel * 0.35, flanger_dry_wet: 0.03 + movement * 0.06, phaser_dry_wet: 0.02 + movement * 0.05 },
+    layered: { osc_3_level: layerLevel, osc_3_stereo_spread: clamp(width * 0.82), noise_level: textureLevel * 0.45, flanger_dry_wet: 0.04 + movement * 0.08, phaser_dry_wet: 0.02 + movement * 0.06 },
+    textural: { osc_3_level: layerLevel * 0.72, noise_level: textureLevel, flanger_dry_wet: 0.05 + movement * 0.14, phaser_dry_wet: 0.04 + noise * 0.14 },
+    focused: { osc_3_level: layerLevel * 0.28, noise_level: textureLevel * 0.18, osc_2_level: family === "bass" ? 0.18 + brightness * 0.16 : 0.2 + brightness * 0.34, flanger_dry_wet: 0.02, phaser_dry_wet: 0.01 },
+  };
+  return maps[topology] || maps.foundation;
+}
+
 function percentValue(value) {
   return Number(value || 0) / 100;
 }
@@ -164,18 +185,22 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
     sustain,
     pitchHz: profile.pitchHz,
   });
+  const topology = profile.topology || PRO_TOPOLOGIES[index % PRO_TOPOLOGIES.length];
+  const limits = FAMILY_MIX_LIMITS[family] || FAMILY_MIX_LIMITS.pad;
 
   return {
     name,
     roleLabel,
     family: familyLabel(family),
     familyKey: family,
-    templateFile: chooseVelvetTemplate(family, generationSeed, index),
+    templateFile: chooseVelvetTemplate(family, generationSeed, index, { brightness, body, movement, noise, width }),
     generationSeed,
+    topology,
     summary: buildAudioPresetSummary({ family, brightness, movement, width, sustain, attack, register }),
     parameterMap: {
       osc_1_level: family === "bass" ? lerp(0.78, 0.98, body) : lerp(0.48, 0.86, body),
       osc_2_level: family === "bass" ? lerp(0.18, 0.42, brightness) : lerp(0.24, 0.72, brightness),
+      volume: limits.volume,
       osc_1_unison_voices: voices,
       osc_2_unison_voices: Math.max(1, voices - (family === "bass" ? 1 : 0)),
       osc_1_unison_detune: detune,
@@ -191,20 +216,21 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
       env_1_decay: clamp(envDecay / 3.4, 0.02, 1),
       env_1_sustain: envSustain,
       env_1_release: clamp(envRelease / 6.5, 0.03, 1),
-      chorus_dry_wet: chorusMix,
+      chorus_dry_wet: Math.min(chorusMix, family === "bass" ? 0.18 : 0.56),
       chorus_mod_depth: clamp(0.12 + width * 0.6, 0, 1),
       chorus_feedback: clamp(0.08 + movement * 0.4, 0, 0.95),
-      reverb_dry_wet: reverbMix,
+      reverb_dry_wet: Math.min(reverbMix, limits.reverb),
       reverb_size: clamp(0.3 + sustain * 0.6 + (profile.wash ?? 0) * 0.16, 0, 1),
       reverb_decay_time: clamp(0.22 + sustain * 0.72 + (profile.wash ?? 0) * 0.2, 0, 1),
-      delay_dry_wet: delayMix,
+      delay_dry_wet: Math.min(delayMix, limits.delay),
       delay_feedback: clamp(0.16 + movement * 0.28 + Math.max(0, profile.wash ?? 0) * 0.16, 0, 0.95),
       delay_filter_cutoff: clamp(36 + brightness * 44 + (profile.drive ?? 0) * 6, 0, 127),
-      distortion_mix: distortion,
+      distortion_mix: Math.min(distortion, limits.distortion),
       distortion_drive: lerp(0.1, 4, clamp(distortion + Math.max(0, profile.drive ?? 0) * 0.18)),
       filter_fx_cutoff: lerp(26, 86, brightness) - (profile.drive ?? 0) * 8,
       filter_fx_resonance: clamp(0.08 + noise * 0.26 + Math.max(0, profile.drive ?? 0) * 0.12, 0, 1),
-      noise_level: noiseLevel,
+      compressor_mix: limits.compressor,
+      ...topologyMap(family, topology, { movement, noise, width, brightness }),
     },
     parameters: [
       ["Oscillator", oscMode],
@@ -271,7 +297,8 @@ export function buildAudioProPack(profile, generationSeed = 0) {
 
   return Array.from({ length: AUDIO_PRO_PACK_COUNT }, (_, index) => {
     const recipe = recipes[index % recipes.length];
-    const shaped = shapeAudioProfile(seededProfile, recipe, index);
+    const topology = PRO_TOPOLOGIES[Math.floor(index / (recipes.length / PRO_TOPOLOGIES.length)) % PRO_TOPOLOGIES.length];
+    const shaped = { ...shapeAudioProfile(seededProfile, recipe, index), topology };
     return mapAudioProfileToVital(shaped, index, {
       amountScale: recipe.amountScale ?? 1,
       roleLabel: recipe.role,

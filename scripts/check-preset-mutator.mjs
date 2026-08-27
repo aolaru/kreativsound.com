@@ -121,7 +121,7 @@ function validateRenderedGeneratedPreset(seed, preset, label) {
     ? settings.modulations.filter((modulation) => modulation?.destination || modulation?.source)
     : [];
   assert(activeModulations.length === 0, `${label}: generated preset should not inherit seed modulation routes`);
-  assert(settings.osc_3_on === 0, `${label}: generated preset should disable the unused third oscillator`);
+  assert(settings.osc_3_on === (preset.parameterMap.osc_3_on ? 1 : 0), `${label}: generated preset should apply the selected third-oscillator architecture`);
   assert(settings.sample_on === 0 && settings.sample_level === 0, `${label}: generated preset should disable inherited samples`);
   assert(settings.filter_2_on === 0, `${label}: generated preset should disable the unused second filter`);
 
@@ -251,6 +251,7 @@ function checkScratchEngine(seedByFamily) {
 
   assert(freePack.length === 3, `Scratch engine: expected 3 free presets, found ${freePack.length}`);
   assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Scratch engine: free roles are inconsistent");
+  assert(new Set(freePack.map((preset) => preset.architecture)).size === 3, "Scratch engine: each free role should use a distinct sound architecture");
   assert(JSON.stringify(freePack[0].parameterMap) !== JSON.stringify(alternatePack[0].parameterMap), "Scratch engine: a new variation seed should produce a distinct set");
   assert(freePack.every((preset) => preset.parameterMap.volume === 7200), "Scratch engine: generated presets should use the normalized output level");
   assert(freePack.every((preset) => preset.parameterMap.filter_1_cutoff >= 42), "Scratch engine: non-bass presets should retain the open-filter baseline");
@@ -290,6 +291,7 @@ function checkAudioEngine(seedByFamily) {
 
   assert(freePack.length === 3, `Audio engine: expected 3 free presets, found ${freePack.length}`);
   assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Audio engine: free roles are inconsistent");
+  assert(new Set(freePack.map((preset) => preset.architecture)).size === 3, "Audio engine: each free role should use a distinct sound architecture");
   assert(JSON.stringify(freePack[0].parameterMap) !== JSON.stringify(alternatePack[0].parameterMap), "Audio engine: a new variation seed should produce a distinct set");
   assert(buildAudioPresetSummary({ family: "pad", brightness: 0.5, movement: 0.4, width: 0.5, sustain: 0.5, attack: 0.8, register: "C3" }).includes("harder attack"), "Audio engine: high attack summary should say harder attack");
 
@@ -329,6 +331,7 @@ function checkPresetMutationEngine(seedFile, seedData) {
 
   assert(freeVariants.length === 3, `${seedFile}: expected 3 free mutation variants, found ${freeVariants.length}`);
   assert(freeVariants.map((variant) => variant.role.label).join("|") === "Closest|Darker|More Motion", `${seedFile}: free mutation roles are inconsistent`);
+  assert(freeVariants[2].changedParameters.some((key) => /^(osc_3|flanger|phaser|delay)_/.test(key)), `${seedFile}: More Motion should target expressive parameter areas`);
   assert(JSON.stringify(freeVariants[0].data.settings) !== JSON.stringify(alternateVariants[0].data.settings), `${seedFile}: a new variation seed should produce distinct mutations`);
 
   for (const [index, variant] of freeVariants.entries()) {

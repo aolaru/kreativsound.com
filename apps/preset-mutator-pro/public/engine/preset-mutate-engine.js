@@ -214,7 +214,26 @@ function mutateValue(key, value, config, rng, strategy, intensity, role) {
   return config.integral ? Math.round(mutated) : mutated;
 }
 
-function chooseParameterPool(keys, strategy) {
+const DIVERSITY_LANES = [
+  { key: "tone", zones: ["tone", "attack"], prefixes: ["osc_1_", "osc_2_", "filter_"] },
+  { key: "motion", zones: ["motion"], prefixes: ["osc_3_", "flanger_", "phaser_", "delay_"] },
+  { key: "space", zones: ["space"], prefixes: ["chorus_", "reverb_", "delay_", "osc_3_"] },
+  { key: "texture", zones: ["dirt", "motion"], prefixes: ["noise_", "distortion_", "osc_3_", "filter_"] },
+];
+
+function sourceAreaIsActive(settings, key) {
+  const prefix = key.match(/^(osc_[123]|noise|distortion|compressor|flanger|phaser|chorus|delay|reverb)/)?.[1];
+  if (!prefix) {
+    return true;
+  }
+  const enabledKey = `${prefix}_on`;
+  if (typeof settings[enabledKey] === "number") {
+    return settings[enabledKey] > 0;
+  }
+  return Number(settings[key]) !== 0;
+}
+
+function chooseParameterPool(keys, strategy, settings, lane) {
   const scored = keys.map((key) => {
     const config = parameterConfigForKey(key);
     let score = 1;
@@ -233,6 +252,15 @@ function chooseParameterPool(keys, strategy) {
     if (config?.zone === "space") {
       score += Math.abs(strategy.space) * 1.5;
     }
+    if (lane.zones.includes(config?.zone)) {
+      score += 1.35;
+    }
+    if (lane.prefixes.some((prefix) => key.startsWith(prefix))) {
+      score += 0.8;
+    }
+    // Preserve a patch's identity while making its genuinely audible layers
+    // more likely to be explored than dormant controls.
+    score += sourceAreaIsActive(settings, key) ? 0.55 : -0.35;
     score += velvetPriorityScore(key, strategy);
     return { key, score };
   });
@@ -291,7 +319,6 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {}, 
 
   const summary = source.summary || presetSummary(source.data);
   const scalarKeys = summary.scalarKeys || safeScalarParameterKeys(source.data.settings);
-  const pool = chooseParameterPool(scalarKeys, strategy);
   const roles = PRO_PACK_ROLES;
   const amountValue = controlValue(controls, "amount", strategy.amount);
   const toneValue = controlValue(controls, "tone", strategy.tone);
@@ -301,12 +328,13 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {}, 
   const dirtValue = controlValue(controls, "dirt", strategy.dirt);
 
   return roles.map((role, index) => {
+    const lane = DIVERSITY_LANES[index % DIVERSITY_LANES.length];
     const rng = createRng(hashString(`pro:${source.fileName}:${role.key}:${amountValue}:${toneValue}:${motionValue}:${attackValue}:${spaceValue}:${dirtValue}:${generationSeed}`));
     const data = cloneJson(source.data);
     const settings = data.settings;
     const baseChanges = 10;
     const changeCount = clamp(Math.round(baseChanges + strategy.amount * 18 + (index % 4) * 2), 6, 24);
-    const candidateKeys = pool.slice(0, Math.max(changeCount * 2, 12));
+    const candidateKeys = chooseParameterPool(scalarKeys, strategy, source.data.settings, lane).slice(0, Math.max(changeCount * 2, 12));
     const chosen = [];
 
     while (chosen.length < Math.min(changeCount, candidateKeys.length)) {
@@ -339,6 +367,7 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {}, 
       groupKey: role.groupKey || "pro",
       groupLabel: role.groupLabel || "PRO Variants",
       groupDescription: role.groupDescription || "PRO mutations generated from the loaded preset.",
+      mutationLane: lane.key,
       name: data.preset_name,
       description: data.comments,
       changedParameters,

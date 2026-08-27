@@ -93,6 +93,7 @@ const scratchPack = buildScratchProPack(scratchProfile, 48271);
 const nextScratchPack = buildScratchProPack(scratchProfile, 93614);
 assert(scratchPack.length === 32, "Scratch: expected a 32-preset PRO pack");
 assert(new Set(scratchPack.map((preset) => preset.templateFile)).size >= 3, "Scratch: pack should use multiple Velvet structures");
+assert(new Set(scratchPack.map((preset) => preset.topology)).size === 4, "Scratch: pack should balance four sound topologies");
 assert(
   JSON.stringify(scratchPack.map((preset) => preset.parameterMap)) !== JSON.stringify(nextScratchPack.map((preset) => preset.parameterMap)),
   "Scratch: a new run seed must change generated parameters",
@@ -113,6 +114,7 @@ const audioProfile = {
 const audioPack = buildAudioProPack(audioProfile, 48271);
 assert(audioPack.length === 32, "Audio: expected a 32-preset PRO pack");
 assert(new Set(audioPack.map((preset) => preset.templateFile)).size >= 3, "Audio: pack should use multiple Velvet structures");
+assert(new Set(audioPack.map((preset) => preset.topology)).size === 4, "Audio: pack should balance four sound topologies");
 
 const templateData = JSON.parse(await readFile(path.join(appDir, "assets/seeds/vital/velvet-ruins/KS Burial Bloom.vital"), "utf8"));
 const renderedTemplate = applyParameterMapToPreset(templateData, scratchPack[0]);
@@ -126,6 +128,7 @@ const mutationStrategy = { tone: 0.15, motion: 0.45, attack: 0, space: 0.2, dirt
 const firstMutations = generatePresetVariants({ sourcePreset, strategy: mutationStrategy, generationSeed: 48271 });
 const nextMutations = generatePresetVariants({ sourcePreset, strategy: mutationStrategy, generationSeed: 93614 });
 assert(firstMutations.length === 32, "Preset: expected a 32-preset PRO pack");
+assert(new Set(firstMutations.map((preset) => preset.mutationLane)).size === 4, "Preset: pack should balance four mutation lanes");
 assert(
   firstMutations.some((preset) => preset.changedParameters.some((key) => /^(osc_3|noise|distortion|compressor|flanger|phaser)_/.test(key))),
   "Preset: corpus-informed expressive parameter areas should be eligible for mutation",

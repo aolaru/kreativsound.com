@@ -2,6 +2,25 @@ import { clamp, familyLabel, lerp, noteName, titleCase, vary } from "./common.js
 
 export const SCRATCH_FREE_VARIANT_LIMIT = 3;
 
+const FREE_ARCHITECTURES = ["foundation", "layered", "noise-bed", "focused"];
+
+function architectureFor(family, index, variationSeed) {
+  const offset = (variationSeed + (family === "texture" ? 1 : family === "bass" ? 2 : 0)) % FREE_ARCHITECTURES.length;
+  return FREE_ARCHITECTURES[(index + offset) % FREE_ARCHITECTURES.length];
+}
+
+function architectureMap(family, architecture, { brightness, movement, noise, width }) {
+  const layerLevel = family === "bass" ? 0.08 : 0.12 + movement * 0.12;
+  const noiseLevel = 0.03 + noise * 0.2;
+  const maps = {
+    foundation: { osc_3_on: 0, osc_3_level: 0, noise_on: noise > 0.52 ? 1 : 0, noise_level: noise > 0.52 ? noiseLevel * 0.45 : 0, flanger_dry_wet: 0, phaser_dry_wet: 0 },
+    layered: { osc_3_on: 1, osc_3_level: layerLevel, osc_3_stereo_spread: clamp(width * 0.7), noise_on: 0, noise_level: 0, flanger_dry_wet: 0, phaser_dry_wet: 0.02 + movement * 0.06 },
+    "noise-bed": { osc_3_on: family === "bass" ? 0 : 1, osc_3_level: layerLevel * 0.6, noise_on: 1, noise_level: noiseLevel, flanger_dry_wet: 0.03 + movement * 0.09, phaser_dry_wet: 0.02 + noise * 0.08 },
+    focused: { osc_3_on: 0, osc_3_level: 0, osc_2_level: family === "bass" ? 0.16 + brightness * 0.14 : 0.18 + brightness * 0.3, noise_on: 0, noise_level: 0, flanger_dry_wet: 0, phaser_dry_wet: 0 },
+  };
+  return maps[architecture] || maps.foundation;
+}
+
 const MOOD_PROFILE = {
   dark: { brightness: 0.32, body: 0.68, movement: 0.44, noise: 0.34, width: 0.48, sustain: 0.64, wetness: 0.32, drive: 0.18 },
   warm: { brightness: 0.5, body: 0.72, movement: 0.36, noise: 0.18, width: 0.42, sustain: 0.58, wetness: 0.24, drive: 0.08 },
@@ -122,15 +141,16 @@ export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1, 
   const reverbMix = clamp((family === "pluck" ? lerp(0.08, 0.28, sustain) : lerp(0.12, 0.62, sustain)) + wetness * 0.18);
   const delayMix = clamp(0.02 + wetness * 0.12 + movement * 0.05);
   const distortion = clamp(lerp(0, 0.56, noise * 0.65 + brightness * 0.35) + drive * 0.18);
-  const noiseLevel = lerp(0, 0.34, noise);
   const cutoffNormalized = clamp((filterCutoff - 120) / (14000 - 120));
   const presetName = buildPresetName(profile, { brightness, movement, noise, width }, index);
+  const architecture = profile.architecture || architectureFor(family, index, variationSeed);
 
   return {
     name: presetName,
     roleLabel,
     family: familyLabel(family),
     familyKey: family,
+    architecture,
     summary: buildScratchPresetSummary({ family, brightness, movement, width, sustain, attack, register: noteName(profile.pitchHz) }),
     parameterMap: {
       osc_1_level: family === "bass" ? lerp(0.78, 0.98, body) : lerp(0.48, 0.86, body),
@@ -169,8 +189,7 @@ export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1, 
       filter_fx_cutoff: lerp(26, 86, brightness) - drive * 8,
       filter_fx_resonance: clamp(0.08 + noise * 0.26 + drive * 0.12, 0, 1),
       sample_on: 0,
-      noise_on: noiseLevel > 0.03 ? 1 : 0,
-      noise_level: noiseLevel,
+      ...architectureMap(family, architecture, { brightness, movement, noise, width }),
     },
     parameters: [
       ["Filter Cutoff", filterCutoff >= 1000 ? `${(filterCutoff / 1000).toFixed(2)} kHz` : `${Math.round(filterCutoff)} Hz`],
@@ -205,5 +224,8 @@ export function buildScratchFreePack(profile, variationSeed = 0) {
     { role: "Closest", spread: 0.04 },
     { role: "Darker", brightness: -0.16, body: 0.06, spread: 0.05 },
     { role: "More Motion", movement: 0.18, width: 0.06, wetness: 0.04, spread: 0.05 },
-  ].map((recipe, index) => mapScratchProfileToVital(shapeScratchProfile(profile, recipe, index, variationSeed), index, recipe.role, 0.9, variationSeed));
+  ].map((recipe, index) => {
+    const architecture = architectureFor(profile.family, index, variationSeed);
+    return mapScratchProfileToVital({ ...shapeScratchProfile(profile, recipe, index, variationSeed), architecture }, index, recipe.role, 0.9, variationSeed);
+  });
 }
