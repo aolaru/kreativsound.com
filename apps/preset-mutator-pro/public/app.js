@@ -1,5 +1,5 @@
 import { PresetMutatorKnob } from "./preset-mutator-knob.js";
-import { ensureJsZip, familyLabel, noteName, sanitizeFileName } from "./engine/common.js";
+import { createGenerationSeed, ensureJsZip, familyLabel, noteName, sanitizeFileName } from "./engine/common.js";
 import {
   buildScratchProfile,
   buildScratchProPack,
@@ -238,29 +238,30 @@ function bestUseForPreset(preset) {
   return "Pads, cues, and atmospheric layers";
 }
 
-function seedUrlForFamily(family) {
-  const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
-  return new URL(`./assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, import.meta.url);
+function seedUrlForPreset(preset) {
+  const seedName = preset.templateFile || SEED_BY_FAMILY[preset.familyKey] || SEED_BY_FAMILY.texture;
+  const directory = preset.templateFile ? "velvet-ruins" : "raw";
+  return new URL(`./assets/seeds/vital/${directory}/${encodeURIComponent(seedName)}`, import.meta.url);
 }
 
-async function loadSeedPreset(family) {
-  const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
+async function loadSeedPreset(preset) {
+  const seedName = preset.templateFile || SEED_BY_FAMILY[preset.familyKey] || SEED_BY_FAMILY.texture;
   if (state.seedCache.has(seedName)) {
     return structuredClone(state.seedCache.get(seedName));
   }
 
-  const response = await fetch(seedUrlForFamily(family));
+  const response = await fetch(seedUrlForPreset(preset));
   if (!response.ok) {
     throw new Error(`Could not load Vital seed preset: ${seedName}`);
   }
 
-  const preset = await response.json();
-  state.seedCache.set(seedName, preset);
-  return structuredClone(preset);
+  const seedData = await response.json();
+  state.seedCache.set(seedName, seedData);
+  return structuredClone(seedData);
 }
 
 async function buildVitalPresetBlob(preset) {
-  const seed = await loadSeedPreset(preset.familyKey);
+  const seed = await loadSeedPreset(preset);
   return createVitalPresetBlob(seed, preset);
 }
 
@@ -336,7 +337,7 @@ function generate() {
   updateStatus("Building 32 PRO variants...");
   window.setTimeout(() => {
     const profile = currentProfile();
-    state.presets = buildScratchProPack(profile);
+    state.presets = buildScratchProPack(profile, createGenerationSeed());
     renderPresets(state.presets);
     elements.downloadPack.disabled = false;
     updateStatus("32 PRO variants ready.");
@@ -366,16 +367,16 @@ function renderUnlockState() {
 async function unlockPro() {
   const code = elements.paidFeatureKey.value.trim();
   if (!code) {
-    elements.paidFeatureUnlockNote.textContent = "Enter your license token to unlock this browser.";
+    elements.paidFeatureUnlockNote.textContent = "Enter your Gumroad license key to unlock this browser.";
     analyticsEvent("unlock_attempt", { result: "empty" });
     return;
   }
   elements.paidFeatureUnlockButton.disabled = true;
-  elements.paidFeatureUnlockNote.textContent = "Checking license token...";
+  elements.paidFeatureUnlockNote.textContent = "Checking Gumroad license key...";
   const result = await verifyLicenseToken(code);
   elements.paidFeatureUnlockButton.disabled = false;
   if (!result.valid) {
-    elements.paidFeatureUnlockNote.textContent = "Invalid license token. Check the token and try again.";
+    elements.paidFeatureUnlockNote.textContent = "Gumroad could not verify this license key. Check the key and try again.";
     analyticsEvent("unlock_attempt", { result: "invalid" });
     return;
   }

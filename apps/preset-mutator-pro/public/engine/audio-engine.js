@@ -1,4 +1,5 @@
 import { clamp, familyLabel, formatHz, lerp, noteName, vary } from "./common.js";
+import { chooseVelvetTemplate } from "./velvet-template-library.js";
 
 export const AUDIO_PRO_PACK_COUNT = 32;
 
@@ -124,13 +125,14 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
   const amountScale = options.amountScale ?? 1;
   const roleLabel = options.roleLabel ?? null;
   const family = profile.family;
-  const brightness = vary(profile.brightness, 0.08 * amountScale, index, 1);
-  const body = vary(profile.body, 0.08 * amountScale, index, 2);
-  const attack = vary(profile.attack, 0.1 * amountScale, index, 3);
-  const sustain = vary(profile.sustain, 0.08 * amountScale, index, 4);
-  const movement = vary(profile.movement, 0.12 * amountScale, index, 5);
-  const noise = vary(profile.noise, 0.08 * amountScale, index, 6);
-  const width = vary(profile.width, 0.1 * amountScale, index, 7);
+  const generationSeed = profile.generationSeed ?? 0;
+  const brightness = vary(profile.brightness, 0.08 * amountScale, index, 1, 0, 1, generationSeed);
+  const body = vary(profile.body, 0.08 * amountScale, index, 2, 0, 1, generationSeed);
+  const attack = vary(profile.attack, 0.1 * amountScale, index, 3, 0, 1, generationSeed);
+  const sustain = vary(profile.sustain, 0.08 * amountScale, index, 4, 0, 1, generationSeed);
+  const movement = vary(profile.movement, 0.12 * amountScale, index, 5, 0, 1, generationSeed);
+  const noise = vary(profile.noise, 0.08 * amountScale, index, 6, 0, 1, generationSeed);
+  const width = vary(profile.width, 0.1 * amountScale, index, 7, 0, 1, generationSeed);
 
   const oscMode = chooseOscillator(family, brightness, noise);
   const voices = family === "bass" ? Math.round(lerp(1, 3, width)) : Math.round(lerp(2, 8, width));
@@ -168,6 +170,8 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
     roleLabel,
     family: familyLabel(family),
     familyKey: family,
+    templateFile: chooseVelvetTemplate(family, generationSeed, index),
+    generationSeed,
     summary: buildAudioPresetSummary({ family, brightness, movement, width, sustain, attack, register }),
     parameterMap: {
       osc_1_level: family === "bass" ? lerp(0.78, 0.98, body) : lerp(0.48, 0.86, body),
@@ -200,8 +204,6 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
       distortion_drive: lerp(0.1, 4, clamp(distortion + Math.max(0, profile.drive ?? 0) * 0.18)),
       filter_fx_cutoff: lerp(26, 86, brightness) - (profile.drive ?? 0) * 8,
       filter_fx_resonance: clamp(0.08 + noise * 0.26 + Math.max(0, profile.drive ?? 0) * 0.12, 0, 1),
-      sample_on: 0,
-      noise_on: noiseLevel > 0.03 ? 1 : 0,
       noise_level: noiseLevel,
     },
     parameters: [
@@ -228,24 +230,26 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
 export function shapeAudioProfile(baseProfile, recipe, index) {
   const mutationScale = 0.55 + (baseProfile.mutationAmount ?? 0.5) * 1.15;
   const spread = (fallback) => fallback * mutationScale;
+  const generationSeed = baseProfile.generationSeed ?? 0;
 
   return {
     ...baseProfile,
     family: recipe.family || baseProfile.family,
-    brightness: vary(clamp(baseProfile.brightness + (recipe.brightness ?? 0)), spread(recipe.spread ?? 0.07), index, 21),
-    body: vary(clamp(baseProfile.body + (recipe.body ?? 0)), spread(recipe.spread ?? 0.06), index, 22),
-    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0)), spread(recipe.spread ?? 0.08), index, 23),
-    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0)), spread(recipe.spread ?? 0.07), index, 24),
-    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0)), spread(recipe.spread ?? 0.09), index, 25),
-    noise: vary(clamp(baseProfile.noise + (recipe.noise ?? 0) + (baseProfile.dirtBias ?? 0) * 0.18), spread(recipe.spread ?? 0.07), index, 26),
-    width: vary(clamp(baseProfile.width + (recipe.width ?? 0) + (baseProfile.widthBias ?? 0) * 0.18), spread(recipe.spread ?? 0.08), index, 27),
-    wetness: vary(clamp((baseProfile.wetness ?? 0.18) + (recipe.wetness ?? 0)), spread(recipe.spread ?? 0.05), index, 28),
-    wash: vary(clamp((baseProfile.wash ?? 0.12) + (recipe.wash ?? 0)), spread(recipe.spread ?? 0.05), index, 29),
-    drive: vary(clamp((baseProfile.drive ?? 0.08) + (recipe.drive ?? 0)), spread(recipe.spread ?? 0.05), index, 30),
+    brightness: vary(clamp(baseProfile.brightness + (recipe.brightness ?? 0)), spread(recipe.spread ?? 0.07), index, 21, 0, 1, generationSeed),
+    body: vary(clamp(baseProfile.body + (recipe.body ?? 0)), spread(recipe.spread ?? 0.06), index, 22, 0, 1, generationSeed),
+    attack: vary(clamp(baseProfile.attack + (recipe.attack ?? 0)), spread(recipe.spread ?? 0.08), index, 23, 0, 1, generationSeed),
+    sustain: vary(clamp(baseProfile.sustain + (recipe.sustain ?? 0)), spread(recipe.spread ?? 0.07), index, 24, 0, 1, generationSeed),
+    movement: vary(clamp(baseProfile.movement + (recipe.movement ?? 0)), spread(recipe.spread ?? 0.09), index, 25, 0, 1, generationSeed),
+    noise: vary(clamp(baseProfile.noise + (recipe.noise ?? 0) + (baseProfile.dirtBias ?? 0) * 0.18), spread(recipe.spread ?? 0.07), index, 26, 0, 1, generationSeed),
+    width: vary(clamp(baseProfile.width + (recipe.width ?? 0) + (baseProfile.widthBias ?? 0) * 0.18), spread(recipe.spread ?? 0.08), index, 27, 0, 1, generationSeed),
+    wetness: vary(clamp((baseProfile.wetness ?? 0.18) + (recipe.wetness ?? 0)), spread(recipe.spread ?? 0.05), index, 28, 0, 1, generationSeed),
+    wash: vary(clamp((baseProfile.wash ?? 0.12) + (recipe.wash ?? 0)), spread(recipe.spread ?? 0.05), index, 29, 0, 1, generationSeed),
+    drive: vary(clamp((baseProfile.drive ?? 0.08) + (recipe.drive ?? 0)), spread(recipe.spread ?? 0.05), index, 30, 0, 1, generationSeed),
   };
 }
 
-export function buildAudioProPack(profile) {
+export function buildAudioProPack(profile, generationSeed = 0) {
+  const seededProfile = { ...profile, generationSeed };
   const recipes = [
     { role: "Closest", brightness: -0.02, movement: -0.02, spread: 0.04, amountScale: 0.85 },
     { role: "Closest", brightness: 0.03, width: 0.04, spread: 0.04, amountScale: 0.85 },
@@ -267,7 +271,7 @@ export function buildAudioProPack(profile) {
 
   return Array.from({ length: AUDIO_PRO_PACK_COUNT }, (_, index) => {
     const recipe = recipes[index % recipes.length];
-    const shaped = shapeAudioProfile(profile, recipe, index);
+    const shaped = shapeAudioProfile(seededProfile, recipe, index);
     return mapAudioProfileToVital(shaped, index, {
       amountScale: recipe.amountScale ?? 1,
       roleLabel: recipe.role,

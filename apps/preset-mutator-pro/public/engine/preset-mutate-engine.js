@@ -1,4 +1,5 @@
 import { clamp, cloneJson, createRng, hashString, slugifyFilename } from "./common.js";
+import { velvetPriorityScore } from "./velvet-template-library.js";
 
 function createPackRole(group, index, config = {}) {
   return {
@@ -99,6 +100,12 @@ export const SAFE_PARAMETER_BOUNDS = {
 const SAFE_PARAMETER_PREFIXES = [
   "osc_1_",
   "osc_2_",
+  "osc_3_",
+  "noise_",
+  "distortion_",
+  "compressor_",
+  "flanger_",
+  "phaser_",
   "filter_1_",
   "filter_2_",
   "env_1_",
@@ -226,6 +233,7 @@ function chooseParameterPool(keys, strategy) {
     if (config?.zone === "space") {
       score += Math.abs(strategy.space) * 1.5;
     }
+    score += velvetPriorityScore(key, strategy);
     return { key, score };
   });
 
@@ -275,7 +283,7 @@ function controlValue(controls, key, fallback) {
   return String(controls?.[key] ?? Math.round(fallback * 100));
 }
 
-export function generatePresetVariants({ sourcePreset, strategy, controls = {} }) {
+export function generatePresetVariants({ sourcePreset, strategy, controls = {}, generationSeed = 0 }) {
   const source = sourcePreset;
   if (!source?.data?.settings) {
     return [];
@@ -293,7 +301,7 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {} }
   const dirtValue = controlValue(controls, "dirt", strategy.dirt);
 
   return roles.map((role, index) => {
-    const rng = createRng(hashString(`pro:${source.fileName}:${role.key}:${amountValue}:${toneValue}:${motionValue}:${attackValue}:${spaceValue}:${dirtValue}`));
+    const rng = createRng(hashString(`pro:${source.fileName}:${role.key}:${amountValue}:${toneValue}:${motionValue}:${attackValue}:${spaceValue}:${dirtValue}:${generationSeed}`));
     const data = cloneJson(source.data);
     const settings = data.settings;
     const baseChanges = 10;

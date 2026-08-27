@@ -4,6 +4,8 @@ const LEGACY_UNLOCK_KEYS = [
   "preset-mutator-pro-preview-unlocked",
 ];
 const LICENSE_PRODUCT = "preset-mutator-pro";
+const GUMROAD_PRODUCT_ID = "-A9fzCUAIYZ0QZKoRvyOQA==";
+const GUMROAD_VERIFY_URL = "https://api.gumroad.com/v2/licenses/verify";
 const LICENSE_PUBLIC_KEY = {
   kty: "EC",
   x: "c5RUK0LbcIkxe1wgnoSp4FOJiv1tVY1tYY4ngti4Lfs",
@@ -17,6 +19,10 @@ let importedPublicKeyPromise = null;
 
 function normalizeToken(token) {
   return String(token || "").replace(/\s+/g, "");
+}
+
+function normalizeGumroadLicenseKey(key) {
+  return normalizeToken(key).toUpperCase();
 }
 
 function base64UrlToBytes(value) {
@@ -76,7 +82,7 @@ export function clearLegacyUnlocks() {
   }
 }
 
-export async function verifyLicenseToken(token) {
+async function verifySignedLicenseToken(token) {
   const normalized = normalizeToken(token);
   const [encodedPayload, encodedSignature] = normalized.split(".");
   if (!encodedPayload || !encodedSignature) {
@@ -108,6 +114,60 @@ export async function verifyLicenseToken(token) {
   } catch (error) {
     return { valid: false, reason: "invalid" };
   }
+}
+
+async function verifyGumroadLicenseKey(key) {
+  const licenseKey = normalizeGumroadLicenseKey(key);
+  if (!licenseKey) {
+    return { valid: false, reason: "format" };
+  }
+
+  try {
+    const response = await fetch(GUMROAD_VERIFY_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        product_id: GUMROAD_PRODUCT_ID,
+        license_key: licenseKey,
+        // Activation should not consume one of Gumroad's optional seat uses.
+        increment_uses_count: "false",
+      }),
+    });
+    const result = await response.json();
+    const purchase = result?.purchase;
+
+    if (
+      !response.ok
+      || !result?.success
+      || purchase?.product_id !== GUMROAD_PRODUCT_ID
+      || purchase?.refunded
+      || purchase?.disputed
+      || purchase?.chargebacked
+    ) {
+      return { valid: false, reason: "gumroad" };
+    }
+
+    return {
+      valid: true,
+      payload: {
+        product: LICENSE_PRODUCT,
+        email: purchase.email,
+        orderId: purchase.sale_id || purchase.id || licenseKey,
+        licenseKey,
+      },
+    };
+  } catch {
+    return { valid: false, reason: "network" };
+  }
+}
+
+export async function verifyLicenseToken(token) {
+  const normalized = normalizeToken(token);
+  // Retain access for customers who received an earlier signed token while
+  // making Gumroad's own key the standard activation method.
+  return normalized.includes(".")
+    ? verifySignedLicenseToken(normalized)
+    : verifyGumroadLicenseKey(normalized);
 }
 
 export function licenseOwnerLabel(payload) {

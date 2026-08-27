@@ -1,5 +1,5 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { ensureJsZip, slugifyFilename } from "../engine/common.js";
+import { createGenerationSeed, ensureJsZip, slugifyFilename } from "../engine/common.js";
 import {
   buildPresetMutateStrategy,
   generatePresetVariants as createPresetVariants,
@@ -320,6 +320,7 @@ function generateVariants() {
       space: elements.widthRange.value,
       dirt: elements.dirtRange.value,
     },
+    generationSeed: createGenerationSeed(),
   });
 }
 
@@ -536,7 +537,7 @@ async function loadPreset(file) {
     });
     elements.status.textContent = state.suiteUnlocked
       ? `Loaded ${summary.name}. Generate your 32-variant PRO pack.`
-      : `Loaded ${summary.name}. Enter your PRO license token to unlock generation.`;
+      : `Loaded ${summary.name}. Enter your Gumroad license key to unlock generation.`;
   } catch (error) {
     state.sourcePreset = null;
     state.sourceFile = null;
@@ -633,16 +634,16 @@ function setAnalysisVisible(visible) {
 async function handlePaidFeatureUnlock() {
   const key = elements.paidFeatureKey.value.trim();
   if (!key) {
-    elements.paidFeatureUnlockNote.textContent = "Enter your license token to unlock this browser.";
+    elements.paidFeatureUnlockNote.textContent = "Enter your Gumroad license key to unlock this browser.";
     analyticsEvent("unlock_attempt", { result: "empty" });
     return;
   }
   elements.paidFeatureUnlockButton.disabled = true;
-  elements.paidFeatureUnlockNote.textContent = "Checking license token...";
+  elements.paidFeatureUnlockNote.textContent = "Checking Gumroad license key...";
   const result = await verifyLicenseToken(key);
   elements.paidFeatureUnlockButton.disabled = false;
   if (!result.valid) {
-    elements.paidFeatureUnlockNote.textContent = "Invalid license token. Check the token and try again.";
+    elements.paidFeatureUnlockNote.textContent = "Gumroad could not verify this license key. Check the key and try again.";
     analyticsEvent("unlock_attempt", { result: "invalid" });
     return;
   }

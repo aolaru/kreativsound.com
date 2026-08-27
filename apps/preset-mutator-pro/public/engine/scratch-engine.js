@@ -1,4 +1,5 @@
 import { clamp, familyLabel, lerp, noteName, titleCase, vary } from "./common.js";
+import { chooseVelvetTemplate } from "./velvet-template-library.js";
 
 export const SCRATCH_PRO_PACK_COUNT = 32;
 
@@ -108,15 +109,16 @@ export function buildScratchPresetSummary({ family, brightness, movement, width,
 }
 
 export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1) {
-  const brightness = vary(profile.brightness, 0.08 * spread, index, 1);
-  const body = vary(profile.body, 0.07 * spread, index, 2);
-  const attack = vary(profile.attack, 0.08 * spread, index, 3);
-  const sustain = vary(profile.sustain, 0.08 * spread, index, 4);
-  const movement = vary(profile.movement, 0.11 * spread, index, 5);
-  const noise = vary(profile.noise, 0.08 * spread, index, 6);
-  const width = vary(profile.width, 0.09 * spread, index, 7);
-  const wetness = vary(profile.wetness, 0.06 * spread, index, 8);
-  const drive = vary(profile.drive, 0.05 * spread, index, 9);
+  const generationSeed = profile.generationSeed ?? 0;
+  const brightness = vary(profile.brightness, 0.08 * spread, index, 1, 0, 1, generationSeed);
+  const body = vary(profile.body, 0.07 * spread, index, 2, 0, 1, generationSeed);
+  const attack = vary(profile.attack, 0.08 * spread, index, 3, 0, 1, generationSeed);
+  const sustain = vary(profile.sustain, 0.08 * spread, index, 4, 0, 1, generationSeed);
+  const movement = vary(profile.movement, 0.11 * spread, index, 5, 0, 1, generationSeed);
+  const noise = vary(profile.noise, 0.08 * spread, index, 6, 0, 1, generationSeed);
+  const width = vary(profile.width, 0.09 * spread, index, 7, 0, 1, generationSeed);
+  const wetness = vary(profile.wetness, 0.06 * spread, index, 8, 0, 1, generationSeed);
+  const drive = vary(profile.drive, 0.05 * spread, index, 9, 0, 1, generationSeed);
   const family = profile.family;
   const voices = family === "bass" ? Math.round(lerp(1, 3, width)) : Math.round(lerp(2, 8, width));
   const detune = family === "bass" ? lerp(0.02, 0.1, width) : lerp(0.05, 0.28, width);
@@ -139,6 +141,8 @@ export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1) 
     roleLabel,
     family: familyLabel(family),
     familyKey: family,
+    templateFile: chooseVelvetTemplate(family, generationSeed, index),
+    generationSeed,
     summary: buildScratchPresetSummary({ family, brightness, movement, width, sustain, attack, register: noteName(profile.pitchHz) }),
     parameterMap: {
       osc_1_level: family === "bass" ? lerp(0.78, 0.98, body) : lerp(0.48, 0.86, body),
@@ -171,8 +175,6 @@ export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1) 
       distortion_drive: lerp(0.1, 4, clamp(distortion + drive * 0.18)),
       filter_fx_cutoff: lerp(26, 86, brightness) - drive * 8,
       filter_fx_resonance: clamp(0.08 + noise * 0.26 + drive * 0.12, 0, 1),
-      sample_on: 0,
-      noise_on: noiseLevel > 0.03 ? 1 : 0,
       noise_level: noiseLevel,
     },
     parameters: [
@@ -187,24 +189,26 @@ export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1) 
 export function shapeScratchProfile(base, recipe, index) {
   const mutationScale = 0.55 + (base.mutationAmount ?? 0.5) * 1.15;
   const spread = (recipe.spread ?? 0.06) * mutationScale;
+  const generationSeed = base.generationSeed ?? 0;
 
   return {
     ...base,
-    brightness: vary(clamp(base.brightness + (recipe.brightness ?? 0)), spread, index, 11),
-    body: vary(clamp(base.body + (recipe.body ?? 0)), spread, index, 12),
-    attack: vary(clamp(base.attack + (recipe.attack ?? 0)), spread, index, 13),
-    sustain: vary(clamp(base.sustain + (recipe.sustain ?? 0)), spread, index, 14),
-    movement: vary(clamp(base.movement + (recipe.movement ?? 0)), spread, index, 15),
-    noise: vary(clamp(base.noise + (recipe.noise ?? 0)), spread, index, 16),
-    width: vary(clamp(base.width + (recipe.width ?? 0)), spread, index, 17),
-    wetness: vary(clamp(base.wetness + (recipe.wetness ?? 0)), spread, index, 18),
-    drive: vary(clamp(base.drive + (recipe.drive ?? 0)), spread, index, 19),
+    brightness: vary(clamp(base.brightness + (recipe.brightness ?? 0)), spread, index, 11, 0, 1, generationSeed),
+    body: vary(clamp(base.body + (recipe.body ?? 0)), spread, index, 12, 0, 1, generationSeed),
+    attack: vary(clamp(base.attack + (recipe.attack ?? 0)), spread, index, 13, 0, 1, generationSeed),
+    sustain: vary(clamp(base.sustain + (recipe.sustain ?? 0)), spread, index, 14, 0, 1, generationSeed),
+    movement: vary(clamp(base.movement + (recipe.movement ?? 0)), spread, index, 15, 0, 1, generationSeed),
+    noise: vary(clamp(base.noise + (recipe.noise ?? 0)), spread, index, 16, 0, 1, generationSeed),
+    width: vary(clamp(base.width + (recipe.width ?? 0)), spread, index, 17, 0, 1, generationSeed),
+    wetness: vary(clamp(base.wetness + (recipe.wetness ?? 0)), spread, index, 18, 0, 1, generationSeed),
+    drive: vary(clamp(base.drive + (recipe.drive ?? 0)), spread, index, 19, 0, 1, generationSeed),
   };
 }
 
-export function buildScratchProPack(profile) {
+export function buildScratchProPack(profile, generationSeed = 0) {
+  const seededProfile = { ...profile, generationSeed };
   return Array.from({ length: SCRATCH_PRO_PACK_COUNT }, (_, index) => {
     const recipe = PRO_RECIPES[index % PRO_RECIPES.length];
-    return mapScratchProfileToVital(shapeScratchProfile(profile, recipe, index), index, recipe.role, 1.15);
+    return mapScratchProfileToVital(shapeScratchProfile(seededProfile, recipe, index), index, recipe.role, 1.15);
   });
 }

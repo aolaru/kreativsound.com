@@ -1,5 +1,5 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { clamp, ensureJsZip, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
+import { clamp, createGenerationSeed, ensureJsZip, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
 import { AUDIO_PRO_PACK_COUNT, buildAudioProfile as createAudioProfile, buildAudioProPack } from "../engine/audio-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "../engine/vital-export.js";
 import {
@@ -602,7 +602,7 @@ function buildProfile(analysis) {
 }
 
 function buildProPack(profile) {
-  return buildAudioProPack(profile);
+  return buildAudioProPack(profile, createGenerationSeed());
 }
 
 function variantRole(index, preset) {
@@ -652,29 +652,30 @@ function bestUseForPreset(preset) {
   return "Pads, intros, and cinematic support";
 }
 
-function seedUrlForFamily(family) {
-  const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
-  return new URL(`../assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, import.meta.url);
+function seedUrlForPreset(preset) {
+  const seedName = preset.templateFile || SEED_BY_FAMILY[preset.familyKey] || SEED_BY_FAMILY.texture;
+  const directory = preset.templateFile ? "velvet-ruins" : "raw";
+  return new URL(`../assets/seeds/vital/${directory}/${encodeURIComponent(seedName)}`, import.meta.url);
 }
 
-async function loadSeedPreset(family) {
-  const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
+async function loadSeedPreset(preset) {
+  const seedName = preset.templateFile || SEED_BY_FAMILY[preset.familyKey] || SEED_BY_FAMILY.texture;
   if (state.seedCache.has(seedName)) {
     return structuredClone(state.seedCache.get(seedName));
   }
 
-  const response = await fetch(seedUrlForFamily(family));
+  const response = await fetch(seedUrlForPreset(preset));
   if (!response.ok) {
     throw new Error(`Could not load Vital seed preset: ${seedName}`);
   }
 
-  const preset = await response.json();
-  state.seedCache.set(seedName, preset);
-  return structuredClone(preset);
+  const seedData = await response.json();
+  state.seedCache.set(seedName, seedData);
+  return structuredClone(seedData);
 }
 
 async function buildVitalPresetBlob(preset) {
-  const seed = await loadSeedPreset(preset.familyKey);
+  const seed = await loadSeedPreset(preset);
   return createVitalPresetBlob(seed, preset);
 }
 
@@ -959,7 +960,7 @@ async function loadAudioFile(file, resetInput = false) {
     renderPresets([]);
     setReady(true);
 
-    updateStatus(state.proPreviewUnlocked ? "Source ready. Generate your 32-variant PRO pack." : "Source ready. Enter your PRO license token to unlock generation.");
+    updateStatus(state.proPreviewUnlocked ? "Source ready. Generate your 32-variant PRO pack." : "Source ready. Enter your Gumroad license key to unlock generation.");
     analyticsEvent("source_loaded", {
       source_type: "audio",
       duration_bucket: durationBucket(state.originalBuffer.duration),
@@ -1062,7 +1063,7 @@ function loadSyntheticSource() {
   setAnalysisVisible(false);
   renderPresets([]);
   setReady(true);
-  updateStatus("Self-test source ready. Enter your PRO license token to unlock generation.");
+  updateStatus("Self-test source ready. Enter your Gumroad license key to unlock generation.");
 }
 
 function generatePresetPack() {
@@ -1160,16 +1161,16 @@ function toggleAnalysisVisibility() {
 async function handlePaidFeatureUnlock() {
   const key = elements.paidFeatureKey.value.trim();
   if (!key) {
-    elements.paidFeatureUnlockNote.textContent = "Enter your license token to unlock this browser.";
+    elements.paidFeatureUnlockNote.textContent = "Enter your Gumroad license key to unlock this browser.";
     analyticsEvent("unlock_attempt", { result: "empty" });
     return;
   }
   elements.paidFeatureUnlockButton.disabled = true;
-  elements.paidFeatureUnlockNote.textContent = "Checking license token...";
+  elements.paidFeatureUnlockNote.textContent = "Checking Gumroad license key...";
   const result = await verifyLicenseToken(key);
   elements.paidFeatureUnlockButton.disabled = false;
   if (!result.valid) {
-    elements.paidFeatureUnlockNote.textContent = "Invalid license token. Check the token and try again.";
+    elements.paidFeatureUnlockNote.textContent = "Gumroad could not verify this license key. Check the key and try again.";
     analyticsEvent("unlock_attempt", { result: "invalid" });
     return;
   }

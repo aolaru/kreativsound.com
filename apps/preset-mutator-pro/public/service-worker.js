@@ -1,4 +1,4 @@
-const CACHE_NAME = "preset-mutator-pro-shell-v6";
+const CACHE_NAME = "preset-mutator-pro-shell-v7";
 const SHELL_ASSETS = [
   "./index.html",
   "./changelog/index.html",
@@ -18,6 +18,7 @@ const SHELL_ASSETS = [
   "./engine/audio-engine.js",
   "./engine/preset-mutate-engine.js",
   "./engine/vital-export.js",
+  "./engine/velvet-template-library.js",
   "./assets/seeds/vital/raw/KS%20Dread%20Lantern.vital",
   "./assets/seeds/vital/raw/KS%20Frozen%20Hollow.vital",
   "./assets/seeds/vital/raw/KS%20Iron%20Wake.vital",

@@ -56,13 +56,24 @@ export function titleCase(value) {
     .join(" ");
 }
 
-export function variantSeed(index) {
-  const x = Math.sin((index + 1) * 97.13) * 43758.5453;
+export function createGenerationSeed() {
+  const values = new Uint32Array(1);
+  if (globalThis.crypto?.getRandomValues) {
+    globalThis.crypto.getRandomValues(values);
+    return values[0];
+  }
+
+  return (Date.now() ^ Math.floor(Math.random() * 0xffffffff)) >>> 0;
+}
+
+export function variantSeed(index, generationSeed = 0) {
+  const runOffset = hashString(String(generationSeed)) % 100000;
+  const x = Math.sin((index + 1) * 97.13 + runOffset * 0.017) * 43758.5453;
   return x - Math.floor(x);
 }
 
-export function vary(base, amount, index, shift = 0, min = 0, max = 1) {
-  const seed = variantSeed(index + shift);
+export function vary(base, amount, index, shift = 0, min = 0, max = 1, generationSeed = 0) {
+  const seed = variantSeed(index + shift, generationSeed);
   return clamp(Number(base) + (seed * 2 - 1) * amount, min, max);
 }
 
