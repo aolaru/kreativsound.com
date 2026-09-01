@@ -9,6 +9,8 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-08-28", kind: "update", title: "Preset Mutator PRO v0.4.7", description: "Preset packs now balance across distinct Vital structures, with near-duplicate retries and safer family-specific output limits.", href: "/preset-mutator-pro/changelog/" },
+  { date: "2026-08-28", kind: "update", title: "Preset Mutator Free v0.4.6", description: "The free generator now starts from more distinct Vital structures and responds more closely to selected and audio-source directions.", href: "/preset-mutator/changelog/" },
   { date: "2026-08-25", kind: "update", title: "Pattern Mutator adds free piano roll editing", description: "Generated MIDI ideas can now be edited directly: add, move, resize, adjust velocity, delete notes, then export the finished clip for any DAW.", href: "/tools/pattern-mutator/" },
   { date: "2026-08-25", kind: "update", title: "Pattern Mutator changelog added", description: "The new free MIDI idea generator now has a versioned public changelog linked from its footer, starting with its launch features and future improvements.", href: "/tools/pattern-mutator/changelog/" },
   { date: "2026-08-25", kind: "new", title: "Pattern Mutator first draft released", description: "A free browser tool now generates scale-aware MIDI melodies, basslines, chords, and arpeggios, with locks, mutation, audition, and MIDI export.", href: "/tools/pattern-mutator/" },
