@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import sys
 import threading
+import json
 from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -11,6 +12,7 @@ from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
+TOOL_RELEASES = ROOT / "src" / "data" / "tool-releases.json"
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
@@ -52,6 +54,12 @@ def main() -> int:
         print("dist/ is required for smoke-site.py. Run npm run build first.")
         return 1
 
+    releases = json.loads(TOOL_RELEASES.read_text(encoding="utf-8"))
+    preset_mutator_free = releases["presetMutatorFree"]
+    preset_mutator_pro = releases["presetMutatorPro"]
+    wave_mutator = releases["waveMutator"]
+    pattern_mutator = releases["patternMutator"]
+
     handler = partial(QuietHandler, directory=str(DIST))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
@@ -63,10 +71,10 @@ def main() -> int:
         pages = {
             "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
             "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
-            "/updates/": ["Kreativ Sound Updates and Changelog", "Changes, releases, and practical guides.", "Recent highlights", "Everything new, updated, and fixed.", "Preset Mutator PRO v0.4.7", "Preset Mutator Free v0.4.6", "Wave Mutator beta v0.2.1", "Earlier updates", "Release notes", "Practical sound-design guides.", "The current browser-tool line", "32 variants per run", "Plugins"],
+            "/updates/": ["Kreativ Sound Updates and Changelog", "Changes, releases, and practical guides.", "Recent highlights", "Everything new, updated, and fixed.", f"{preset_mutator_pro['name']} v{preset_mutator_pro['version']}", f"{preset_mutator_free['name']} v{preset_mutator_free['version']}", f"{wave_mutator['name']} {wave_mutator['releaseLabel']} v{wave_mutator['version']}", "Earlier updates", "Release notes", "Practical sound-design guides.", "The current browser-tool line", "32 variants per run", "Plugins"],
             "/tools/": ["Preset Mutator", "3 free / 32 PRO", "Free + PRO", "Get PRO for €19", "Wave Mutator", "Pattern Mutator"],
             "/tools/pattern-mutator/": ["Pattern Mutator", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "Free piano roll"],
-            "/tools/pattern-mutator/changelog/": ["Pattern Mutator", "Changelog", "Current release", "v0.1.1", "Back to Pattern Mutator"],
+            "/tools/pattern-mutator/changelog/": ["Pattern Mutator", "Changelog", "Current release", f"v{pattern_mutator['version']}", "Back to Pattern Mutator"],
             "/tools/preset-mutator/": ["Preset Mutator", "Free + PRO", "Get PRO for €19", "Free", "PRO", "32 Vital preset variants per workflow."],
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],

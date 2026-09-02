@@ -137,9 +137,12 @@ npm run release:check
 ```bash
 npm run check:products
 npm run check:preset-mutator
+npm run check:tool-releases
 npm run check:links
 python3 scripts/smoke-site.py
 ```
+
+Current browser-tool version, release-date, status, and changelog metadata lives in `src/data/tool-releases.json`. Update it with the app and changelog in the same change; `npm run check:tool-releases` rejects mismatches across the public app pages, release log, Updates cards, rendered smoke checks, and sitemap routes.
 
 - Refresh sitemap freshness metadata explicitly when needed:
 

@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { siteUpdates, type SiteUpdateKind } from "../../lib/site-updates";
+import { displayToolReleaseVersion, toolReleases } from "../../lib/tool-releases";
 
 const posts = (await getCollection("posts", ({ data }) => !data.draft))
   .sort((a, b) => (b.data.published || "").localeCompare(a.data.published || ""));
@@ -10,6 +11,9 @@ const releasePosts = posts.filter((post) => post.data.section === "news" && post
 const latestUpdates = siteUpdates.slice(0, 10);
 const archivedUpdates = siteUpdates.slice(10);
 const highlights = siteUpdates.slice(0, 3);
+const presetMutatorFree = toolReleases.presetMutatorFree;
+const presetMutatorPro = toolReleases.presetMutatorPro;
+const waveMutator = toolReleases.waveMutator;
 
 const kindLabels: Record<SiteUpdateKind, string> = {
   new: "New",
@@ -207,10 +211,10 @@ function imageFor(post: (typeof posts)[number]) {
       <div class="updates-tool-grid">
         <article class="updates-tool-card">
           <div class="updates-tool-card-head">
-            <span class="updates-tool-version">v0.4.6</span>
-            <span class="updates-tool-status">Free</span>
+            <span class="updates-tool-version">{displayToolReleaseVersion(presetMutatorFree)}</span>
+            <span class="updates-tool-status">{presetMutatorFree.status}</span>
           </div>
-          <h3>Preset Mutator Free</h3>
+          <h3>{presetMutatorFree.name}</h3>
           <p>Create three Vital variants from an intent, an existing preset, or a short audio source. Processing stays local and no account is required.</p>
           <ul>
             <li>3 variants per run</li>
@@ -221,10 +225,10 @@ function imageFor(post: (typeof posts)[number]) {
         </article>
         <article class="updates-tool-card is-pro">
           <div class="updates-tool-card-head">
-            <span class="updates-tool-version">v0.4.7</span>
-            <span class="updates-tool-status">PRO · €19</span>
+            <span class="updates-tool-version">{displayToolReleaseVersion(presetMutatorPro)}</span>
+            <span class="updates-tool-status">{presetMutatorPro.status}</span>
           </div>
-          <h3>Preset Mutator PRO</h3>
+          <h3>{presetMutatorPro.name}</h3>
           <p>Build a larger Vital pack from the same three workflows. PRO access is a one-time purchase activated with a local browser token.</p>
           <ul>
             <li>32 variants per run</li>
@@ -235,10 +239,10 @@ function imageFor(post: (typeof posts)[number]) {
         </article>
         <article class="updates-tool-card">
           <div class="updates-tool-card-head">
-            <span class="updates-tool-version">v0.2.1 beta</span>
-            <span class="updates-tool-status">Available</span>
+            <span class="updates-tool-version">{displayToolReleaseVersion(waveMutator)}</span>
+            <span class="updates-tool-status">{waveMutator.status}</span>
           </div>
-          <h3>Wave Mutator</h3>
+          <h3>{waveMutator.name}</h3>
           <p>Prepare WAV files locally with cleanup, delivery profiles, pack export, and preview-montage tools for sound-design and sample-pack workflows.</p>
           <ul>
             <li>Four delivery profiles</li>

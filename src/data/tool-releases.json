@@ -1,0 +1,31 @@
+{
+  "presetMutatorFree": {
+    "name": "Preset Mutator Free",
+    "version": "0.4.6",
+    "date": "2026-08-28",
+    "status": "Free",
+    "changelog": "/preset-mutator/changelog/"
+  },
+  "presetMutatorPro": {
+    "name": "Preset Mutator PRO",
+    "version": "0.4.7",
+    "date": "2026-08-28",
+    "status": "PRO · €19",
+    "changelog": "/preset-mutator-pro/changelog/"
+  },
+  "waveMutator": {
+    "name": "Wave Mutator",
+    "version": "0.2.1",
+    "date": "2026-08-21",
+    "status": "Available",
+    "releaseLabel": "beta",
+    "changelog": "/tools/wave-mutator/"
+  },
+  "patternMutator": {
+    "name": "Pattern Mutator",
+    "version": "0.2.0",
+    "date": "2026-08-25",
+    "status": "Free",
+    "changelog": "/tools/pattern-mutator/changelog/"
+  }
+}

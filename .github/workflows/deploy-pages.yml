@@ -64,6 +64,9 @@ jobs:
       - name: Check Wave Mutator
         run: npm run check:wave-mutator
 
+      - name: Check tool release consistency
+        run: npm run check:tool-releases
+
       - name: Check search index
         run: npm run check:search
 

@@ -24,6 +24,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const uiDir = path.join(rootDir, "apps/preset-mutator/public");
 const seedDir = path.join(rootDir, "apps/preset-mutator/public/assets/seeds/vital/raw");
+const toolReleases = JSON.parse(await readFile(path.join(rootDir, "src/data/tool-releases.json"), "utf8"));
+const releaseVersion = `v${toolReleases.presetMutatorFree.version}`;
 
 const failures = [];
 
@@ -176,7 +178,7 @@ async function checkPages() {
     assert(!html.includes("hero-cover"), `${page.name}: hero cover should not be present in app UI`);
     assert(!html.includes("<h1></h1>"), `${page.name}: empty h1 found`);
     assert(html.includes("Generate 3 Variants"), `${page.name}: main action should use simple variants language`);
-    assert(html.includes("v0.4.6"), `${page.name}: release version should be v0.4.6`);
+    assert(html.includes(releaseVersion), `${page.name}: release version should be ${releaseVersion}`);
     assert(!html.includes("Generate 3 Free Variants"), `${page.name}: old free-mode action copy is still visible`);
     assert(html.includes("Preset Mutator PRO"), `${page.name}: PRO upgrade should be visible`);
     assert(html.includes("Get Preset Mutator PRO for €19"), `${page.name}: PRO Gumroad CTA is missing`);
@@ -222,7 +224,7 @@ async function checkPages() {
 
   const changelogHtml = await readText("changelog/index.html");
   assert(changelogHtml.includes("Preset Mutator Changelog"), "Changelog: page title is missing");
-  assert(changelogHtml.includes("v0.4.6"), "Changelog: current version is missing");
+  assert(changelogHtml.includes(releaseVersion), "Changelog: current version is missing");
   assert(changelogHtml.includes("Current release"), "Changelog: current release marker is missing");
 
   const serviceWorker = await readText("service-worker.js");
