@@ -8,9 +8,9 @@ const posts = (await getCollection("posts", ({ data }) => !data.draft))
   .sort((a, b) => (b.data.published || "").localeCompare(a.data.published || ""));
 const guidePosts = posts.filter((post) => post.data.section === "learn");
 const releasePosts = posts.filter((post) => post.data.section === "news" && post.data.kind === "release");
-const latestUpdates = siteUpdates.slice(0, 10);
+const featuredUpdate = siteUpdates[0];
+const latestUpdates = siteUpdates.slice(1, 10);
 const archivedUpdates = siteUpdates.slice(10);
-const highlights = siteUpdates.slice(0, 3);
 const presetMutatorFree = toolReleases.presetMutatorFree;
 const presetMutatorPro = toolReleases.presetMutatorPro;
 const waveMutator = toolReleases.waveMutator;
@@ -79,31 +79,29 @@ function imageFor(post: (typeof posts)[number]) {
       </aside>
     </header>
 
-    <section class="updates-highlights" aria-labelledby="updates-highlights-title">
+    {featuredUpdate ? <section class="updates-highlights" aria-labelledby="updates-highlights-title">
       <div class="updates-section-head">
-        <p class="product-section-kicker">Recent highlights</p>
-        <h2 id="updates-highlights-title">The newest moves, at a glance.</h2>
+        <p class="product-section-kicker">Latest update</p>
+        <h2 id="updates-highlights-title">Start with what changed most recently.</h2>
       </div>
       <div class="updates-highlight-list">
-        {highlights.map((item) => (
-          <a class="updates-highlight" href={item.href}>
-            <span class="updates-highlight-meta">
-              <i class:list={["fa-solid", kindIcons[item.kind]]} aria-hidden="true"></i>
-              <span>{kindLabels[item.kind]}</span>
-              <time datetime={item.date}>{item.date}</time>
-            </span>
-            <strong>{item.title}</strong>
-            <span>{item.description}</span>
-          </a>
-        ))}
+        <a class="updates-highlight" href={featuredUpdate.href}>
+          <span class="updates-highlight-meta">
+            <i class:list={["fa-solid", kindIcons[featuredUpdate.kind]]} aria-hidden="true"></i>
+            <span>{kindLabels[featuredUpdate.kind]}</span>
+            <time datetime={featuredUpdate.date}>{formatDate(featuredUpdate.date)}</time>
+          </span>
+          <strong>{featuredUpdate.title}</strong>
+          <span>{featuredUpdate.description}</span>
+        </a>
       </div>
-    </section>
+    </section> : null}
 
     <section class="updates-log" id="recent-log" aria-labelledby="updates-log-title">
       <div class="updates-section-head">
         <p class="product-section-kicker">Change log</p>
         <h2 id="updates-log-title">Everything new, updated, and fixed.</h2>
-        <p>The public change record stays concise and newest first.</p>
+        <p>After the featured update above, the rest of the public change record stays concise and newest first.</p>
       </div>
       <ul class="updates-log-list">
         {latestUpdates.map((item) => (

@@ -15,7 +15,7 @@ async function read(relativePath) {
 }
 
 function currentChangelogEntry(html) {
-  return html.match(/<article class="changelog-entry is-current">([\s\S]*?)<\/article>/)?.[1];
+  return html.match(/<article class="[^"]*is-current[^"]*">([\s\S]*?)<\/article>/)?.[1];
 }
 
 const surfaces = {
@@ -39,6 +39,7 @@ const surfaces = {
   },
   waveMutator: {
     appPages: ["apps/wave-mutator/public/index.html"],
+    changelogPage: "apps/wave-mutator/public/changelog/index.html",
     updatesLog: true,
   },
   patternMutator: {

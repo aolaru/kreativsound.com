@@ -124,6 +124,9 @@ function sourcePathsForRoute(route) {
   if (route === "/tools/wave-mutator/") {
     return ["apps/wave-mutator/public/index.html"];
   }
+  if (route === "/tools/wave-mutator/changelog/") {
+    return ["apps/wave-mutator/public/changelog/index.html"];
+  }
   if (route.endsWith("/")) {
     return [`src/pages/${route.slice(1)}index.astro`];
   }

@@ -113,6 +113,13 @@ const staticEntries: SearchEntry[] = [
     description: "Clean messy WAV files, export sample packs, and build short preview montages locally."
   },
   {
+    title: "Wave Mutator Changelog",
+    url: "/tools/wave-mutator/changelog/",
+    type: "Tool",
+    thumbnail: "/assets/thumbs/wave-mutator.jpg",
+    description: "A concise public record of Wave Mutator beta releases, delivery-profile improvements, and current scope limits."
+  },
+  {
     title: "Pattern Mutator",
     url: "/tools/pattern-mutator/",
     type: "Tool",

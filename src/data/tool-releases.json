@@ -19,7 +19,7 @@
     "date": "2026-08-21",
     "status": "Available",
     "releaseLabel": "beta",
-    "changelog": "/tools/wave-mutator/"
+    "changelog": "/tools/wave-mutator/changelog/"
   },
   "patternMutator": {
     "name": "Pattern Mutator",

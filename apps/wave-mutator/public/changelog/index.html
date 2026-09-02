@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wave Mutator Changelog | Kreativ Sound</title>
+    <meta name="description" content="A concise public record of Wave Mutator beta releases, improvements, and known scope limits." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://kreativsound.com/tools/wave-mutator/changelog/" />
+    <meta name="theme-color" content="#121622" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="../styles.css?v=14" />
+    <script defer src="/kreativ-analytics.js?v=20260819"></script>
+  </head>
+  <body>
+    <main class="app-shell wave-changelog-shell">
+      <nav class="app-nav" aria-label="Wave Mutator changelog navigation">
+        <a class="brand-link" href="/tools/wave-mutator/">Open Wave Mutator</a>
+        <div class="app-brand">
+          <span class="app-brand-mark" aria-hidden="true">WM</span>
+          <strong>Changelog</strong>
+        </div>
+        <a class="app-nav-link" href="/tools/">All tools</a>
+      </nav>
+
+      <section class="wave-changelog-page" aria-labelledby="changelog-title">
+        <header class="wave-changelog-hero">
+          <p class="section-kicker">Wave Mutator beta</p>
+          <h1 id="changelog-title">Changelog</h1>
+          <p>A public record of release milestones, practical improvements, and the current scope of the local sample-cleanup workflow.</p>
+        </header>
+
+        <ol class="wave-changelog-list">
+          <li>
+            <article class="wave-changelog-entry is-current">
+              <span>Current beta release</span>
+              <header>
+                <h2>v0.2.1</h2>
+                <time datetime="2026-08-21">August 21, 2026</time>
+              </header>
+              <p>Added delivery profiles for recurring sample-pack, music-pack, game-SFX, and store-preview tasks.</p>
+              <ul>
+                <li>Delivery Profiles now set practical cleanup, naming, export, pack, and preview defaults.</li>
+                <li>Preflight and export controls make the selected production target easier to review before rendering.</li>
+                <li>The workflow remains local: source audio is decoded, processed, and exported in the browser.</li>
+              </ul>
+            </article>
+          </li>
+          <li>
+            <article class="wave-changelog-entry">
+              <header>
+                <h2>v0.2.0</h2>
+                <time datetime="2026-08-20">August 20, 2026</time>
+              </header>
+              <p>Introduced the public beta for preparing cleaner WAV files, ZIP packs, and short MP3 preview montages.</p>
+              <ul>
+                <li>Added silence trimming, short fades, peak normalization, clipping warnings, and browser preview processing.</li>
+                <li>Added single-file WAV, ZIP queue, manifest, and MP3 montage export paths.</li>
+              </ul>
+            </article>
+          </li>
+        </ol>
+
+        <aside class="wave-changelog-scope">
+          <strong>Current beta limits</strong>
+          <p>Wave Mutator does not yet offer LUFS normalization, spectral editing, AI tagging, or full DAW-style repair. The tool is designed for clear, local preparation rather than replacement of a mastering or restoration suite.</p>
+        </aside>
+      </section>
+
+      <footer class="app-footer">
+        <p>Wave Mutator is a local-first Kreativ Sound browser tool.</p>
+        <p><a href="/tools/wave-mutator/">Open Wave Mutator</a> <span aria-hidden="true">·</span> <a href="/tools/">All tools</a></p>
+      </footer>
+    </main>
+  </body>
+</html>
