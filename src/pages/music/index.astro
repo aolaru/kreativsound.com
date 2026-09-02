@@ -133,6 +133,18 @@ const musicJsonLd = {
       ) : null}
     </div>
 
+    <section class="music-context" aria-labelledby="music-context-title">
+      <div>
+        <p class="product-section-kicker">Listening as context</p>
+        <h2 id="music-context-title">Olaru is where the palette gets tested in a complete piece.</h2>
+      </div>
+      <p>These releases are not product demos. They are the ongoing music project behind Kreativ Sound, built with its samples, presets, drones, and texture layers as raw material for ambient, melodic, and cinematic work.</p>
+      <div class="music-context-actions">
+        <a class="button secondary" href="/sounds/">Browse the source palette <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        <a class="button secondary" href="/updates/#guides">Read the workflows <i class="fa-solid fa-book-open" aria-hidden="true"></i></a>
+      </div>
+    </section>
+
     <div class="music-artist-stack">
       {musicArtists.map((artist) => {
         const gridReleases = artist.releases.filter((release) => release !== featuredItem?.release);

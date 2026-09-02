@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://kreativsound.com/</loc>
-    <lastmod>2026-08-20</lastmod>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -50,13 +50,13 @@
   </url>
   <url>
     <loc>https://kreativsound.com/music/</loc>
-    <lastmod>2026-07-28</lastmod>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/about/</loc>
-    <lastmod>2026-07-15</lastmod>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -121,6 +121,18 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://kreativsound.com/posts/how-to-choose-kreativ-sound-packs-by-session-2026-09-03.html</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/posts/how-to-finish-a-sample-pack-with-wave-mutator-2026-09-03.html</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://kreativsound.com/posts/how-to-layer-bioforms-for-organic-motion-2026-03-14.html</loc>
     <lastmod>2026-08-21</lastmod>
     <changefreq>monthly</changefreq>
@@ -153,6 +165,12 @@
   <url>
     <loc>https://kreativsound.com/posts/how-to-use-black-arcology-lite-before-buying-full-pack-2026-05-06.html</loc>
     <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/posts/how-to-use-juno-nocturnes-and-operators-for-dark-motion-2026-09-03.html</loc>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

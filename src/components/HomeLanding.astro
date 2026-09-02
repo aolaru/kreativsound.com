@@ -73,6 +73,31 @@ function appActionUrl(product: Product) {
   </div>
 </header>
 
+<section class="home-start card" aria-labelledby="home-start-title">
+  <div class="home-start-intro">
+    <p class="featured-label">Start here</p>
+    <h2 id="home-start-title">Choose the next useful move.</h2>
+    <p>Find a finished sound, make a new starting point, or hear the palette in a real release.</p>
+  </div>
+  <div class="home-start-grid">
+    <a href="/sounds/">
+      <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+      <strong>Find a sound</strong>
+      <span>Browse preset banks, sample packs, bundles, and free Lite editions by mood or synth.</span>
+    </a>
+    <a href="/tools/">
+      <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+      <strong>Make or prepare material</strong>
+      <span>Use the local browser tools for Vital starts, MIDI patterns, and WAV preparation.</span>
+    </a>
+    <a href="/music/">
+      <i class="fa-solid fa-headphones" aria-hidden="true"></i>
+      <strong>Hear it in context</strong>
+      <span>Listen to Olaru releases made with the same evolving sound palette.</span>
+    </a>
+  </div>
+</section>
+
 {latestProduct ? (
   <section class="home-latest card" id="latest-featured" aria-labelledby="latest-title">
     <div class="home-latest-copy">

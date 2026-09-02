@@ -8,9 +8,11 @@ const posts = (await getCollection("posts", ({ data }) => !data.draft))
   .sort((a, b) => (b.data.published || "").localeCompare(a.data.published || ""));
 const guidePosts = posts.filter((post) => post.data.section === "learn");
 const releasePosts = posts.filter((post) => post.data.section === "news" && post.data.kind === "release");
-const featuredUpdate = siteUpdates[0];
-const latestUpdates = siteUpdates.slice(1, 10);
-const archivedUpdates = siteUpdates.slice(10);
+const customerUpdates = siteUpdates.filter((item) => item.audience !== "maintenance");
+const maintenanceUpdates = siteUpdates.filter((item) => item.audience === "maintenance");
+const featuredUpdate = customerUpdates[0];
+const latestUpdates = customerUpdates.slice(1, 10);
+const archivedUpdates = customerUpdates.slice(10);
 const presetMutatorFree = toolReleases.presetMutatorFree;
 const presetMutatorPro = toolReleases.presetMutatorPro;
 const waveMutator = toolReleases.waveMutator;
@@ -29,7 +31,7 @@ const kindIcons: Record<SiteUpdateKind, string> = {
   fix: "fa-shield-halved"
 };
 
-const counts = siteUpdates.reduce<Record<SiteUpdateKind, number>>(
+const counts = customerUpdates.reduce<Record<SiteUpdateKind, number>>(
   (total, item) => ({ ...total, [item.kind]: total[item.kind] + 1 }),
   { new: 0, release: 0, update: 0, fix: 0 }
 );
@@ -62,19 +64,18 @@ function imageFor(post: (typeof posts)[number]) {
       <div>
         <p class="eyebrow">Kreativ Sound Updates and Changelog</p>
         <h1 class="page-title">Changes, releases, and practical guides.</h1>
-        <p class="page-lead">The public record for new sound packs, browser tools, catalog improvements, website fixes, release notes, and focused sound-design workflows.</p>
+        <p class="page-lead">New sound packs, browser tools, and practical workflows—kept focused on what you can use in a session.</p>
         <div class="updates-quick-stats" aria-label="Updates categories">
           <a href="#recent-log"><strong>{counts.new}</strong><span>New additions</span></a>
           <a href="#recent-log"><strong>{counts.release}</strong><span>Releases</span></a>
           <a href="#recent-log"><strong>{counts.update}</strong><span>Updates</span></a>
-          <a href="#recent-log"><strong>{counts.fix}</strong><span>Fixes</span></a>
           <a href="#guides"><strong>{guidePosts.length}</strong><span>Guides</span></a>
         </div>
       </div>
       <aside class="updates-direction" aria-label="Updates page scope">
-        <p class="product-section-kicker">One shared record</p>
-        <h2>What changed, plus how to use it.</h2>
-        <p>Use the log for concise changes, release notes for context, and guides for practical sound-design decisions around the current catalog.</p>
+        <p class="product-section-kicker">Useful first</p>
+        <h2>What changed, then how to use it.</h2>
+        <p>Use the log for current products and tools, release notes for context, and guides for practical decisions around the catalog.</p>
         <a href="#releases">Browse release notes <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
       </aside>
     </header>
@@ -99,9 +100,9 @@ function imageFor(post: (typeof posts)[number]) {
 
     <section class="updates-log" id="recent-log" aria-labelledby="updates-log-title">
       <div class="updates-section-head">
-        <p class="product-section-kicker">Change log</p>
-        <h2 id="updates-log-title">Everything new, updated, and fixed.</h2>
-        <p>After the featured update above, the rest of the public change record stays concise and newest first.</p>
+        <p class="product-section-kicker">Current catalog and tools</p>
+        <h2 id="updates-log-title">What you can use now.</h2>
+        <p>Product, tool, and catalog changes stay concise and newest first. Site-maintenance history is kept separately below.</p>
       </div>
       <ul class="updates-log-list">
         {latestUpdates.map((item) => (
@@ -143,6 +144,31 @@ function imageFor(post: (typeof posts)[number]) {
         </ul>
       </details>
     </section>
+
+    {maintenanceUpdates.length ? <details class="news-archive updates-archive updates-maintenance" id="site-maintenance">
+      <summary>
+        <span>
+          <strong>Site-maintenance history</strong>
+          <small>{maintenanceUpdates.length} reliability, analytics, and publishing notes</small>
+        </span>
+        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+      </summary>
+      <ul class="updates-log-list">
+        {maintenanceUpdates.map((item) => (
+          <li>
+            <a class="updates-log-entry" href={item.href}>
+              <time datetime={item.date}>{formatDate(item.date)}</time>
+              <span class:list={["updates-log-kind", `is-${item.kind}`]}>{kindLabels[item.kind]}</span>
+              <span class="updates-log-copy">
+                <strong>{item.title}</strong>
+                <span>{item.description}</span>
+              </span>
+              <i class="fa-solid fa-arrow-up-right-from-square updates-log-arrow" aria-hidden="true"></i>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details> : null}
 
     <div class="news-sections updates-editorial">
       <section class="news-panel" id="releases" aria-labelledby="release-notes-title">
