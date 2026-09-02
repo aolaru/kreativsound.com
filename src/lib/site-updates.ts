@@ -9,6 +9,8 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-09-02", kind: "update", title: "Preset Mutator PRO v0.4.8", description: "Every PRO workflow now has a direct All tools path, making it easier to move between the local app, release notes, and the wider browser-tool line.", href: "/preset-mutator-pro/changelog/" },
+  { date: "2026-09-02", kind: "update", title: "Preset Mutator Free v0.4.7", description: "Every Free workflow now has a direct All tools path, making it easier to move between the local app, release notes, and the wider browser-tool line.", href: "/preset-mutator/changelog/" },
   { date: "2026-08-28", kind: "update", title: "Preset Mutator PRO v0.4.7", description: "Preset packs now balance across distinct Vital structures, with near-duplicate retries and safer family-specific output limits.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-08-28", kind: "update", title: "Preset Mutator Free v0.4.6", description: "The free generator now starts from more distinct Vital structures and responds more closely to selected and audio-source directions.", href: "/preset-mutator/changelog/" },
   { date: "2026-08-25", kind: "update", title: "Pattern Mutator adds free piano roll editing", description: "Generated MIDI ideas can now be edited directly: add, move, resize, adjust velocity, delete notes, then export the finished clip for any DAW.", href: "/tools/pattern-mutator/" },
