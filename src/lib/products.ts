@@ -67,13 +67,13 @@ export const products: Product[] = [
     }
   },
   {
-    title: "Preset Mutator - Vital Preset Generator",
+    title: "Preset Mutator Lite - Vital Preset Generator",
     category: "Tools",
     status: "free",
     featuredRank: 3,
     detailsUrl: "/sounds/preset-mutator",
     appUrl: "/preset-mutator/",
-    badge: "Tool",
+    badge: "Lite tool",
     extraAction: {
       label: "Open Tool",
       url: "/preset-mutator/"
@@ -84,7 +84,7 @@ export const products: Product[] = [
     homeImageSrcSet: "/assets/home/preset-mutator-480.webp 480w, /assets/home/preset-mutator-720.webp 720w",
     format: "Free browser tool",
     count: "3 variants per run",
-    useCase: "Free local-first Vital preset starts from scratch ideas, existing presets, and audio sources"
+    useCase: "Lite local-first Vital preset starts from scratch ideas, existing presets, and audio sources"
   },
   {
     title: "JUNO NOCTURNES - 96 Arturia JUN-6 V Presets",

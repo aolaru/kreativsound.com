@@ -223,7 +223,7 @@ async function checkPages() {
   assert(audioHtml.includes("Try Example Sound"), "Audio mode: included example sound action is missing");
 
   const changelogHtml = await readText("changelog/index.html");
-  assert(changelogHtml.includes("Preset Mutator Changelog"), "Changelog: page title is missing");
+  assert(changelogHtml.includes("Preset Mutator Lite Changelog"), "Changelog: page title is missing");
   assert(changelogHtml.includes(releaseVersion), "Changelog: current version is missing");
   assert(changelogHtml.includes("Current release"), "Changelog: current release marker is missing");
 
@@ -368,11 +368,11 @@ await checkPages();
 await checkEngines();
 
 if (failures.length) {
-  console.error("Preset Mutator QA failed:");
+  console.error("Preset Mutator Lite QA failed:");
   for (const failure of failures) {
     console.error(`- ${failure}`);
   }
   process.exit(1);
 }
 
-console.log("Preset Mutator QA passed.");
+console.log("Preset Mutator Lite QA passed.");

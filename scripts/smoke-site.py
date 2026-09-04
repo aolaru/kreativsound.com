@@ -69,14 +69,14 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator", "Kreativ Kollection V1", "Optional analytics"],
+            "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator Lite", "Kreativ Kollection V1", "Optional analytics"],
             "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
             "/updates/": ["Kreativ Sound Updates and Changelog", "Changes, releases, and practical guides.", "Latest update", "What you can use now.", f"{preset_mutator_pro['name']} v{preset_mutator_pro['version']}", f"{preset_mutator_free['name']} v{preset_mutator_free['version']}", f"{wave_mutator['name']} {wave_mutator['releaseLabel']} v{wave_mutator['version']}", "Earlier updates", "Site-maintenance history", "Release notes", "Practical sound-design guides.", "The current browser-tool line", "32 variants per run", "Plugins"],
-            "/tools/": ["Preset Mutator", "3 free / 32 PRO", "Free + PRO", "Get PRO for €19", "Wave Mutator", "Pattern Mutator"],
+            "/tools/": ["Preset Mutator Lite", "3 free / 32 PRO", "Lite + PRO", "Get PRO for €19", "Wave Mutator", "Pattern Mutator"],
             "/tools/pattern-mutator/": ["Pattern Mutator", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "Free piano roll"],
             "/tools/pattern-mutator/changelog/": ["Pattern Mutator", "Changelog", "Current release", f"v{pattern_mutator['version']}", "Back to Pattern Mutator"],
             "/tools/wave-mutator/changelog/": ["Wave Mutator", "Changelog", "Current beta release", f"v{wave_mutator['version']}", "Current beta limits"],
-            "/tools/preset-mutator/": ["Preset Mutator", "Free + PRO", "Get PRO for €19", "Free", "PRO", "32 Vital preset variants per workflow."],
+            "/tools/preset-mutator/": ["Preset Mutator Lite", "Lite + PRO", "Get PRO for €19", "Free", "PRO", "32 Vital preset variants per workflow."],
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
             "/plugins/": ["Plugins", "Plugins are in development. Help shape what launches first.", "Early development", "Share plugin interest", "View Updates", "Browse Sounds", "Browse Tools"],

@@ -65,7 +65,7 @@ export function applyParameterMapToPreset(seedData, preset) {
   settings.preset_name = preset.name;
 
   rendered.settings = settings;
-  rendered.author = "Preset Mutator";
+  rendered.author = "Preset Mutator Lite";
   rendered.comments = preset.summary;
   rendered.preset_style = preset.familyKey.charAt(0).toUpperCase() + preset.familyKey.slice(1);
   rendered.macro1 = "Tone";

@@ -1,6 +1,6 @@
-# Preset Mutator
+# Preset Mutator Lite
 
-Preset Mutator is a free Kreativ Sound browser app for creating three Vital preset variants from scratch intent, existing `.vital` presets, or short audio sources.
+Preset Mutator Lite is a free Kreativ Sound browser app for creating three Vital preset variants from scratch intent, existing `.vital` presets, or short audio sources.
 
 ## Source And Public URL
 
@@ -48,7 +48,7 @@ npm run check
 
 ## Versioning
 
-Free versions are updated deliberately for Free releases. The repository hook only manages Preset Mutator PRO versioning.
+Lite versions are updated deliberately for Lite releases. The repository hook updates the Preset Mutator Lite version when its source changes.
 
 Install the hook after cloning:
 

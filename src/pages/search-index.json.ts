@@ -64,18 +64,18 @@ const staticEntries: SearchEntry[] = [
     description: "Upcoming Kreativ Sound instrument and effect plugins."
   },
   {
-    title: "Preset Mutator",
+    title: "Preset Mutator Lite",
     url: "/preset-mutator/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
     description: "Create Vital preset starts from scratch ideas, existing presets, or one short audio source."
   },
   {
-    title: "Preset Mutator Changelog",
+    title: "Preset Mutator Lite Changelog",
     url: "/preset-mutator/changelog/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
-    description: "A concise public record of Preset Mutator Free improvements, fixes, and release versions."
+    description: "A concise public record of Preset Mutator Lite improvements, fixes, and release versions."
   },
   {
     title: "Preset Mutator PRO Changelog",
@@ -85,11 +85,11 @@ const staticEntries: SearchEntry[] = [
     description: "A concise public record of Preset Mutator PRO improvements, fixes, and release versions."
   },
   {
-    title: "Preset Mutator Product Details",
+    title: "Preset Mutator Lite Product Details",
     url: "/tools/preset-mutator/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
-    description: "Free browser tool for creating 3 Vital preset variants from scratch, one preset, or one audio source. Preset Mutator PRO creates 32-variant ZIP packs."
+    description: "Lite browser tool for creating 3 Vital preset variants from scratch, one preset, or one audio source. Preset Mutator PRO creates 32-variant ZIP packs."
   },
   {
     title: "Audio to Preset",

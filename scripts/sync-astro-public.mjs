@@ -65,8 +65,8 @@ function redirectPage(target, message) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Preset Mutator moved</title>
-    <meta name="description" content="This old Preset Mutator URL has moved to the canonical Kreativ Sound tool page." />
+    <title>Preset Mutator Lite moved</title>
+    <meta name="description" content="This old Preset Mutator Lite URL has moved to the canonical Kreativ Sound tool page." />
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href="${canonical}" />
     <meta http-equiv="refresh" content="0; url=${target}" />
@@ -76,9 +76,9 @@ function redirectPage(target, message) {
   </head>
   <body>
     <main>
-      <h1>Preset Mutator moved</h1>
+      <h1>Preset Mutator Lite moved</h1>
       <p>${message}</p>
-      <p><a href="${target}">Open Preset Mutator</a></p>
+      <p><a href="${target}">Open Preset Mutator Lite</a></p>
     </main>
   </body>
 </html>
@@ -135,10 +135,10 @@ self.addEventListener("fetch", (event) => {
 
 function writeLegacyPresetMutatorRedirects() {
   fs.rmSync(presetMutatorLegacyPublicDir, { recursive: true, force: true });
-  writeRedirect("index.html", "/preset-mutator/", "The old app path now redirects to the canonical Preset Mutator URL.");
-  writeRedirect("scratch/index.html", "/preset-mutator/scratch/", "The old From Scratch path now redirects to the canonical Preset Mutator URL.");
-  writeRedirect("mutate/index.html", "/preset-mutator/mutate/", "The old Mutate Preset path now redirects to the canonical Preset Mutator URL.");
-  writeRedirect("audio/index.html", "/preset-mutator/audio/", "The old Audio to Preset path now redirects to the canonical Preset Mutator URL.");
+  writeRedirect("index.html", "/preset-mutator/", "The old app path now redirects to the canonical Preset Mutator Lite URL.");
+  writeRedirect("scratch/index.html", "/preset-mutator/scratch/", "The old From Scratch path now redirects to the canonical Preset Mutator Lite URL.");
+  writeRedirect("mutate/index.html", "/preset-mutator/mutate/", "The old Mutate Preset path now redirects to the canonical Preset Mutator Lite URL.");
+  writeRedirect("audio/index.html", "/preset-mutator/audio/", "The old Audio to Preset path now redirects to the canonical Preset Mutator Lite URL.");
   writeLegacyServiceWorker();
 }
 
