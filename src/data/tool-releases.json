@@ -1,7 +1,7 @@
 {
   "presetMutatorFree": {
     "name": "Preset Mutator Free",
-    "version": "0.4.8",
+    "version": "0.4.9",
     "date": "2026-09-05",
     "status": "Free",
     "changelog": "/preset-mutator/changelog/"

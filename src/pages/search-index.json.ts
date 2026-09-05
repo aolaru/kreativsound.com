@@ -71,6 +71,13 @@ const staticEntries: SearchEntry[] = [
     description: "Create Vital preset starts from scratch ideas, existing presets, or one short audio source."
   },
   {
+    title: "Preset Mutator Pro",
+    url: "/preset-mutator-pro/",
+    type: "Tool",
+    thumbnail: "/preset-mutator-pro/preset-mutator-mark.svg",
+    description: "Open the purchased Pro workflow to activate a license, generate 32 Vital variants, and export ZIP preset packs."
+  },
+  {
     title: "Preset Mutator Free Changelog",
     url: "/preset-mutator/changelog/",
     type: "Tool",

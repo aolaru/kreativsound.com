@@ -183,7 +183,8 @@ async function checkPages() {
     assert(html.includes("Preset Mutator Pro"), `${page.name}: Pro upgrade should be visible`);
     assert(html.includes("Get Preset Mutator Pro for €19"), `${page.name}: Pro Gumroad CTA is missing`);
     assert(html.includes("https://kreativ.gumroad.com/l/preset-mutator"), `${page.name}: Pro Gumroad URL is missing`);
-    assert(html.includes("Already purchased? Open Pro"), `${page.name}: Pro access link is missing`);
+    assert(html.includes("Already purchased? Open Preset Mutator Pro"), `${page.name}: Pro access label is missing`);
+    assert(html.includes('href="/preset-mutator-pro/"'), `${page.name}: direct Pro app URL is missing`);
     assert(!html.includes("license token"), `${page.name}: license-token copy should not be visible`);
     assert(!html.includes("Pay with PayPal"), `${page.name}: PayPal CTA should not be visible in the free app`);
     assert(!html.includes("Download 32-Pack"), `${page.name}: 32-pack download should not be visible`);
