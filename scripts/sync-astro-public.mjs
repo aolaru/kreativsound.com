@@ -55,7 +55,7 @@ if (!fs.existsSync(waveMutatorSourceDir)) {
 }
 
 if (!fs.existsSync(patternMutatorSourceDir)) {
-  throw new Error("Missing apps/pattern-mutator/public. Pattern Mutator source must be available before syncing public assets.");
+  throw new Error("Missing apps/pattern-mutator/public. Pattern Mutator Lite source must be available before syncing public assets.");
 }
 
 function redirectPage(target, message) {
