@@ -124,7 +124,7 @@ const staticEntries: SearchEntry[] = [
     url: "/tools/pattern-mutator/",
     type: "Tool",
     thumbnail: "/assets/thumbs/preset-mutator.webp",
-    description: "Generate scale-aware MIDI patterns, lock the parts that work, mutate the rest, and export an editable MIDI file locally."
+    description: "Generate free scale-aware MIDI patterns, lock the parts that work, mutate the rest, and export an editable MIDI file locally."
   },
   {
     title: "Pattern Mutator Lite Changelog",
