@@ -1,6 +1,6 @@
 # Wave Mutator Lite
 
-Wave Mutator Lite is a beta browser tool for preparing audio samples for sound-product releases.
+Wave Mutator Lite is a free beta browser tool for preparing audio samples for sound-product releases.
 
 Core idea: drop in messy audio files and export cleaner, product-ready samples without uploading audio anywhere.
 

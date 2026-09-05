@@ -110,7 +110,7 @@ const staticEntries: SearchEntry[] = [
     url: "/tools/wave-mutator/",
     type: "Tool",
     thumbnail: "/assets/thumbs/wave-mutator.jpg",
-    description: "Clean messy WAV files, export sample packs, and build short preview montages locally."
+    description: "Free local tool to clean messy WAV files, export sample packs, and build short preview montages."
   },
   {
     title: "Wave Mutator Lite Changelog",
