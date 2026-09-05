@@ -15,8 +15,8 @@
   },
   "waveMutator": {
     "name": "Wave Mutator Lite",
-    "version": "0.2.1",
-    "date": "2026-08-21",
+    "version": "0.2.2",
+    "date": "2026-09-05",
     "status": "Lite",
     "releaseLabel": "beta",
     "changelog": "/tools/wave-mutator/changelog/"

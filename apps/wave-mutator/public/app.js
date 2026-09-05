@@ -130,7 +130,7 @@ const MAX_INPUT_BYTES = 1024 * 1024 * 1024;
 const MAX_DECODED_BYTES = 1536 * 1024 * 1024;
 const DEFAULT_TRIM_WINDOW_MS = 10;
 const HISTORY_LIMIT = 40;
-const APP_VERSION = "0.2.1";
+const APP_VERSION = "0.2.2";
 const SUPPORTED_AUDIO_FORMATS = {
   wav: { label: "WAV", extensions: [".wav"], types: ["audio/wav", "audio/wave", "audio/x-wav"] },
   aiff: { label: "AIFF", extensions: [".aif", ".aiff"], types: ["audio/aiff", "audio/x-aiff"] },

@@ -12,6 +12,7 @@ export type SiteUpdate = {
 
 export const siteUpdates: SiteUpdate[] = [
   { date: "2026-09-05", kind: "update", title: "Pattern Mutator Lite v0.2.1", description: "The free MIDI tool is now Pattern Mutator Lite, clarifying its focused single-pattern workflow while keeping every existing link working.", href: "/tools/pattern-mutator/changelog/" },
+  { date: "2026-09-05", kind: "update", title: "Wave Mutator Lite beta v0.2.2", description: "The local sample-preparation tool is now Wave Mutator Lite, with the existing tool URL preserved and local pack, settings, and report labels updated.", href: "/tools/wave-mutator/changelog/" },
   { date: "2026-09-02", kind: "update", title: "Preset Mutator PRO v0.4.8", description: "Every PRO workflow now has a direct All tools path, making it easier to move between the local app, release notes, and the wider browser-tool line.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-09-02", kind: "update", title: "Preset Mutator Lite v0.4.7", description: "Every Lite workflow now has a direct All tools path, making it easier to move between the local app, release notes, and the wider browser-tool line.", href: "/preset-mutator/changelog/" },
   { date: "2026-08-28", kind: "update", title: "Preset Mutator PRO v0.4.7", description: "Preset packs now balance across distinct Vital structures, with near-duplicate retries and safer family-specific output limits.", href: "/preset-mutator-pro/changelog/" },
