@@ -3866,6 +3866,52 @@ a:focus-visible,
   box-shadow: 0 22px 52px rgba(109, 50, 50, 0.1);
 }
 
+.tools-page-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 0.55fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: end;
+  padding: 0.15rem 0.15rem 0.5rem;
+}
+
+.tools-page-intro .page-title {
+  max-width: 24ch;
+  margin-bottom: 0.42rem;
+}
+
+.tools-page-intro .page-lead {
+  max-width: 47rem;
+  margin-bottom: 0;
+}
+
+.tools-page-trust {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.tools-page-trust li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 42px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid rgba(228, 171, 171, 0.18);
+  border-radius: 14px;
+  color: var(--soft);
+  font-size: 0.86rem;
+  font-weight: 700;
+  background: rgba(153, 0, 0, 0.045);
+}
+
+.tools-page-trust i {
+  width: 1rem;
+  color: var(--accent-strong);
+  text-align: center;
+}
+
 .preset-mutator-sales-page {
   max-width: 980px;
 }
@@ -5076,6 +5122,7 @@ a:focus-visible,
   .updates-hero,
   .news-featured,
   .tools-hero-grid,
+  .tools-page-intro,
   .tools-feature-card,
   .tools-launch,
   .tools-trust-grid,

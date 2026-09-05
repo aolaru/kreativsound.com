@@ -8,11 +8,24 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   activeNav="tools"
 >
   <section class="card page-main product-page tools-page">
+    <header class="tools-page-intro" aria-labelledby="tools-title">
+      <div>
+        <p class="eyebrow">Kreativ Sound tools</p>
+        <h1 id="tools-title" class="page-title">Local-first tools for presets, audio, and MIDI.</h1>
+        <p class="page-lead">Create Vital starting points, prepare audio, and generate editable MIDI patterns without sending your files anywhere.</p>
+      </div>
+      <ul class="tools-page-trust" aria-label="Tool privacy promises">
+        <li><i class="fa-solid fa-laptop" aria-hidden="true"></i><span>Runs in your browser</span></li>
+        <li><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><span>No file uploads</span></li>
+        <li><i class="fa-solid fa-user-slash" aria-hidden="true"></i><span>No account required</span></li>
+      </ul>
+    </header>
+
     <div class="stack">
-      <section class="tools-feature-card" aria-labelledby="tools-title">
+      <section class="tools-feature-card" aria-labelledby="preset-mutator-title">
         <div class="tools-feature-copy">
           <p class="product-kicker">Current tool</p>
-          <h1 id="tools-title" class="page-title">Preset Mutator Free</h1>
+          <h2 id="preset-mutator-title" class="page-title">Preset Mutator Free</h2>
           <p class="page-lead">Create Vital preset starts from scratch ideas, existing presets, or one short audio source.</p>
           <p class="product-summary">Start with the free local-first Vital workflow for three variants and individual downloads. Preset Mutator Pro expands the same three modes into a 32-variant ZIP pack.</p>
           <dl class="tools-feature-meta" aria-label="Preset Mutator Free facts">
@@ -92,7 +105,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
           </div>
         </div>
         <a class="tools-feature-media" href="/tools/wave-mutator/" aria-label="Open Wave Mutator Lite">
-          <img src="/assets/thumbs/wave-mutator.jpg" width="1440" height="810" alt="Wave Mutator Lite cover artwork showing waveform cleanup and sample export" loading="lazy" decoding="async" />
+          <img src="/assets/thumbs/wave-mutator-interface.webp" width="1440" height="810" alt="Wave Mutator Lite interface showing local sample cleanup, pack export, and preview montage controls" loading="lazy" decoding="async" />
         </a>
       </section>
 
