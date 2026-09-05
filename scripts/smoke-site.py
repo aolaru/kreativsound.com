@@ -88,7 +88,7 @@ def main() -> int:
             "/license/": ["Product License", "What the license allows", "What the license does not allow"],
             "/posts/how-to-use-juno-nocturnes-for-dark-ambient-2026-07-18.html": ["By Andrei Olaru", "Published July 18, 2026", "How to Use JUNO NOCTURNES for Dark Ambient"],
             "/search/": ["Find sounds, music, tools, and articles.", "Search Kreativ Sound", "Enter a product, album, artist, synth, format, guide, or tool."],
-            "/sounds/": ["Browse Sound", "Find a sound", "Need placement ideas?", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs"],
+            "/sounds/": ["Browse Sound", "Need placement ideas?", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs", "Legacy Archive"],
             "/sounds/kreativ-kollection-v1": ["Get the bundle on Gumroad", "49 EUR", "16 products", "Kreativ Kollection V1", "JUNO NOCTURNES", "Description", "What's Included", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements", "Related sounds", "View full catalog"],
             "/sounds/operators-fm8-presets": ["Buy on Gumroad", "Try Lite free", "OPERATORS", "64 presets", "Product Specifications", "Requirements"],
@@ -131,13 +131,14 @@ def main() -> int:
                 forbid(dom, 'action="https://www.google.com/search"', route, errors)
                 require(dom, 'action="/search/"', route, errors)
             if route == "/sounds/":
-                require(dom, 'data-catalog-query', route, errors)
-                require(dom, 'data-catalog-category="Bundle"', route, errors)
-                require(dom, 'data-catalog-category="Presets"', route, errors)
-                require(dom, 'data-catalog-category="Free"', route, errors)
-                require(dom, 'data-catalog-more', route, errors)
-                forbid(dom, 'class="catalog-anchor-links"', route, errors)
-                forbid(dom, 'data-catalog-category="Tools"', route, errors)
+                require(dom, 'class="catalog-anchor-links"', route, errors)
+                require(dom, 'href="#catalog-presets"', route, errors)
+                require(dom, 'href="#catalog-samples"', route, errors)
+                require(dom, 'href="#catalog-free"', route, errors)
+                require(dom, 'href="#catalog-legacy"', route, errors)
+                forbid(dom, 'data-catalog-query', route, errors)
+                forbid(dom, 'data-catalog-category=', route, errors)
+                forbid(dom, 'data-catalog-more', route, errors)
             if route.startswith("/sounds/") and route != "/sounds/":
                 require(dom, 'class="product-breadcrumbs"', route, errors)
                 require(dom, 'href="/sounds/"', route, errors)

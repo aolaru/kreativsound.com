@@ -72,8 +72,7 @@ const catalogCategories = visibleCategories || (isCurated ? ["Bundle", "Tools", 
   ) : null}
   <ProductCatalog
     visibleCategories={catalogCategories}
-    showCategoryNav={isCurated}
-    showFilters={!isCurated}
+    showCategoryNav={true}
   />
   {showGuide ? (
     <details class="catalog-guide catalog-guide-collapsible">

@@ -3,8 +3,7 @@ import { categoryIds, categoryLabels, preferredCategoryOrder, products } from ".
 
 const {
   visibleCategories = preferredCategoryOrder,
-  showCategoryNav = true,
-  showFilters = true
+  showCategoryNav = true
 } = Astro.props;
 
 const discoveredCategories = Array.from(new Set(products.map((product) => product.category)));
@@ -12,7 +11,8 @@ const categories = [
   ...preferredCategoryOrder.filter((category) => discoveredCategories.includes(category)),
   ...discoveredCategories.filter((category) => !preferredCategoryOrder.includes(category))
 ].filter((category) => visibleCategories.includes(category));
-const CategoryHeading = showFilters ? "h2" : "h3";
+const anchorCategories = categories.filter((category) => ["Presets", "Samples", "Free", "Legacy"].includes(category));
+const CategoryHeading = "h2";
 
 function ctaText(category: string) {
   if (category === "Free") return "Download Free";
@@ -34,47 +34,10 @@ function ctaTrackingEvent(product: { status?: string }) {
   return "begin_checkout";
 }
 ---
-<div class="product-catalog" data-product-catalog>
-  {showFilters ? (
-    <div class="catalog-filters" aria-label="Filter sound catalog">
-      <label class="catalog-filter-search">
-        <span>Find a sound</span>
-        <input type="search" placeholder="Search packs, synths, or textures" autocomplete="off" data-catalog-query />
-      </label>
-      <div class="catalog-filter-categories" role="group" aria-label="Product type">
-        <button type="button" class="is-active" aria-pressed="true" data-catalog-category="all">All</button>
-        {categories.map((category) => (
-          <button type="button" aria-pressed="false" data-catalog-category={category}>{categoryLabels[category]}</button>
-        ))}
-      </div>
-      <nav class="catalog-discovery" aria-label="Browse sounds by synth or use case">
-        <div class="catalog-discovery-group">
-          <span>By synth</span>
-          <div class="catalog-discovery-links">
-            <a href="/sounds/?q=JUN-6+V#catalog-title">JUN-6 V</a>
-            <a href="/sounds/?q=Pigments#catalog-title">Pigments</a>
-            <a href="/sounds/?q=Vital#catalog-title">Vital</a>
-            <a href="/sounds/?q=FM8#catalog-title">FM8</a>
-            <a href="/sounds/?q=Softube+Models#catalog-title">Softube Models</a>
-          </div>
-        </div>
-        <div class="catalog-discovery-group">
-          <span>By sound</span>
-          <div class="catalog-discovery-links">
-            <a href="/sounds/?q=ambient#catalog-title">Ambient</a>
-            <a href="/sounds/?q=cinematic#catalog-title">Cinematic</a>
-            <a href="/sounds/?q=industrial#catalog-title">Industrial</a>
-            <a href="/sounds/?q=FX#catalog-title">FX and transitions</a>
-            <a href="/sounds/?category=Free#catalog-title">Free packs</a>
-          </div>
-        </div>
-      </nav>
-      <p class="catalog-filter-status" role="status" aria-live="polite" data-catalog-status></p>
-    </div>
-  ) : null}
-  {showCategoryNav && !showFilters && categories.length ? (
+<div class="product-catalog">
+  {showCategoryNav && anchorCategories.length ? (
     <div class="catalog-anchor-links" aria-label="Catalog sections">
-      {categories.map((category) => (
+      {anchorCategories.map((category) => (
         <a href={`#${categoryIds[category]}`}>{categoryLabels[category]}</a>
       ))}
     </div>
@@ -82,7 +45,7 @@ function ctaTrackingEvent(product: { status?: string }) {
   {categories.map((category, categoryIndex) => {
     const categoryItems = products.filter((product) => product.category === category);
     return (
-      <section class:list={["catalog-group", category === "Legacy" && "catalog-group-legacy"]} id={categoryIds[category]} data-catalog-section={category}>
+      <section class:list={["catalog-group", category === "Legacy" && "catalog-group-legacy"]} id={categoryIds[category]}>
         <CategoryHeading>{categoryLabels[category]}</CategoryHeading>
         <ul class="product-grid">
           {categoryItems.map((item, itemIndex) => {
@@ -90,10 +53,9 @@ function ctaTrackingEvent(product: { status?: string }) {
             const hasSecondaryAction = Boolean(item.detailsUrl || item.extraAction?.url);
             const eagerImage = categoryIndex === 0 && itemIndex < 6;
             const fetchPriority = eagerImage ? "high" : "auto";
-            const searchText = [item.title, item.format, item.count, item.useCase, categoryLabels[category]].join(" ").toLowerCase();
 
             return (
-              <li data-catalog-item data-category={category} data-search-text={searchText}>
+              <li>
               <div class="product-card-stack">
                 <div class:list={["product-card", "product-card-static", category === "Legacy" && "product-card-legacy"]}>
                   {item.badge ? (
@@ -151,12 +113,4 @@ function ctaTrackingEvent(product: { status?: string }) {
       </section>
     );
   })}
-  {showFilters ? (
-    <div class="catalog-progress">
-      <button class="button secondary" type="button" data-catalog-more hidden>
-        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-        Show more products
-      </button>
-    </div>
-  ) : null}
 </div>
