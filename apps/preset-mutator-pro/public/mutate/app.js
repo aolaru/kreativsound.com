@@ -154,7 +154,7 @@ function amountLabel(value) {
 }
 
 function currentActionLabel() {
-  return "Generate 32 PRO Variants";
+  return "Generate 32 Pro Variants";
 }
 
 function updateControlLabels() {
@@ -536,7 +536,7 @@ async function loadPreset(file) {
       macro_count: summary.macroCount,
     });
     elements.status.textContent = state.suiteUnlocked
-      ? `Loaded ${summary.name}. Generate your 32-variant PRO pack.`
+      ? `Loaded ${summary.name}. Generate your 32-variant Pro pack.`
       : `Loaded ${summary.name}. Enter your Gumroad license key to unlock generation.`;
   } catch (error) {
     state.sourcePreset = null;
@@ -565,14 +565,14 @@ async function handleGenerate() {
   }
 
   setGenerationLoadingState(true);
-  elements.status.textContent = "Building 32 PRO variants from the loaded source preset...";
+  elements.status.textContent = "Building 32 Pro variants from the loaded source preset...";
 
   try {
     await new Promise((resolve) => window.setTimeout(resolve, 520));
     state.generatedVariants = generateVariants();
     state.lastGenerationMode = "pro";
     renderVariants();
-    elements.status.textContent = "32 PRO variants ready. Expand each group and download individual presets or the full ZIP.";
+    elements.status.textContent = "32 Pro variants ready. Expand each group and download individual presets or the full ZIP.";
     analyticsEvent("generate_pro", {
       preset_count: state.generatedVariants.length,
       ...currentAnalyticsSelection(),
@@ -653,8 +653,8 @@ async function handlePaidFeatureUnlock() {
   saveLicenseToken(key);
   renderPaidFeatureState();
   elements.status.textContent = state.sourcePreset
-    ? `Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}. Generate 32 PRO variants when ready.`
-    : `Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}.`;
+    ? `Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}. Generate 32 Pro variants when ready.`
+    : `Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}.`;
   analyticsEvent("unlock_attempt", { result: "success" });
 }
 

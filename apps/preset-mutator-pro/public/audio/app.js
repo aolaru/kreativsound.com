@@ -701,7 +701,7 @@ function renderPresets(presets) {
       ? "Load a short source sound to begin."
       : state.proPreviewUnlocked
         ? "Source ready. Generate a 32-variant Vital preset pack."
-        : "Source ready. Activate PRO to generate a 32-variant Vital preset pack.";
+        : "Source ready. Activate Pro to generate a 32-variant Vital preset pack.";
     elements.presetList.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
     return;
   }
@@ -960,7 +960,7 @@ async function loadAudioFile(file, resetInput = false) {
     renderPresets([]);
     setReady(true);
 
-    updateStatus(state.proPreviewUnlocked ? "Source ready. Generate your 32-variant PRO pack." : "Source ready. Enter your Gumroad license key to unlock generation.");
+    updateStatus(state.proPreviewUnlocked ? "Source ready. Generate your 32-variant Pro pack." : "Source ready. Enter your Gumroad license key to unlock generation.");
     analyticsEvent("source_loaded", {
       source_type: "audio",
       duration_bucket: durationBucket(state.originalBuffer.duration),
@@ -1071,7 +1071,7 @@ function generatePresetPack() {
     return;
   }
 
-  updateStatus("Shaping 32 PRO variants...");
+  updateStatus("Shaping 32 Pro variants...");
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
   state.lastGenerationMode = "pro";
@@ -1101,7 +1101,7 @@ function generatePresetPack() {
   ]);
 
   renderPresets(state.presets);
-  updateStatus("32 PRO variants ready.");
+  updateStatus("32 Pro variants ready.");
   analyticsEvent("generate_pro", {
     preset_count: state.presets.length,
     detected_family: state.profile.family,
@@ -1117,7 +1117,7 @@ async function handleGeneratePresetPack() {
   }
 
   setGenerateLoadingState(true);
-  updateStatus("Generating 32 PRO variants...");
+  updateStatus("Generating 32 Pro variants...");
 
   await new Promise((resolve) => {
     window.setTimeout(resolve, GENERATE_DELAY_MS);
@@ -1139,11 +1139,11 @@ function renderPaidFeatureState() {
   updateStatus(
     unlocked
       ? state.originalBuffer
-        ? "PRO is active. Source ready for 32-variant generation."
-        : "PRO is active. Load a short audio file to begin."
+        ? "Pro is active. Source ready for 32-variant generation."
+        : "Pro is active. Load a short audio file to begin."
       : state.originalBuffer
-        ? "Source ready. Activate PRO to generate 32 variants."
-        : "Load a short audio file, activate PRO, then generate 32 variants.",
+        ? "Source ready. Activate Pro to generate 32 variants."
+        : "Load a short audio file, activate Pro, then generate 32 variants.",
   );
 }
 
@@ -1180,7 +1180,7 @@ async function handlePaidFeatureUnlock() {
   saveLicenseToken(key);
   renderPaidFeatureState();
   renderPresets(state.presets);
-  updateStatus(`Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}.`);
+  updateStatus(`Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}.`);
   setReady(Boolean(state.originalBuffer));
   analyticsEvent("unlock_attempt", { result: "success" });
 }

@@ -92,12 +92,12 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
     variant: "bundle"
   },
   "preset-mutator": {
-    title: "Preset Mutator Lite | Vital Preset Generator",
-    headline: "Preset Mutator Lite",
-    description: "Preset Mutator Lite is a free browser-based Vital preset generator for creating preset starts from scratch ideas, existing presets, or short audio sources.",
-    kicker: "Lite browser tool",
+    title: "Preset Mutator Free | Vital Preset Generator",
+    headline: "Preset Mutator Free",
+    description: "Preset Mutator Free is a free browser-based Vital preset generator for creating preset starts from scratch ideas, existing presets, or short audio sources.",
+    kicker: "Free browser tool",
     secondaryUrl: "/preset-mutator/",
-    secondaryLabel: "Open Preset Mutator Lite",
+    secondaryLabel: "Open Preset Mutator Free",
     variant: "flagship"
   },
   "juno-nocturnes-jun-6-v-presets": {
@@ -446,7 +446,7 @@ export const productPages: ProductPage[] = products
       previewUrl: product.category === "Presets" ? product.extraAction?.url : undefined,
       previewLabel: product.category === "Presets" && product.extraAction?.url ? "Try Lite free" : undefined,
       secondaryUrl: override.secondaryUrl || product.appUrl,
-      secondaryLabel: override.secondaryLabel || (product.appUrl ? "Open Preset Mutator Lite" : undefined),
+      secondaryLabel: override.secondaryLabel || (product.appUrl ? "Open Preset Mutator Free" : undefined),
       shortMeta: copy?.shortMeta || defaultShortMeta(product),
       price: product.price,
       priceAmount: product.priceAmount,

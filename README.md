@@ -32,9 +32,9 @@ npm run build
 npm run preview
 ```
 
-## Preset Mutator Lite Browser App
+## Preset Mutator Free Browser App
 
-The Preset Mutator Lite source lives under:
+The Preset Mutator Free source lives under:
 
 - `apps/preset-mutator/public`
 

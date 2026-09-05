@@ -1,8 +1,8 @@
 {
   "id": "/preset-mutator-pro/",
-  "name": "Preset Mutator PRO",
-  "short_name": "Mutator PRO",
-  "description": "Preset Mutator PRO access for verified customers.",
+  "name": "Preset Mutator Pro",
+  "short_name": "Mutator Pro",
+  "description": "Preset Mutator Pro access for verified customers.",
   "start_url": "/preset-mutator-pro/",
   "scope": "/preset-mutator-pro/",
   "display": "standalone",

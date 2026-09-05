@@ -33,13 +33,13 @@ function stagedVersionChanged() {
     encoding: "utf8",
   });
 
-  return /^[-+](?![-+]).*Preset Mutator PRO v\d+\.\d+\.\d+/m.test(diff);
+  return /^[-+](?![-+]).*Preset Mutator Pro v\d+\.\d+\.\d+/m.test(diff);
 }
 
 function nextPatchVersion(version) {
   const match = /^v(\d+)\.(\d+)\.(\d+)$/.exec(version);
   if (!match) {
-    throw new Error(`Unsupported Preset Mutator PRO version: ${version}`);
+    throw new Error(`Unsupported Preset Mutator Pro version: ${version}`);
   }
 
   const [, major, minor, patch] = match;
@@ -58,7 +58,7 @@ async function bumpVersion() {
   );
 
   if (versions.size !== 1) {
-    throw new Error(`Preset Mutator PRO version files are out of sync: ${[...versions].join(", ") || "none found"}`);
+    throw new Error(`Preset Mutator Pro version files are out of sync: ${[...versions].join(", ") || "none found"}`);
   }
 
   const [currentVersion] = versions;
@@ -76,7 +76,7 @@ async function bumpVersion() {
     }),
   );
   execFileSync("git", ["add", "--", ...versionFiles, ...companionFiles], { cwd: rootDir, stdio: "inherit" });
-  console.log(`Preset Mutator PRO version: ${currentVersion} -> ${nextVersion}`);
+  console.log(`Preset Mutator Pro version: ${currentVersion} -> ${nextVersion}`);
 }
 
 if (!process.argv.includes("--staged") || (stagedProAppChanged() && !stagedVersionChanged())) {

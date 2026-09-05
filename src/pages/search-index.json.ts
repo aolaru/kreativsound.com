@@ -64,32 +64,32 @@ const staticEntries: SearchEntry[] = [
     description: "Upcoming Kreativ Sound instrument and effect plugins."
   },
   {
-    title: "Preset Mutator Lite",
+    title: "Preset Mutator Free",
     url: "/preset-mutator/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
     description: "Create Vital preset starts from scratch ideas, existing presets, or one short audio source."
   },
   {
-    title: "Preset Mutator Lite Changelog",
+    title: "Preset Mutator Free Changelog",
     url: "/preset-mutator/changelog/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
-    description: "A concise public record of Preset Mutator Lite improvements, fixes, and release versions."
+    description: "A concise public record of Preset Mutator Free improvements, fixes, and release versions."
   },
   {
-    title: "Preset Mutator PRO Changelog",
+    title: "Preset Mutator Pro Changelog",
     url: "/preset-mutator-pro/changelog/",
     type: "Tool",
     thumbnail: "/preset-mutator-pro/preset-mutator-mark.svg",
-    description: "A concise public record of Preset Mutator PRO improvements, fixes, and release versions."
+    description: "A concise public record of Preset Mutator Pro improvements, fixes, and release versions."
   },
   {
-    title: "Preset Mutator Lite Product Details",
+    title: "Preset Mutator Free Product Details",
     url: "/tools/preset-mutator/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
-    description: "Lite browser tool for creating 3 Vital preset variants from scratch, one preset, or one audio source. Preset Mutator PRO creates 32-variant ZIP packs."
+    description: "Free browser tool for creating 3 Vital preset variants from scratch, one preset, or one audio source. Preset Mutator Pro creates 32-variant ZIP packs."
   },
   {
     title: "Audio to Preset",

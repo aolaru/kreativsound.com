@@ -1,16 +1,16 @@
 {
   "presetMutatorFree": {
-    "name": "Preset Mutator Lite",
-    "version": "0.4.7",
-    "date": "2026-09-02",
-    "status": "Lite",
+    "name": "Preset Mutator Free",
+    "version": "0.4.8",
+    "date": "2026-09-05",
+    "status": "Free",
     "changelog": "/preset-mutator/changelog/"
   },
   "presetMutatorPro": {
-    "name": "Preset Mutator PRO",
-    "version": "0.4.8",
-    "date": "2026-09-02",
-    "status": "PRO · €19",
+    "name": "Preset Mutator Pro",
+    "version": "0.4.9",
+    "date": "2026-09-05",
+    "status": "Pro · €19",
     "changelog": "/preset-mutator-pro/changelog/"
   },
   "waveMutator": {

@@ -190,7 +190,7 @@ function renderPresets(presets) {
   if (!presets.length) {
     const emptyMessage = state.proUnlocked
       ? "Choose your direction, then generate a 32-variant Vital preset pack."
-      : "Activate PRO, then generate a 32-variant Vital preset pack from your selected direction.";
+      : "Activate Pro, then generate a 32-variant Vital preset pack from your selected direction.";
     elements.presetList.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
     return;
   }
@@ -334,13 +334,13 @@ function generate() {
   }
   setLoading(true);
   state.lastGenerationMode = "pro";
-  updateStatus("Building 32 PRO variants...");
+  updateStatus("Building 32 Pro variants...");
   window.setTimeout(() => {
     const profile = currentProfile();
     state.presets = buildScratchProPack(profile, createGenerationSeed());
     renderPresets(state.presets);
     elements.downloadPack.disabled = false;
-    updateStatus("32 PRO variants ready.");
+    updateStatus("32 Pro variants ready.");
     analyticsEvent("generate_pro", {
       preset_count: state.presets.length,
       ...currentAnalyticsSelection(),
@@ -356,8 +356,8 @@ function renderUnlockState() {
   elements.paidFeaturePreview.hidden = !state.proUnlocked;
   updateStatus(
     state.proUnlocked
-      ? "PRO is active. Generate your 32-variant Vital preset pack when ready."
-      : "Set your direction, activate PRO, then generate your 32-variant Vital preset pack.",
+      ? "Pro is active. Generate your 32-variant Vital preset pack when ready."
+      : "Set your direction, activate Pro, then generate your 32-variant Vital preset pack.",
   );
   if (elements.generatePack) {
     elements.generatePack.disabled = !state.proUnlocked || state.isGenerating;
@@ -385,7 +385,7 @@ async function unlockPro() {
   saveLicenseToken(code);
   renderUnlockState();
   renderPresets(state.presets);
-  updateStatus(`Preset Mutator PRO is active for ${licenseOwnerLabel(result.payload)}.`);
+  updateStatus(`Preset Mutator Pro is active for ${licenseOwnerLabel(result.payload)}.`);
   analyticsEvent("unlock_attempt", { result: "success" });
 }
 

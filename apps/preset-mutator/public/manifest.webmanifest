@@ -1,7 +1,7 @@
 {
   "id": "/preset-mutator/",
-  "name": "Preset Mutator Lite",
-  "short_name": "Preset Mutator Lite",
+  "name": "Preset Mutator Free",
+  "short_name": "Preset Mutator Free",
   "description": "Create synth presets from audio, existing presets, or scratch ideas. Vital is live first; Serum 2 and Pigments 7 are planned.",
   "start_url": "/preset-mutator/",
   "scope": "/preset-mutator/",

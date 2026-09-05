@@ -180,10 +180,10 @@ async function checkPages() {
     assert(html.includes("Generate 3 Variants"), `${page.name}: main action should use simple variants language`);
     assert(html.includes(releaseVersion), `${page.name}: release version should be ${releaseVersion}`);
     assert(!html.includes("Generate 3 Free Variants"), `${page.name}: old free-mode action copy is still visible`);
-    assert(html.includes("Preset Mutator PRO"), `${page.name}: PRO upgrade should be visible`);
-    assert(html.includes("Get Preset Mutator PRO for €19"), `${page.name}: PRO Gumroad CTA is missing`);
-    assert(html.includes("https://kreativ.gumroad.com/l/preset-mutator"), `${page.name}: PRO Gumroad URL is missing`);
-    assert(html.includes("Already purchased? Open PRO"), `${page.name}: PRO access link is missing`);
+    assert(html.includes("Preset Mutator Pro"), `${page.name}: Pro upgrade should be visible`);
+    assert(html.includes("Get Preset Mutator Pro for €19"), `${page.name}: Pro Gumroad CTA is missing`);
+    assert(html.includes("https://kreativ.gumroad.com/l/preset-mutator"), `${page.name}: Pro Gumroad URL is missing`);
+    assert(html.includes("Already purchased? Open Pro"), `${page.name}: Pro access link is missing`);
     assert(!html.includes("license token"), `${page.name}: license-token copy should not be visible`);
     assert(!html.includes("Pay with PayPal"), `${page.name}: PayPal CTA should not be visible in the free app`);
     assert(!html.includes("Download 32-Pack"), `${page.name}: 32-pack download should not be visible`);
@@ -194,7 +194,7 @@ async function checkPages() {
     assert(!renderedApp.includes("Hear Direction Preview"), `${page.name}: generated preview action should not be visible`);
     assert(!renderedApp.includes("preview_preset"), `${page.name}: generated preview analytics should not ship`);
     assert(html.includes('role="status"'), `${page.name}: generation status should be announced accessibly`);
-    assert(!app.includes("AA-PRO-32-DGTW9930"), `${page.name}: hard-coded Pro unlock code is still present`);
+    assert(!app.includes("AA-Pro-32-DGTW9930"), `${page.name}: hard-coded Pro unlock code is still present`);
     assert(!app.includes("PURCHASE_CODE"), `${page.name}: hard-coded purchase-code constant is still present`);
     assert(!app.includes("verifyLicenseToken"), `${page.name}: license verification should not ship in the free app`);
     assert(!app.includes("generate_pro"), `${page.name}: Pro generation analytics should not ship`);
@@ -223,7 +223,7 @@ async function checkPages() {
   assert(audioHtml.includes("Try Example Sound"), "Audio mode: included example sound action is missing");
 
   const changelogHtml = await readText("changelog/index.html");
-  assert(changelogHtml.includes("Preset Mutator Lite Changelog"), "Changelog: page title is missing");
+  assert(changelogHtml.includes("Preset Mutator Free Changelog"), "Changelog: page title is missing");
   assert(changelogHtml.includes(releaseVersion), "Changelog: current version is missing");
   assert(changelogHtml.includes("Current release"), "Changelog: current release marker is missing");
 
@@ -368,11 +368,11 @@ await checkPages();
 await checkEngines();
 
 if (failures.length) {
-  console.error("Preset Mutator Lite QA failed:");
+  console.error("Preset Mutator Free QA failed:");
   for (const failure of failures) {
     console.error(`- ${failure}`);
   }
   process.exit(1);
 }
 
-console.log("Preset Mutator Lite QA passed.");
+console.log("Preset Mutator Free QA passed.");

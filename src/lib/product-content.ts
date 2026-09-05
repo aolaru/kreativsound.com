@@ -62,10 +62,10 @@ export const landingCopyOverrides = {
     subtitle: "Browser-Based Vital Preset Generator",
     shortMeta: "Free browser tool • 3 variants per run • Vital presets",
     ctaLine: "Open the free browser tool and export playable Vital preset variants.",
-    finalCtaTitle: "Open Preset Mutator Lite.",
+    finalCtaTitle: "Open Preset Mutator Free.",
     finalCtaText: "Create three Vital preset variants from scratch intent, one source preset, or a short audio source.",
     longDescription: [
-      "Preset Mutator Lite creates Vital preset starts from scratch ideas, existing Vital presets, or short audio sources.",
+      "Preset Mutator Free creates Vital preset starts from scratch ideas, existing Vital presets, or short audio sources.",
       "It is built for quick sketches: generate a playable direction, then finish the sound inside Vital.",
       "The tool runs locally in your browser and exports individual `.vital` variants without uploads or accounts."
     ],
@@ -78,7 +78,7 @@ export const landingCopyOverrides = {
       { label: "Price", value: "Free" }
     ],
     requirements: [
-      "A modern web browser is required to run Preset Mutator Lite.",
+      "A modern web browser is required to run Preset Mutator Free.",
       "Vital is required to load and edit the generated preset files.",
       "Generated presets are best treated as starting points for sound design, not final mix-ready presets."
     ]

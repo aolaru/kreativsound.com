@@ -38,7 +38,7 @@ export function noteName(frequency) {
   return `${names[((midi % 12) + 12) % 12]}${Math.floor(midi / 12) - 1}`;
 }
 
-export function sanitizeFileName(value, fallback = "Preset Mutator Lite Vital") {
+export function sanitizeFileName(value, fallback = "Preset Mutator Free Vital") {
   return String(value || "").replace(/[<>:"/\\|?*\u0000-\u001f]/g, "").trim() || fallback;
 }
 

@@ -35,7 +35,7 @@ function primaryActionLabel(product: Product) {
 }
 
 function cardTitle(product: Product) {
-  if (product.category === "Tools") return "Preset Mutator Lite";
+  if (product.category === "Tools") return "Preset Mutator Free";
   if (product.category === "Bundle") return "Kreativ Kollection V1";
   return shortTitle(product);
 }
@@ -47,7 +47,7 @@ function cardPrimaryText(product: Product) {
 }
 
 function extraActionLabel(product: Product) {
-  if (product.appUrl) return "Open Preset Mutator Lite";
+  if (product.appUrl) return "Open Preset Mutator Free";
   return product.extraAction?.label;
 }
 

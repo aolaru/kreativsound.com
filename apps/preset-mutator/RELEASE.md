@@ -1,4 +1,4 @@
-# Preset Mutator Lite Release Notes
+# Preset Mutator Free Release Notes
 
 ## Current Internal Layout
 
@@ -19,4 +19,4 @@
 
 ## Split Criteria
 
-Consider moving Preset Mutator Lite into its own repository when it needs an independent release cycle, a backend service, standalone deployment, or a separate package/build system.
+Consider moving Preset Mutator Free into its own repository when it needs an independent release cycle, a backend service, standalone deployment, or a separate package/build system.

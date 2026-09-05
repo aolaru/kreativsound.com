@@ -49,7 +49,7 @@ def main() -> int:
 
         dom = fetch_html(base_url + "/preset-mutator/")
         for needle in [
-            "Preset Mutator Lite",
+            "Preset Mutator Free",
             "From Scratch",
             "Create a Vital preset from intent",
             "Preset Intent",
@@ -60,7 +60,7 @@ def main() -> int:
 
         mutate_dom = fetch_html(base_url + "/preset-mutator/mutate/")
         for needle in [
-            "Preset Mutator Lite",
+            "Preset Mutator Free",
             "Mutate one Vital preset",
             "into new variants",
             "Scratch",
@@ -74,7 +74,7 @@ def main() -> int:
 
         scratch_dom = fetch_html(base_url + "/preset-mutator/scratch/")
         for needle in [
-            "Preset Mutator Lite",
+            "Preset Mutator Free",
             "Create a Vital preset from intent",
             "From Scratch",
             "Scratch",
@@ -87,12 +87,12 @@ def main() -> int:
             require(scratch_dom, needle, "/preset-mutator/scratch/", errors)
 
         if errors:
-            print("Preset Mutator Lite smoke test failed:")
+            print("Preset Mutator Free smoke test failed:")
             for error in errors:
                 print(f"- {error}")
             return 1
 
-        print("Preset Mutator Lite smoke checks passed.")
+        print("Preset Mutator Free smoke checks passed.")
         return 0
     finally:
         server.shutdown()
