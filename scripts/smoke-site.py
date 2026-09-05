@@ -139,6 +139,7 @@ def main() -> int:
                 forbid(dom, 'data-catalog-query', route, errors)
                 forbid(dom, 'data-catalog-category=', route, errors)
                 forbid(dom, 'data-catalog-more', route, errors)
+                require(dom, 'class="product-card-demo-player"', route, errors)
             if route.startswith("/sounds/") and route != "/sounds/":
                 require(dom, 'class="product-breadcrumbs"', route, errors)
                 require(dom, 'href="/sounds/"', route, errors)

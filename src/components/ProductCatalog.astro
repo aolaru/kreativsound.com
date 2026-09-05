@@ -15,17 +15,11 @@ const anchorCategories = categories.filter((category) => ["Presets", "Samples", 
 const CategoryHeading = "h2";
 
 function ctaText(category: string) {
+  if (category === "Bundle") return "Get the bundle";
   if (category === "Free") return "Download Free";
   if (category === "Tools") return "Get Tool";
   if (category === "Legacy") return "View Archive";
   return "Get Pack";
-}
-
-function unavailableText(product: { status?: string; badge?: string; category: string }) {
-  if (product.status === "comingSoon" || product.badge?.toLowerCase().includes("coming")) return "Coming soon";
-  if (product.status === "archive") return "Archive only";
-  if (product.category === "Bundle") return "Coming soon";
-  return "Archive only";
 }
 
 function ctaTrackingEvent(product: { status?: string }) {
@@ -44,20 +38,22 @@ function ctaTrackingEvent(product: { status?: string }) {
   ) : null}
   {categories.map((category, categoryIndex) => {
     const categoryItems = products.filter((product) => product.category === category);
+    const isBundle = category === "Bundle";
     return (
       <section class:list={["catalog-group", category === "Legacy" && "catalog-group-legacy"]} id={categoryIds[category]}>
         <CategoryHeading>{categoryLabels[category]}</CategoryHeading>
+        {category === "Free" ? <p class="catalog-group-intro">Start with a free palette, then move to a full bank when the sound fits your session.</p> : null}
+        {category === "Legacy" ? <p class="catalog-group-intro">Earlier releases kept for existing users and anyone looking for the original archive.</p> : null}
         <ul class="product-grid">
           {categoryItems.map((item, itemIndex) => {
             const hasPrimaryAction = Boolean(item.url);
-            const hasSecondaryAction = Boolean(item.detailsUrl || item.extraAction?.url);
             const eagerImage = categoryIndex === 0 && itemIndex < 6;
             const fetchPriority = eagerImage ? "high" : "auto";
 
             return (
               <li>
               <div class="product-card-stack">
-                <div class:list={["product-card", "product-card-static", category === "Legacy" && "product-card-legacy"]}>
+                <div class:list={["product-card", "product-card-static", isBundle && "product-card-bundle", category === "Legacy" && "product-card-legacy"]}>
                   {item.badge ? (
                     <span class:list={["product-badge", item.badge.toLowerCase() === "new" && "is-new", item.badge.toLowerCase() === "updated" && "is-updated"]}>
                       {item.badge}
@@ -88,21 +84,33 @@ function ctaTrackingEvent(product: { status?: string }) {
                       fetchpriority={fetchPriority}
                     />
                   )}
-                  <span class="product-title">{item.title}</span>
+                  {item.detailsUrl ? (
+                    <a class="product-title product-title-link" href={item.detailsUrl}>{item.title}</a>
+                  ) : (
+                    <span class="product-title">{item.title}</span>
+                  )}
                   <span class="product-meta">{item.format} | {item.count}</span>
                   {item.price ? <span class="product-price">{item.price}</span> : null}
+                  {isBundle ? <span class="product-bundle-offer">16 products · €144 individual value</span> : null}
                   <span class="product-use">{item.useCase}</span>
-                  {item.demo?.src ? <span class="product-demo-pill">Audio demo available</span> : null}
+                  {item.demo?.src ? (
+                    <div class="product-card-demo">
+                      <span class="product-card-demo-label">Listen to the demo</span>
+                      <audio class="product-card-demo-player" controls preload="metadata">
+                        <source src={item.demo.src} type={item.demo.type || "audio/mpeg"} />
+                      </audio>
+                    </div>
+                  ) : null}
                   <div class="product-action-row">
-                    {item.detailsUrl ? <a class="product-action-link" href={item.detailsUrl}>Details</a> : null}
-                    {item.extraAction?.url ? <a class="product-action-link" href={item.extraAction.url}>{item.extraAction.label || "More"}</a> : null}
                     {hasPrimaryAction ? (
                       <a class="product-action-link is-primary" data-track={ctaTrackingEvent(item)} data-track-product={item.title} data-track-placement="catalog" href={item.url} target="_blank" rel="noopener noreferrer">
                         {ctaText(item.category)}
                       </a>
-                    ) : !hasSecondaryAction ? (
-                      <span class="product-action-link is-muted">{unavailableText(item)}</span>
-                    ) : null}
+                    ) : item.detailsUrl ? (
+                      <a class="product-action-link" href={item.detailsUrl}>View details</a>
+                    ) : (
+                      <span class="product-action-link is-muted">Archive only</span>
+                    )}
                   </div>
                 </div>
               </div>
