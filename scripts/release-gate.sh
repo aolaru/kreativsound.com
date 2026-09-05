@@ -19,7 +19,7 @@ python3 scripts/check-product-assets.py
 echo "[6/16] Checking thumbnail quality..."
 npm run check:thumbnails
 
-echo "[7/16] Checking Wave Mutator..."
+echo "[7/16] Checking Wave Mutator Lite..."
 npm run check:wave-mutator
 
 echo "[8/16] Checking tool release consistency..."

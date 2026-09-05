@@ -106,18 +106,18 @@ const staticEntries: SearchEntry[] = [
     description: "Load one Vital preset and create related playable variants in the browser."
   },
   {
-    title: "Wave Mutator",
+    title: "Wave Mutator Lite",
     url: "/tools/wave-mutator/",
     type: "Tool",
     thumbnail: "/assets/thumbs/wave-mutator.jpg",
     description: "Clean messy WAV files, export sample packs, and build short preview montages locally."
   },
   {
-    title: "Wave Mutator Changelog",
+    title: "Wave Mutator Lite Changelog",
     url: "/tools/wave-mutator/changelog/",
     type: "Tool",
     thumbnail: "/assets/thumbs/wave-mutator.jpg",
-    description: "A concise public record of Wave Mutator beta releases, delivery-profile improvements, and current scope limits."
+    description: "A concise public record of Wave Mutator Lite beta releases, delivery-profile improvements, and current scope limits."
   },
   {
     title: "Pattern Mutator Lite",

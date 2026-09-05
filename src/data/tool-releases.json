@@ -14,10 +14,10 @@
     "changelog": "/preset-mutator-pro/changelog/"
   },
   "waveMutator": {
-    "name": "Wave Mutator",
+    "name": "Wave Mutator Lite",
     "version": "0.2.1",
     "date": "2026-08-21",
-    "status": "Available",
+    "status": "Lite",
     "releaseLabel": "beta",
     "changelog": "/tools/wave-mutator/changelog/"
   },

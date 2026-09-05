@@ -1,6 +1,6 @@
-# Wave Mutator
+# Wave Mutator Lite
 
-Wave Mutator is a beta browser tool for preparing audio samples for sound-product releases.
+Wave Mutator Lite is a beta browser tool for preparing audio samples for sound-product releases.
 
 Core idea: drop in messy audio files and export cleaner, product-ready samples without uploading audio anywhere.
 
@@ -25,7 +25,7 @@ Inside the Kreativ Sound site, the intended URL is:
 https://kreativsound.com/tools/wave-mutator/
 ```
 
-The previous `/tools/kreativ-sample-prep/` path redirects to the new Wave Mutator URL.
+The previous `/tools/kreativ-sample-prep/` path redirects to the Wave Mutator Lite URL.
 
 The root `predev` and `prebuild` scripts copy this source folder into `public/tools/wave-mutator/`. Treat that public copy as generated output.
 

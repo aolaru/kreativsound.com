@@ -204,7 +204,7 @@ const DELIVERY_PROFILES = {
       sampleRateMode: "original",
       channelMode: "original",
       namingTemplate: "{name}_clean",
-      packName: "wave-mutator-one-shots",
+      packName: "wave-mutator-lite-one-shots",
     },
     montage: { clipSeconds: 3, gapSeconds: 0.35 },
     summary: "24-bit WAV at the original sample rate, preserved channels, -1 dB peak, and concise one-shot previews.",
@@ -227,7 +227,7 @@ const DELIVERY_PROFILES = {
       sampleRateMode: "44100",
       channelMode: "original",
       namingTemplate: "{name}_music",
-      packName: "wave-mutator-music",
+      packName: "wave-mutator-lite-music",
     },
     montage: { clipSeconds: 5, gapSeconds: 0.5 },
     summary: "16-bit, 44.1 kHz WAV delivery with longer preview clips for music-focused sound packs.",
@@ -250,7 +250,7 @@ const DELIVERY_PROFILES = {
       sampleRateMode: "48000",
       channelMode: "original",
       namingTemplate: "{name}_sfx",
-      packName: "wave-mutator-game-sfx",
+      packName: "wave-mutator-lite-game-sfx",
     },
     montage: { clipSeconds: 3, gapSeconds: 0.3 },
     summary: "Tighter cleanup with 24-bit, 48 kHz WAV output for video and game-audio workflows.",
@@ -273,7 +273,7 @@ const DELIVERY_PROFILES = {
       sampleRateMode: "44100",
       channelMode: "original",
       namingTemplate: "{name}_preview",
-      packName: "wave-mutator-store-preview",
+      packName: "wave-mutator-lite-store-preview",
     },
     montage: { clipSeconds: 4, gapSeconds: 0.5 },
     summary: "16-bit, 44.1 kHz WAV settings with paced clips for local store-preview montage export.",
@@ -577,7 +577,7 @@ function getRawExportSettings() {
     sampleRateMode: elements.sampleRateMode.value,
     channelMode: elements.channelMode.value,
     namingTemplate: elements.namingTemplate.value.trim() || "{name}_clean",
-    packName: sanitizeFileBaseName(elements.packName.value || "wave-mutator-pack"),
+    packName: sanitizeFileBaseName(elements.packName.value || "wave-mutator-lite-pack"),
   };
 }
 
@@ -2370,7 +2370,7 @@ function resetSettingsForSelectedFile() {
 
 function exportCleanupSettings() {
   const payload = {
-    tool: "Wave Mutator",
+    tool: "Wave Mutator Lite",
     version: APP_VERSION,
     exportedAt: new Date().toISOString(),
     cleanup: getSettings(),
@@ -2380,7 +2380,7 @@ function exportCleanupSettings() {
   };
   downloadBlob(
     new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }),
-    "wave-mutator-cleanup-settings.json",
+    "wave-mutator-lite-cleanup-settings.json",
   );
   setStatus("Downloaded local cleanup settings.", "success");
 }
@@ -2414,13 +2414,13 @@ async function importCleanupSettings(file) {
     const parsed = JSON.parse(await file.text());
     const settings = parsed.cleanup || parsed;
     if (!isValidImportedSettings(settings)) {
-      throw new Error("The file does not contain a valid Wave Mutator cleanup configuration.");
+      throw new Error("The file does not contain a valid Wave Mutator Lite cleanup configuration.");
     }
     if (parsed.export && !isValidImportedExportSettings(parsed.export)) {
-      throw new Error("The file does not contain valid Wave Mutator export settings.");
+      throw new Error("The file does not contain valid Wave Mutator Lite export settings.");
     }
     if (parsed.montage && !isValidImportedMontageSettings(parsed.montage)) {
-      throw new Error("The file does not contain valid Wave Mutator montage settings.");
+      throw new Error("The file does not contain valid Wave Mutator Lite montage settings.");
     }
     const historySnapshot = captureWorkspaceState();
     applySettingsToControls(settings);
@@ -2433,7 +2433,7 @@ async function importCleanupSettings(file) {
     updateUi();
   } catch (error) {
     console.error(error);
-    setStatus("Could not import cleanup settings. Choose a valid Wave Mutator JSON settings file.", "error");
+    setStatus("Could not import cleanup settings. Choose a valid Wave Mutator Lite JSON settings file.", "error");
   } finally {
     elements.settingsFileInput.value = "";
   }
@@ -2715,7 +2715,7 @@ function createManifestText(files, exportSettings = getExportSettings()) {
     ].join("\n");
   });
   return [
-    "Wave Mutator free pack report",
+    "Wave Mutator Lite free pack report",
     `Created locally: ${new Date().toISOString()}`,
     `Pack: ${exportSettings.packName}`,
     `Delivery profile: ${exportSettings.deliveryProfileLabel}`,
@@ -2725,7 +2725,7 @@ function createManifestText(files, exportSettings = getExportSettings()) {
     "",
     ...rows,
     "",
-    "All audio was processed locally in Wave Mutator. No files were uploaded.",
+    "All audio was processed locally in Wave Mutator Lite. No files were uploaded.",
   ].join("\n");
 }
 
@@ -2768,7 +2768,7 @@ function uniqueFileName(name, usedNames) {
 }
 
 function makeMontageFileName(exportSettings = getExportSettings()) {
-  return `${sanitizeFileBaseName(exportSettings.packName || "wave-mutator-pack")}_preview_montage.mp3`;
+  return `${sanitizeFileBaseName(exportSettings.packName || "wave-mutator-lite-pack")}_preview_montage.mp3`;
 }
 
 function readBufferSample(buffer, channel, sampleIndex) {

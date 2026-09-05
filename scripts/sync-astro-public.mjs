@@ -51,7 +51,7 @@ if (!fs.existsSync(presetMutatorProSourceDir)) {
 }
 
 if (!fs.existsSync(waveMutatorSourceDir)) {
-  throw new Error("Missing apps/wave-mutator/public. Wave Mutator source must be available before syncing public assets.");
+  throw new Error("Missing apps/wave-mutator/public. Wave Mutator Lite source must be available before syncing public assets.");
 }
 
 if (!fs.existsSync(patternMutatorSourceDir)) {
