@@ -73,6 +73,30 @@
               <option value="32">32 bars</option>
             </select>
           </label>
+          <label>Rhythm feel
+            <select id="groove" aria-label="Rhythm feel">
+              <option value="straight" selected>Straight</option>
+              <option value="syncopated">Syncopated</option>
+              <option value="half-time">Half-time</option>
+              <option value="driving">Driving</option>
+              <option value="sparse">Sparse</option>
+            </select>
+          </label>
+          <label>Register
+            <select id="register" aria-label="Pattern register">
+              <option value="low">Low</option>
+              <option value="mid" selected>Mid</option>
+              <option value="high">High</option>
+            </select>
+          </label>
+        </div>
+        <div class="style-starters" aria-label="Quick style starters">
+          <span>Quick starters</span>
+          <button type="button" data-style="cinematic-pulse">Cinematic pulse</button>
+          <button type="button" data-style="warm-chords">Warm chords</button>
+          <button type="button" data-style="dark-bass">Dark bass</button>
+          <button type="button" data-style="broken-motion">Broken motion</button>
+          <button type="button" data-style="glass-arp">Glass arp</button>
         </div>
         <div class="range-grid">
           <label class="range-control" for="complexity"><span>Complexity</span><output id="complexity-value">52%</output><input id="complexity" type="range" min="0" max="100" value="52" /></label>
@@ -102,9 +126,21 @@
           <div class="editor-controls">
             <label class="velocity-control" for="note-velocity"><span>Selected velocity</span><output id="note-velocity-value">—</output><input id="note-velocity" type="range" min="1" max="127" value="92" disabled /></label>
             <button id="delete-note" class="quiet-button" type="button" disabled>Delete selected</button>
+            <button id="undo" class="quiet-button" type="button" disabled>Undo</button>
+            <button id="redo" class="quiet-button" type="button" disabled>Redo</button>
+            <button id="reset-pattern" class="quiet-button" type="button" disabled>Reset</button>
           </div>
         </div>
         <div class="piano-transport" aria-label="Pattern audition controls">
+          <label class="transport-control" for="audition-sound">Sound
+            <select id="audition-sound">
+              <option value="soft" selected>Soft synth</option>
+              <option value="pluck">Pluck</option>
+              <option value="bass">Bass</option>
+              <option value="pad">Pad</option>
+            </select>
+          </label>
+          <label class="loop-control" for="loop-audition"><input id="loop-audition" type="checkbox" /> Loop</label>
           <button id="audition" class="primary-button" type="button" disabled>▶ Play Pattern</button>
           <button id="stop" class="quiet-button" type="button" disabled>■ Stop</button>
         </div>
@@ -125,18 +161,22 @@
         </div>
         <div class="mutation-actions">
           <button id="mutate" class="primary-button" type="button" disabled>Mutate Unlocked Parts <span aria-hidden="true">⟲</span></button>
+          <label class="bar-refresh" for="regenerate-bar">Refresh bar
+            <select id="regenerate-bar" disabled></select>
+          </label>
+          <button id="regenerate-bar-button" class="quiet-button" type="button" disabled>Regenerate bar</button>
           <button id="download" class="export-button" type="button" disabled>Download MIDI <span>.mid</span></button>
         </div>
         <p id="status" class="status" role="status">Ready when you are.</p>
       </section>
 
       <section class="draft-note">
-        <p><strong>Free scope:</strong> melody, bass, chords, and arps; fixed musical lengths; an editable piano roll; local audition; and MIDI export. Drum generation, DAW plugin formats, and saved history can come next.</p>
+        <p><strong>Free scope:</strong> melody, bass, chords, and arps; style starters, register and rhythm controls; an editable piano roll with undo/redo; local audition; and MIDI export. Multi-track generation, arrangement mode, and saved projects remain Pro territory.</p>
       </section>
 
       <footer class="app-footer">
         <p>Kreativ Sound browser tool for controlled MIDI pattern generation.</p>
-        <p class="app-version">Pattern Mutator Lite v0.2.1 <span aria-hidden="true">·</span> <a href="/tools/pattern-mutator/changelog/">Changelog</a> <span aria-hidden="true">·</span> <a href="/tools/">All tools</a></p>
+        <p class="app-version">Pattern Mutator Lite v0.3.0 <span aria-hidden="true">·</span> <a href="/tools/pattern-mutator/changelog/">Changelog</a> <span aria-hidden="true">·</span> <a href="/tools/">All tools</a></p>
       </footer>
     </main>
   </body>

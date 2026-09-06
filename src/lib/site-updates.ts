@@ -11,6 +11,8 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-09-06", kind: "update", title: "Pattern Mutator Lite v0.3.0", description: "The free MIDI idea generator now adds Quick Starters, register targeting, undo/redo, richer loop auditioning, and selected-bar regeneration.", href: "/tools/pattern-mutator/changelog/" },
+  { date: "2026-09-06", kind: "update", title: "Pattern Mutator Lite v0.2.2", description: "The free MIDI idea generator now has Rhythm Feel controls for straight, syncopated, half-time, driving, and sparse patterns.", href: "/tools/pattern-mutator/changelog/" },
   { date: "2026-09-05", kind: "update", title: "Preset Mutator Free v0.4.9", description: "Existing customers can now open Preset Mutator Pro directly from the Tools page, product details, search, and every Free workflow.", href: "/preset-mutator/changelog/" },
   { date: "2026-09-05", kind: "update", title: "Preset Mutator Pro v0.4.9", description: "The paid edition now uses the clearer Preset Mutator Pro name consistently across its workflows, activation, metadata, and release notes.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-09-05", kind: "update", title: "Preset Mutator Free v0.4.8", description: "The free edition is now clearly named Preset Mutator Free across the app, product pages, metadata, and release notes.", href: "/preset-mutator/changelog/" },

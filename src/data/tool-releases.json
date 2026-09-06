@@ -23,8 +23,8 @@
   },
   "patternMutator": {
     "name": "Pattern Mutator Lite",
-    "version": "0.2.1",
-    "date": "2026-09-05",
+    "version": "0.3.0",
+    "date": "2026-09-06",
     "status": "Lite",
     "changelog": "/tools/pattern-mutator/changelog/"
   }
