@@ -11,6 +11,7 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-09-07", kind: "update", title: "Wave Mutator Lite beta v0.2.3", description: "The first-run workflow now leads from adding audio and choosing a delivery target to previewing cleanup and downloading the result, with specialist settings kept optional.", href: "/tools/wave-mutator/changelog/" },
   { date: "2026-09-06", kind: "update", title: "Pattern Mutator Lite v0.3.0", description: "The free MIDI idea generator now adds Quick Starters, register targeting, undo/redo, richer loop auditioning, and selected-bar regeneration.", href: "/tools/pattern-mutator/changelog/" },
   { date: "2026-09-06", kind: "update", title: "Pattern Mutator Lite v0.2.2", description: "The free MIDI idea generator now has Rhythm Feel controls for straight, syncopated, half-time, driving, and sparse patterns.", href: "/tools/pattern-mutator/changelog/" },
   { date: "2026-09-05", kind: "update", title: "Preset Mutator Free v0.4.9", description: "Existing customers can now open Preset Mutator Pro directly from the Tools page, product details, search, and every Free workflow.", href: "/preset-mutator/changelog/" },
