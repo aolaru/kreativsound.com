@@ -23,9 +23,9 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="stylesheet" href="./styles.css?v=14" />
+    <link rel="stylesheet" href="./styles.css?v=15" />
     <script src="./vendor/lame.min.js" defer></script>
-    <script src="./app.js?v=15" defer></script>
+    <script src="./app.js?v=17" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -59,53 +59,16 @@
             <span class="app-brand-mark" aria-hidden="true">WM</span>
             <strong>Wave Mutator Lite</strong>
           </div>
-          <div class="app-version-group" aria-label="Wave Mutator Lite beta version 0.2.2">
+          <div class="app-version-group" aria-label="Wave Mutator Lite beta version 0.2.3">
             <a class="app-nav-link" href="./changelog/">Changelog</a>
             <span class="version-pill beta-sticker">FREE BETA</span>
-            <span class="version-build">v0.2.2</span>
+            <span class="version-build">v0.2.3</span>
           </div>
         </div>
         <div class="hero-copy">
           <p class="kicker">Local sample cleanup</p>
           <h1>Wave Mutator Lite</h1>
-          <p class="subtitle">Drop in messy audio files. Export cleaner WAV samples, ZIP packs, and browser-made preview montages.</p>
-        </div>
-
-        <div class="workflow-tabs" aria-label="Wave Mutator Lite workflow">
-          <button class="workflow-tab is-active" type="button" data-scroll-target="#load-title">
-            <span aria-hidden="true">01</span>
-            <strong>Clean Audio</strong>
-            <small>Load and preview</small>
-          </button>
-          <button class="workflow-tab" type="button" data-scroll-target="#export-title">
-            <span aria-hidden="true">02</span>
-            <strong>Batch Pack</strong>
-            <small>Export ZIP</small>
-          </button>
-          <button class="workflow-tab" type="button" data-scroll-target="#montage-seconds">
-            <span aria-hidden="true">03</span>
-            <strong>Preview Montage</strong>
-            <small>Store demo</small>
-          </button>
-        </div>
-
-        <div class="tool-proof-grid" aria-label="Wave Mutator Lite summary">
-          <div>
-            <span>Input</span>
-            <strong>Audio files</strong>
-          </div>
-          <div>
-            <span>Processing</span>
-            <strong>Trim, fade, normalize</strong>
-          </div>
-          <div>
-            <span>Export</span>
-            <strong>WAV, ZIP, MP3 beta</strong>
-          </div>
-          <div>
-            <span>Privacy</span>
-            <strong>Local only</strong>
-          </div>
+          <p class="subtitle">Add audio, choose its destination, preview a clean result, and download it. Everything stays in your browser.</p>
         </div>
 
         <div class="local-trust-strip" aria-label="Wave Mutator Lite privacy promises">
@@ -115,43 +78,12 @@
         </div>
       </header>
 
-      <section class="tool-detail-panel" aria-labelledby="tool-detail-title">
-        <div class="tool-detail-copy">
-          <p class="section-kicker">Beta tool</p>
-          <h2 id="tool-detail-title">Drop in messy audio files. Export cleaner samples and pack previews.</h2>
-          <p>
-            Wave Mutator Lite is built for preparing sample-pack material, preset-source audio, one-shots,
-            loops, noise layers, and sound-product demos. It trims silence, adds short fades,
-            normalizes peak level, warns about clipping, exports cleaned WAV files, and creates a
-            short MP3 preview montage locally in the browser.
-          </p>
-        </div>
-        <div class="tool-detail-grid" aria-label="Wave Mutator Lite details">
-          <article>
-            <span>For</span>
-            <strong>Sound designers, musicians, preset creators, sample-pack makers.</strong>
-          </article>
-          <article>
-            <span>Privacy</span>
-            <strong>Files are decoded, processed, and exported locally in the browser.</strong>
-          </article>
-          <article>
-            <span>Formats</span>
-            <strong>WAV, AIFF, FLAC, or MP3 input. WAV/ZIP/MP3 export.</strong>
-          </article>
-          <article>
-            <span>Beta limits</span>
-            <strong>No LUFS normalization, spectral editing, AI tagging, or full DAW-style repair yet.</strong>
-          </article>
-        </div>
-      </section>
-
       <section class="top-grid" aria-label="Sample loading and preview">
         <section class="panel load-panel" aria-labelledby="load-title">
           <div class="section-head">
             <div>
-              <p class="section-kicker">Input</p>
-              <h2 id="load-title">Drop audio files</h2>
+              <p class="section-kicker">Step 1</p>
+              <h2 id="load-title">Add audio</h2>
             </div>
             <p class="section-note">WAV, AIFF, FLAC, and MP3 decode locally when supported by your browser.</p>
           </div>
@@ -164,11 +96,37 @@
               multiple
             />
             <div class="drop-zone-copy">
-              <strong>Drop messy audio files here</strong>
+              <strong>Drop audio files here</strong>
               <span>or choose files from your computer</span>
             </div>
             <label class="file-button" for="file-input">Choose audio files</label>
           </div>
+
+          <section class="intent-picker" aria-labelledby="intent-title">
+            <div>
+              <p class="section-kicker">Step 2</p>
+              <h3 id="intent-title">What are you preparing?</h3>
+              <p id="delivery-profile-summary" class="section-note" aria-live="polite">Sample Pack is selected: a safe default for clean, product-ready audio.</p>
+            </div>
+            <div class="intent-options" role="group" aria-label="Choose delivery target">
+              <button class="intent-option" type="button" data-delivery-profile="sample-pack">
+                <strong>Sample pack</strong>
+                <span>One-shots and loops</span>
+              </button>
+              <button class="intent-option" type="button" data-delivery-profile="music-pack">
+                <strong>Music release</strong>
+                <span>44.1 kHz delivery</span>
+              </button>
+              <button class="intent-option" type="button" data-delivery-profile="game-sfx">
+                <strong>Game / video</strong>
+                <span>48 kHz delivery</span>
+              </button>
+              <button class="intent-option" type="button" data-delivery-profile="store-preview">
+                <strong>Store preview</strong>
+                <span>WAV plus MP3 demo</span>
+              </button>
+            </div>
+          </section>
 
           <p id="status-message" class="status-message" role="status">Load one or more audio files to begin.</p>
 
@@ -284,12 +242,32 @@
         <section class="panel process-panel" aria-labelledby="process-title">
           <div class="section-head">
             <div>
-              <p class="section-kicker">Processing</p>
-              <h2 id="process-title">Cleanup options</h2>
+              <p class="section-kicker">Step 3</p>
+              <h2 id="process-title">Preview a clean result</h2>
             </div>
-            <p class="section-note">Preview processing before export. Original files stay untouched.</p>
+            <p class="section-note">The default removes edge silence, adds click-safe fades, and targets -1 dB. Originals stay untouched.</p>
           </div>
 
+          <div class="quick-clean-panel">
+            <div>
+              <strong>Use the selected delivery target</strong>
+              <span>Adjust the details only when this file needs special handling.</span>
+            </div>
+            <div class="quick-clean-actions">
+              <button id="apply-button" class="primary-action" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Preview clean result</span>
+              </button>
+              <button id="reset-preview-button" type="button" disabled>Show original</button>
+            </div>
+          </div>
+
+          <details class="advanced-settings">
+            <summary>
+              <span>Customize cleanup</span>
+              <small>Strength presets, silence detection, fades, normalization, and saved settings</small>
+            </summary>
+            <div class="advanced-settings-body">
           <div class="controls-stack">
             <section class="cleanup-strength" aria-labelledby="cleanup-strength-title">
               <div>
@@ -394,17 +372,14 @@
           </div>
 
           <div class="action-row">
-            <button id="apply-button" class="primary-action" type="button" disabled>
-              <span class="button-spinner" aria-hidden="true"></span>
-              <span class="button-label">Apply processing preview</span>
-            </button>
-            <button id="reset-preview-button" type="button" disabled>Show original</button>
             <button id="save-file-override-button" type="button" disabled>Save settings for this file</button>
             <button id="reset-file-override-button" type="button" disabled>Use global settings</button>
             <button id="export-settings-button" type="button">Export settings</button>
             <button id="import-settings-button" type="button">Import settings</button>
             <input id="settings-file-input" type="file" accept="application/json,.json" hidden />
           </div>
+            </div>
+          </details>
         </section>
 
         <section class="panel analysis-panel" aria-labelledby="analysis-title">
@@ -475,7 +450,12 @@
           </details>
         </section>
 
-        <section class="panel preflight-panel" aria-labelledby="preflight-title">
+        <details class="panel pack-review advanced-settings">
+          <summary>
+            <span>Review pack details</span>
+            <small>Optional batch QA, export inclusion, and format checks</small>
+          </summary>
+          <section class="preflight-panel" aria-labelledby="preflight-title">
           <div class="section-head">
             <div>
               <p class="section-kicker">Pack QA</p>
@@ -503,34 +483,40 @@
               </tbody>
             </table>
           </div>
-        </section>
+          </section>
+        </details>
 
         <section class="panel export-panel" aria-labelledby="export-title">
           <div>
             <p class="section-kicker">Export</p>
-            <h2 id="export-title">Product-ready files</h2>
+            <h2 id="export-title">Download cleaned audio</h2>
             <p class="section-note">
-              Export one cleaned WAV, render a ZIP pack, or generate a short preview montage for store demos.
+              Export the selected file, a cleaned ZIP pack, or a short store-preview montage.
             </p>
           </div>
           <div class="export-controls">
-            <section class="delivery-profile-panel" aria-labelledby="delivery-profile-title">
-              <div>
-                <p class="section-kicker">Delivery profile</p>
-                <h3 id="delivery-profile-title">Release target</h3>
-                <p id="delivery-profile-summary" class="section-note" aria-live="polite">Select a delivery target to apply its local export settings.</p>
-              </div>
-              <label class="field-control" for="delivery-profile">
-                <span>Profile</span>
-                <select id="delivery-profile">
-                  <option value="sample-pack">Sample Pack One-Shots</option>
-                  <option value="music-pack">Music Pack</option>
-                  <option value="game-sfx">Video / Game SFX</option>
-                  <option value="store-preview">Store Preview</option>
-                  <option value="custom" disabled>Custom settings</option>
-                </select>
-              </label>
-            </section>
+            <div class="export-action-row">
+              <button id="export-button" class="export-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Download cleaned WAV</span>
+              </button>
+              <button id="export-zip-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Download clean ZIP</span>
+              </button>
+              <button id="export-mp3-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Create MP3 store preview</span>
+              </button>
+              <button id="export-manifest-button" type="button" disabled>Download manifest</button>
+              <button id="cancel-export-button" class="danger-button" type="button" disabled>Cancel batch</button>
+            </div>
+            <details class="advanced-settings export-settings">
+              <summary>
+                <span>Customize export</span>
+                <small>Naming, WAV format, ZIP scope, and montage timing</small>
+              </summary>
+              <div class="advanced-settings-body export-settings-body">
             <label class="field-control" for="naming-template">
               <span>Naming template</span>
               <input id="naming-template" type="text" value="{name}_clean" />
@@ -585,6 +571,8 @@
               <span>Montage gap</span>
               <input id="montage-gap" type="number" min="0" max="3" step="0.1" value="0.35" />
             </label>
+              </div>
+            </details>
             <div id="batch-progress" class="batch-progress" aria-live="polite">
               <div class="batch-progress-head">
                 <span id="batch-progress-label">Export queue idle</span>
@@ -593,22 +581,6 @@
               <div class="batch-progress-track" aria-hidden="true">
                 <span id="batch-progress-fill"></span>
               </div>
-            </div>
-            <div class="export-action-row">
-              <button id="export-button" class="export-button" type="button" disabled>
-                <span class="button-spinner" aria-hidden="true"></span>
-                <span class="button-label">Export selected WAV</span>
-              </button>
-              <button id="export-zip-button" type="button" disabled>
-                <span class="button-spinner" aria-hidden="true"></span>
-                <span class="button-label">Export all as ZIP</span>
-              </button>
-              <button id="export-mp3-button" type="button" disabled>
-                <span class="button-spinner" aria-hidden="true"></span>
-                <span class="button-label">Export MP3 montage</span>
-              </button>
-              <button id="export-manifest-button" type="button" disabled>Download manifest</button>
-              <button id="cancel-export-button" class="danger-button" type="button" disabled>Cancel batch</button>
             </div>
             <div class="cleaned-output-section" aria-labelledby="cleaned-output-title">
               <div class="mini-head">
@@ -627,6 +599,6 @@
       </section>
     </main>
 
-    <footer class="app-footer">A Kreativ Sound tool — Wave Mutator Lite beta v0.2.2 <span aria-hidden="true">·</span> <a href="./changelog/">Changelog</a></footer>
+    <footer class="app-footer">A Kreativ Sound tool — Wave Mutator Lite beta v0.2.3 <span aria-hidden="true">·</span> <a href="./changelog/">Changelog</a></footer>
   </body>
 </html>

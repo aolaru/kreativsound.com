@@ -481,6 +481,16 @@ h3 {
   grid-template-columns: minmax(420px, 1.2fr) minmax(300px, 0.8fr);
 }
 
+body:not(.has-files) .top-grid {
+  grid-template-columns: minmax(0, 860px);
+  justify-content: center;
+}
+
+body:not(.has-files) .preview-panel,
+body:not(.has-files) .work-grid {
+  display: none;
+}
+
 .panel {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -552,6 +562,57 @@ h3 {
 
 .drop-zone-copy span {
   color: var(--muted);
+}
+
+.intent-picker {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.intent-picker > div:first-child {
+  display: grid;
+  gap: 6px;
+}
+
+.intent-picker h3 {
+  font-size: 1.08rem;
+}
+
+.intent-picker .section-note {
+  max-width: 680px;
+}
+
+.intent-options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.intent-option {
+  display: grid;
+  gap: 5px;
+  min-height: 82px;
+  padding: 0.8rem;
+  text-align: left;
+}
+
+.intent-option strong {
+  color: #f5f7ff;
+  font-size: 0.88rem;
+}
+
+.intent-option span {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.3;
+}
+
+.intent-option.is-active {
+  border-color: rgba(82, 240, 170, 0.72);
+  background: linear-gradient(135deg, rgba(82, 240, 170, 0.16), rgba(74, 74, 255, 0.2));
 }
 
 .file-button,
@@ -1132,6 +1193,100 @@ select {
   margin-top: 18px;
 }
 
+.quick-clean-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(74, 74, 255, 0.38);
+  border-radius: 8px;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(74, 74, 255, 0.18), rgba(255, 255, 255, 0.035));
+}
+
+.quick-clean-panel > div:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+.quick-clean-panel strong {
+  color: #f5f7ff;
+}
+
+.quick-clean-panel span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.quick-clean-actions {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.advanced-settings {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.advanced-settings summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px 14px;
+  align-items: center;
+  min-height: 58px;
+  padding: 0.85rem 0.95rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.advanced-settings summary::-webkit-details-marker {
+  display: none;
+}
+
+.advanced-settings summary::after {
+  content: "+";
+  grid-row: 1 / span 2;
+  grid-column: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  color: #e9edff;
+  background: rgba(255, 255, 255, 0.07);
+  font-weight: 800;
+}
+
+.advanced-settings[open] summary::after {
+  content: "-";
+}
+
+.advanced-settings summary span {
+  color: #f8f9ff;
+  font-weight: 800;
+}
+
+.advanced-settings summary small {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.advanced-settings-body {
+  display: grid;
+  gap: 18px;
+  padding: 0 0.95rem 0.95rem;
+}
+
 .analysis-warnings {
   display: grid;
   gap: 10px;
@@ -1244,6 +1399,10 @@ select {
   gap: 12px;
 }
 
+.pack-review {
+  grid-column: 1 / -1;
+}
+
 .preflight-summary {
   color: var(--green);
   font-size: 0.84rem;
@@ -1337,6 +1496,14 @@ select {
   gap: 12px;
   width: min(100%, 980px);
   max-width: 980px;
+}
+
+.export-settings {
+  grid-column: 1 / -1;
+}
+
+.export-settings-body {
+  grid-template-columns: repeat(5, minmax(130px, 1fr));
 }
 
 .delivery-profile-panel {
@@ -1462,7 +1629,7 @@ select {
   grid-column: 1 / -1;
   gap: 12px;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .danger-button {
@@ -1751,8 +1918,13 @@ select {
   .tool-detail-grid,
   .manual-trim-panel,
   .export-controls,
-  .delivery-profile-panel {
+  .delivery-profile-panel,
+  .export-settings-body {
     grid-template-columns: 1fr;
+  }
+
+  .intent-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .export-action-row {
@@ -1796,9 +1968,14 @@ select {
   }
 
   .waveform-tools,
-  .cleanup-suggestion {
+  .cleanup-suggestion,
+  .quick-clean-panel {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .quick-clean-actions {
+    justify-content: flex-start;
   }
 
   .app-nav {
@@ -1819,7 +1996,8 @@ select {
   }
 
   .tool-proof-grid,
-  .strength-options {
+  .strength-options,
+  .intent-options {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 

@@ -105,7 +105,7 @@ const elements = {
   exportMp3Button: document.querySelector("#export-mp3-button"),
   exportManifestButton: document.querySelector("#export-manifest-button"),
   cancelExportButton: document.querySelector("#cancel-export-button"),
-  deliveryProfile: document.querySelector("#delivery-profile"),
+  deliveryProfileButtons: document.querySelectorAll("[data-delivery-profile]"),
   deliveryProfileSummary: document.querySelector("#delivery-profile-summary"),
   namingTemplate: document.querySelector("#naming-template"),
   packName: document.querySelector("#pack-name"),
@@ -130,7 +130,7 @@ const MAX_INPUT_BYTES = 1024 * 1024 * 1024;
 const MAX_DECODED_BYTES = 1536 * 1024 * 1024;
 const DEFAULT_TRIM_WINDOW_MS = 10;
 const HISTORY_LIMIT = 40;
-const APP_VERSION = "0.2.2";
+const APP_VERSION = "0.2.3";
 const SUPPORTED_AUDIO_FORMATS = {
   wav: { label: "WAV", extensions: [".wav"], types: ["audio/wav", "audio/wave", "audio/x-wav"] },
   aiff: { label: "AIFF", extensions: [".aif", ".aiff"], types: ["audio/aiff", "audio/x-aiff"] },
@@ -634,10 +634,14 @@ function applyExportSettingsToControls(exportSettings, montageSettings) {
 function renderDeliveryProfile() {
   const profileId = getMatchingDeliveryProfile();
   const profile = DELIVERY_PROFILES[profileId];
-  elements.deliveryProfile.value = profileId;
+  elements.deliveryProfileButtons.forEach((button) => {
+    const isActive = button.dataset.deliveryProfile === profileId;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
   elements.deliveryProfileSummary.textContent = profile
-    ? profile.summary
-    : "Custom settings are active. Select a delivery profile to restore a release-ready target.";
+    ? `${profile.label}: ${profile.summary}`
+    : "Custom settings are active. Choose a target to restore release-ready defaults.";
 }
 
 function applyDeliveryProfile(profileId) {
@@ -724,7 +728,7 @@ function applyCleanupPreset(presetName) {
 
   const selected = getSelectedFile();
   if (selected) {
-    clearProcessedPreview(`Cleanup Strength set to ${preset.label}. Apply processing preview to audition it.`);
+    clearProcessedPreview(`Cleanup Strength set to ${preset.label}. Preview the clean result to audition it.`);
     pushWorkspaceHistory(historySnapshot, "cleanup preset");
     updateUi();
     return;
@@ -2175,7 +2179,7 @@ function renderWarnings() {
   if (state.previewMode !== "processed" && file.processedBuffer) {
     notes.push({
       type: "note",
-      text: "A processed preview exists. Use Apply processing preview again after changing settings, or export to render the latest settings.",
+      text: "A processed preview exists. Preview the clean result again after changing settings, or export to render the latest settings.",
     });
   }
 
@@ -2214,6 +2218,9 @@ function updateUi() {
   const busy = isExportBusy();
   const hasProcessedPreview = Boolean(selected?.processedBuffer);
 
+  document.body.classList.toggle("has-files", state.files.length > 0);
+  document.body.classList.toggle("has-processed-preview", hasProcessedPreview);
+
   renderFileList();
   renderMeta();
   renderWarnings();
@@ -2248,25 +2255,27 @@ function updateUi() {
   elements.resetFileOverrideButton.disabled = !selected?.settingsOverride || busy;
   elements.exportSettingsButton.disabled = busy;
   elements.importSettingsButton.disabled = busy;
-  elements.deliveryProfile.disabled = busy;
+  elements.deliveryProfileButtons.forEach((button) => {
+    button.disabled = busy;
+  });
   setButtonLoading(
     elements.applyButton,
-    state.processingMode === "preview" ? "Processing preview..." : "Apply processing preview",
+    state.processingMode === "preview" ? "Processing preview..." : "Preview clean result",
     state.processingMode === "preview",
   );
   setButtonLoading(
     elements.exportButton,
-    state.exportMode === "wav" ? "Exporting WAV..." : "Export selected WAV",
+    state.exportMode === "wav" ? "Exporting WAV..." : "Download cleaned WAV",
     state.exportMode === "wav",
   );
   setButtonLoading(
     elements.exportZipButton,
-    state.exportMode === "zip" ? "Exporting ZIP..." : "Export queue as ZIP",
+    state.exportMode === "zip" ? "Exporting ZIP..." : "Download clean ZIP",
     state.exportMode === "zip",
   );
   setButtonLoading(
     elements.exportMp3Button,
-    !window.lamejs?.Mp3Encoder ? "MP3 encoder unavailable" : state.exportMode === "mp3" ? "Encoding MP3..." : "Export MP3 montage",
+    !window.lamejs?.Mp3Encoder ? "MP3 encoder unavailable" : state.exportMode === "mp3" ? "Encoding MP3..." : "Create MP3 store preview",
     state.exportMode === "mp3",
   );
   elements.exportMp3Button.title = window.lamejs?.Mp3Encoder
@@ -2291,7 +2300,7 @@ function getPreviewStateText(file, hasProcessedPreview) {
   if (hasProcessedPreview) {
     return "Previewing the original file. Switch to After to compare the cleaned preview.";
   }
-  return "Previewing the original file. Apply processing preview to create the After version.";
+  return "Previewing the original file. Preview the clean result to create the After version.";
 }
 
 function showPreviewMode(mode) {
@@ -3230,7 +3239,7 @@ function handleWaveformPointerUp(event) {
   elements.waveform.releasePointerCapture?.(event.pointerId);
   state.trimDragHandle = null;
   commitWorkspaceEdit();
-  setStatus("Manual trim updated. Apply processing preview to audition the result.");
+  setStatus("Manual trim updated. Preview the clean result to audition it.");
   updateUi();
 }
 
@@ -3303,6 +3312,11 @@ function bindEvents() {
     button.addEventListener("click", () => applyCleanupPreset(button.dataset.preset));
   });
 
+  elements.deliveryProfileButtons.forEach((button) => {
+    button.setAttribute("aria-pressed", "false");
+    button.addEventListener("click", () => applyDeliveryProfile(button.dataset.deliveryProfile));
+  });
+
   elements.fileInput.addEventListener("change", (event) => loadFiles(event.target.files));
   elements.waveformEmptyButton.addEventListener("click", () => elements.fileInput.click());
   elements.waveformZoomOut.addEventListener("click", () => setWaveformZoom(state.waveformZoom / 2));
@@ -3368,11 +3382,6 @@ function bindEvents() {
   elements.exportSettingsButton.addEventListener("click", exportCleanupSettings);
   elements.importSettingsButton.addEventListener("click", () => elements.settingsFileInput.click());
   elements.settingsFileInput.addEventListener("change", (event) => importCleanupSettings(event.target.files[0]));
-  elements.deliveryProfile.addEventListener("input", () => {
-    if (elements.deliveryProfile.value !== "custom") {
-      applyDeliveryProfile(elements.deliveryProfile.value);
-    }
-  });
   elements.previewOriginalButton.addEventListener("click", () => showPreviewMode("original"));
   elements.previewProcessedButton.addEventListener("click", () => showPreviewMode("processed"));
   elements.manualTrimReset.addEventListener("click", resetManualTrim);
