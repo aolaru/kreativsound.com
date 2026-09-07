@@ -11,6 +11,8 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-09-08", kind: "update", title: "Preset Mutator Free v0.4.11", description: "Scratch, Preset, and Audio now share the same focused refinement layout, responsive control grid, and generation hierarchy.", href: "/preset-mutator/changelog/" },
+  { date: "2026-09-07", kind: "update", title: "Preset Mutator Free v0.4.10", description: "Serum 2 beta export is now available alongside Vital, with clearer synth targeting and a more balanced Scratch workflow.", href: "/preset-mutator/changelog/" },
   { date: "2026-09-07", kind: "update", title: "Wave Mutator Lite beta v0.2.3", description: "The first-run workflow now leads from adding audio and choosing a delivery target to previewing cleanup and downloading the result, with specialist settings kept optional.", href: "/tools/wave-mutator/changelog/" },
   { date: "2026-09-06", kind: "update", title: "Pattern Mutator Lite v0.3.0", description: "The free MIDI idea generator now adds Quick Starters, register targeting, undo/redo, richer loop auditioning, and selected-bar regeneration.", href: "/tools/pattern-mutator/changelog/" },
   { date: "2026-09-06", kind: "update", title: "Pattern Mutator Lite v0.2.2", description: "The free MIDI idea generator now has Rhythm Feel controls for straight, syncopated, half-time, driving, and sparse patterns.", href: "/tools/pattern-mutator/changelog/" },

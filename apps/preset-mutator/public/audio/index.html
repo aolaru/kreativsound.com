@@ -63,7 +63,6 @@
           <img class="nav-brand-mark-image" src="../preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator Free</strong>
-            <span class="nav-version">v0.4.10</span>
           </span>
         </a>
         <div class="nav-group nav-group-utility">
@@ -178,37 +177,44 @@
           </div>
         </section>
 
-        <section class="workspace">
-          <section class="panel controls-panel">
+        <section class="panel macro-panel">
           <div class="section-head">
-            <h2>Mutation Controls</h2>
-            <p class="muted">Guide how the source gets interpreted. The variants stay inspired by the upload, not matched one-to-one.</p>
+            <div>
+              <h2 id="mutation-amount-heading">Mutation Amount</h2>
+              <p class="muted">Control how far each variant moves from the analyzed source.</p>
+            </div>
           </div>
 
-          <section class="control-section control-section-free" aria-labelledby="free-control-title">
-            <div class="control-section-head">
-              <p class="control-section-kicker">Output</p>
-              <h3 id="free-control-title">Starter controls</h3>
+            <div class="mutation-macro" aria-labelledby="mutation-amount-heading">
+              <div class="mutation-macro-copy">
+                <span class="meta-label">Macro Control</span>
+                <p>Move from source-focused results to more exploratory interpretations.</p>
+              </div>
+              <div id="mutation-knob" class="mutation-knob-mount"></div>
+              <input id="mutation-amount" type="hidden" value="50" />
             </div>
 
+        </section>
+      </section>
+
+      <section class="panel refinement-panel audio-refinement-panel">
+        <div class="section-head refinement-head">
+          <div>
+            <h2>Refine &amp; Generate</h2>
+            <p class="muted">Choose the output, refine the interpretation, then create three playable variants.</p>
+          </div>
+          <span class="refinement-badge">Optional refinements</span>
+        </div>
+
+          <div class="refinement-settings-grid">
             <label class="control synth-target-control">
               <span class="control-label">Synth Target</span>
               <select id="synth-select">
                 <option value="vital">Vital</option>
                 <option value="serum2">Serum 2 (Beta)</option>
               </select>
-              <span class="control-note">Choose the preset format you want to download.</span>
+              <span class="control-note">Choose the preset format to download.</span>
             </label>
-
-            <div class="mutation-macro" aria-labelledby="mutation-amount-heading">
-              <div class="mutation-macro-copy">
-                <span class="meta-label">Macro Control</span>
-                <h3 id="mutation-amount-heading">Mutation Amount</h3>
-                <p>Set how far the generated variants can move from the uploaded audio profile.</p>
-              </div>
-              <div id="mutation-knob" class="mutation-knob-mount"></div>
-              <input id="mutation-amount" type="hidden" value="50" />
-            </div>
 
             <label class="control interpretation-control">
               <span class="control-label">Interpret source as</span>
@@ -219,10 +225,12 @@
                 <option value="bass">Bass</option>
                 <option value="texture">Drone / Texture</option>
               </select>
+              <span class="control-note">Auto Detect works best for focused source sounds.</span>
             </label>
+          </div>
 
-            <details class="advanced-controls">
-              <summary>Fine tune the direction <span>Optional sliders</span></summary>
+            <details class="advanced-controls" open>
+              <summary>Fine tune the direction <span>Five focused controls</span></summary>
               <div class="control-grid">
               <label class="control">
                 <span class="control-label">Darker / Brighter
@@ -276,18 +284,18 @@
               </div>
             </details>
 
-            <div class="actions section-actions">
-              <button id="analyze-generate" type="button" disabled>
-                <span class="button-spinner" aria-hidden="true"></span>
-                <span class="button-label">Generate 3 Variants</span>
-              </button>
+          <div class="refinement-footer">
+            <div class="refinement-feedback">
+              <div class="status" id="status" role="status">Load a short audio file, then generate 3 variants.</div>
+              <p class="upgrade-hint">Exports match the selected Vital or Serum 2 format.</p>
             </div>
-          </section>
-
-          <div class="status" id="status" role="status">Load a short audio file, then generate 3 variants.</div>
-          <p class="upgrade-hint">Mutate Preset and From Scratch support Vital and Serum 2.</p>
-          </section>
-        </section>
+            <div class="actions section-actions">
+                <button id="analyze-generate" type="button" disabled>
+                  <span class="button-spinner" aria-hidden="true"></span>
+                  <span class="button-label">Generate 3 Variants</span>
+                </button>
+              </div>
+          </div>
       </section>
 
       <section class="panel analysis-shell" id="analysis-shell" hidden>
@@ -355,7 +363,7 @@
 
       <footer class="app-footer">
         <p>Kreativ Sound browser tool for Vital and Serum 2 preset generation. Pigments 7 is planned.</p>
-        <p class="app-version">Preset Mutator Free v0.4.10 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator/changelog/">Changelog</a></p>
+        <p class="app-version">Preset Mutator Free v0.4.11 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator/changelog/">Changelog</a></p>
       </footer>
     </main>
 

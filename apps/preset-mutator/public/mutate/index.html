@@ -63,7 +63,6 @@
           <img class="nav-brand-mark-image" src="../preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator Free</strong>
-            <span class="nav-version">v0.4.10</span>
           </span>
         </a>
         <div class="nav-group nav-group-utility">
@@ -178,71 +177,84 @@
           </section>
         </section>
 
-        <section class="workspace">
-          <section class="panel controls-panel">
+        <section class="panel macro-panel">
           <div class="section-head">
-            <h2>Mutation Controls</h2>
-            <p class="muted">Bias the direction without destroying the source preset’s identity.</p>
+            <div>
+              <h2 id="mutation-amount-heading">Mutation Amount</h2>
+              <p class="muted">Control how far each variant moves from the source preset.</p>
+            </div>
           </div>
 
           <div class="mutation-macro" aria-labelledby="mutation-amount-heading">
             <div class="mutation-macro-copy">
               <span class="meta-label">Macro Control</span>
-              <h3 id="mutation-amount-heading">Mutation Amount</h3>
-              <p>Set how far the variants can move from the loaded preset.</p>
+              <p>Move from close variations to more exploratory mutations.</p>
             </div>
             <div id="mutation-knob" class="mutation-knob-mount"></div>
           </div>
 
           <input id="amount-range" type="hidden" value="45" />
 
-          <details class="advanced-controls">
-            <summary>Fine tune the direction <span>Optional sliders</span></summary>
+        </section>
+      </section>
+
+      <section class="panel refinement-panel">
+        <div class="section-head refinement-head">
+          <div>
+            <h2>Refine &amp; Generate</h2>
+            <p class="muted">Optionally shape the mutation, then create three related variants.</p>
+          </div>
+          <span class="refinement-badge">Optional refinements</span>
+        </div>
+
+          <details class="advanced-controls" open>
+            <summary>Fine tune the direction <span>Five focused controls</span></summary>
             <div class="control-grid">
 
             <label class="control">
-              <span>Darker / Brighter</span>
+              <span class="control-label">Darker / Brighter</span>
               <output id="brightness-value">0%</output>
               <input id="brightness-range" type="range" min="-100" max="100" step="1" value="0" aria-label="Darker or brighter" />
             </label>
 
             <label class="control">
-              <span>Steadier / More Motion</span>
+              <span class="control-label">Steadier / More Motion</span>
               <output id="motion-value">0%</output>
               <input id="motion-range" type="range" min="-100" max="100" step="1" value="0" aria-label="Steadier or more motion" />
             </label>
 
             <label class="control">
-              <span>Softer / Harder Attack</span>
+              <span class="control-label">Softer / Harder Attack</span>
               <output id="attack-value">0%</output>
               <input id="attack-range" type="range" min="-100" max="100" step="1" value="0" aria-label="Softer or harder attack" />
             </label>
 
             <label class="control">
-              <span>Narrower / Wider</span>
+              <span class="control-label">Narrower / Wider</span>
               <output id="width-value">0%</output>
               <input id="width-range" type="range" min="-100" max="100" step="1" value="0" aria-label="Narrower or wider" />
             </label>
 
             <label class="control">
-              <span>Cleaner / Dirtier</span>
+              <span class="control-label">Cleaner / Dirtier</span>
               <output id="dirt-value">0%</output>
               <input id="dirt-range" type="range" min="-100" max="100" step="1" value="0" aria-label="Cleaner or dirtier" />
             </label>
             </div>
           </details>
 
-          <div class="actions">
-            <button id="generate-button" type="button" disabled>
-              <span class="button-spinner" aria-hidden="true"></span>
-              <span class="button-label">Generate 3 Variants</span>
-            </button>
+        <div class="refinement-footer">
+          <div class="refinement-feedback">
+            <div class="status" id="status" role="status">Load one preset to generate 3 variants.</div>
+            <p class="upgrade-hint">Downloads keep the source format so you can refine the best mutation in its synth.</p>
           </div>
-
-          <div class="status" id="status" role="status">Load one preset to generate 3 variants.</div>
-          <p class="upgrade-hint">Downloads keep the source format so you can refine the best mutation in its synth.</p>
-          </section>
-        </section>
+          <div class="actions section-actions">
+              <button id="generate-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Generate 3 Variants</span>
+              </button>
+            </div>
+        </div>
       </section>
 
       <section class="panel analysis-shell" id="analysis-shell" hidden>
@@ -313,7 +325,7 @@
 
       <footer class="app-footer">
         <p>Kreativ Sound browser tool for preset-driven mutation.</p>
-        <p class="app-version">Preset Mutator Free v0.4.10 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator/changelog/">Changelog</a></p>
+        <p class="app-version">Preset Mutator Free v0.4.11 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator/changelog/">Changelog</a></p>
       </footer>
     </main>
 

@@ -1708,3 +1708,132 @@ textarea::placeholder {
     flex-direction: column;
   }
 }
+
+.workflow-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.workflow-grid > .panel {
+  height: 100%;
+  margin-bottom: 0;
+}
+
+.macro-panel,
+.refinement-panel {
+  padding: 24px;
+}
+
+.macro-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.macro-panel .mutation-macro {
+  flex: 1;
+  align-content: center;
+  margin-bottom: 0;
+}
+
+.macro-panel .mutation-macro-copy p {
+  max-width: 24rem;
+}
+
+.refinement-panel {
+  margin-bottom: 20px;
+}
+
+.refinement-head {
+  align-items: center;
+}
+
+.refinement-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0.3rem 0.68rem;
+  border: 1px solid rgba(153, 0, 0, 0.16);
+  border-radius: 999px;
+  color: var(--accent-strong);
+  background: rgba(153, 0, 0, 0.06);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.refinement-panel .advanced-controls {
+  margin-top: 0;
+}
+
+.refinement-panel .advanced-controls .control-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.refinement-panel .control {
+  min-width: 0;
+}
+
+.refinement-panel .control-label {
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+
+.refinement-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px 28px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.refinement-feedback .status,
+.refinement-footer .actions {
+  margin-top: 0;
+}
+
+.refinement-feedback .upgrade-hint {
+  margin-bottom: 0;
+}
+
+@media (max-width: 1100px) {
+  .refinement-panel .advanced-controls .control-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .workflow-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .refinement-panel .advanced-controls .control-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .refinement-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .refinement-footer .section-actions {
+    justify-content: stretch;
+  }
+
+  .refinement-footer #generate-button {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .macro-panel,
+  .refinement-panel {
+    padding: 20px;
+  }
+
+  .refinement-panel .advanced-controls .control-grid {
+    grid-template-columns: 1fr;
+  }
+}
