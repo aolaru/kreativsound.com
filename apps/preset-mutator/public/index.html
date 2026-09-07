@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preset Mutator Free | From Scratch</title>
-    <meta name="description" content="Preset Mutator Free creates three Vital preset starts from scratch intent controls, runs locally in the browser, and exports playable preset variants." />
+    <meta name="description" content="Preset Mutator Free creates three Vital or Serum 2 preset starts from scratch intent controls and runs locally in the browser." />
     <meta name="theme-color" content="#f8e9e9" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Preset Mutator Free" />
@@ -13,12 +13,12 @@
     <meta property="og:site_name" content="Kreativ Sound" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Preset Mutator Free | From Scratch" />
-    <meta property="og:description" content="Create Vital preset starts from scratch ideas in a local-first browser tool." />
+    <meta property="og:description" content="Create Vital or Serum 2 preset starts from scratch ideas in a local-first browser tool." />
     <meta property="og:url" content="https://kreativsound.com/preset-mutator/" />
     <meta property="og:image" content="https://kreativsound.com/preset-mutator/preset-mutator-mark.svg" />
     <meta property="twitter:card" content="summary" />
     <meta property="twitter:title" content="Preset Mutator Free | From Scratch" />
-    <meta property="twitter:description" content="Create Vital preset starts from scratch ideas in a local-first browser tool." />
+    <meta property="twitter:description" content="Create Vital or Serum 2 preset starts from scratch ideas in a local-first browser tool." />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -28,7 +28,7 @@
         "operatingSystem": "Web browser",
         "url": "https://kreativsound.com/preset-mutator/",
         "image": "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg",
-        "description": "Preset Mutator Free creates three Vital preset starts from scratch ideas, existing presets, or short audio sources. It runs locally in the browser and exports playable preset variants.",
+        "description": "Preset Mutator Free creates three Vital or Serum 2 preset starts from scratch ideas, existing presets, or short audio sources. It runs locally in the browser and exports playable preset variants.",
         "offers": {
           "@type": "Offer",
           "url": "https://kreativsound.com/preset-mutator/",
@@ -70,7 +70,7 @@
           <img class="nav-brand-mark-image" src="/preset-mutator/preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator Free</strong>
-            <span class="nav-version">v0.4.9</span>
+            <span class="nav-version">v0.4.10</span>
           </span>
         </a>
         <div class="nav-group nav-group-utility">
@@ -85,8 +85,8 @@
 
       <section class="hero">
         <p class="eyebrow">From Scratch</p>
-        <h1>Create a Vital preset from intent</h1>
-        <p class="lede">Choose a direction, shape the feel, and export playable Vital starting points.</p>
+        <h1>Create a synth preset from intent</h1>
+        <p class="lede">Choose a direction, shape the feel, and export playable starting points for Vital or Serum 2.</p>
         <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator Free source">
           <button class="mode-tab is-active" type="button" aria-current="true">
             <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
@@ -99,7 +99,7 @@
             <i class="fa-solid fa-sliders" aria-hidden="true"></i>
             <span class="mode-copy">
               <strong>Preset</strong>
-              <small>Mutate one .vital file</small>
+              <small>Mutate Vital or Serum 2</small>
             </span>
           </a>
           <a class="mode-tab" href="/preset-mutator/audio/">
@@ -121,7 +121,7 @@
           </div>
           <div>
             <span>Export</span>
-            <strong>Vital .vital files</strong>
+            <strong id="export-format-proof">Vital .vital files</strong>
           </div>
         </div>
         <div class="local-trust-strip" aria-label="Preset Mutator Free privacy promises">
@@ -132,18 +132,38 @@
       </section>
 
       <section class="workflow-grid">
-        <div class="intent-stack">
-          <section class="panel intent-panel">
+        <section class="panel intent-panel">
             <div class="section-head">
               <div>
                 <h2>Preset Intent</h2>
-                <p class="muted">Choose a sound type, mood, register, and optional direction keywords.</p>
-                <p class="input-note">Vital is live now. Serum 2 and Pigments 7 are planned.</p>
+                <p class="muted">Choose a sound type, mood, register, and character.</p>
               </div>
             </div>
 
             <div class="intent-grid">
-              <label class="control">
+              <div class="synth-target-control">
+                <div class="intent-field-heading">
+                  <span class="control-label">Target</span>
+                  <span class="target-note">Exports locally</span>
+                </div>
+                <select class="sr-only" id="synth-select" tabindex="-1" aria-hidden="true">
+                  <option value="vital">Vital</option>
+                  <option value="serum2">Serum 2 (Beta)</option>
+                </select>
+                <div class="synth-target-options" role="group" aria-label="Choose synth target">
+                  <button class="synth-target-option is-active" type="button" data-synth-target="vital" aria-pressed="true">
+                    <span>Vital</span>
+                    <small>.vital</small>
+                  </button>
+                  <button class="synth-target-option" type="button" data-synth-target="serum2" aria-pressed="false">
+                    <span>Serum 2</span>
+                    <small>.SerumPreset</small>
+                    <span class="target-badge">Beta</span>
+                  </button>
+                </div>
+              </div>
+
+              <label class="control sound-type-control">
                 <span class="control-label">Sound Type</span>
                 <select id="family-select">
                   <option value="pad">Pad / Atmosphere</option>
@@ -172,44 +192,59 @@
                 </select>
               </label>
 
-              <label class="control intent-text-control">
-                <span class="control-label">Direction Keywords</span>
-                <textarea id="intent-text" rows="4" maxlength="180" placeholder="Example: dark evolving key for a tense intro"></textarea>
-                <span class="control-note">Optional. These keywords bias brightness, motion, and texture; they do not generate from full natural-language prompts.</span>
-              </label>
-              <div class="keyword-chips" aria-label="Quick direction keywords">
-                <button type="button" data-intent-keyword="dark" aria-pressed="false">Dark</button>
-                <button type="button" data-intent-keyword="evolving" aria-pressed="false">Evolving</button>
-                <button type="button" data-intent-keyword="glass" aria-pressed="false">Glass</button>
-                <button type="button" data-intent-keyword="dirty" aria-pressed="false">Dirty</button>
-                <button type="button" data-intent-keyword="steady" aria-pressed="false">Steady</button>
+              <div class="character-control">
+                <span class="control-label">Character</span>
+                <div class="keyword-chips" aria-label="Quick character keywords">
+                  <button type="button" data-intent-keyword="dark" aria-pressed="false">Dark</button>
+                  <button type="button" data-intent-keyword="evolving" aria-pressed="false">Evolving</button>
+                  <button type="button" data-intent-keyword="glass" aria-pressed="false">Glass</button>
+                  <button type="button" data-intent-keyword="dirty" aria-pressed="false">Dirty</button>
+                  <button type="button" data-intent-keyword="steady" aria-pressed="false">Steady</button>
+                </div>
+                <label class="custom-keyword-control">
+                  <span class="sr-only">Add custom direction keywords</span>
+                  <input id="intent-text" type="text" maxlength="120" placeholder="Add custom keywords..." />
+                </label>
+                <span class="control-note">Optional. Adjusts tone, movement, and texture.</span>
               </div>
+
+              <p class="intent-summary" aria-live="polite">
+                <span>Current intent</span>
+                <strong id="intent-summary-value">Pad / Atmosphere · Dark / cinematic · Mid</strong>
+              </p>
             </div>
-          </section>
+        </section>
 
-        </div>
-
-        <section class="workspace">
-          <section class="panel controls-panel">
+        <section class="panel macro-panel">
           <div class="section-head">
             <div>
-              <h2>Mutation Controls</h2>
-              <p class="muted">Bias the generated variants before export.</p>
+              <h2 id="mutation-amount-heading">Mutation Amount</h2>
+              <p class="muted">Control how far each variant moves from your intent.</p>
             </div>
           </div>
 
           <div class="mutation-macro" aria-labelledby="mutation-amount-heading">
             <div class="mutation-macro-copy">
               <span class="meta-label">Macro Control</span>
-              <h3 id="mutation-amount-heading">Mutation Amount</h3>
-              <p>One hero control for how far the generated variants move from the current intent.</p>
+              <p>Move from subtle changes to more exploratory results.</p>
             </div>
             <div id="mutation-knob" class="mutation-knob-mount"></div>
             <input id="mutation-amount" type="hidden" value="50" />
           </div>
+        </section>
+      </section>
 
-          <details class="advanced-controls">
-            <summary>Fine tune the direction <span>Optional sliders</span></summary>
+      <section class="panel refinement-panel">
+        <div class="section-head refinement-head">
+          <div>
+            <h2>Refine &amp; Generate</h2>
+            <p class="muted">Optionally shape the direction, then create three playable variants.</p>
+          </div>
+          <span class="refinement-badge">Optional refinements</span>
+        </div>
+
+          <details class="advanced-controls" open>
+            <summary>Fine tune the direction <span>Five focused controls</span></summary>
             <div class="control-grid">
             <label class="control">
               <span class="control-label">Darker / Brighter</span>
@@ -239,23 +274,24 @@
             </div>
           </details>
 
-          <div class="actions section-actions">
-            <button id="generate-button" type="button">
-              <span class="button-spinner" aria-hidden="true"></span>
-              <span class="button-label">Generate 3 Variants</span>
-            </button>
+        <div class="refinement-footer">
+          <div class="refinement-feedback">
+            <div class="status" id="status" role="status">Choose an intent, then generate 3 variants.</div>
+            <p class="upgrade-hint" id="download-format-hint">Download individual `.vital` files and finish the best direction inside Vital.</p>
           </div>
-
-          <div class="status" id="status" role="status">Choose an intent, then generate 3 variants.</div>
-          <p class="upgrade-hint">Download individual `.vital` files and finish the best direction inside Vital.</p>
-          </section>
-        </section>
+          <div class="actions section-actions">
+              <button id="generate-button" type="button">
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Generate 3 Variants</span>
+              </button>
+            </div>
+        </div>
       </section>
 
       <section class="panel presets-panel" id="presets-panel">
         <div class="section-head">
           <h2>Generated Preset Variants</h2>
-          <p class="muted">Each export is a real `.vital` preset built from the selected direction and a neutralized family seed.</p>
+          <p class="muted" id="results-format-note">Each export is a real `.vital` preset built from the selected direction and a neutralized family seed.</p>
         </div>
         <div class="result-set-toolbar" id="result-set-toolbar" hidden>
           <p id="result-set-label"></p>
@@ -286,11 +322,13 @@
       </aside>
 
       <footer class="app-footer">
-        <p>Kreativ Sound browser tool for synth preset generation. Vital is live first; Serum 2 and Pigments 7 are planned.</p>
-        <p class="app-version">Preset Mutator Free v0.4.9 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator/changelog/">Changelog</a></p>
+        <p>Kreativ Sound browser tool for Vital and Serum 2 preset generation. Pigments 7 is planned.</p>
+        <p class="app-version">Preset Mutator Free v0.4.10 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator/changelog/">Changelog</a></p>
       </footer>
     </main>
 
+    <script src="/preset-mutator/vendor/cbor-x.min.js"></script>
+    <script src="/preset-mutator/vendor/spark-md5.min.js"></script>
     <script src="/preset-mutator/app.js" type="module"></script>
     <script>
       const themeToggle = document.getElementById("theme-toggle");

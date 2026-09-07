@@ -2,6 +2,7 @@ import { PresetMutatorKnob } from "../preset-mutator-knob.js";
 import { clamp, familyLabel, formatHz } from "../engine/common.js";
 import { buildAudioFreePack, buildAudioProfile as createAudioProfile } from "../engine/audio-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "../engine/vital-export.js";
+import { createSerum2PresetBlob } from "../engine/serum2-export.js";
 
 const state = {
   audioContext: null,
@@ -24,6 +25,7 @@ const state = {
 };
 
 const elements = {
+  synthSelect: document.querySelector("#synth-select"),
   fileInput: document.querySelector("#file-input"),
   fileName: document.querySelector("#file-name"),
   fileDuration: document.querySelector("#file-duration"),
@@ -66,6 +68,8 @@ const elements = {
   newSetButton: document.querySelector("#new-set-button"),
   previousSetButton: document.querySelector("#previous-set-button"),
   latestSetButton: document.querySelector("#latest-set-button"),
+  exportFormatProof: document.querySelector("#export-format-proof"),
+  resultsFormatNote: document.querySelector("#results-format-note"),
 };
 
 const FREE_VARIANT_LIMIT = 3;
@@ -175,6 +179,7 @@ function sizeBucket(bytes) {
 
 function currentAnalyticsSelection() {
   return {
+    synth_target: elements.synthSelect.value,
     input_mode: elements.inputMode?.value || "auto",
     mutation_amount: Number(elements.mutationAmount.value),
     mutation_bucket: mutationBucket(elements.mutationAmount.value),
@@ -640,6 +645,10 @@ function seedUrlForFamily(family) {
   return new URL(`../assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, import.meta.url);
 }
 
+function serumSeedUrl() {
+  return new URL("../assets/seeds/serum2/raw/KS%20Serum%202%20Base.SerumPreset", import.meta.url);
+}
+
 async function loadSeedPreset(family) {
   const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
   if (state.seedCache.has(seedName)) {
@@ -659,6 +668,27 @@ async function loadSeedPreset(family) {
 async function buildVitalPresetBlob(preset) {
   const seed = await loadSeedPreset(preset.familyKey);
   return createVitalPresetBlob(seed, preset);
+}
+
+async function loadSerumSeedPreset() {
+  const cacheKey = "serum2-base";
+  if (state.seedCache.has(cacheKey)) {
+    return state.seedCache.get(cacheKey).slice();
+  }
+  const response = await fetch(serumSeedUrl());
+  if (!response.ok) {
+    throw new Error("Could not load the Serum 2 seed preset.");
+  }
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  state.seedCache.set(cacheKey, bytes);
+  return bytes.slice();
+}
+
+async function buildPresetBlob(preset) {
+  if (elements.synthSelect.value === "serum2") {
+    return createSerum2PresetBlob(await loadSerumSeedPreset(), preset);
+  }
+  return buildVitalPresetBlob(preset);
 }
 
 function renderMetricGrid(target, items) {
@@ -740,6 +770,7 @@ function renderPresets(presets) {
 }
 
 function buildPresetCard(preset, role, totalCount) {
+    const isSerum = elements.synthSelect.value === "serum2";
     const card = document.createElement("article");
     card.className = "preset-card";
     const maxRows = totalCount > FREE_VARIANT_LIMIT ? 4 : 4;
@@ -767,8 +798,8 @@ function buildPresetCard(preset, role, totalCount) {
       <div class="param-list">${paramRows}</div>
       <div class="preset-actions">
         <button class="download-button" type="button">
-          <span class="download-badge" aria-hidden="true">VITAL</span>
-          <span>Download .vital</span>
+          <span class="download-badge" aria-hidden="true">${isSerum ? "SERUM 2" : "VITAL"}</span>
+          <span>Download ${isSerum ? ".SerumPreset" : ".vital"}</span>
         </button>
       </div>
     `;
@@ -871,7 +902,7 @@ function describePackGroup(role) {
 async function downloadPreset(preset) {
   try {
     updateStatus(`Preparing ${preset.name} for download...`);
-    const { fileName, blob } = await buildVitalPresetBlob(preset);
+    const { fileName, blob } = await buildPresetBlob(preset);
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -1070,7 +1101,8 @@ function generatePresets() {
     return;
   }
 
-  updateStatus("Shaping 3 guided Vital variants...");
+  const synthName = elements.synthSelect.value === "serum2" ? "Serum 2" : "Vital";
+  updateStatus(`Shaping 3 guided ${synthName} variants...`);
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
   state.lastGenerationMode = "standard";
@@ -1143,7 +1175,20 @@ function toggleAnalysisVisibility() {
   setAnalysisVisible(elements.analysisContent.hidden);
 }
 
+function syncSynthTargetUi(announce = false) {
+  const isSerum = elements.synthSelect.value === "serum2";
+  elements.exportFormatProof.textContent = isSerum ? "Serum 2 .SerumPreset files" : "Vital .vital files";
+  elements.resultsFormatNote.textContent = isSerum
+    ? "Download real `.SerumPreset` files built from the analyzed direction and a neutralized Serum 2 seed."
+    : "Download real `.vital` files built from the analyzed direction and neutralized Vital seeds.";
+  renderPresets(state.presets);
+  if (announce) {
+    updateStatus(isSerum ? "Serum 2 beta target selected." : "Vital target selected.");
+  }
+}
+
 elements.fileInput.addEventListener("change", handleFileChange);
+elements.synthSelect.addEventListener("change", () => syncSynthTargetUi(true));
 elements.waveformPanel.addEventListener("dragenter", handleDropZoneDrag);
 elements.waveformPanel.addEventListener("dragover", handleDropZoneDrag);
 elements.waveformPanel.addEventListener("dragleave", handleDropZoneLeave);
@@ -1183,6 +1228,7 @@ for (const control of [
 }
 
 updateControlLabels();
+syncSynthTargetUi();
 setAnalysisVisible(false);
 updatePlaybackUI();
 setReady(false);

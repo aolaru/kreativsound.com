@@ -1,6 +1,9 @@
 import { access, readdir, readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { decode, Encoder } from "cbor-x";
+import { Zstd } from "@hpcc-js/wasm-zstd";
 
 import {
   buildAudioFreePack,
@@ -19,21 +22,29 @@ import {
   buildScratchProfile,
 } from "../apps/preset-mutator/public/engine/scratch-engine.js";
 import { buildVitalPresetPayload } from "../apps/preset-mutator/public/engine/vital-export.js";
+import {
+  buildGeneratedSerum2Document,
+  buildSerum2Container,
+  generateSerum2PresetVariants,
+  parseSerum2Container,
+  summarizeSerum2Preset,
+} from "../apps/preset-mutator/public/engine/serum2-format.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const uiDir = path.join(rootDir, "apps/preset-mutator/public");
 const seedDir = path.join(rootDir, "apps/preset-mutator/public/assets/seeds/vital/raw");
+const serumSeedPath = path.join(rootDir, "apps/preset-mutator/public/assets/seeds/serum2/raw/KS Serum 2 Base.SerumPreset");
 const toolReleases = JSON.parse(await readFile(path.join(rootDir, "src/data/tool-releases.json"), "utf8"));
 const releaseVersion = `v${toolReleases.presetMutatorFree.version}`;
 
 const failures = [];
 
 const modePages = [
-  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "vital-export.js"] },
+  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "vital-export.js", "serum2-export.js"] },
   { name: "Scratch route", html: "index.html", app: "scratch/app.js", requiredImports: ["../app.js"] },
-  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "vital-export.js"] },
-  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js"] },
+  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "vital-export.js", "serum2-export.js"] },
+  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js", "serum2-format.js", "serum2-export.js"] },
 ];
 
 const generatedParameterRanges = {
@@ -215,13 +226,21 @@ async function checkPages() {
   assert(!mutateHtml.includes("trust-panel"), "Preset mode: Local Processing panel should stay removed");
   assert(!mutateHtml.includes("insight-panel"), "Preset mode: tips panel should stay removed");
   assert(mutateHtml.includes("Load Example Preset"), "Preset mode: included example preset action is missing");
+  assert(mutateHtml.includes(".SerumPreset"), "Preset mode: Serum 2 upload support is missing");
+  assert(mutateHtml.includes("vendor/cbor-x.min.js"), "Preset mode: CBOR codec is missing");
 
   const scratchHtml = await readText("index.html");
-  assert(scratchHtml.includes("Direction Keywords"), "Scratch mode: keyword direction input is missing");
+  assert(scratchHtml.includes("Character"), "Scratch mode: character controls are missing");
+  assert(scratchHtml.includes('id="intent-text"'), "Scratch mode: custom keyword input is missing");
   assert(scratchHtml.includes("data-intent-keyword"), "Scratch mode: quick direction keywords are missing");
+  assert(scratchHtml.includes('id="synth-select"'), "Scratch mode: synth target selector is missing");
+  assert(scratchHtml.includes("data-synth-target"), "Scratch mode: segmented synth target control is missing");
+  assert(scratchHtml.includes('value="serum2"'), "Scratch mode: Serum 2 target is missing");
 
   const audioHtml = await readText("audio/index.html");
   assert(audioHtml.includes("Try Example Sound"), "Audio mode: included example sound action is missing");
+  assert(audioHtml.includes('id="synth-select"'), "Audio mode: synth target selector is missing");
+  assert(audioHtml.includes('value="serum2"'), "Audio mode: Serum 2 target is missing");
 
   const changelogHtml = await readText("changelog/index.html");
   assert(changelogHtml.includes("Preset Mutator Free Changelog"), "Changelog: page title is missing");
@@ -234,6 +253,9 @@ async function checkPages() {
   assert(!serviceWorker.includes("./engine/license.js"), "Service worker: license verifier asset should not be cached");
   assert(!serviceWorker.includes("./engine/audio-preview.js"), "Service worker: removed preview asset should not be cached");
   assert(serviceWorker.includes("./changelog/index.html"), "Service worker: changelog should be cached");
+  assert(serviceWorker.includes("./engine/serum2-format.js"), "Service worker: Serum 2 format engine should be cached");
+  assert(serviceWorker.includes("./vendor/zstd.js"), "Service worker: Serum 2 Zstandard codec should be cached");
+  assert(serviceWorker.includes("KS%20Serum%202%20Base.SerumPreset"), "Service worker: Serum 2 seed should be cached");
 }
 
 function checkScratchEngine(seedByFamily) {
@@ -344,6 +366,55 @@ function checkPresetMutationEngine(seedFile, seedData) {
   }
 }
 
+async function checkSerum2Engine() {
+  const zstd = await Zstd.load();
+  const encoder = new Encoder({ useRecords: false, variableMapSize: true });
+  const codecs = {
+    decode,
+    encode: (value) => encoder.encode(value),
+    compress: (bytes, level) => zstd.compress(bytes, level),
+    decompress: (bytes) => zstd.decompress(bytes),
+    md5: (bytes) => createHash("md5").update(bytes).digest("hex"),
+  };
+  const seedBytes = new Uint8Array(await readFile(serumSeedPath));
+  const seedDocument = parseSerum2Container(seedBytes, codecs);
+  assert(seedDocument.metadata.product === "Serum2", "Serum 2 engine: seed metadata should identify Serum 2");
+  assert(seedDocument.data.fileType === "SerumPreset", "Serum 2 engine: seed payload should be a Serum preset");
+
+  const profile = buildScratchProfile({
+    family: "pad",
+    mood: "dark",
+    register: "mid",
+    intent: "bright evolving glass",
+    mutationAmount: 68,
+    motion: 24,
+    width: 18,
+  });
+  const [preset] = buildScratchFreePack(profile, 1);
+  const document = buildGeneratedSerum2Document(seedDocument, preset);
+  const output = buildSerum2Container(document, codecs);
+  const roundTrip = parseSerum2Container(output, codecs);
+  const summary = summarizeSerum2Preset(roundTrip);
+  assert(new TextDecoder().decode(output.subarray(0, 8)) === "XferJson", "Serum 2 engine: output is missing the XferJson header");
+  assert(roundTrip.metadata.presetName === preset.name, "Serum 2 engine: generated name did not survive round trip");
+  assert(roundTrip.metadata.presetAuthor === "Preset Mutator Free", "Serum 2 engine: generated author is incorrect");
+  assert(summary.scalarKeys.length >= 12, `Serum 2 engine: expected mapped parameters, found ${summary.scalarKeys.length}`);
+  assert(roundTrip.data.ModSlot0?.plainParams !== "default", "Serum 2 engine: moving presets should keep one filter-motion route");
+
+  const strategy = buildPresetMutateStrategy({ amount: 70, tone: 15, motion: 30, attack: -10, space: 20, dirt: 12 });
+  const sourcePreset = { ...roundTrip, summary, fileName: `${preset.name}.SerumPreset` };
+  const variants = generateSerum2PresetVariants({ sourcePreset, strategy, variationSeed: 1 });
+  assert(variants.length === 3, `Serum 2 engine: expected 3 mutation variants, found ${variants.length}`);
+  assert(variants.every((variant) => variant.downloadName.endsWith(".SerumPreset")), "Serum 2 engine: mutation downloads should use .SerumPreset");
+  assert(variants.every((variant) => variant.changedParameters.length >= 8), "Serum 2 engine: mutation variants should change useful parameters");
+
+  for (const variant of variants) {
+    const variantBytes = buildSerum2Container({ metadata: variant.metadata, data: variant.data }, codecs);
+    const parsedVariant = parseSerum2Container(variantBytes, codecs);
+    assert(parsedVariant.metadata.presetName === variant.name, `Serum 2 engine: ${variant.name} failed binary round trip`);
+  }
+}
+
 async function checkEngines() {
   const seedFiles = (await readdir(seedDir)).filter((file) => file.endsWith(".vital")).sort();
   assert(seedFiles.length >= 4, `Expected at least 4 Vital seed presets, found ${seedFiles.length}`);
@@ -367,6 +438,7 @@ async function checkEngines() {
 
 await checkPages();
 await checkEngines();
+await checkSerum2Engine();
 
 if (failures.length) {
   console.error("Preset Mutator Free QA failed:");

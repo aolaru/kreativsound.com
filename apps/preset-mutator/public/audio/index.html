@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preset Mutator Free | Audio to Preset</title>
-    <meta name="description" content="Audio to Preset analyzes one short source sound locally in the browser and exports free Vital preset variants." />
+    <meta name="description" content="Audio to Preset analyzes one short source sound locally in the browser and exports free Vital or Serum 2 preset variants." />
     <meta name="theme-color" content="#f8e9e9" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="robots" content="index, follow" />
@@ -12,12 +12,12 @@
     <meta property="og:site_name" content="Kreativ Sound" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Preset Mutator Free | Audio to Preset" />
-    <meta property="og:description" content="Turn one short source sound into local Vital preset variants in the browser." />
+    <meta property="og:description" content="Turn one short source sound into local Vital or Serum 2 preset variants in the browser." />
     <meta property="og:url" content="https://kreativsound.com/preset-mutator/audio/" />
     <meta property="og:image" content="https://kreativsound.com/preset-mutator/preset-mutator-mark.svg" />
     <meta property="twitter:card" content="summary" />
     <meta property="twitter:title" content="Preset Mutator Free | Audio to Preset" />
-    <meta property="twitter:description" content="Turn one short source sound into local Vital preset variants in the browser." />
+    <meta property="twitter:description" content="Turn one short source sound into local Vital or Serum 2 preset variants in the browser." />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -27,7 +27,7 @@
         "operatingSystem": "Web browser",
         "url": "https://kreativsound.com/preset-mutator/audio/",
         "image": "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg",
-        "description": "Preset Mutator Free Audio to Preset analyzes one short source sound locally and exports Vital preset variants.",
+        "description": "Preset Mutator Free Audio to Preset analyzes one short source sound locally and exports Vital or Serum 2 preset variants.",
         "isPartOf": {
           "@type": "SoftwareApplication",
           "name": "Preset Mutator Free",
@@ -63,7 +63,7 @@
           <img class="nav-brand-mark-image" src="../preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator Free</strong>
-            <span class="nav-version">v0.4.9</span>
+            <span class="nav-version">v0.4.10</span>
           </span>
         </a>
         <div class="nav-group nav-group-utility">
@@ -78,8 +78,8 @@
 
       <section class="hero">
         <p class="eyebrow">Audio to Preset</p>
-        <h1>Turn audio into Vital preset variants</h1>
-        <p class="lede">Load one short source sound, shape the mapping, and export playable Vital variants.</p>
+        <h1>Turn audio into synth preset variants</h1>
+        <p class="lede">Load one short source sound, shape the mapping, and export playable Vital or Serum 2 variants.</p>
         <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator Free source">
           <a class="mode-tab" href="../index.html">
             <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
@@ -92,7 +92,7 @@
             <i class="fa-solid fa-sliders" aria-hidden="true"></i>
             <span class="mode-copy">
               <strong>Preset</strong>
-              <small>Mutate one .vital file</small>
+              <small>Mutate Vital or Serum 2</small>
             </span>
           </a>
           <button class="mode-tab is-active" type="button" aria-current="true">
@@ -114,7 +114,7 @@
           </div>
           <div>
             <span>Export</span>
-            <strong>Vital .vital files</strong>
+            <strong id="export-format-proof">Vital .vital files</strong>
           </div>
         </div>
         <div class="local-trust-strip" aria-label="Preset Mutator Free privacy promises">
@@ -129,7 +129,7 @@
           <div class="section-head">
             <div>
               <h2>Input Audio</h2>
-              <p class="muted">Load one short source sound and generate Vital variants inspired by its tone and shape.</p>
+              <p class="muted">Load one short source sound and generate synth variants inspired by its tone and shape.</p>
               <p class="input-note">Best inputs: one-shots, basses, pads, plucks, drones, and clean textures. Avoid full songs and dense mixes.</p>
               <p class="input-note">WAV, MP3, AIFF, M4A, OGG, or FLAC. Max 10 MB.</p>
             </div>
@@ -190,6 +190,15 @@
               <p class="control-section-kicker">Output</p>
               <h3 id="free-control-title">Starter controls</h3>
             </div>
+
+            <label class="control synth-target-control">
+              <span class="control-label">Synth Target</span>
+              <select id="synth-select">
+                <option value="vital">Vital</option>
+                <option value="serum2">Serum 2 (Beta)</option>
+              </select>
+              <span class="control-note">Choose the preset format you want to download.</span>
+            </label>
 
             <div class="mutation-macro" aria-labelledby="mutation-amount-heading">
               <div class="mutation-macro-copy">
@@ -276,7 +285,7 @@
           </section>
 
           <div class="status" id="status" role="status">Load a short audio file, then generate 3 variants.</div>
-          <p class="upgrade-hint">Mutate Preset and From Scratch are also available for Vital.</p>
+          <p class="upgrade-hint">Mutate Preset and From Scratch support Vital and Serum 2.</p>
           </section>
         </section>
       </section>
@@ -313,7 +322,7 @@
       <section class="panel presets-panel" id="presets-panel">
         <div class="section-head">
           <h2>Generated Preset Variants</h2>
-          <p class="muted">Download real `.vital` files built from the analyzed direction and neutralized Vital seeds.</p>
+          <p class="muted" id="results-format-note">Download real `.vital` files built from the analyzed direction and neutralized Vital seeds.</p>
         </div>
         <p class="self-test-note" id="self-test-note" hidden>Example sound is synthetic; use your own audio for production results.</p>
         <div class="result-set-toolbar" id="result-set-toolbar" hidden>
@@ -345,11 +354,13 @@
       </aside>
 
       <footer class="app-footer">
-        <p>Kreativ Sound browser tool for Vital preset generation. Serum 2 and Pigments 7 are planned.</p>
-        <p class="app-version">Preset Mutator Free v0.4.9 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator/changelog/">Changelog</a></p>
+        <p>Kreativ Sound browser tool for Vital and Serum 2 preset generation. Pigments 7 is planned.</p>
+        <p class="app-version">Preset Mutator Free v0.4.10 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator/changelog/">Changelog</a></p>
       </footer>
     </main>
 
+    <script src="/preset-mutator/vendor/cbor-x.min.js"></script>
+    <script src="/preset-mutator/vendor/spark-md5.min.js"></script>
     <script src="./app.js" type="module"></script>
     <script>
       const themeToggle = document.getElementById("theme-toggle");

@@ -4,10 +4,19 @@ import {
   generatePresetVariants as createPresetVariants,
   presetSummary as summarizeVitalPreset,
 } from "../engine/preset-mutate-engine.js";
+import {
+  generateSerum2PresetVariants,
+  summarizeSerum2Preset,
+} from "../engine/serum2-format.js";
+import {
+  createSerum2VariantBlob,
+  parseSerum2Preset,
+} from "../engine/serum2-export.js";
 
 const state = {
   sourcePreset: null,
   sourceFile: null,
+  sourceFormat: null,
   generatedVariants: [],
   resultSets: [],
   activeSetIndex: -1,
@@ -111,6 +120,7 @@ function countBucket(count) {
 
 function currentAnalyticsSelection() {
   return {
+    synth_target: state.sourceFormat || "none",
     mutation_amount: Number(elements.amountRange.value),
     mutation_bucket: amountBucket(elements.amountRange.value),
     brightness_bucket: signedBucket(elements.brightnessRange.value, "darker", "brighter"),
@@ -165,12 +175,13 @@ function setUploadMessage(message = "") {
 
 function renderSourceMetrics() {
   if (!state.sourcePreset) {
-    elements.sourceMetrics.innerHTML = `<p class="empty-state">Load a preset to inspect its current Vital structure.</p>`;
+    elements.sourceMetrics.innerHTML = `<p class="empty-state">Load a preset to inspect its current structure.</p>`;
     return;
   }
 
   const summary = state.sourcePreset.summary;
   const metrics = [
+    ["Format", state.sourceFormat === "serum2" ? "Serum 2" : "Vital"],
     ["Author", summary.author],
     ["Sample", summary.sampleName],
     ["Wavetables", String(summary.wavetableCount)],
@@ -284,6 +295,21 @@ function buildStrategyWeights() {
 }
 
 function generateVariants() {
+  if (state.sourceFormat === "serum2") {
+    return generateSerum2PresetVariants({
+      sourcePreset: state.sourcePreset,
+      strategy: buildStrategyWeights(),
+      variationSeed: state.variationSeed,
+      controls: {
+        amount: elements.amountRange.value,
+        tone: elements.brightnessRange.value,
+        motion: elements.motionRange.value,
+        attack: elements.attackRange.value,
+        space: elements.widthRange.value,
+        dirt: elements.dirtRange.value,
+      },
+    });
+  }
   return createPresetVariants({
     sourcePreset: state.sourcePreset,
     strategy: buildStrategyWeights(),
@@ -299,28 +325,39 @@ function generateVariants() {
   });
 }
 
-function downloadVariant(variant) {
-  const blob = new Blob([JSON.stringify(variant.data)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = variant.downloadName;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
-  analyticsEvent("download_preset", {
-    generation_mode: state.lastGenerationMode,
-    preset_role: variant.role.label,
-    preset_group: variant.groupKey,
-    changed_parameters_bucket: countBucket(variant.changedParameters.length),
-    ...currentAnalyticsSelection(),
-  });
+async function downloadVariant(variant) {
+  try {
+    elements.status.textContent = `Preparing ${variant.name} for download...`;
+    const payload = state.sourceFormat === "serum2"
+      ? await createSerum2VariantBlob(variant)
+      : {
+          fileName: variant.downloadName,
+          blob: new Blob([JSON.stringify(variant.data)], { type: "application/json" }),
+        };
+    const url = URL.createObjectURL(payload.blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = payload.fileName;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+    elements.status.textContent = `${variant.name} is ready.`;
+    analyticsEvent("download_preset", {
+      generation_mode: state.lastGenerationMode,
+      preset_role: variant.role.label,
+      preset_group: variant.groupKey,
+      changed_parameters_bucket: countBucket(variant.changedParameters.length),
+      ...currentAnalyticsSelection(),
+    });
+  } catch (error) {
+    elements.status.textContent = error.message || "Could not download the preset variant.";
+  }
 }
 
 function renderVariants() {
   if (!state.generatedVariants.length) {
-    elements.presetList.innerHTML = `<p class="empty-state">Choose one <strong>.vital</strong> preset, then click <strong>${currentActionLabel()}</strong> to create new playable mutations.</p>`;
+    elements.presetList.innerHTML = `<p class="empty-state">Choose one preset, then click <strong>${currentActionLabel()}</strong> to create new playable mutations.</p>`;
     return;
   }
 
@@ -379,7 +416,7 @@ function renderVariants() {
           </div>
           <div>
             <span class="metric-label">Format</span>
-            <strong>Vital</strong>
+            <strong>${state.sourceFormat === "serum2" ? "Serum 2" : "Vital"}</strong>
           </div>
           <div>
             <span class="metric-label">Best use</span>
@@ -394,8 +431,8 @@ function renderVariants() {
         </div>
         <div class="preset-actions">
           <button class="download-button" type="button">
-            <span class="download-badge">VITAL</span>
-            <span>Download .vital</span>
+            <span class="download-badge">${state.sourceFormat === "serum2" ? "SERUM 2" : "VITAL"}</span>
+            <span>Download ${state.sourceFormat === "serum2" ? ".SerumPreset" : ".vital"}</span>
           </button>
         </div>
       `;
@@ -483,31 +520,44 @@ async function loadPreset(file) {
     return;
   }
 
-  if (!file.name.toLowerCase().endsWith(".vital")) {
+  const lowerName = file.name.toLowerCase();
+  const isVital = lowerName.endsWith(".vital");
+  const isSerum = lowerName.endsWith(".serumpreset");
+  if (!isVital && !isSerum) {
     state.sourcePreset = null;
     state.sourceFile = null;
+    state.sourceFormat = null;
     state.generatedVariants = [];
     clearResultSets();
-    setUploadMessage("Unsupported file type. Please use a valid .vital preset.");
+    setUploadMessage("Unsupported file type. Please use a valid .vital or .SerumPreset file.");
     updateSourceUi();
     renderVariants();
     return;
   }
 
   try {
-    const text = await file.text();
-    const data = JSON.parse(text);
-    if (!data || typeof data !== "object" || typeof data.settings !== "object" || Array.isArray(data.settings)) {
-      throw new Error("Vital preset is missing a valid settings object.");
+    let sourcePreset;
+    let summary;
+    if (isSerum) {
+      const document = await parseSerum2Preset(await file.arrayBuffer());
+      summary = summarizeSerum2Preset(document);
+      sourcePreset = { ...document, summary, fileName: file.name, format: "serum2" };
+    } else {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      if (!data || typeof data !== "object" || typeof data.settings !== "object" || Array.isArray(data.settings)) {
+        throw new Error("Vital preset is missing a valid settings object.");
+      }
+      summary = summarizeVitalPreset(data);
+      sourcePreset = { data, summary, fileName: file.name, format: "vital" };
     }
-
-    const summary = summarizeVitalPreset(data);
     if (!summary.scalarKeys.length) {
-      throw new Error("No safe Vital parameters were found in this preset.");
+      throw new Error("No safe mutation parameters were found in this preset.");
     }
 
-    state.sourcePreset = { data, summary, fileName: file.name };
+    state.sourcePreset = sourcePreset;
     state.sourceFile = file;
+    state.sourceFormat = isSerum ? "serum2" : "vital";
     state.generatedVariants = [];
     clearResultSets();
     state.lastGenerationMode = "standard";
@@ -515,7 +565,7 @@ async function loadPreset(file) {
     updateSourceUi();
     renderVariants();
     analyticsEvent("source_loaded", {
-      source_type: "vital_preset",
+      source_type: isSerum ? "serum2_preset" : "vital_preset",
       source_wavetables_bucket: countBucket(summary.wavetableCount),
       source_modulations_bucket: countBucket(summary.modulationCount),
       safe_parameter_bucket: countBucket(summary.scalarKeys.length),
@@ -525,6 +575,7 @@ async function loadPreset(file) {
   } catch (error) {
     state.sourcePreset = null;
     state.sourceFile = null;
+    state.sourceFormat = null;
     state.generatedVariants = [];
     clearResultSets();
     setUploadMessage(error.message || "Unsupported or unreadable preset file.");

@@ -151,6 +151,7 @@ export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1, 
     roleLabel,
     family: familyLabel(family),
     familyKey: family,
+    pitchHz: profile.pitchHz,
     architecture,
     summary: buildScratchPresetSummary({ family, brightness, movement, width, sustain, attack, register: noteName(profile.pitchHz) }),
     parameterMap: {

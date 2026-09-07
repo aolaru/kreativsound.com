@@ -5,6 +5,7 @@ const rootDir = process.cwd();
 const publicDir = path.join(rootDir, "public");
 const presetMutatorSourceDir = path.join(rootDir, "apps/preset-mutator/public");
 const presetMutatorPublicDir = path.join(publicDir, "preset-mutator");
+const presetMutatorVendorDir = path.join(presetMutatorPublicDir, "vendor");
 const presetMutatorProSourceDir = path.join(rootDir, "apps/preset-mutator-pro/public");
 const presetMutatorProPublicDir = path.join(publicDir, "preset-mutator-pro");
 const presetMutatorLegacyPublicDir = path.join(publicDir, "apps/preset-mutator");
@@ -145,6 +146,19 @@ function writeLegacyPresetMutatorRedirects() {
 fs.rmSync(presetMutatorPublicDir, { recursive: true, force: true });
 fs.mkdirSync(path.dirname(presetMutatorPublicDir), { recursive: true });
 fs.cpSync(presetMutatorSourceDir, presetMutatorPublicDir, { recursive: true });
+fs.mkdirSync(presetMutatorVendorDir, { recursive: true });
+fs.copyFileSync(
+  path.join(rootDir, "node_modules/cbor-x/dist/index.min.js"),
+  path.join(presetMutatorVendorDir, "cbor-x.min.js")
+);
+fs.copyFileSync(
+  path.join(rootDir, "node_modules/spark-md5/spark-md5.min.js"),
+  path.join(presetMutatorVendorDir, "spark-md5.min.js")
+);
+fs.copyFileSync(
+  path.join(rootDir, "node_modules/@hpcc-js/wasm-zstd/dist/index.js"),
+  path.join(presetMutatorVendorDir, "zstd.js")
+);
 fs.mkdirSync(path.join(presetMutatorPublicDir, "scratch"), { recursive: true });
 fs.copyFileSync(
   path.join(presetMutatorSourceDir, "index.html"),

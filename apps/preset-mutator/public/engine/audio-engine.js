@@ -193,6 +193,7 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
     roleLabel,
     family: familyLabel(family),
     familyKey: family,
+    pitchHz: profile.pitchHz,
     architecture,
     summary: buildAudioPresetSummary({ family, brightness, movement, width, sustain, attack, register }),
     parameterMap: {

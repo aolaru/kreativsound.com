@@ -6,6 +6,7 @@ import {
   SCRATCH_FREE_VARIANT_LIMIT,
 } from "./engine/scratch-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "./engine/vital-export.js";
+import { createSerum2PresetBlob } from "./engine/serum2-export.js";
 
 const state = {
   presets: [],
@@ -18,10 +19,12 @@ const state = {
 };
 
 const elements = {
+  synthSelect: document.querySelector("#synth-select"),
   familySelect: document.querySelector("#family-select"),
   moodSelect: document.querySelector("#mood-select"),
   registerSelect: document.querySelector("#register-select"),
   intentText: document.querySelector("#intent-text"),
+  intentSummaryValue: document.querySelector("#intent-summary-value"),
   brightnessRange: document.querySelector("#brightness-range"),
   motionRange: document.querySelector("#motion-range"),
   attackRange: document.querySelector("#attack-range"),
@@ -44,6 +47,9 @@ const elements = {
   newSetButton: document.querySelector("#new-set-button"),
   previousSetButton: document.querySelector("#previous-set-button"),
   latestSetButton: document.querySelector("#latest-set-button"),
+  exportFormatProof: document.querySelector("#export-format-proof"),
+  downloadFormatHint: document.querySelector("#download-format-hint"),
+  resultsFormatNote: document.querySelector("#results-format-note"),
 };
 
 const FREE_VARIANT_LIMIT = SCRATCH_FREE_VARIANT_LIMIT;
@@ -110,6 +116,7 @@ function intentLengthBucket(value) {
 
 function currentAnalyticsSelection() {
   return {
+    synth_target: elements.synthSelect.value,
     sound_type: elements.familySelect.value,
     mood: elements.moodSelect.value,
     register: elements.registerSelect.value,
@@ -177,11 +184,13 @@ function renderPresets(presets) {
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
   elements.presetsPanel.classList.toggle("is-pack", presets.length > FREE_VARIANT_LIMIT);
   if (!presets.length) {
-    elements.presetList.innerHTML = `<p class="empty-state">Click <strong>Generate 3 Variants</strong> to create from-scratch Vital starting points.</p>`;
+    const synthName = elements.synthSelect.value === "serum2" ? "Serum 2" : "Vital";
+    elements.presetList.innerHTML = `<p class="empty-state">Click <strong>Generate 3 Variants</strong> to create from-scratch ${synthName} starting points.</p>`;
     return;
   }
 
   for (const preset of presets) {
+    const isSerum = elements.synthSelect.value === "serum2";
     const card = document.createElement("article");
     card.className = "preset-card";
     card.innerHTML = `
@@ -201,8 +210,8 @@ function renderPresets(presets) {
       <div class="param-list">${preset.parameters.map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`).join("")}</div>
       <div class="preset-actions">
         <button class="download-button" type="button">
-          <span class="download-badge" aria-hidden="true">VITAL</span>
-          <span>Download .vital</span>
+          <span class="download-badge" aria-hidden="true">${isSerum ? "SERUM 2" : "VITAL"}</span>
+          <span>Download ${isSerum ? ".SerumPreset" : ".vital"}</span>
         </button>
       </div>
     `;
@@ -265,6 +274,10 @@ function seedUrlForFamily(family) {
   return new URL(`./assets/seeds/vital/raw/${encodeURIComponent(seedName)}`, import.meta.url);
 }
 
+function serumSeedUrl() {
+  return new URL("./assets/seeds/serum2/raw/KS%20Serum%202%20Base.SerumPreset", import.meta.url);
+}
+
 async function loadSeedPreset(family) {
   const seedName = SEED_BY_FAMILY[family] || SEED_BY_FAMILY.texture;
   if (state.seedCache.has(seedName)) {
@@ -286,10 +299,32 @@ async function buildVitalPresetBlob(preset) {
   return createVitalPresetBlob(seed, preset);
 }
 
+async function loadSerumSeedPreset() {
+  const cacheKey = "serum2-base";
+  if (state.seedCache.has(cacheKey)) {
+    return state.seedCache.get(cacheKey).slice();
+  }
+
+  const response = await fetch(serumSeedUrl());
+  if (!response.ok) {
+    throw new Error("Could not load the Serum 2 seed preset.");
+  }
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  state.seedCache.set(cacheKey, bytes);
+  return bytes.slice();
+}
+
+async function buildPresetBlob(preset) {
+  if (elements.synthSelect.value === "serum2") {
+    return createSerum2PresetBlob(await loadSerumSeedPreset(), preset);
+  }
+  return buildVitalPresetBlob(preset);
+}
+
 async function downloadPreset(preset) {
   try {
     updateStatus(`Preparing ${preset.name} for download...`);
-    const { fileName, blob } = await buildVitalPresetBlob(preset);
+    const { fileName, blob } = await buildPresetBlob(preset);
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -338,6 +373,27 @@ function refreshProfile() {
   updateControlLabels();
   renderProfile(currentProfile());
   syncIntentKeywords();
+  syncIntentSummary();
+}
+
+function syncSynthTargetUi(announce = false) {
+  const isSerum = elements.synthSelect.value === "serum2";
+  document.querySelectorAll("[data-synth-target]").forEach((button) => {
+    const isActive = button.dataset.synthTarget === elements.synthSelect.value;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+  elements.exportFormatProof.textContent = isSerum ? "Serum 2 .SerumPreset files" : "Vital .vital files";
+  elements.downloadFormatHint.textContent = isSerum
+    ? "Download individual `.SerumPreset` files and finish the best direction inside Serum 2."
+    : "Download individual `.vital` files and finish the best direction inside Vital.";
+  elements.resultsFormatNote.textContent = isSerum
+    ? "Each export is a real `.SerumPreset` file built from the selected direction and a neutralized Serum 2 seed."
+    : "Each export is a real `.vital` preset built from the selected direction and a neutralized family seed.";
+  renderPresets(state.presets);
+  if (announce) {
+    updateStatus(isSerum ? "Serum 2 beta target selected." : "Vital target selected.");
+  }
 }
 
 function syncIntentKeywords() {
@@ -346,6 +402,19 @@ function syncIntentKeywords() {
     const keyword = button.dataset.intentKeyword;
     button.setAttribute("aria-pressed", String(new RegExp(`\\b${keyword}\\b`, "i").test(value)));
   });
+}
+
+function syncIntentSummary() {
+  const parts = [
+    elements.familySelect.options[elements.familySelect.selectedIndex].text,
+    elements.moodSelect.options[elements.moodSelect.selectedIndex].text,
+    elements.registerSelect.options[elements.registerSelect.selectedIndex].text,
+  ];
+  const direction = elements.intentText.value.trim().replace(/\s+/g, " ");
+  if (direction) {
+    parts.push(direction);
+  }
+  elements.intentSummaryValue.textContent = parts.join(" · ");
 }
 
 function toggleIntentKeyword(keyword) {
@@ -384,6 +453,16 @@ for (const element of [
 }
 
 elements.generateButton.addEventListener("click", generate);
+elements.synthSelect.addEventListener("change", () => syncSynthTargetUi(true));
+document.querySelectorAll("[data-synth-target]").forEach((button) => {
+  button.addEventListener("click", () => {
+    if (elements.synthSelect.value === button.dataset.synthTarget) {
+      return;
+    }
+    elements.synthSelect.value = button.dataset.synthTarget;
+    elements.synthSelect.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+});
 elements.newSetButton.addEventListener("click", generate);
 elements.previousSetButton.addEventListener("click", () => showResultSet(state.activeSetIndex - 1));
 elements.latestSetButton.addEventListener("click", () => showResultSet(state.resultSets.length - 1));
@@ -397,5 +476,6 @@ document.querySelectorAll("[data-pro-upsell]").forEach((link) => {
 });
 
 refreshProfile();
+syncSynthTargetUi();
 renderPresets([]);
 renderResultSetToolbar();
