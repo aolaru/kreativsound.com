@@ -51,8 +51,10 @@ def main() -> int:
         for needle in [
             "Preset Mutator Free",
             "From Scratch",
-            "Create a Vital preset from intent",
+            "Create a synth preset from intent",
             "Preset Intent",
+            "Mutation Amount",
+            "Refine &amp; Generate",
             "Generate 3 Variants",
             "Generated Preset Variants",
         ]:
@@ -61,28 +63,45 @@ def main() -> int:
         mutate_dom = fetch_html(base_url + "/preset-mutator/mutate/")
         for needle in [
             "Preset Mutator Free",
-            "Mutate one Vital preset",
+            "Mutate one synth preset",
             "into new variants",
             "Scratch",
             "Preset",
             "Audio",
+            "Source Preset",
+            "Mutation Amount",
+            "Refine &amp; Generate",
             "Generate 3 Variants",
-            "Mutation Controls",
             "Kreativ Sound browser tool for preset-driven mutation.",
         ]:
             require(mutate_dom, needle, "/preset-mutator/mutate/", errors)
 
+        audio_dom = fetch_html(base_url + "/preset-mutator/audio/")
+        for needle in [
+            "Preset Mutator Free",
+            "Turn audio into synth preset variants",
+            "Input Audio",
+            "Mutation Amount",
+            "Synth Target",
+            "Refine &amp; Generate",
+            "Generate 3 Variants",
+            "Generated Preset Variants",
+        ]:
+            require(audio_dom, needle, "/preset-mutator/audio/", errors)
+
         scratch_dom = fetch_html(base_url + "/preset-mutator/scratch/")
         for needle in [
             "Preset Mutator Free",
-            "Create a Vital preset from intent",
+            "Create a synth preset from intent",
             "From Scratch",
             "Scratch",
             "Preset",
             "Audio",
             "Preset Intent",
+            "Mutation Amount",
+            "Refine &amp; Generate",
             "Generate 3 Variants",
-            "Serum 2 and Pigments 7 are planned.",
+            "Pigments 7 is planned.",
         ]:
             require(scratch_dom, needle, "/preset-mutator/scratch/", errors)
 
