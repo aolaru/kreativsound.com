@@ -1,18 +1,29 @@
 import { execFile as execFileCallback } from "node:child_process";
+import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
+import { decode, Encoder } from "cbor-x";
+import { Zstd } from "@hpcc-js/wasm-zstd";
 import { buildAudioProPack, buildAudioProfile } from "../apps/preset-mutator-pro/public/engine/audio-engine.js";
 import { presetParameterDistance } from "../apps/preset-mutator-pro/public/engine/common.js";
 import { generatePresetVariants, presetSummary } from "../apps/preset-mutator-pro/public/engine/preset-mutate-engine.js";
 import { buildScratchProfile, buildScratchProPack } from "../apps/preset-mutator-pro/public/engine/scratch-engine.js";
 import { VELVET_TEMPLATE_LIBRARY } from "../apps/preset-mutator-pro/public/engine/velvet-template-library.js";
 import { applyParameterMapToPreset } from "../apps/preset-mutator-pro/public/engine/vital-export.js";
+import {
+  buildGeneratedSerum2Document,
+  buildSerum2Container,
+  generateSerum2PresetVariants,
+  parseSerum2Container,
+  summarizeSerum2Preset,
+} from "../apps/preset-mutator-pro/public/engine/serum2-format.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const appDir = path.join(rootDir, "apps/preset-mutator-pro/public");
+const serumSeedPath = path.join(appDir, "assets/seeds/serum2/raw/KS Serum 2 Base.SerumPreset");
 const toolReleases = JSON.parse(await readFile(path.join(rootDir, "src/data/tool-releases.json"), "utf8"));
 const releaseVersion = `v${toolReleases.presetMutatorPro.version}`;
 const failures = [];
@@ -77,13 +88,25 @@ const [manifest, serviceWorker, licenseScript, changelogHtml] = await Promise.al
 assert(manifest.includes('"scope": "/preset-mutator-pro/"'), "Manifest: legacy route scope is incorrect");
 assert(serviceWorker.includes("preset-mutator-pro-shell"), "Service worker: Pro cache namespace is missing");
 assert(serviceWorker.includes("./changelog/index.html"), "Service worker: changelog should be cached");
+assert(serviceWorker.includes("./engine/serum2-format.js"), "Service worker: Serum 2 format engine should be cached");
+assert(serviceWorker.includes("./vendor/zstd.js"), "Service worker: Serum 2 codec should be cached");
 assert(licenseScript.includes('LICENSE_PRODUCT = "preset-mutator-pro"'), "License verifier: product identifier changed unexpectedly");
 assert(licenseScript.includes('GUMROAD_PRODUCT_ID = "-A9fzCUAIYZ0QZKoRvyOQA=="'), "License verifier: Gumroad product identifier changed unexpectedly");
 assert(licenseScript.includes("GUMROAD_VERIFY_URL"), "License verifier: Gumroad verification endpoint is missing");
 assert(await exists("assets/seeds/vital/raw/KS Dread Lantern.vital"), "Legacy Pro: missing Vital seed assets");
+assert(await exists("assets/seeds/serum2/raw/KS Serum 2 Base.SerumPreset"), "Pro: missing Serum 2 seed asset");
 assert(changelogHtml.includes("Preset Mutator Pro Changelog"), "Changelog: page title is missing");
 assert(changelogHtml.includes(releaseVersion), "Changelog: current version is missing");
 assert(changelogHtml.includes("Current release"), "Changelog: current release marker is missing");
+
+for (const page of ["index.html", "audio/index.html", "mutate/index.html"]) {
+  const html = await read(page);
+  assert(html.includes("vendor/cbor-x.min.js"), `${page}: Serum 2 CBOR codec is missing`);
+  assert(html.includes("vendor/spark-md5.min.js"), `${page}: Serum 2 MD5 codec is missing`);
+}
+assert((await read("index.html")).includes('id="synth-select"'), "Scratch: synth target selector is missing");
+assert((await read("audio/index.html")).includes('id="synth-select"'), "Audio: synth target selector is missing");
+assert((await read("mutate/index.html")).includes(".SerumPreset"), "Mutate Preset: Serum 2 upload support is missing");
 
 const templateFiles = Object.values(VELVET_TEMPLATE_LIBRARY).flat();
 assert(templateFiles.length === 16, "Velvet library: expected 16 curated templates");
@@ -150,6 +173,32 @@ assert(
   JSON.stringify(firstMutations.map((preset) => preset.changedParameters)) !== JSON.stringify(nextMutations.map((preset) => preset.changedParameters)),
   "Preset: a new run seed must change selected mutations",
 );
+
+const zstd = await Zstd.load();
+const encoder = new Encoder({ useRecords: false, variableMapSize: true });
+const serumCodecs = {
+  decode,
+  encode: (value) => encoder.encode(value),
+  compress: (bytes, level) => zstd.compress(bytes, level),
+  decompress: (bytes) => zstd.decompress(bytes),
+  md5: (bytes) => createHash("md5").update(bytes).digest("hex"),
+};
+const serumSeed = parseSerum2Container(new Uint8Array(await readFile(serumSeedPath)), serumCodecs);
+const serumDocument = buildGeneratedSerum2Document(serumSeed, scratchPack[0]);
+const serumOutput = buildSerum2Container(serumDocument, serumCodecs);
+const serumRoundTrip = parseSerum2Container(serumOutput, serumCodecs);
+const serumSummary = summarizeSerum2Preset(serumRoundTrip);
+assert(new TextDecoder().decode(serumOutput.subarray(0, 8)) === "XferJson", "Serum 2: generated preset is missing the XferJson header");
+assert(serumRoundTrip.metadata.presetAuthor === "Preset Mutator Pro", "Serum 2: generated author should identify Pro");
+const serumMutations = generateSerum2PresetVariants({
+  sourcePreset: { ...serumRoundTrip, summary: serumSummary, fileName: "source.SerumPreset" },
+  strategy: mutationStrategy,
+  controls: { amount: 60, tone: 15, motion: 45, attack: 0, space: 20, dirt: 10 },
+  variationSeed: 48271,
+});
+assert(serumMutations.length === 32, "Serum 2: mutation should produce a 32-variant Pro pack");
+assert(serumMutations.every((preset) => preset.downloadName.endsWith(".SerumPreset")), "Serum 2: mutation downloads must use .SerumPreset");
+assert(serumMutations.every((preset) => preset.changedParameters.length >= 8), "Serum 2: mutations should change useful parameters");
 
 if (failures.length) {
   console.error("Preset Mutator Pro QA failed:");

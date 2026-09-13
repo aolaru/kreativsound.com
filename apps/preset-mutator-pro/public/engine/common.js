@@ -9,6 +9,10 @@ export function clamp(value, min = 0, max = 1) {
   return Math.min(max, Math.max(min, Number(value)));
 }
 
+export function applySynthTheme(synth) {
+  document.documentElement.dataset.synth = synth === "serum2" ? "serum2" : "vital";
+}
+
 export function lerp(min, max, amount) {
   return min + (max - min) * amount;
 }

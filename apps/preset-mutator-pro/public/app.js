@@ -1,11 +1,12 @@
 import { PresetMutatorKnob } from "./preset-mutator-knob.js";
-import { createGenerationSeed, ensureJsZip, familyLabel, noteName, sanitizeFileName } from "./engine/common.js";
+import { applySynthTheme, createGenerationSeed, ensureJsZip, familyLabel, noteName, sanitizeFileName } from "./engine/common.js";
 import {
   buildScratchProfile,
   buildScratchProPack,
   SCRATCH_PRO_PACK_COUNT,
 } from "./engine/scratch-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "./engine/vital-export.js";
+import { createSerum2PresetBlob } from "./engine/serum2-export.js";
 import {
   clearLegacyUnlocks,
   clearLicenseToken,
@@ -26,10 +27,16 @@ const state = {
 };
 
 const elements = {
+  synthSelect: document.querySelector("#synth-select"),
+  heroTitle: document.querySelector("#hero-title"),
+  heroLede: document.querySelector("#hero-lede"),
+  exportFormatProof: document.querySelector("#export-format-proof"),
+  downloadFormatHint: document.querySelector("#download-format-hint"),
   familySelect: document.querySelector("#family-select"),
   moodSelect: document.querySelector("#mood-select"),
   registerSelect: document.querySelector("#register-select"),
   intentText: document.querySelector("#intent-text"),
+  intentSummaryValue: document.querySelector("#intent-summary-value"),
   brightnessRange: document.querySelector("#brightness-range"),
   motionRange: document.querySelector("#motion-range"),
   attackRange: document.querySelector("#attack-range"),
@@ -121,6 +128,7 @@ function intentLengthBucket(value) {
 
 function currentAnalyticsSelection() {
   return {
+    synth_target: elements.synthSelect.value,
     sound_type: elements.familySelect.value,
     mood: elements.moodSelect.value,
     register: elements.registerSelect.value,
@@ -189,8 +197,8 @@ function renderPresets(presets) {
   elements.presetsPanel.classList.toggle("is-pack", presets.length > 0);
   if (!presets.length) {
     const emptyMessage = state.proUnlocked
-      ? "Choose your direction, then generate a 32-variant Vital preset pack."
-      : "Activate Pro, then generate a 32-variant Vital preset pack from your selected direction.";
+      ? `Choose your direction, then generate a 32-variant ${elements.synthSelect.value === "serum2" ? "Serum 2" : "Vital"} preset pack.`
+      : `Activate Pro, then generate a 32-variant ${elements.synthSelect.value === "serum2" ? "Serum 2" : "Vital"} preset pack from your selected direction.`;
     elements.presetList.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
     return;
   }
@@ -215,8 +223,8 @@ function renderPresets(presets) {
       <div class="param-list">${preset.parameters.map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`).join("")}</div>
       <div class="preset-actions">
         <button class="download-button" type="button">
-          <span class="download-badge" aria-hidden="true">VITAL</span>
-          <span>Download .vital</span>
+          <span class="download-badge" aria-hidden="true">${elements.synthSelect.value === "serum2" ? "SERUM 2" : "VITAL"}</span>
+          <span>Download ${elements.synthSelect.value === "serum2" ? ".SerumPreset" : ".vital"}</span>
         </button>
       </div>
     `;
@@ -265,10 +273,31 @@ async function buildVitalPresetBlob(preset) {
   return createVitalPresetBlob(seed, preset);
 }
 
+async function loadSerumSeedPreset() {
+  const cacheKey = "serum2-base";
+  if (state.seedCache.has(cacheKey)) {
+    return state.seedCache.get(cacheKey).slice();
+  }
+  const response = await fetch(new URL("./assets/seeds/serum2/raw/KS%20Serum%202%20Base.SerumPreset", import.meta.url));
+  if (!response.ok) {
+    throw new Error("Could not load the Serum 2 seed preset.");
+  }
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  state.seedCache.set(cacheKey, bytes);
+  return bytes.slice();
+}
+
+async function buildPresetBlob(preset) {
+  if (elements.synthSelect.value === "serum2") {
+    return createSerum2PresetBlob(await loadSerumSeedPreset(), preset);
+  }
+  return buildVitalPresetBlob(preset);
+}
+
 async function downloadPreset(preset) {
   try {
     updateStatus(`Preparing ${preset.name} for download...`);
-    const { fileName, blob } = await buildVitalPresetBlob(preset);
+    const { fileName, blob } = await buildPresetBlob(preset);
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -299,7 +328,7 @@ async function downloadPack() {
     const folderName = sanitizeFileName(elements.intentText.value.trim() || `scratch-${elements.familySelect.value}-${elements.moodSelect.value}`);
     const folder = zip.folder(folderName);
     for (const preset of state.presets) {
-      const { fileName, blob } = await buildVitalPresetBlob(preset);
+      const { fileName, blob } = await buildPresetBlob(preset);
       folder.file(fileName, blob);
     }
     const zipBlob = await zip.generateAsync({ type: "blob" });
@@ -356,8 +385,8 @@ function renderUnlockState() {
   elements.paidFeaturePreview.hidden = !state.proUnlocked;
   updateStatus(
     state.proUnlocked
-      ? "Pro is active. Generate your 32-variant Vital preset pack when ready."
-      : "Set your direction, activate Pro, then generate your 32-variant Vital preset pack.",
+      ? "Pro is active. Generate your 32-variant preset pack when ready."
+      : "Set your direction, activate Pro, then generate your 32-variant preset pack.",
   );
   if (elements.generatePack) {
     elements.generatePack.disabled = !state.proUnlocked || state.isGenerating;
@@ -408,6 +437,59 @@ async function restoreLicense() {
 function refreshProfile() {
   updateControlLabels();
   renderProfile(currentProfile());
+  syncIntentKeywords();
+  syncIntentSummary();
+}
+
+function syncSynthTargetUi(announce = false) {
+  const isSerum = elements.synthSelect.value === "serum2";
+  applySynthTheme(elements.synthSelect.value);
+  document.querySelectorAll("[data-synth-target]").forEach((button) => {
+    const isActive = button.dataset.synthTarget === elements.synthSelect.value;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+  elements.heroTitle.textContent = `Create a ${isSerum ? "Serum 2" : "Vital"} preset from intent`;
+  elements.heroLede.textContent = `Choose a direction, shape the feel, and export playable ${isSerum ? "Serum 2" : "Vital"} starting points.`;
+  elements.exportFormatProof.textContent = isSerum ? "Serum 2 .SerumPreset files" : "Vital .vital files";
+  elements.downloadFormatHint.textContent = isSerum
+    ? "Generate 32 presets and export the complete Serum 2 ZIP pack."
+    : "Generate 32 presets and export the complete Vital ZIP pack.";
+  renderPresets(state.presets);
+  if (announce) {
+    updateStatus(isSerum ? "Serum 2 beta target selected." : "Vital target selected.");
+  }
+}
+
+function syncIntentKeywords() {
+  const value = elements.intentText.value.toLowerCase();
+  document.querySelectorAll("[data-intent-keyword]").forEach((button) => {
+    const keyword = button.dataset.intentKeyword;
+    button.setAttribute("aria-pressed", String(new RegExp(`\\b${keyword}\\b`, "i").test(value)));
+  });
+}
+
+function syncIntentSummary() {
+  const parts = [
+    elements.familySelect.options[elements.familySelect.selectedIndex].text,
+    elements.moodSelect.options[elements.moodSelect.selectedIndex].text,
+    elements.registerSelect.options[elements.registerSelect.selectedIndex].text,
+  ];
+  const direction = elements.intentText.value.trim().replace(/\s+/g, " ");
+  if (direction) {
+    parts.push(direction);
+  }
+  elements.intentSummaryValue.textContent = parts.join(" · ");
+}
+
+function toggleIntentKeyword(keyword) {
+  const expression = new RegExp(`\\b${keyword}\\b`, "ig");
+  const current = elements.intentText.value.trim();
+  const next = expression.test(current)
+    ? current.replace(expression, "").replace(/\s{2,}/g, " ").trim()
+    : `${current}${current ? " " : ""}${keyword}`;
+  elements.intentText.value = next;
+  refreshProfile();
 }
 
 new PresetMutatorKnob(elements.mutationKnob, {
@@ -435,6 +517,20 @@ for (const element of [
   element.addEventListener("change", refreshProfile);
 }
 
+elements.synthSelect.addEventListener("change", () => syncSynthTargetUi(true));
+document.querySelectorAll("[data-synth-target]").forEach((button) => {
+  button.addEventListener("click", () => {
+    if (elements.synthSelect.value === button.dataset.synthTarget) {
+      return;
+    }
+    elements.synthSelect.value = button.dataset.synthTarget;
+    elements.synthSelect.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+});
+document.querySelectorAll("[data-intent-keyword]").forEach((button) => {
+  button.addEventListener("click", () => toggleIntentKeyword(button.dataset.intentKeyword));
+});
+
 elements.generatePack?.addEventListener("click", generate);
 elements.downloadPack?.addEventListener("click", downloadPack);
 elements.paidFeatureUnlockButton?.addEventListener("click", () => {
@@ -451,6 +547,7 @@ elements.paidFeatureActions?.addEventListener("click", (event) => {
 });
 
 await restoreLicense();
+syncSynthTargetUi();
 refreshProfile();
 renderPresets([]);
 renderUnlockState();

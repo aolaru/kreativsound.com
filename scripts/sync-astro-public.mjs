@@ -8,6 +8,7 @@ const presetMutatorPublicDir = path.join(publicDir, "preset-mutator");
 const presetMutatorVendorDir = path.join(presetMutatorPublicDir, "vendor");
 const presetMutatorProSourceDir = path.join(rootDir, "apps/preset-mutator-pro/public");
 const presetMutatorProPublicDir = path.join(publicDir, "preset-mutator-pro");
+const presetMutatorProVendorDir = path.join(presetMutatorProPublicDir, "vendor");
 const presetMutatorLegacyPublicDir = path.join(publicDir, "apps/preset-mutator");
 const presetMutatorLegacyUiDir = path.join(presetMutatorLegacyPublicDir, "ui");
 const waveMutatorSourceDir = path.join(rootDir, "apps/wave-mutator/public");
@@ -168,6 +169,19 @@ fs.copyFileSync(
 fs.rmSync(presetMutatorProPublicDir, { recursive: true, force: true });
 fs.mkdirSync(path.dirname(presetMutatorProPublicDir), { recursive: true });
 fs.cpSync(presetMutatorProSourceDir, presetMutatorProPublicDir, { recursive: true });
+fs.mkdirSync(presetMutatorProVendorDir, { recursive: true });
+fs.copyFileSync(
+  path.join(rootDir, "node_modules/cbor-x/dist/index.min.js"),
+  path.join(presetMutatorProVendorDir, "cbor-x.min.js")
+);
+fs.copyFileSync(
+  path.join(rootDir, "node_modules/spark-md5/spark-md5.min.js"),
+  path.join(presetMutatorProVendorDir, "spark-md5.min.js")
+);
+fs.copyFileSync(
+  path.join(rootDir, "node_modules/@hpcc-js/wasm-zstd/dist/index.js"),
+  path.join(presetMutatorProVendorDir, "zstd.js")
+);
 fs.mkdirSync(path.join(presetMutatorProPublicDir, "scratch"), { recursive: true });
 fs.copyFileSync(
   path.join(presetMutatorProSourceDir, "index.html"),

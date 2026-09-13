@@ -1,7 +1,8 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { clamp, createGenerationSeed, ensureJsZip, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
+import { applySynthTheme, clamp, createGenerationSeed, ensureJsZip, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
 import { AUDIO_PRO_PACK_COUNT, buildAudioProfile as createAudioProfile, buildAudioProPack } from "../engine/audio-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "../engine/vital-export.js";
+import { createSerum2PresetBlob } from "../engine/serum2-export.js";
 import {
   clearLegacyUnlocks,
   clearLicenseToken,
@@ -32,6 +33,10 @@ const state = {
 };
 
 const elements = {
+  synthSelect: document.querySelector("#synth-select"),
+  heroTitle: document.querySelector("#hero-title"),
+  heroLede: document.querySelector("#hero-lede"),
+  exportFormatProof: document.querySelector("#export-format-proof"),
   fileInput: document.querySelector("#file-input"),
   fileName: document.querySelector("#file-name"),
   fileDuration: document.querySelector("#file-duration"),
@@ -184,6 +189,7 @@ function sizeBucket(bytes) {
 
 function currentAnalyticsSelection() {
   return {
+    synth_target: elements.synthSelect.value,
     input_mode: elements.inputMode?.value || "auto",
     mutation_amount: Number(elements.mutationAmount.value),
     mutation_bucket: mutationBucket(elements.mutationAmount.value),
@@ -679,6 +685,27 @@ async function buildVitalPresetBlob(preset) {
   return createVitalPresetBlob(seed, preset);
 }
 
+async function loadSerumSeedPreset() {
+  const cacheKey = "serum2-base";
+  if (state.seedCache.has(cacheKey)) {
+    return state.seedCache.get(cacheKey).slice();
+  }
+  const response = await fetch(new URL("../assets/seeds/serum2/raw/KS%20Serum%202%20Base.SerumPreset", import.meta.url));
+  if (!response.ok) {
+    throw new Error("Could not load the Serum 2 seed preset.");
+  }
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  state.seedCache.set(cacheKey, bytes);
+  return bytes.slice();
+}
+
+async function buildPresetBlob(preset) {
+  if (elements.synthSelect.value === "serum2") {
+    return createSerum2PresetBlob(await loadSerumSeedPreset(), preset);
+  }
+  return buildVitalPresetBlob(preset);
+}
+
 function renderMetricGrid(target, items) {
   target.innerHTML = "";
   for (const [label, value] of items) {
@@ -700,8 +727,8 @@ function renderPresets(presets) {
     const emptyMessage = !state.originalBuffer
       ? "Load a short source sound to begin."
       : state.proPreviewUnlocked
-        ? "Source ready. Generate a 32-variant Vital preset pack."
-        : "Source ready. Activate Pro to generate a 32-variant Vital preset pack.";
+        ? `Source ready. Generate a 32-variant ${elements.synthSelect.value === "serum2" ? "Serum 2" : "Vital"} preset pack.`
+        : `Source ready. Activate Pro to generate a 32-variant ${elements.synthSelect.value === "serum2" ? "Serum 2" : "Vital"} preset pack.`;
     elements.presetList.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
     return;
   }
@@ -786,8 +813,8 @@ function buildPresetCard(preset, role, totalCount) {
       <div class="param-list">${paramRows}</div>
       <div class="preset-actions">
         <button class="download-button" type="button">
-          <span class="download-badge" aria-hidden="true">VITAL</span>
-          <span>Download .vital</span>
+          <span class="download-badge" aria-hidden="true">${elements.synthSelect.value === "serum2" ? "SERUM 2" : "VITAL"}</span>
+          <span>Download ${elements.synthSelect.value === "serum2" ? ".SerumPreset" : ".vital"}</span>
         </button>
       </div>
     `;
@@ -840,7 +867,7 @@ function describePackGroup(role) {
 async function downloadPreset(preset) {
   try {
     updateStatus(`Preparing ${preset.name} for download...`);
-    const { fileName, blob } = await buildVitalPresetBlob(preset);
+    const { fileName, blob } = await buildPresetBlob(preset);
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -872,7 +899,7 @@ async function downloadPresetPack() {
     const folder = zip.folder(folderName);
 
     for (const preset of state.presets) {
-      const { fileName, blob } = await buildVitalPresetBlob(preset);
+      const { fileName, blob } = await buildPresetBlob(preset);
       folder.file(fileName, blob);
     }
 
@@ -1202,6 +1229,14 @@ async function restoreLicense() {
 }
 
 elements.fileInput.addEventListener("change", handleFileChange);
+elements.synthSelect.addEventListener("change", () => {
+  const isSerum = elements.synthSelect.value === "serum2";
+  applySynthTheme(elements.synthSelect.value);
+  elements.heroTitle.textContent = `Turn audio into ${isSerum ? "Serum 2" : "Vital"} preset variants`;
+  elements.heroLede.textContent = `Load one short source sound, shape the mapping, and export playable ${isSerum ? "Serum 2" : "Vital"} variants.`;
+  elements.exportFormatProof.textContent = isSerum ? "Serum 2 .SerumPreset files" : "Vital .vital files";
+  renderPresets(state.presets);
+});
 elements.waveformPanel.addEventListener("dragenter", handleDropZoneDrag);
 elements.waveformPanel.addEventListener("dragover", handleDropZoneDrag);
 elements.waveformPanel.addEventListener("dragleave", handleDropZoneLeave);
@@ -1245,6 +1280,7 @@ for (const control of [
 }
 
 updateControlLabels();
+applySynthTheme(elements.synthSelect.value);
 await restoreLicense();
 renderPaidFeatureState();
 renderPresets([]);

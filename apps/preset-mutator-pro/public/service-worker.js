@@ -1,4 +1,4 @@
-const CACHE_NAME = "preset-mutator-pro-shell-v7";
+const CACHE_NAME = "preset-mutator-pro-shell-v9";
 const SHELL_ASSETS = [
   "./index.html",
   "./changelog/index.html",
@@ -18,11 +18,17 @@ const SHELL_ASSETS = [
   "./engine/audio-engine.js",
   "./engine/preset-mutate-engine.js",
   "./engine/vital-export.js",
+  "./engine/serum2-format.js",
+  "./engine/serum2-export.js",
   "./engine/velvet-template-library.js",
   "./assets/seeds/vital/raw/KS%20Dread%20Lantern.vital",
   "./assets/seeds/vital/raw/KS%20Frozen%20Hollow.vital",
   "./assets/seeds/vital/raw/KS%20Iron%20Wake.vital",
   "./assets/seeds/vital/raw/KS%20Shadow%20Archive.vital",
+  "./assets/seeds/serum2/raw/KS%20Serum%202%20Base.SerumPreset",
+  "./vendor/cbor-x.min.js",
+  "./vendor/spark-md5.min.js",
+  "./vendor/zstd.js",
   "./manifest.webmanifest",
   "./preset-mutator-mark.svg",
 ];
