@@ -244,7 +244,7 @@ export const landingCopyOverrides = {
     longDescription: [
       "VELVET RUINS 2 is a curated 256-preset collection for Vital, moving between veiled drones, unstable sequences, cinematic impacts, degraded textures, ritual instruments, experimental drums, and weighty low end.",
       "Every preset includes four functional macros — ATMOS, MOTION, DUST, and SPACE — for immediate variation and performance.",
-      "Version 2.0 expands the original 80-preset release with 176 new presets while improving effect efficiency, low-end mono compatibility, velocity response, modulation routing, macro behavior, and output consistency."
+      "Version 2.0 expands the original 80-preset release with 176 new presets while improving effect efficiency, low-end mono compatibility, velocity response, modulation routing, macro behavior, and output consistency. All 80 original presets remain available for backward compatibility."
     ],
     specifications: [
       { label: "Product type", value: "Preset bank" },
@@ -253,9 +253,11 @@ export const landingCopyOverrides = {
       { label: "Preset count", value: "256 presets" },
       { label: "Included", value: "55 cinematic experiments, 28 basses, 41 sequences, 47 drones and pads, 26 drums, 26 keys and plucks, and 33 SFX and textures" },
       { label: "Performance", value: "ATMOS, MOTION, DUST, and SPACE macros on every preset" },
+      { label: "Extras", value: "Installation guide and commercial-use license" },
       { label: "Focus", value: "Dark ambient, cinematic, industrial, experimental electronic, horror, game audio, and soundtrack work" },
       { label: "Delivery", value: "Digital download" },
-      { label: "License", value: "Personal and commercial music production use" },
+      { label: "License", value: "Personal and commercial projects; no attribution required; preset redistribution prohibited" },
+      { label: "Guarantee", value: "30-day money-back guarantee through Gumroad" },
       { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [

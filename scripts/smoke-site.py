@@ -93,7 +93,7 @@ def main() -> int:
             "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements", "Related sounds", "View full catalog"],
             "/sounds/operators-fm8-presets": ["Buy on Gumroad", "Try Lite free", "OPERATORS", "64 presets", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-lite-jun-6-v-presets": ["Download Free", "Juno Nocturnes Lite", "16 presets", "Lite vs Full", "Upgrade to full Juno Nocturnes"],
-            "/sounds/velvet-ruins-vital-presets": ["Buy on Gumroad", "Try Lite free", "VELVET RUINS 2", "256 presets", "ATMOS, MOTION, DUST, and SPACE", "Vital or Vital Free", "Product Specifications", "Requirements"],
+            "/sounds/velvet-ruins-vital-presets": ["Buy on Gumroad", "Try Lite free", "VELVET RUINS 2", "256 presets", "ATMOS, MOTION, DUST, and SPACE", "backward compatibility", "Installation guide", "30-day money-back guarantee", "Vital or Vital Free", "Product Specifications", "Requirements"],
             "/sounds/velvet-ruins-lite-vital-presets": ["Download Free", "VELVET RUINS Lite", "32 presets", "8 cinematic experiments", "ATMOS, MOTION, DUST, and SPACE", "Vital or Vital Free", "Lite vs Full", "Upgrade to VELVET RUINS 2"],
             "/sounds/black-arcology-pigments-presets": ["Buy on Gumroad", "Try Lite free", "BLACK ARCOLOGY", "Product Specifications", "Requirements"],
             "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Description", "Product Specifications", "Requirements"],
