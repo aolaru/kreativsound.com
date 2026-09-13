@@ -122,6 +122,16 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
     description: "OPERATORS Lite is a free 16-preset Native Instruments FM8 bank focused on cold digital motion, metallic textures, and atmospheric sound design.",
     kicker: "Free FM8 preset bank"
   },
+  "velvet-ruins-vital-presets": {
+    headline: "VELVET RUINS 2",
+    description: "VELVET RUINS 2 is a 256-preset Vital bank for dark ambient, cinematic, industrial, experimental electronic, horror, game audio, and soundtrack work.",
+    kicker: "256-preset Vital bank"
+  },
+  "velvet-ruins-lite-vital-presets": {
+    headline: "VELVET RUINS Lite",
+    description: "VELVET RUINS Lite is a free 32-preset Vital bank of cinematic experiments, dark sequences, drones, pads, SFX, and textures.",
+    kicker: "Free 32-preset Vital bank"
+  },
   "black-arcology-pigments-presets": {
     headline: "BLACK ARCOLOGY",
     description: "BLACK ARCOLOGY is a dark cinematic Arturia Pigments preset collection built for industrial pressure, evolving tension, and character-driven synthetic tone.",
@@ -165,20 +175,20 @@ const liteComparisons: Record<string, ProductLiteComparison> = {
     note: "If the Lite bank fits your session, the full release keeps the same FM8 character and gives you four times the preset count."
   },
   "velvet-ruins-lite-vital-presets": {
-    title: "VELVET RUINS Lite vs Full",
-    intro: "VELVET RUINS Lite gives you a compact Vital preview. The full release extends the same darker spectral direction with a broader preset palette.",
+    title: "VELVET RUINS Lite vs VELVET RUINS 2",
+    intro: "VELVET RUINS Lite gives you 32 selected sounds from the same dark cinematic palette. VELVET RUINS 2 expands it into a complete 256-preset collection.",
     liteLabel: "Lite",
-    fullLabel: "Full VELVET RUINS",
+    fullLabel: "VELVET RUINS 2",
     rows: [
-      { label: "Included", lite: "20 Vital presets", full: "Full VELVET RUINS preset pack" },
-      { label: "Palette", lite: "Dark spectral tone, pads, and melodic fragments", full: "Expanded dark melody, cinematic pads, spectral layers, and texture material" },
-      { label: "Best use", lite: "Try the mood and drop in a few darker Vital layers", full: "Use a broader Vital bank when a project needs more variation and depth" }
+      { label: "Included", lite: "32 Vital presets", full: "256 Vital presets" },
+      { label: "Palette", lite: "Cinematic experiments, dark sequences, drones, pads, SFX, and textures", full: "Adds basses, ritual keys and plucks, experimental drums, and deeper coverage across every Lite category" },
+      { label: "Best use", lite: "Try the palette or add a focused set of dark Vital sounds", full: "Build complete tracks, scores, and sound-design palettes with eight times the presets" }
     ],
     upgradeUrl: "https://kreativ.gumroad.com/l/velvet-ruins-vital-synth-presets?layout=profile",
-    upgradeLabel: "Upgrade to full VELVET RUINS",
+    upgradeLabel: "Upgrade to VELVET RUINS 2",
     secondaryUrl: "/sounds/velvet-ruins-vital-presets",
     secondaryLabel: "View full details",
-    note: "The Lite pack is a free sample of the VELVET RUINS palette, not a separate product line."
+    note: "Every Lite and full-edition preset includes ATMOS, MOTION, DUST, and SPACE performance macros."
   },
   "black-arcology-lite-pigments-presets": {
     title: "BLACK ARCOLOGY Lite vs Full",

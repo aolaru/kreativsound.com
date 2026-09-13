@@ -145,7 +145,7 @@ export const products: Product[] = [
     useCase: "Industrial pressure and machine tone"
   },
   {
-    title: "VELVET RUINS - Presets for Vital spectral synth",
+    title: "VELVET RUINS 2 - 256 Dark Experimental Presets for Vital",
     category: "Presets",
     status: "available",
     ...standardSoundPackPrice,
@@ -158,8 +158,8 @@ export const products: Product[] = [
       url: "/sounds/velvet-ruins-lite-vital-presets"
     },
     format: "Vital presets",
-    count: "Full pack",
-    useCase: "Dark melody and spectral motion"
+    count: "256 presets",
+    useCase: "Dark cinematic presets, degraded ambience, ritual rhythm, and playable low end"
   },
   {
     title: "NEOLITH - Presets for Softube Models",
@@ -392,7 +392,7 @@ export const products: Product[] = [
     useCase: "Free cinematic FM8 motion and metallic textures"
   },
   {
-    title: "VELVET RUINS Lite - Free presets for Vital",
+    title: "VELVET RUINS Lite - 32 Free Dark Ambient Presets for Vital",
     category: "Free",
     status: "free",
     url: "https://kreativ.gumroad.com/l/velvet-ruins-demo-presets-for-vital?layout=profile",
@@ -400,8 +400,8 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/velvet-ruins-lite.jpg",
     coverImage: "/assets/thumbs/velvet-ruins-lite-cover.webp",
     format: "Vital presets",
-    count: "20 presets",
-    useCase: "Free dark Vital presets"
+    count: "32 presets",
+    useCase: "Free dark ambient presets, sequences, pads, cinematic experiments, and textures"
   },
   {
     title: "BLACK ARCOLOGY Lite - Free presets for Pigments",

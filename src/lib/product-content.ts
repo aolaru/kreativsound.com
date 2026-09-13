@@ -238,28 +238,30 @@ export const landingCopyOverrides = {
     ]
   },
   "velvet-ruins-vital-presets": {
-    subtitle: "Vital Presets for Dark Melody and Spectral Motion",
-    shortMeta: "Full pack • Vital presets • Dark spectral textures",
-    ctaLine: "Download the full VELVET RUINS preset pack.",
+    subtitle: "256 Dark Experimental Presets for Vital",
+    shortMeta: "256 presets • Vital and Vital Free • 7 sound categories",
+    ctaLine: "Download the complete 256-preset VELVET RUINS 2 bank.",
     longDescription: [
-      "VELVET RUINS is a preset pack for Vital focused on worn-down cinematic texture, dark melodic tone, and controlled spectral movement.",
-      "The pack is built for atmospheric pads, tense melodic patches, spectral layers, and darker electronic material that feels aged without becoming muddy.",
-      "Instead of a glossy EDM-style Vital palette, VELVET RUINS leans into damaged harmonics, soft spectral smear, and mood-first sound design for ambient, cinematic, industrial, and experimental music."
+      "VELVET RUINS 2 is a curated 256-preset collection for Vital, moving between veiled drones, unstable sequences, cinematic impacts, degraded textures, ritual instruments, experimental drums, and weighty low end.",
+      "Every preset includes four functional macros — ATMOS, MOTION, DUST, and SPACE — for immediate variation and performance.",
+      "Version 2.0 expands the original 80-preset release with 176 new presets while improving effect efficiency, low-end mono compatibility, velocity response, modulation routing, macro behavior, and output consistency."
     ],
     specifications: [
       { label: "Product type", value: "Preset bank" },
       { label: "Synth", value: "Vital" },
       { label: "Format", value: "Vital presets" },
-      { label: "Preset count", value: "Full pack" },
-      { label: "Focus", value: "Dark melody, spectral motion, cinematic atmosphere" },
+      { label: "Preset count", value: "256 presets" },
+      { label: "Included", value: "55 cinematic experiments, 28 basses, 41 sequences, 47 drones and pads, 26 drums, 26 keys and plucks, and 33 SFX and textures" },
+      { label: "Performance", value: "ATMOS, MOTION, DUST, and SPACE macros on every preset" },
+      { label: "Focus", value: "Dark ambient, cinematic, industrial, experimental electronic, horror, game audio, and soundtrack work" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [
-      "Vital is required to use these presets.",
-      "You need a DAW or host that can load Vital, such as Ableton Live, Logic Pro, Cubase, FL Studio, Bitwig Studio, Reaper, or similar.",
-      "Use these presets for dark spectral layers in ambient, cinematic, electronic, and experimental tracks."
+      "Vital or Vital Free is required to use these presets.",
+      "The bank works on macOS and Windows in a DAW or host that can load Vital.",
+      "No external samples are required."
     ]
   },
   "black-arcology-pigments-presets": {
@@ -540,28 +542,30 @@ export const landingCopyOverrides = {
     ]
   },
   "velvet-ruins-lite-vital-presets": {
-    subtitle: "Free Vital Presets from VELVET RUINS",
-    shortMeta: "20 presets • Vital presets • Free download",
-    ctaLine: "Download the free Vital preset pack.",
+    subtitle: "32 Free Dark Ambient Presets for Vital",
+    shortMeta: "32 presets • Vital and Vital Free • Free download",
+    ctaLine: "Download the free 32-preset Vital bank.",
     longDescription: [
-      "VELVET RUINS Lite is a free Vital preset pack drawn from the worn-down atmosphere of the full VELVET RUINS release.",
-      "The pack gives you dark spectral tone, cinematic mood, and experimental Vital material in a smaller bank.",
-      "Use it for pads, melodic fragments, and darker layers before moving to the full preset pack."
+      "VELVET RUINS Lite is a free 32-preset introduction to the dark cinematic world of VELVET RUINS 2.",
+      "The bank includes 8 cinematic experiments, 8 dark sequences, 10 drones and pads, and 6 SFX and textures, with no external samples required.",
+      "Every preset includes four functional macros — ATMOS, MOTION, DUST, and SPACE — for immediate variation and performance."
     ],
     specifications: [
       { label: "Product type", value: "Free preset bank" },
       { label: "Synth", value: "Vital" },
       { label: "Format", value: "Vital presets" },
-      { label: "Preset count", value: "20 presets" },
-      { label: "Focus", value: "Dark Vital presets, spectral texture, cinematic mood" },
+      { label: "Preset count", value: "32 presets" },
+      { label: "Included", value: "8 cinematic experiments, 8 dark sequences, 10 drones and pads, and 6 SFX and textures" },
+      { label: "Performance", value: "ATMOS, MOTION, DUST, and SPACE macros on every preset" },
+      { label: "Focus", value: "Dark ambient, cinematic experiments, unstable sequences, veiled pads, and textured sound design" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Free Gumroad download" }
     ],
     requirements: [
-      "Vital is required to use these presets.",
-      "You need a DAW or host that can load Vital.",
-      "Use these presets for darker cinematic and experimental Vital patches."
+      "Vital or Vital Free is required to use these presets.",
+      "The bank works on macOS and Windows in a DAW or host that can load Vital.",
+      "No external samples are required."
     ]
   },
   "black-arcology-lite-pigments-presets": {
