@@ -233,6 +233,7 @@ async function checkPages() {
   assert(scratchHtml.includes("Character"), "Scratch mode: character controls are missing");
   assert(scratchHtml.includes('id="intent-text"'), "Scratch mode: custom keyword input is missing");
   assert(scratchHtml.includes("data-intent-keyword"), "Scratch mode: quick direction keywords are missing");
+  assert(scratchHtml.includes('data-intent-keyword="wide"'), "Scratch mode: Wide character keyword is missing");
   assert(scratchHtml.includes('id="synth-select"'), "Scratch mode: synth target selector is missing");
   assert(scratchHtml.includes("data-synth-target"), "Scratch mode: segmented synth target control is missing");
   assert(scratchHtml.includes('value="serum2"'), "Scratch mode: Serum 2 target is missing");
@@ -273,8 +274,11 @@ function checkScratchEngine(seedByFamily) {
   });
   const freePack = buildScratchFreePack(profile);
   const alternatePack = buildScratchFreePack(profile, 1);
+  const neutralWidth = buildScratchProfile({ family: "pad", mood: "dark", register: "mid" }).width;
+  const wideWidth = buildScratchProfile({ family: "pad", mood: "dark", register: "mid", intent: "wide" }).width;
 
   assert(freePack.length === 3, `Scratch engine: expected 3 free presets, found ${freePack.length}`);
+  assert(wideWidth > neutralWidth, "Scratch engine: Wide character should increase the generated width profile");
   assert(freePack.map((preset) => preset.roleLabel).join("|") === "Closest|Darker|More Motion", "Scratch engine: free roles are inconsistent");
   assert(new Set(freePack.map((preset) => preset.architecture)).size === 3, "Scratch engine: each free role should use a distinct sound architecture");
   assert(JSON.stringify(freePack[0].parameterMap) !== JSON.stringify(alternatePack[0].parameterMap), "Scratch engine: a new variation seed should produce a distinct set");

@@ -11,6 +11,8 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-09-13", kind: "update", title: "Preset Mutator Free v0.4.12", description: "The new Wide character direction creates broader stereo presets by influencing width, unison, and chorus decisions.", href: "/preset-mutator/changelog/" },
+  { date: "2026-09-13", kind: "update", title: "Preset Mutator Pro v0.4.11", description: "The new Wide character direction creates broader stereo presets by influencing width, unison, and chorus decisions.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-09-13", kind: "update", title: "Preset Mutator Pro v0.4.10", description: "Serum 2 beta joins all three Pro workflows, while Scratch, Preset, and Audio now use the same focused interface structure as Preset Mutator Free.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-09-08", kind: "update", title: "Preset Mutator Free v0.4.11", description: "Scratch, Preset, and Audio now share the same focused refinement layout, responsive control grid, and generation hierarchy.", href: "/preset-mutator/changelog/" },
   { date: "2026-09-07", kind: "update", title: "Preset Mutator Free v0.4.10", description: "Serum 2 beta export is now available alongside Vital, with clearer synth targeting and a more balanced Scratch workflow.", href: "/preset-mutator/changelog/" },

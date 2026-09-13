@@ -65,6 +65,11 @@ export function buildScratchProfile(input = {}) {
       ? -0.08
       : 0;
   const textNoise = /\b(broken|industrial|dirty|noise|fractured|grit)\b/.test(intentLower) ? 0.12 : 0;
+  const textWidth = /\b(wide|spacious|stereo)\b/.test(intentLower)
+    ? 0.1
+    : /\b(narrow|mono|focused)\b/.test(intentLower)
+      ? -0.08
+      : 0;
   const textureBias = percentValue(input.texture);
 
   return {
@@ -79,7 +84,7 @@ export function buildScratchProfile(input = {}) {
     sustain: clamp((moodBase.sustain + familyBase.sustain) / 2),
     movement: clamp((moodBase.movement + familyBase.movement) / 2 + percentValue(input.motion) * 0.28 + textMotion),
     noise: clamp(moodBase.noise + textNoise + textureBias * 0.18),
-    width: clamp((moodBase.width + familyBase.width) / 2 + percentValue(input.width) * 0.28),
+    width: clamp((moodBase.width + familyBase.width) / 2 + percentValue(input.width) * 0.28 + textWidth),
     wetness: clamp(moodBase.wetness),
     drive: clamp(moodBase.drive + textureBias * 0.12),
     pitchHz: (REGISTER_PITCH[register] || REGISTER_PITCH.mid)[family] || familyBase.pitchHz,

@@ -104,7 +104,9 @@ for (const page of ["index.html", "audio/index.html", "mutate/index.html"]) {
   assert(html.includes("vendor/cbor-x.min.js"), `${page}: Serum 2 CBOR codec is missing`);
   assert(html.includes("vendor/spark-md5.min.js"), `${page}: Serum 2 MD5 codec is missing`);
 }
-assert((await read("index.html")).includes('id="synth-select"'), "Scratch: synth target selector is missing");
+const scratchHtml = await read("index.html");
+assert(scratchHtml.includes('id="synth-select"'), "Scratch: synth target selector is missing");
+assert(scratchHtml.includes('data-intent-keyword="wide"'), "Scratch: Wide character keyword is missing");
 assert((await read("audio/index.html")).includes('id="synth-select"'), "Audio: synth target selector is missing");
 assert((await read("mutate/index.html")).includes(".SerumPreset"), "Mutate Preset: Serum 2 upload support is missing");
 
@@ -115,9 +117,12 @@ for (const fileName of templateFiles) {
 }
 
 const scratchProfile = buildScratchProfile({ family: "pad", mood: "dark", register: "mid", intent: "evolving dark glass", mutationAmount: 55 });
+const neutralWidth = buildScratchProfile({ family: "pad", mood: "dark", register: "mid" }).width;
+const wideWidth = buildScratchProfile({ family: "pad", mood: "dark", register: "mid", intent: "wide" }).width;
 const scratchPack = buildScratchProPack(scratchProfile, 48271);
 const nextScratchPack = buildScratchProPack(scratchProfile, 93614);
 assert(scratchPack.length === 32, "Scratch: expected a 32-preset Pro pack");
+assert(wideWidth > neutralWidth, "Scratch: Wide character should increase the generated width profile");
 assert(new Set(scratchPack.map((preset) => preset.templateFile)).size >= 3, "Scratch: pack should use multiple Velvet structures");
 assert(new Set(scratchPack.map((preset) => preset.topology)).size === 4, "Scratch: pack should balance four sound topologies");
 assert(new Set(scratchPack.map((preset) => preset.parameterMap.macro_control_1)).size === 4, "Scratch: topology should vary macro behavior");

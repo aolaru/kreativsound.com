@@ -1,14 +1,14 @@
 {
   "presetMutatorFree": {
     "name": "Preset Mutator Free",
-    "version": "0.4.11",
-    "date": "2026-09-08",
+    "version": "0.4.12",
+    "date": "2026-09-13",
     "status": "Free",
     "changelog": "/preset-mutator/changelog/"
   },
   "presetMutatorPro": {
     "name": "Preset Mutator Pro",
-    "version": "0.4.10",
+    "version": "0.4.11",
     "date": "2026-09-13",
     "status": "Pro · €19",
     "changelog": "/preset-mutator-pro/changelog/"
