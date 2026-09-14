@@ -1,4 +1,5 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
+import { applySynthTheme, synthTargetDetails } from "../engine/common.js";
 import {
   buildPresetMutateStrategy,
   generatePresetVariants as createPresetVariants,
@@ -12,6 +13,11 @@ import {
   createSerum2VariantBlob,
   parseSerum2Preset,
 } from "../engine/serum2-export.js";
+import { generatePigmentsPresetVariants } from "../engine/pigments-format.js";
+import {
+  createPigmentsVariantBlob,
+  parsePigmentsBank,
+} from "../engine/pigments-export.js";
 
 const state = {
   sourcePreset: null,
@@ -181,7 +187,7 @@ function renderSourceMetrics() {
 
   const summary = state.sourcePreset.summary;
   const metrics = [
-    ["Format", state.sourceFormat === "serum2" ? "Serum 2" : "Vital"],
+    ["Format", synthTargetDetails(state.sourceFormat).name],
     ["Author", summary.author],
     ["Sample", summary.sampleName],
     ["Wavetables", String(summary.wavetableCount)],
@@ -230,7 +236,7 @@ function renderStrategyMetrics() {
 }
 
 function summarizeVariantFocus(variant) {
-  const changed = variant.changedParameters.join(" ");
+  const changed = variant.changedParameters.join(" ").toLowerCase();
   const focus = [];
 
   if (/(cutoff|resonance|transpose|tune|keytrack|pre_)/.test(changed)) {
@@ -251,6 +257,7 @@ function summarizeVariantFocus(variant) {
 }
 
 function updateSourceUi() {
+  applySynthTheme(state.sourceFormat);
   if (!state.sourcePreset) {
     elements.presetDropZone.classList.remove("has-preset");
     elements.presetName.textContent = "No preset loaded";
@@ -295,6 +302,13 @@ function buildStrategyWeights() {
 }
 
 function generateVariants() {
+  if (state.sourceFormat === "pigments") {
+    return generatePigmentsPresetVariants({
+      sourcePreset: state.sourcePreset,
+      strategy: buildStrategyWeights(),
+      variationSeed: state.variationSeed,
+    });
+  }
   if (state.sourceFormat === "serum2") {
     return generateSerum2PresetVariants({
       sourcePreset: state.sourcePreset,
@@ -328,12 +342,17 @@ function generateVariants() {
 async function downloadVariant(variant) {
   try {
     elements.status.textContent = `Preparing ${variant.name} for download...`;
-    const payload = state.sourceFormat === "serum2"
-      ? await createSerum2VariantBlob(variant)
-      : {
-          fileName: variant.downloadName,
-          blob: new Blob([JSON.stringify(variant.data)], { type: "application/json" }),
-        };
+    let payload;
+    if (state.sourceFormat === "serum2") {
+      payload = await createSerum2VariantBlob(variant);
+    } else if (state.sourceFormat === "pigments") {
+      payload = createPigmentsVariantBlob(variant);
+    } else {
+      payload = {
+        fileName: variant.downloadName,
+        blob: new Blob([JSON.stringify(variant.data)], { type: "application/json" }),
+      };
+    }
     const url = URL.createObjectURL(payload.blob);
     const anchor = document.createElement("a");
     anchor.href = url;
@@ -362,6 +381,7 @@ function renderVariants() {
   }
 
   elements.presetList.innerHTML = "";
+  const synth = synthTargetDetails(state.sourceFormat);
   const groups = new Map();
   for (const variant of state.generatedVariants) {
     const key = variant.groupKey || "free";
@@ -416,7 +436,7 @@ function renderVariants() {
           </div>
           <div>
             <span class="metric-label">Format</span>
-            <strong>${state.sourceFormat === "serum2" ? "Serum 2" : "Vital"}</strong>
+            <strong>${synth.name}</strong>
           </div>
           <div>
             <span class="metric-label">Best use</span>
@@ -431,8 +451,8 @@ function renderVariants() {
         </div>
         <div class="preset-actions">
           <button class="download-button" type="button">
-            <span class="download-badge">${state.sourceFormat === "serum2" ? "SERUM 2" : "VITAL"}</span>
-            <span>Download ${state.sourceFormat === "serum2" ? ".SerumPreset" : ".vital"}</span>
+            <span class="download-badge">${synth.badge}</span>
+            <span>Download ${synth.extension}</span>
           </button>
         </div>
       `;
@@ -523,13 +543,14 @@ async function loadPreset(file) {
   const lowerName = file.name.toLowerCase();
   const isVital = lowerName.endsWith(".vital");
   const isSerum = lowerName.endsWith(".serumpreset");
-  if (!isVital && !isSerum) {
+  const isPigments = lowerName.endsWith(".pgtx");
+  if (!isVital && !isSerum && !isPigments) {
     state.sourcePreset = null;
     state.sourceFile = null;
     state.sourceFormat = null;
     state.generatedVariants = [];
     clearResultSets();
-    setUploadMessage("Unsupported file type. Please use a valid .vital or .SerumPreset file.");
+    setUploadMessage("Unsupported file type. Please use a valid .vital, .SerumPreset, or .pgtx file.");
     updateSourceUi();
     renderVariants();
     return;
@@ -538,7 +559,10 @@ async function loadPreset(file) {
   try {
     let sourcePreset;
     let summary;
-    if (isSerum) {
+    if (isPigments) {
+      sourcePreset = await parsePigmentsBank(await file.arrayBuffer(), file.name);
+      summary = sourcePreset.summary;
+    } else if (isSerum) {
       const document = await parseSerum2Preset(await file.arrayBuffer());
       summary = summarizeSerum2Preset(document);
       sourcePreset = { ...document, summary, fileName: file.name, format: "serum2" };
@@ -557,7 +581,7 @@ async function loadPreset(file) {
 
     state.sourcePreset = sourcePreset;
     state.sourceFile = file;
-    state.sourceFormat = isSerum ? "serum2" : "vital";
+    state.sourceFormat = isPigments ? "pigments" : isSerum ? "serum2" : "vital";
     state.generatedVariants = [];
     clearResultSets();
     state.lastGenerationMode = "standard";
@@ -565,7 +589,7 @@ async function loadPreset(file) {
     updateSourceUi();
     renderVariants();
     analyticsEvent("source_loaded", {
-      source_type: isSerum ? "serum2_preset" : "vital_preset",
+      source_type: isPigments ? "pigments_bank" : isSerum ? "serum2_preset" : "vital_preset",
       source_wavetables_bucket: countBucket(summary.wavetableCount),
       source_modulations_bucket: countBucket(summary.modulationCount),
       safe_parameter_bucket: countBucket(summary.scalarKeys.length),

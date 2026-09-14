@@ -1,4 +1,4 @@
-const CACHE_NAME = "preset-mutator-shell-v15";
+const CACHE_NAME = "preset-mutator-shell-v17";
 const SHELL_ASSETS = [
   "./index.html",
   "./styles.css",
@@ -19,11 +19,14 @@ const SHELL_ASSETS = [
   "./engine/preset-mutate-engine.js",
   "./engine/serum2-format.js",
   "./engine/serum2-export.js",
+  "./engine/pigments-format.js",
+  "./engine/pigments-export.js",
   "./engine/vital-export.js",
   "./vendor/cbor-x.min.js",
   "./vendor/spark-md5.min.js",
   "./vendor/zstd.js",
   "./assets/seeds/serum2/raw/KS%20Serum%202%20Base.SerumPreset",
+  "./assets/seeds/pigments/raw/KS%20Pigments%20Base.pgtpreset",
   "./assets/seeds/vital/raw/KS%20Dread%20Lantern.vital",
   "./assets/seeds/vital/raw/KS%20Frozen%20Hollow.vital",
   "./assets/seeds/vital/raw/KS%20Iron%20Wake.vital",

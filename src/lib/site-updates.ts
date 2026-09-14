@@ -11,6 +11,7 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-09-14", kind: "release", title: "Preset Mutator Free v0.5.0", description: "Arturia Pigments beta joins Scratch, Preset, and Audio with local `.pgtx` generation, bounded mutations, and byte-safe resource preservation.", href: "/preset-mutator/changelog/" },
   { date: "2026-09-13", kind: "update", title: "Preset Mutator Free v0.4.12", description: "The new Wide character direction creates broader stereo presets by influencing width, unison, and chorus decisions.", href: "/preset-mutator/changelog/" },
   { date: "2026-09-13", kind: "update", title: "Preset Mutator Pro v0.4.11", description: "The new Wide character direction creates broader stereo presets by influencing width, unison, and chorus decisions.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-09-13", kind: "update", title: "Preset Mutator Pro v0.4.10", description: "Serum 2 beta joins all three Pro workflows, while Scratch, Preset, and Audio now use the same focused interface structure as Preset Mutator Free.", href: "/preset-mutator-pro/changelog/" },

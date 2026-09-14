@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-synth="vital">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preset Mutator Free | Mutate Preset</title>
-    <meta name="description" content="Mutate Preset loads one Vital or Serum 2 preset locally and exports related preset variants in the browser." />
+    <meta name="description" content="Mutate Preset loads one Vital, Serum 2, or Arturia Pigments preset locally and exports related preset variants in the browser." />
     <meta name="theme-color" content="#f8e9e9" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Preset Mutator Free" />
@@ -13,12 +13,12 @@
     <meta property="og:site_name" content="Kreativ Sound" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Preset Mutator Free | Mutate Preset" />
-    <meta property="og:description" content="Mutate one Vital or Serum 2 preset into related local preset variants in the browser." />
+    <meta property="og:description" content="Mutate one Vital, Serum 2, or Arturia Pigments preset into related local preset variants in the browser." />
     <meta property="og:url" content="https://kreativsound.com/preset-mutator/mutate/" />
     <meta property="og:image" content="https://kreativsound.com/preset-mutator/preset-mutator-mark.svg" />
     <meta property="twitter:card" content="summary" />
     <meta property="twitter:title" content="Preset Mutator Free | Mutate Preset" />
-    <meta property="twitter:description" content="Mutate one Vital or Serum 2 preset into related local preset variants in the browser." />
+    <meta property="twitter:description" content="Mutate one Vital, Serum 2, or Arturia Pigments preset into related local preset variants in the browser." />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -28,7 +28,7 @@
         "operatingSystem": "Web browser",
         "url": "https://kreativsound.com/preset-mutator/mutate/",
         "image": "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg",
-        "description": "Preset Mutator Free loads one Vital or Serum 2 preset locally and exports related preset variants.",
+        "description": "Preset Mutator Free loads one Vital, Serum 2, or Arturia Pigments preset locally and exports related preset variants.",
         "isPartOf": {
           "@type": "SoftwareApplication",
           "name": "Preset Mutator Free",
@@ -81,7 +81,7 @@
           <span>Mutate one synth preset</span>
           <span>into new variants</span>
         </h1>
-        <p class="lede">Load a Vital or Serum 2 preset, bias the mutation, and export related variants without losing the source identity.</p>
+        <p class="lede">Load a Vital, Serum 2, or Pigments preset, bias the mutation, and export related variants without losing the source identity.</p>
         <div class="mode-tabs mode-source-tabs" aria-label="Choose Preset Mutator Free source">
           <a class="mode-tab" href="../index.html">
             <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
@@ -94,7 +94,7 @@
             <i class="fa-solid fa-sliders" aria-hidden="true"></i>
             <span class="mode-copy">
               <strong>Preset</strong>
-              <small>Mutate Vital or Serum 2</small>
+              <small>Mutate Vital, Serum 2, or Pigments</small>
             </span>
           </button>
           <a class="mode-tab" href="/preset-mutator/audio/">
@@ -108,7 +108,7 @@
         <div class="mode-proof-grid" aria-label="Mutate Preset summary">
           <div>
             <span>Current source</span>
-            <strong>Vital or Serum 2 preset</strong>
+            <strong>Vital, Serum 2, or Pigments preset</strong>
           </div>
           <div>
             <span>Output</span>
@@ -131,8 +131,8 @@
           <div class="section-head">
             <div>
               <h2>Source Preset</h2>
-              <p class="muted">Load one `.vital` or `.SerumPreset` file, then shape three related variants from the source.</p>
-              <p class="input-note">Preset data stays local in your browser. Serum 2 support is currently beta.</p>
+              <p class="muted">Load one `.vital`, `.SerumPreset`, or Pigments `.pgtx` file, then shape three related variants from the source.</p>
+              <p class="input-note">Preset data stays local in your browser. Serum 2 and Pigments support are currently beta.</p>
             </div>
           </div>
           <p class="upload-message" id="upload-message" hidden></p>
@@ -142,10 +142,10 @@
               <div class="preset-drop-cta" id="preset-drop-cta">
                 <label class="upload">
                   <span>Choose preset</span>
-                  <input id="file-input" type="file" accept=".vital,.SerumPreset,application/json,application/octet-stream" />
+                  <input id="file-input" type="file" accept=".vital,.SerumPreset,.pgtx,application/json,application/zip,application/octet-stream" />
                 </label>
                 <button class="button secondary try-example-button" id="try-example-preset" type="button">Load Example Preset</button>
-                <p class="drop-note">Drag and drop a `.vital` or `.SerumPreset` file here.</p>
+                <p class="drop-note">Drag and drop a `.vital`, `.SerumPreset`, or `.pgtx` file here.</p>
               </div>
               <div class="preset-summary" id="preset-summary" hidden>
                 <div>
@@ -325,7 +325,7 @@
 
       <footer class="app-footer">
         <p>Kreativ Sound browser tool for preset-driven mutation.</p>
-        <p class="app-version">Preset Mutator Free v0.4.12 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator/changelog/">Changelog</a></p>
+        <p class="app-version">Preset Mutator Free v0.5.0 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator/changelog/">Changelog</a></p>
       </footer>
     </main>
 

@@ -29,22 +29,30 @@ import {
   parseSerum2Container,
   summarizeSerum2Preset,
 } from "../apps/preset-mutator/public/engine/serum2-format.js";
+import {
+  applyGeneratedPresetToPigments,
+  buildPigmentsBank,
+  generatePigmentsPresetVariants,
+  parsePigmentsBank,
+  readPigmentsParameter,
+} from "../apps/preset-mutator/public/engine/pigments-format.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const uiDir = path.join(rootDir, "apps/preset-mutator/public");
 const seedDir = path.join(rootDir, "apps/preset-mutator/public/assets/seeds/vital/raw");
 const serumSeedPath = path.join(rootDir, "apps/preset-mutator/public/assets/seeds/serum2/raw/KS Serum 2 Base.SerumPreset");
+const pigmentsSeedPath = path.join(rootDir, "apps/preset-mutator/public/assets/seeds/pigments/raw/KS Pigments Base.pgtpreset");
 const toolReleases = JSON.parse(await readFile(path.join(rootDir, "src/data/tool-releases.json"), "utf8"));
 const releaseVersion = `v${toolReleases.presetMutatorFree.version}`;
 
 const failures = [];
 
 const modePages = [
-  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "vital-export.js", "serum2-export.js"] },
+  { name: "Scratch root", html: "index.html", app: "app.js", requiredImports: ["scratch-engine.js", "vital-export.js", "serum2-export.js", "pigments-export.js"] },
   { name: "Scratch route", html: "index.html", app: "scratch/app.js", requiredImports: ["../app.js"] },
-  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "vital-export.js", "serum2-export.js"] },
-  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js", "serum2-format.js", "serum2-export.js"] },
+  { name: "Audio", html: "audio/index.html", app: "audio/app.js", requiredImports: ["audio-engine.js", "vital-export.js", "serum2-export.js", "pigments-export.js"] },
+  { name: "Preset", html: "mutate/index.html", app: "mutate/app.js", requiredImports: ["preset-mutate-engine.js", "serum2-format.js", "serum2-export.js", "pigments-format.js", "pigments-export.js"] },
 ];
 
 const generatedParameterRanges = {
@@ -227,6 +235,7 @@ async function checkPages() {
   assert(!mutateHtml.includes("insight-panel"), "Preset mode: tips panel should stay removed");
   assert(mutateHtml.includes("Load Example Preset"), "Preset mode: included example preset action is missing");
   assert(mutateHtml.includes(".SerumPreset"), "Preset mode: Serum 2 upload support is missing");
+  assert(mutateHtml.includes(".pgtx"), "Preset mode: Pigments bank upload support is missing");
   assert(mutateHtml.includes("vendor/cbor-x.min.js"), "Preset mode: CBOR codec is missing");
 
   const scratchHtml = await readText("index.html");
@@ -237,11 +246,14 @@ async function checkPages() {
   assert(scratchHtml.includes('id="synth-select"'), "Scratch mode: synth target selector is missing");
   assert(scratchHtml.includes("data-synth-target"), "Scratch mode: segmented synth target control is missing");
   assert(scratchHtml.includes('value="serum2"'), "Scratch mode: Serum 2 target is missing");
+  assert(scratchHtml.includes('value="pigments"'), "Scratch mode: Pigments target is missing");
+  assert(scratchHtml.includes('data-synth-target="pigments"'), "Scratch mode: Pigments target control is missing");
 
   const audioHtml = await readText("audio/index.html");
   assert(audioHtml.includes("Try Example Sound"), "Audio mode: included example sound action is missing");
   assert(audioHtml.includes('id="synth-select"'), "Audio mode: synth target selector is missing");
   assert(audioHtml.includes('value="serum2"'), "Audio mode: Serum 2 target is missing");
+  assert(audioHtml.includes('value="pigments"'), "Audio mode: Pigments target is missing");
 
   const changelogHtml = await readText("changelog/index.html");
   assert(changelogHtml.includes("Preset Mutator Free Changelog"), "Changelog: page title is missing");
@@ -255,8 +267,10 @@ async function checkPages() {
   assert(!serviceWorker.includes("./engine/audio-preview.js"), "Service worker: removed preview asset should not be cached");
   assert(serviceWorker.includes("./changelog/index.html"), "Service worker: changelog should be cached");
   assert(serviceWorker.includes("./engine/serum2-format.js"), "Service worker: Serum 2 format engine should be cached");
+  assert(serviceWorker.includes("./engine/pigments-format.js"), "Service worker: Pigments format engine should be cached");
   assert(serviceWorker.includes("./vendor/zstd.js"), "Service worker: Serum 2 Zstandard codec should be cached");
   assert(serviceWorker.includes("KS%20Serum%202%20Base.SerumPreset"), "Service worker: Serum 2 seed should be cached");
+  assert(serviceWorker.includes("KS%20Pigments%20Base.pgtpreset"), "Service worker: Pigments seed should be cached");
 }
 
 function checkScratchEngine(seedByFamily) {
@@ -419,6 +433,43 @@ async function checkSerum2Engine() {
   }
 }
 
+async function checkPigmentsEngine() {
+  const seedBytes = new Uint8Array(await readFile(pigmentsSeedPath));
+  assert(seedBytes.length > 100000, "Pigments engine: the Pigments 7 seed is missing or incomplete");
+
+  const profile = buildScratchProfile({
+    family: "pad",
+    mood: "dark",
+    register: "mid",
+    intent: "wide evolving glass",
+    mutationAmount: 64,
+    width: 28,
+  });
+  const [preset] = buildScratchFreePack(profile, 2);
+  const presetText = applyGeneratedPresetToPigments(seedBytes, preset);
+  const output = buildPigmentsBank(presetText, preset.name);
+  const roundTrip = await parsePigmentsBank(output, `${preset.name}.pgtx`);
+
+  assert(new TextDecoder().decode(output.subarray(0, 2)) === "PK", "Pigments engine: output is not a .pgtx ZIP container");
+  assert(roundTrip.summary.name === preset.name, "Pigments engine: generated name did not survive round trip");
+  assert(roundTrip.summary.author === "Kreativ Sound", "Pigments engine: generated author is incorrect");
+  assert(roundTrip.summary.scalarKeys.length >= 16, `Pigments engine: expected mapped parameters, found ${roundTrip.summary.scalarKeys.length}`);
+  assert(readPigmentsParameter(roundTrip.presetText, "Filter1_Cutoff") > 0, "Pigments engine: filter mapping is missing");
+  assert(roundTrip.presetText.includes("4 Type 3 Pad"), "Pigments engine: generated family metadata is missing");
+
+  const strategy = buildPresetMutateStrategy({ amount: 68, tone: -16, motion: 32, attack: -8, space: 24, dirt: 34 });
+  const variants = generatePigmentsPresetVariants({ sourcePreset: roundTrip, strategy, variationSeed: 2 });
+  assert(variants.length === 3, `Pigments engine: expected 3 mutation variants, found ${variants.length}`);
+  assert(variants.every((variant) => variant.changedParameters.length >= 16), "Pigments engine: mutation variants should change useful parameters");
+  assert(variants.every((variant) => variant.changedParameters.some((key) => /FM|ClusterDW|Waveshaper_Drive/.test(key))), "Pigments engine: dirt controls should reach safe harmonic drive parameters");
+
+  for (const variant of variants) {
+    const variantBytes = buildPigmentsBank(variant.presetText, variant.name);
+    const parsedVariant = await parsePigmentsBank(variantBytes, `${variant.name}.pgtx`);
+    assert(parsedVariant.summary.name === variant.name, `Pigments engine: ${variant.name} failed .pgtx round trip`);
+  }
+}
+
 async function checkEngines() {
   const seedFiles = (await readdir(seedDir)).filter((file) => file.endsWith(".vital")).sort();
   assert(seedFiles.length >= 4, `Expected at least 4 Vital seed presets, found ${seedFiles.length}`);
@@ -443,6 +494,7 @@ async function checkEngines() {
 await checkPages();
 await checkEngines();
 await checkSerum2Engine();
+await checkPigmentsEngine();
 
 if (failures.length) {
   console.error("Preset Mutator Free QA failed:");

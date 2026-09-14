@@ -61,14 +61,15 @@
   align-items: center;
   min-height: 30px;
   padding: 0.3rem 0.68rem;
-  border: 1px solid rgba(153, 0, 0, 0.16);
+  border: 1px solid var(--synth-border);
   border-radius: 999px;
-  color: var(--accent-strong);
-  background: rgba(153, 0, 0, 0.06);
+  color: var(--synth-accent);
+  background: var(--synth-soft);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
 .refinement-panel .advanced-controls {
@@ -147,7 +148,7 @@
 
 .synth-target-options {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   padding: 5px;
   border: 1px solid rgba(153, 0, 0, 0.13);
@@ -199,12 +200,30 @@
   transform: translateY(-1px);
 }
 
+[data-synth="serum2"] .synth-target-option.is-active {
+  border-color: var(--synth-border);
+  background:
+    radial-gradient(circle at 10% 20%, color-mix(in srgb, var(--neon-blue) 88%, transparent), transparent 42%),
+    radial-gradient(circle at 92% 90%, color-mix(in srgb, var(--neon-pink) 82%, transparent), transparent 44%),
+    linear-gradient(135deg, #071e2c, #0a2e58);
+  box-shadow: 0 10px 24px rgba(0, 128, 190, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+[data-synth="pigments"] .synth-target-option.is-active {
+  border-color: var(--synth-border);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 190, 62, 0.92), transparent 42%),
+    radial-gradient(circle at 90% 88%, rgba(221, 50, 139, 0.9), transparent 46%),
+    linear-gradient(135deg, #34200b, #4a1534);
+  box-shadow: 0 10px 24px rgba(150, 51, 99, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
 .synth-target-option.is-active small {
   color: rgba(255, 255, 255, 0.72);
 }
 
 .synth-target-option:focus-visible {
-  outline: 3px solid rgba(176, 38, 38, 0.25);
+  outline: 3px solid color-mix(in srgb, var(--synth-accent-bright) 28%, transparent);
   outline-offset: 2px;
 }
 
@@ -347,6 +366,10 @@ textarea {
 
   .synth-target-option {
     padding-inline: 11px;
+  }
+
+  .synth-target-options {
+    grid-template-columns: 1fr;
   }
 
   .target-badge {
