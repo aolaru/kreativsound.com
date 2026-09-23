@@ -1,18 +1,21 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { siteUpdates, type SiteUpdateKind } from "../../lib/site-updates";
+import { siteUpdates, type SiteUpdate, type SiteUpdateKind } from "../../lib/site-updates";
 import { displayToolReleaseVersion, toolReleases } from "../../lib/tool-releases";
 
 const posts = (await getCollection("posts", ({ data }) => !data.draft))
   .sort((a, b) => (b.data.published || "").localeCompare(a.data.published || ""));
 const guidePosts = posts.filter((post) => post.data.section === "learn");
 const releasePosts = posts.filter((post) => post.data.section === "news" && post.data.kind === "release");
-const customerUpdates = siteUpdates.filter((item) => item.audience !== "maintenance");
-const maintenanceUpdates = siteUpdates.filter((item) => item.audience === "maintenance");
-const featuredUpdate = customerUpdates[0];
-const latestUpdates = customerUpdates.slice(1, 10);
-const archivedUpdates = customerUpdates.slice(10);
+const customerUpdates = siteUpdates
+  .filter((item) => item.audience !== "maintenance")
+  .sort((a, b) => b.date.localeCompare(a.date));
+const maintenanceUpdates = siteUpdates
+  .filter((item) => item.audience === "maintenance")
+  .sort((a, b) => b.date.localeCompare(a.date));
+const newReleaseUpdates = customerUpdates.filter((item) => item.kind === "new" || item.kind === "release");
+const productUpdates = customerUpdates.filter((item) => item.kind === "update" || item.kind === "fix");
 const presetMutatorFree = toolReleases.presetMutatorFree;
 const presetMutatorPro = toolReleases.presetMutatorPro;
 const waveMutator = toolReleases.waveMutator;
@@ -24,18 +27,6 @@ const kindLabels: Record<SiteUpdateKind, string> = {
   fix: "Fix"
 };
 
-const kindIcons: Record<SiteUpdateKind, string> = {
-  new: "fa-sparkles",
-  release: "fa-compact-disc",
-  update: "fa-wrench",
-  fix: "fa-shield-halved"
-};
-
-const counts = customerUpdates.reduce<Record<SiteUpdateKind, number>>(
-  (total, item) => ({ ...total, [item.kind]: total[item.kind] + 1 }),
-  { new: 0, release: 0, update: 0, fix: 0 }
-);
-
 function formatDate(date: string) {
   return new Date(`${date}T12:00:00`).toLocaleDateString("en-US", {
     month: "long",
@@ -43,6 +34,29 @@ function formatDate(date: string) {
     year: "numeric"
   });
 }
+
+function groupByMonth(items: SiteUpdate[]) {
+  const groups = new Map<string, SiteUpdate[]>();
+
+  for (const item of items) {
+    const key = item.date.slice(0, 7);
+    const monthItems = groups.get(key) || [];
+    monthItems.push(item);
+    groups.set(key, monthItems);
+  }
+
+  return Array.from(groups, ([key, monthItems]) => ({
+    key,
+    label: new Date(`${key}-01T12:00:00`).toLocaleDateString("en-US", {
+      month: "long",
+      year: "numeric"
+    }),
+    items: monthItems
+  }));
+}
+
+const updateMonths = groupByMonth(productUpdates);
+const maintenanceMonths = groupByMonth(maintenanceUpdates);
 
 function hrefFor(post: (typeof posts)[number]) {
   return `/posts/${post.id.replace(/\.md$/, "")}.html`;
@@ -63,12 +77,12 @@ function imageFor(post: (typeof posts)[number]) {
     <header class="updates-hero">
       <div>
         <p class="eyebrow">Kreativ Sound Updates and Changelog</p>
-        <h1 class="page-title">Changes, releases, and practical guides.</h1>
+        <h1 class="page-title">New releases, updates, and practical guides.</h1>
         <p class="page-lead">New sound packs, browser tools, and practical workflows—kept focused on what you can use in a session.</p>
         <div class="updates-quick-stats" aria-label="Updates categories">
-          <a href="#recent-log"><strong>{counts.new}</strong><span>New additions</span></a>
-          <a href="#recent-log"><strong>{counts.release}</strong><span>Releases</span></a>
-          <a href="#recent-log"><strong>{counts.update}</strong><span>Updates</span></a>
+          <a href="#new-releases"><strong>{newReleaseUpdates.length}</strong><span>New releases</span></a>
+          <a href="#product-updates"><strong>{productUpdates.length}</strong><span>Updates</span></a>
+          <a href="#releases"><strong>{releasePosts.length}</strong><span>Release notes</span></a>
           <a href="#guides"><strong>{guidePosts.length}</strong><span>Guides</span></a>
         </div>
       </div>
@@ -76,36 +90,18 @@ function imageFor(post: (typeof posts)[number]) {
         <p class="product-section-kicker">Useful first</p>
         <h2>What changed, then how to use it.</h2>
         <p>Use the log for current products and tools, release notes for context, and guides for practical decisions around the catalog.</p>
-        <a href="#releases">Browse release notes <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
+        <a href="#new-releases">Browse new releases <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
       </aside>
     </header>
 
-    {featuredUpdate ? <section class="updates-highlights" aria-labelledby="updates-highlights-title">
+    <section class="updates-log updates-releases" id="new-releases" aria-labelledby="new-releases-title">
       <div class="updates-section-head">
-        <p class="product-section-kicker">Latest update</p>
-        <h2 id="updates-highlights-title">Start with what changed most recently.</h2>
-      </div>
-      <div class="updates-highlight-list">
-        <a class="updates-highlight" href={featuredUpdate.href}>
-          <span class="updates-highlight-meta">
-            <i class:list={["fa-solid", kindIcons[featuredUpdate.kind]]} aria-hidden="true"></i>
-            <span>{kindLabels[featuredUpdate.kind]}</span>
-            <time datetime={featuredUpdate.date}>{formatDate(featuredUpdate.date)}</time>
-          </span>
-          <strong>{featuredUpdate.title}</strong>
-          <span>{featuredUpdate.description}</span>
-        </a>
-      </div>
-    </section> : null}
-
-    <section class="updates-log" id="recent-log" aria-labelledby="updates-log-title">
-      <div class="updates-section-head">
-        <p class="product-section-kicker">Current catalog and tools</p>
-        <h2 id="updates-log-title">What you can use now.</h2>
-        <p>Product, tool, and catalog changes stay concise and newest first. Site-maintenance history is kept separately below.</p>
+        <p class="product-section-kicker">New releases</p>
+        <h2 id="new-releases-title">New products and major launches.</h2>
+        <p>New sound packs, tools, and substantial product launches, listed newest first.</p>
       </div>
       <ul class="updates-log-list">
-        {latestUpdates.map((item) => (
+        {newReleaseUpdates.map((item) => (
           <li>
             <a class="updates-log-entry" href={item.href}>
               <time datetime={item.date}>{formatDate(item.date)}</time>
@@ -119,55 +115,74 @@ function imageFor(post: (typeof posts)[number]) {
           </li>
         ))}
       </ul>
-      <details class="news-archive updates-archive" open>
-        <summary>
-          <span>
-            <strong>Earlier updates</strong>
-            <small>{archivedUpdates.length} previous additions, releases, updates, and fixes</small>
-          </span>
-          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-        </summary>
-        <ul class="updates-log-list">
-          {archivedUpdates.map((item) => (
-            <li>
-              <a class="updates-log-entry" href={item.href}>
-                <time datetime={item.date}>{formatDate(item.date)}</time>
-                <span class:list={["updates-log-kind", `is-${item.kind}`]}>{kindLabels[item.kind]}</span>
-                <span class="updates-log-copy">
-                  <strong>{item.title}</strong>
-                  <span>{item.description}</span>
-                </span>
-                <i class="fa-solid fa-arrow-up-right-from-square updates-log-arrow" aria-hidden="true"></i>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </details>
+    </section>
+
+    <section class="updates-log updates-monthly" id="product-updates" aria-labelledby="product-updates-title">
+      <div class="updates-section-head">
+        <p class="product-section-kicker">Product updates</p>
+        <h2 id="product-updates-title">Improvements grouped by month.</h2>
+        <p>Tool, catalog, and product refinements are grouped by month and ordered newest first.</p>
+      </div>
+      <div class="updates-month-list">
+        {updateMonths.map((month) => (
+          <section class="updates-month-group" aria-labelledby={`updates-month-${month.key}`}>
+            <div class="updates-month-heading">
+              <h3 id={`updates-month-${month.key}`}>{month.label}</h3>
+              <span>{month.items.length} {month.items.length === 1 ? "update" : "updates"}</span>
+            </div>
+            <ul class="updates-log-list">
+              {month.items.map((item) => (
+                <li>
+                  <a class="updates-log-entry" href={item.href}>
+                    <time datetime={item.date}>{formatDate(item.date)}</time>
+                    <span class:list={["updates-log-kind", `is-${item.kind}`]}>{kindLabels[item.kind]}</span>
+                    <span class="updates-log-copy">
+                      <strong>{item.title}</strong>
+                      <span>{item.description}</span>
+                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square updates-log-arrow" aria-hidden="true"></i>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
     </section>
 
     {maintenanceUpdates.length ? <details class="news-archive updates-archive updates-maintenance" id="site-maintenance">
       <summary>
         <span>
           <strong>Site-maintenance history</strong>
-          <small>{maintenanceUpdates.length} reliability, analytics, and publishing notes</small>
+          <small>{maintenanceUpdates.length} reliability, analytics, and publishing notes grouped by month</small>
         </span>
         <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
       </summary>
-      <ul class="updates-log-list">
-        {maintenanceUpdates.map((item) => (
-          <li>
-            <a class="updates-log-entry" href={item.href}>
-              <time datetime={item.date}>{formatDate(item.date)}</time>
-              <span class:list={["updates-log-kind", `is-${item.kind}`]}>{kindLabels[item.kind]}</span>
-              <span class="updates-log-copy">
-                <strong>{item.title}</strong>
-                <span>{item.description}</span>
-              </span>
-              <i class="fa-solid fa-arrow-up-right-from-square updates-log-arrow" aria-hidden="true"></i>
-            </a>
-          </li>
+      <div class="updates-month-list">
+        {maintenanceMonths.map((month) => (
+          <section class="updates-month-group" aria-labelledby={`maintenance-month-${month.key}`}>
+            <div class="updates-month-heading">
+              <h3 id={`maintenance-month-${month.key}`}>{month.label}</h3>
+              <span>{month.items.length} {month.items.length === 1 ? "note" : "notes"}</span>
+            </div>
+            <ul class="updates-log-list">
+              {month.items.map((item) => (
+                <li>
+                  <a class="updates-log-entry" href={item.href}>
+                    <time datetime={item.date}>{formatDate(item.date)}</time>
+                    <span class:list={["updates-log-kind", `is-${item.kind}`]}>{kindLabels[item.kind]}</span>
+                    <span class="updates-log-copy">
+                      <strong>{item.title}</strong>
+                      <span>{item.description}</span>
+                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square updates-log-arrow" aria-hidden="true"></i>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
         ))}
-      </ul>
+      </div>
     </details> : null}
 
     <div class="news-sections updates-editorial">

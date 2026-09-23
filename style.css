@@ -2954,7 +2954,6 @@ a:focus-visible,
   line-height: 1.3;
 }
 
-.updates-highlights,
 .updates-log {
   display: grid;
   gap: 0.85rem;
@@ -2973,52 +2972,6 @@ a:focus-visible,
 
 .updates-section-head p:last-child {
   color: var(--soft);
-}
-
-.updates-highlight-list {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0.8rem;
-}
-
-.updates-highlight {
-  display: grid;
-  align-content: start;
-  gap: 0.42rem;
-  min-width: 0;
-  padding: 0.85rem 0.15rem 0.1rem;
-  border-top: 2px solid rgba(153, 0, 0, 0.45);
-  color: var(--muted);
-  line-height: 1.45;
-  text-decoration: none;
-}
-
-.updates-highlight:hover {
-  border-color: var(--accent-bright);
-  color: var(--soft);
-  text-decoration: none;
-}
-
-.updates-highlight strong {
-  color: var(--text);
-  font-size: 0.98rem;
-  line-height: 1.28;
-}
-
-.updates-highlight-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.42rem;
-  color: var(--accent-strong);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.updates-highlight-meta time {
-  color: var(--muted);
-  font-weight: 700;
 }
 
 .updates-log-list {
@@ -3098,6 +3051,43 @@ a:focus-visible,
 
 .updates-archive .updates-log-list {
   padding-top: 0.25rem;
+}
+
+.updates-month-list {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.updates-month-group {
+  display: grid;
+  gap: 0.25rem;
+  scroll-margin-top: 5rem;
+}
+
+.updates-month-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.68rem 0.15rem 0.48rem;
+  border-bottom: 2px solid rgba(153, 0, 0, 0.34);
+}
+
+.updates-month-heading h3 {
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.updates-month-heading span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.updates-maintenance .updates-month-list {
+  gap: 0.85rem;
+  padding-top: 0.75rem;
 }
 
 .updates-tools {
@@ -5064,17 +5054,12 @@ a:focus-visible,
     border-left: 0;
   }
 
-  .updates-quick-stats,
-  .updates-highlight-list {
+  .updates-quick-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .updates-tool-grid {
     grid-template-columns: 1fr;
-  }
-
-  .updates-quick-stats a:last-child {
-    grid-column: span 2;
   }
 
   .updates-log-entry {
