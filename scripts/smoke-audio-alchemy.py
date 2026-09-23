@@ -101,7 +101,7 @@ def main() -> int:
             "Mutation Amount",
             "Refine &amp; Generate",
             "Generate 3 Variants",
-            "Pigments 7 is planned.",
+            "Arturia Pigments (Beta)",
         ]:
             require(scratch_dom, needle, "/preset-mutator/scratch/", errors)
 
