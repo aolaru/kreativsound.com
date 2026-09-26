@@ -69,7 +69,7 @@ function routeFromFile(filePath) {
     if (route === "/sound/" || route === "/news/" || route.startsWith("/products/")) {
       return null;
     }
-    if (route.startsWith("/sounds/") && route !== "/sounds/") {
+    if ((route.startsWith("/sounds/") && route !== "/sounds/") || (route.startsWith("/plugins/") && route !== "/plugins/")) {
       return route.replace(/\/$/, "");
     }
     return route;
@@ -101,7 +101,7 @@ function sourcePathsForRoute(route) {
     const slug = route.slice("/posts/".length, -".html".length);
     return [`src/content/posts/${slug}.md`];
   }
-  if (route.startsWith("/sounds/")) {
+  if (route.startsWith("/sounds/") || (route.startsWith("/plugins/") && route !== "/plugins/")) {
     return [
       "src/components/ProductLandingPage.astro",
       "src/lib/products.ts",
@@ -180,6 +180,7 @@ function priorityForRoute(route) {
   if (route === "/updates/" || route === "/tools/" || route === "/plugins/") return "0.8";
   if (route.startsWith("/tools/")) return "0.8";
   if (route.startsWith("/sounds/")) return "0.8";
+  if (route.startsWith("/plugins/")) return "0.8";
   if (route.startsWith("/posts/")) return "0.7";
   return "0.7";
 }

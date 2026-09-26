@@ -57,6 +57,7 @@ for (const requiredRoute of [
   "/sounds/",
   "/sounds/kreativ-kollection-v1",
   "/sounds/preset-mutator",
+  "/plugins/ghostform",
   "/tools/wave-mutator/",
   "/preset-mutator/",
   "/preset-mutator/audio/",

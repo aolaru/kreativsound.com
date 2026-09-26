@@ -84,8 +84,8 @@ const breadcrumbSchema = {
     {
       "@type": "ListItem",
       position: 2,
-      name: "Sounds",
-      item: "https://kreativsound.com/sounds/"
+      name: product.hubLabel,
+      item: `https://kreativsound.com${product.hubUrl}`
     },
     {
       "@type": "ListItem",
@@ -102,7 +102,7 @@ const breadcrumbSchema = {
   <nav class="product-breadcrumbs" aria-label="Breadcrumb">
     <a href="/">Home</a>
     <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-    <a href="/sounds/">Sounds</a>
+    <a href={product.hubUrl}>{product.hubLabel}</a>
     <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
     <span aria-current="page">{productName}</span>
   </nav>
@@ -270,10 +270,10 @@ const breadcrumbSchema = {
     <div class="product-discovery-head">
       <div>
         <p class="product-section-kicker">Keep exploring</p>
-        <h2 id="product-discovery-title">Related sounds</h2>
+        <h2 id="product-discovery-title">{product.hubLabel === "Plugins" ? "More from Kreativ Sound" : "Related sounds"}</h2>
       </div>
-      <a class="product-catalog-link" href="/sounds/">
-        View full catalog
+      <a class="product-catalog-link" href={product.hubUrl}>
+        {product.hubLabel === "Plugins" ? "View all plugins" : "View full catalog"}
         <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
       </a>
     </div>

@@ -8,7 +8,7 @@ const latestProduct = homepageProducts[0] || products.find((product) => product.
 const wideFeatureProducts = homepageProducts.filter((product) => product !== latestProduct);
 
 function shortTitle(product: Product) {
-  return product.title.split(" - ")[0];
+  return product.title.split(/\s[-—]\s/)[0];
 }
 
 function productImage(product: Product) {
@@ -28,14 +28,19 @@ function productKicker(product: Product) {
 
 function primaryActionLabel(product: Product) {
   if (!product.url) return product.status === "comingSoon" ? "Coming Soon" : "Details";
-  if (product.category === "Tools") return "Open Tool";
+  if (product.category === "Tools" && product.appUrl) return "Open Tool";
   if (product.status === "free") return "Download Free";
   if (product.status === "archive") return "Open Archive";
+  if (product.category === "Tools") return "Get Tool";
   return "Buy on Gumroad";
 }
 
+function primaryTrackingEvent(product: Product) {
+  return product.status === "free" ? "generate_lead" : "begin_checkout";
+}
+
 function cardTitle(product: Product) {
-  if (product.category === "Tools") return "Preset Mutator Free";
+  if (product.title.startsWith("Preset Mutator")) return "Preset Mutator Free";
   if (product.category === "Bundle") return "Kreativ Kollection V1";
   return shortTitle(product);
 }
@@ -103,7 +108,7 @@ function appActionUrl(product: Product) {
           </a>
         ) : null}
         {latestProduct.url ? (
-          <a class="button primary" data-track="begin_checkout" data-track-product={latestProduct.title} data-track-placement="home_latest" href={latestProduct.url} target="_blank" rel="noopener noreferrer">
+          <a class="button primary" data-track={primaryTrackingEvent(latestProduct)} data-track-product={latestProduct.title} data-track-placement="home_latest" href={latestProduct.url} target="_blank" rel="noopener noreferrer">
             <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
             {primaryActionLabel(latestProduct)}
           </a>
@@ -163,7 +168,7 @@ function appActionUrl(product: Product) {
           </a>
         ) : null}
         {product.url ? (
-          <a class={appActionUrl(product) ? "button secondary" : "button primary"} data-track="begin_checkout" data-track-product={product.title} data-track-placement="home_feature" href={product.url} target="_blank" rel="noopener noreferrer">
+          <a class={appActionUrl(product) ? "button secondary" : "button primary"} data-track={primaryTrackingEvent(product)} data-track-product={product.title} data-track-placement="home_feature" href={product.url} target="_blank" rel="noopener noreferrer">
             <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
             {primaryActionLabel(product)}
           </a>

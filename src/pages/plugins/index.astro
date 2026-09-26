@@ -3,18 +3,41 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 <BaseLayout
   title="Plugins | Kreativ Sound"
-  description="Kreativ Sound instrument and effect plugins are in development. Follow the direction, share your format needs, and get launch updates."
+  description="Kreativ Sound instruments and effects for atmospheric, cinematic, and textural work. KS Ghostform is available now as a free drone and string synthesizer."
   canonical="https://kreativsound.com/plugins/"
   activeNav="plugins"
 >
   <section class="card page-main plugins-page" aria-labelledby="plugins-title">
-    <p class="eyebrow">Plugins</p>
-    <h1 id="plugins-title" class="page-title">Plugins are in development. Help shape what launches first.</h1>
-    <p class="page-lead">Kreativ Sound is exploring focused instruments and effects for atmospheric, cinematic, and textural work. Release dates are not announced yet; this page records the direction and gives you a direct way to share what would be useful.</p>
-    <div class="plugins-page-status" aria-label="Plugin release status">
-      <span>Early development</span>
-      <p>Product pages, formats, demos, and release notes will appear here once a plugin is ready to evaluate publicly.</p>
-    </div>
+    <p class="eyebrow">Kreativ Sound plugins</p>
+    <h1 id="plugins-title" class="page-title">Atmosphere-first instruments and effects.</h1>
+    <p class="page-lead">KS Ghostform is the first live Kreativ Sound plugin: a free evolving drone and string synthesizer for cinematic beds, deep drones, and textured ambient work.</p>
+
+    <article class="plugins-release-card" aria-labelledby="ghostform-title">
+      <a class="plugins-release-art" href="/plugins/ghostform" aria-label="View KS Ghostform details">
+        <img src="/assets/thumbs/ghostform.png" width="1005" height="565" alt="KS Ghostform synthesizer artwork" loading="eager" decoding="async" fetchpriority="high" />
+      </a>
+      <div class="plugins-release-copy">
+        <p class="product-kicker">Available now · Free plugin</p>
+        <h2 id="ghostform-title">KS Ghostform</h2>
+        <p>Shape slow harmonic movement with two oscillator workflows, a sub oscillator, filter movement, echo, reverb, and a Variation engine.</p>
+        <dl class="plugins-release-meta" aria-label="KS Ghostform facts">
+          <div><dt>Presets</dt><dd>144 factory sounds</dd></div>
+          <div><dt>Formats</dt><dd>macOS AU/VST3 · Windows VST3</dd></div>
+          <div><dt>Access</dt><dd>Free · no activation</dd></div>
+        </dl>
+        <div class="product-actions">
+          <a class="button primary" data-track="generate_lead" data-track-product="ghostform" data-track-placement="plugins_feature" href="https://kreativ.gumroad.com/l/ks-ghostform" target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+            Download Free
+          </a>
+          <a class="button secondary" href="/plugins/ghostform">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            Product Details
+          </a>
+        </div>
+      </div>
+    </article>
+
     <section class="plugins-roadmap" aria-label="Plugin direction">
       <article>
         <strong>Atmosphere-first instruments</strong>
@@ -26,26 +49,17 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
       </article>
       <article>
         <strong>Clear evaluation</strong>
-        <p>Every public release will include format details, audio examples, support scope, and versioned release notes.</p>
+        <p>Every release includes format details, support scope, and practical information before you download.</p>
       </article>
     </section>
-    <section class="plugins-interest" aria-labelledby="plugins-interest-title">
-      <h2 id="plugins-interest-title">Want a launch update or have a format request?</h2>
-      <p>Email the tool, format, or workflow you want to see. This is also the best place to ask about beta evaluation when it opens.</p>
-      <p><a class="button primary" href="mailto:info@kreativsound.com?subject=Plugin%20launch%20interest">Share plugin interest</a></p>
-    </section>
     <div class="plugins-page-actions">
-      <a class="button primary" href="/updates/">
-        <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
-        View Updates
-      </a>
-      <a class="button secondary" href="/sounds/">
+      <a class="button primary" href="/plugins/ghostform">
         <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
-        Browse Sounds
+        Explore KS Ghostform
       </a>
-      <a class="button secondary" href="/tools/">
-        <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
-        Browse Tools
+      <a class="button secondary" href="/updates/#new-releases-title">
+        <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
+        View release notes
       </a>
     </div>
   </section>

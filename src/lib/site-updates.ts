@@ -11,6 +11,7 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-09-25", kind: "release", title: "KS Ghostform released", description: "A free evolving drone and string synthesizer is now available with 144 factory presets, macOS AU/VST3 support, Windows VST3 support, MIDI automation, and no activation required.", href: "/plugins/ghostform" },
   { date: "2026-09-14", kind: "release", title: "Preset Mutator Free v0.5.0", description: "Arturia Pigments beta joins Scratch, Preset, and Audio with local `.pgtx` generation, bounded mutations, and byte-safe resource preservation.", href: "/preset-mutator/changelog/" },
   { date: "2026-09-13", kind: "update", title: "Preset Mutator Free v0.4.12", description: "The new Wide character direction creates broader stereo presets by influencing width, unison, and chorus decisions.", href: "/preset-mutator/changelog/" },
   { date: "2026-09-13", kind: "update", title: "Preset Mutator Pro v0.4.11", description: "The new Wide character direction creates broader stereo presets by influencing width, unison, and chorus decisions.", href: "/preset-mutator-pro/changelog/" },

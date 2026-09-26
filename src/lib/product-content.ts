@@ -11,6 +11,33 @@ export type ProductLandingCopy = {
 };
 
 export const landingCopyOverrides = {
+  "ghostform": {
+    subtitle: "Free evolving drone and string synthesizer for slow harmonic movement, cinematic beds, deep drones, and textured ambient sound design.",
+    shortMeta: "Free plugin • 144 factory presets • macOS AU/VST3 • Windows VST3",
+    ctaLine: "Download KS Ghostform free from Gumroad.",
+    finalCtaTitle: "Download KS Ghostform free.",
+    finalCtaText: "Get the full instrument, 144 factory presets, and MIDI automation with no activation or license key.",
+    longDescription: [
+      "KS Ghostform is a free evolving drone and string synthesizer built for slow harmonic movement, cinematic beds, deep drones, and textured ambient sound design.",
+      "Two oscillator workflows, a sub oscillator, filter movement, echo, reverb, and a Variation engine make it easy to move from a stable source into more animated, uncertain, or spacious material.",
+      "The instrument includes 144 factory presets covering drones, pads, basses, leads, plucks, and experimental textures. It supports full MIDI automation and needs no activation or license key."
+    ],
+    specifications: [
+      { label: "Product type", value: "Free software synthesizer" },
+      { label: "Formats", value: "macOS AU and VST3; Windows 64-bit VST3" },
+      { label: "Preset count", value: "144 factory presets" },
+      { label: "Sound palette", value: "Drones, pads, basses, leads, plucks, and experimental textures" },
+      { label: "Core engine", value: "Two oscillators, sub oscillator, filter movement, echo, reverb, and Variation engine" },
+      { label: "Automation", value: "Full MIDI automation" },
+      { label: "Activation", value: "No activation or license key" },
+      { label: "Delivery", value: "Free Gumroad download" }
+    ],
+    requirements: [
+      "macOS 11 or later: signed and notarized universal AU and VST3 for Apple Silicon and Intel Macs.",
+      "Windows: a 64-bit DAW that supports VST3 plug-ins.",
+      "After installation, restart or rescan plug-ins in your DAW."
+    ]
+  },
   "kreativ-kollection-v1": {
     subtitle: "9 synth preset banks and 7 WAV sound packs in one native Gumroad bundle.",
     shortMeta: "16 products • 9 preset banks • 7 WAV sound packs • €144 value • €69 later",

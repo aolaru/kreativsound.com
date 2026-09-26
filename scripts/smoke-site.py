@@ -69,9 +69,10 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "JUNO NOCTURNES", "Preset Mutator Free", "Kreativ Kollection V1", "Optional analytics"],
+            "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "KS Ghostform", "JUNO NOCTURNES", "Preset Mutator Free", "Kreativ Kollection V1", "Optional analytics"],
             "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
-            "/updates/": ["Kreativ Sound Updates and Changelog", "New releases, updates, and practical guides.", "New products and major launches.", "Improvements grouped by month.", "September 2026", "August 2026", f"{preset_mutator_pro['name']} v{preset_mutator_pro['version']}", f"{preset_mutator_free['name']} v{preset_mutator_free['version']}", f"{wave_mutator['name']} {wave_mutator['releaseLabel']} v{wave_mutator['version']}", "Site-maintenance history", "Release notes", "Practical sound-design guides.", "The current browser-tool line", "32 variants per run", "Plugins"],
+            "/updates/": ["Kreativ Sound Updates and Changelog", "New releases, updates, and practical guides.", "New products and major launches.", "Improvements grouped by month.", "September 2026", "August 2026", f"{preset_mutator_pro['name']} v{preset_mutator_pro['version']}", f"{preset_mutator_free['name']} v{preset_mutator_free['version']}", f"{wave_mutator['name']} {wave_mutator['releaseLabel']} v{wave_mutator['version']}", "Site-maintenance history", "Release notes", "Practical sound-design guides.", "The current tools and plugin line", "32 variants per run", "KS Ghostform", "144 factory presets"],
+            "/plugins/ghostform": ["KS Ghostform", "Download Free", "144 factory presets", "macOS AU and VST3", "Windows 64-bit VST3", "Product Specifications", "Requirements"],
             "/tools/": ["Preset Mutator Free", "3 free / 32 Pro", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "Wave Mutator Lite", "Pattern Mutator Lite"],
             "/tools/pattern-mutator/": ["Pattern Mutator Lite", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "Free piano roll"],
             "/tools/pattern-mutator/changelog/": ["Pattern Mutator Lite", "Changelog", "Current release", f"v{pattern_mutator['version']}", "Back to Pattern Mutator Lite"],
@@ -79,7 +80,7 @@ def main() -> int:
             "/tools/preset-mutator/": ["Preset Mutator Free", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "32 Vital preset variants per workflow."],
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
-            "/plugins/": ["Plugins", "Plugins are in development. Help shape what launches first.", "Early development", "Share plugin interest", "View Updates", "Browse Sounds", "Browse Tools"],
+            "/plugins/": ["Kreativ Sound plugins", "KS Ghostform", "144 factory sounds", "Download Free", "Explore KS Ghostform", "View release notes"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
             "/privacy/": ["Privacy Policy", "Optional analytics", "Google Analytics", "Cloudflare Web Analytics"],
@@ -125,7 +126,7 @@ def main() -> int:
                 require(dom, 'href="/plugins/"', route, errors)
                 forbid(dom, 'href="/learn/"', route, errors)
                 require(dom, "Flagship bundle", route, errors)
-                require(dom, 'id="latest-title">Kreativ Kollection V1</h2>', route, errors)
+                require(dom, 'id="latest-title">KS Ghostform</h2>', route, errors)
                 require(dom, "Creative tool", route, errors)
                 require(dom, "Explore Sounds", route, errors)
                 require(dom, "Open Tools", route, errors)
@@ -145,6 +146,9 @@ def main() -> int:
             if route.startswith("/sounds/") and route != "/sounds/":
                 require(dom, 'class="product-breadcrumbs"', route, errors)
                 require(dom, 'href="/sounds/"', route, errors)
+            if route.startswith("/plugins/") and route != "/plugins/":
+                require(dom, 'class="product-breadcrumbs"', route, errors)
+                require(dom, 'href="/plugins/"', route, errors)
             if route == "/music/":
                 forbid(dom, "Rethyn", route, errors)
                 forbid(dom, "Holo Signal", route, errors)

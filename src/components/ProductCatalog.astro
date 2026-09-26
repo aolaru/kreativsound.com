@@ -14,11 +14,11 @@ const categories = [
 const anchorCategories = categories.filter((category) => ["Presets", "Samples", "Free", "Legacy"].includes(category));
 const CategoryHeading = "h2";
 
-function ctaText(category: string) {
-  if (category === "Bundle") return "Get the bundle";
-  if (category === "Free") return "Download Free";
-  if (category === "Tools") return "Get Tool";
-  if (category === "Legacy") return "View Archive";
+function ctaText(product: { category: string; status?: string }) {
+  if (product.status === "free" || product.category === "Free") return "Download Free";
+  if (product.category === "Bundle") return "Get the bundle";
+  if (product.category === "Tools") return "Get Tool";
+  if (product.category === "Legacy") return "View Archive";
   return "Get Pack";
 }
 
@@ -104,7 +104,7 @@ function ctaTrackingEvent(product: { status?: string }) {
                   <div class="product-action-row">
                     {hasPrimaryAction ? (
                       <a class="product-action-link is-primary" data-track={ctaTrackingEvent(item)} data-track-product={item.title} data-track-placement="catalog" href={item.url} target="_blank" rel="noopener noreferrer">
-                        {ctaText(item.category)}
+                        {ctaText(item)}
                       </a>
                     ) : item.detailsUrl ? (
                       <a class="product-action-link" href={item.detailsUrl}>View details</a>

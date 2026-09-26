@@ -60,8 +60,8 @@ const staticEntries: SearchEntry[] = [
     title: "Plugins",
     url: "/plugins/",
     type: "Page",
-    thumbnail: "/logo-128.svg",
-    description: "Upcoming Kreativ Sound instrument and effect plugins."
+    thumbnail: "/assets/thumbs/ghostform.png",
+    description: "Kreativ Sound instrument and effect plugins, starting with KS Ghostform."
   },
   {
     title: "Preset Mutator Free",
@@ -202,8 +202,8 @@ export const GET: APIRoute = async () => {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
   const productEntries: SearchEntry[] = productPages.map((product) => ({
     title: product.title.replace(" | Kreativ Sound", ""),
-    url: `/sounds/${product.slug}`,
-    type: product.variant === "bundle" ? "Bundle" : product.variant === "archive" ? "Archive" : "Product",
+    url: product.route,
+    type: product.hubLabel === "Plugins" ? "Plugin" : product.variant === "bundle" ? "Bundle" : product.variant === "archive" ? "Archive" : "Product",
     thumbnail: product.image,
     description: product.description
   }));

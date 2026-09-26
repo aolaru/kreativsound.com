@@ -30,6 +30,9 @@ export type ProductRelatedItem = {
 
 export type ProductPage = {
   slug: string;
+  route: string;
+  hubLabel: "Sounds" | "Plugins";
+  hubUrl: "/sounds/" | "/plugins/";
   title: string;
   headline: string;
   subtitle: string;
@@ -82,6 +85,15 @@ type ProductPageOverride = Partial<Pick<
 >>;
 
 const productPageOverrides: Record<string, ProductPageOverride> = {
+  "ghostform": {
+    title: "KS Ghostform | Free Drone & String Synth",
+    headline: "KS Ghostform",
+    description: "KS Ghostform is a free evolving drone and string synthesizer with 144 factory presets for cinematic beds, deep drones, and textured ambient sound design.",
+    kicker: "Free synthesizer plugin",
+    variant: "flagship",
+    primaryUrl: "https://kreativ.gumroad.com/l/ks-ghostform",
+    primaryLabel: "Download Free"
+  },
   "kreativ-kollection-v1": {
     title: "Kreativ Kollection V1 | Preset & Sample Bundle",
     headline: "Kreativ Kollection V1",
@@ -211,7 +223,7 @@ const liteComparisons: Record<string, ProductLiteComparison> = {
 const copyBySlug = landingCopyOverrides as Record<string, ProductLandingCopy>;
 
 function slugFromDetailsUrl(url?: string) {
-  return url?.replace(/^\/(?:products|sounds)\//, "").replace(/\/$/, "") || "";
+  return url?.replace(/^\/+|\/+$/g, "").split("/").at(-1) || "";
 }
 
 function productTitle(product: Product) {
@@ -430,7 +442,9 @@ function buildRelatedProducts(current: Product): ProductRelatedItem[] {
 export const productPages: ProductPage[] = products
   .filter((product) => product.detailsUrl)
   .map((product) => {
-    const slug = slugFromDetailsUrl(product.detailsUrl);
+    const route = product.detailsUrl as string;
+    const slug = slugFromDetailsUrl(route);
+    const isPlugin = route.startsWith("/plugins/");
     const name = productTitle(product);
     const copy = copyBySlug[slug];
     const override = productPageOverrides[slug] || {};
@@ -438,11 +452,14 @@ export const productPages: ProductPage[] = products
 
     return {
       slug,
+      route,
+      hubLabel: isPlugin ? "Plugins" : "Sounds",
+      hubUrl: isPlugin ? "/plugins/" : "/sounds/",
       title: override.title || `${name} | Kreativ Sound`,
       headline: override.headline || name,
       subtitle: copy?.subtitle || defaultSubtitle(product),
       description,
-      canonical: `https://kreativsound.com/sounds/${slug}`,
+      canonical: `https://kreativsound.com${route}`,
       ogImage: `https://kreativsound.com${product.coverImage || product.thumbnail || "/logo-128.svg"}`,
       ogImageAlt: `${name} product cover`,
       image: product.coverImage || product.thumbnail || "/logo-128.svg",

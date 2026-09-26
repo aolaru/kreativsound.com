@@ -4,7 +4,7 @@ import { productPages } from "../../lib/product-pages";
 export function getStaticPaths() {
   return productPages.map((product) => ({
     params: { slug: product.slug },
-    props: { target: `/sounds/${product.slug}`, title: product.headline }
+    props: { target: product.route, title: product.headline }
   }));
 }
 

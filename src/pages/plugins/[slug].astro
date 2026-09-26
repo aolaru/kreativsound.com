@@ -4,7 +4,7 @@ import ProductLandingPage from "../../components/ProductLandingPage.astro";
 import { productPages } from "../../lib/product-pages";
 
 export function getStaticPaths() {
-  return productPages.filter((product) => product.route.startsWith("/sounds/")).map((product) => ({
+  return productPages.filter((product) => product.route.startsWith("/plugins/")).map((product) => ({
     params: { slug: product.slug },
     props: { product }
   }));
@@ -18,7 +18,7 @@ const { product } = Astro.props;
   canonical={product.canonical}
   ogImage={product.ogImage}
   ogImageAlt={product.ogImageAlt}
-  activeNav="sound"
+  activeNav="plugins"
 >
   <ProductLandingPage product={product} />
 </BaseLayout>
