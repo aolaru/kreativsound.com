@@ -51,7 +51,7 @@ export const products: Product[] = [
     detailsUrl: "/plugins/ghostform",
     badge: "New",
     thumbnail: "/assets/thumbs/ghostform.png",
-    coverImage: "/assets/thumbs/ghostform.png",
+    coverImage: "/assets/thumbs/ghostform-interface.png",
     homeImage: "/assets/thumbs/ghostform.png",
     format: "macOS AU/VST3 + Windows VST3",
     count: "144 factory presets",
