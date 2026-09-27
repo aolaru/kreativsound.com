@@ -80,7 +80,7 @@ def main() -> int:
             "/tools/preset-mutator/": ["Preset Mutator Free", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "32 Vital preset variants per workflow."],
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
-            "/plugins/": ["Kreativ Sound plugins", "KS Ghostform", "144 factory sounds", "Download Free", "Explore KS Ghostform", "View release notes"],
+            "/plugins/": ["New free plugin", "KS Ghostform", "144 factory sounds", "Download Free", "Product Details"],
             "/about/": ["Sounds", "About"],
             "/contact/": ["Sounds", "info@kreativsound.com"],
             "/privacy/": ["Privacy Policy", "Optional analytics", "Google Analytics", "Cloudflare Web Analytics"],
