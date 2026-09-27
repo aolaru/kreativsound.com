@@ -3358,25 +3358,30 @@ a:focus-visible,
 
 .plugins-page {
   display: grid;
-  gap: 0.9rem;
-  max-width: 760px;
+  gap: clamp(1.25rem, 2.6vw, 2rem);
+  max-width: 960px;
 }
 
-.plugins-page .page-lead {
-  max-width: 58ch;
+.plugins-intro {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 640px;
+}
+
+.plugins-intro .eyebrow,
+.plugins-intro .page-title,
+.plugins-intro .page-lead {
   margin-bottom: 0;
 }
 
 .plugins-release-card {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(18rem, .9fr);
-  gap: clamp(1.25rem, 3vw, 2.5rem);
-  align-items: center;
-  margin: 1rem 0;
-  padding: clamp(1rem, 2.5vw, 1.5rem);
+  gap: clamp(1rem, 2vw, 1.35rem);
+  margin: 0;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: linear-gradient(135deg, rgba(255, 255, 255, .5), rgba(250, 227, 227, .72));
+  background: linear-gradient(145deg, rgba(255, 255, 255, .58), rgba(250, 227, 227, .56));
 }
 
 .plugins-release-art {
@@ -3384,6 +3389,7 @@ a:focus-visible,
   overflow: hidden;
   border-radius: calc(var(--radius) - .25rem);
   background: #18131d;
+  box-shadow: 0 16px 38px rgba(18, 21, 28, 0.16);
 }
 
 .plugins-release-art img {
@@ -3397,19 +3403,24 @@ a:focus-visible,
   font-size: clamp(2rem, 4vw, 3.25rem);
 }
 
-.plugins-release-copy > p:not(.product-kicker) {
-  max-width: 40rem;
+.plugins-release-copy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.1rem 0.25rem 0.2rem;
 }
 
 .plugins-release-meta {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: .65rem;
-  margin: 1.1rem 0;
+  flex: 1 1 auto;
+  margin: 0;
 }
 
 .plugins-release-meta div {
-  padding: .75rem;
+  padding: .7rem .8rem;
   border: 1px solid var(--line);
   border-radius: .8rem;
   background: rgba(255, 255, 255, .35);
@@ -3495,13 +3506,14 @@ a:focus-visible,
 }
 
 @media (max-width: 760px) {
-  .plugins-roadmap {
+  .plugins-release-copy,
+  .plugins-release-meta {
     grid-template-columns: 1fr;
   }
 
-  .plugins-release-card,
-  .plugins-release-meta {
-    grid-template-columns: 1fr;
+  .plugins-release-copy {
+    display: grid;
+    padding: 0.1rem;
   }
 }
 
