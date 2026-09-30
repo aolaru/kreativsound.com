@@ -125,9 +125,7 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   "operators-fm8-presets": {
     headline: "OPERATORS",
     description: "OPERATORS is a 64-preset soundset for Native Instruments FM8, focused on atmospheric motion, digital textures, and frequency-driven synthesis.",
-    kicker: "FM8 preset pack",
-    purchaseAltUrl: "https://www.paypal.com/ncp/payment/TS44NMWAGW2DL",
-    purchaseAltLabel: "Pay with PayPal"
+    kicker: "FM8 preset pack"
   },
   "operators-lite-fm8-presets": {
     headline: "OPERATORS Lite",
@@ -147,9 +145,7 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   "black-arcology-pigments-presets": {
     headline: "BLACK ARCOLOGY",
     description: "BLACK ARCOLOGY is a dark cinematic Arturia Pigments preset collection built for industrial pressure, evolving tension, and character-driven synthetic tone.",
-    kicker: "Flagship preset pack",
-    purchaseAltUrl: "https://www.paypal.com/ncp/payment/MUN23XJLKABU8",
-    purchaseAltLabel: "Pay with PayPal"
+    kicker: "Flagship preset pack"
   }
 };
 

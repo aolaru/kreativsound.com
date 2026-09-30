@@ -3976,6 +3976,13 @@ a:focus-visible,
   max-width: 42rem;
 }
 
+.brand-hero-actions,
+.brand-plugin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
 .music-hero-note {
   max-width: 38rem;
   color: var(--soft);
@@ -4128,6 +4135,21 @@ a:focus-visible,
   color: var(--muted);
 }
 
+.brand-artist-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  margin-top: 0.45rem;
+  color: var(--accent-strong);
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.brand-artist-link:hover {
+  text-decoration: underline;
+}
+
 .music-artist-stack,
 .brand-grid,
 .contact-grid {
@@ -4136,7 +4158,8 @@ a:focus-visible,
 }
 
 .music-context,
-.brand-process {
+.brand-process,
+.brand-plugin-feature {
   display: grid;
   gap: 1rem;
   padding: 1.05rem;
@@ -4145,6 +4168,130 @@ a:focus-visible,
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.11) 0%, transparent 34%),
     rgba(153, 0, 0, 0.045);
+}
+
+.brand-plugin-feature {
+  grid-template-columns: minmax(220px, 0.82fr) minmax(0, 1.18fr);
+  align-items: center;
+}
+
+.brand-plugin-art {
+  display: block;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #15131a;
+  box-shadow: 0 16px 34px rgba(18, 21, 28, 0.18);
+}
+
+.brand-plugin-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.brand-plugin-copy {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.brand-plugin-copy h2,
+.brand-plugin-copy p {
+  margin: 0;
+}
+
+.brand-plugin-copy > p:not(.product-section-kicker) {
+  color: var(--muted);
+}
+
+.brand-plugin-facts,
+.brand-plugin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.brand-plugin-facts span {
+  padding: 0.25rem 0.55rem;
+  border: 1px solid rgba(228, 171, 171, 0.18);
+  border-radius: 999px;
+  color: var(--soft);
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: rgba(153, 0, 0, 0.055);
+}
+
+.brand-plugin-actions {
+  padding-top: 0.1rem;
+}
+
+.brand-start {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.brand-start-head h2,
+.brand-start-head .product-section-kicker {
+  margin: 0;
+}
+
+.brand-start-head h2 {
+  margin-top: 0.28rem;
+  font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+}
+
+.brand-start-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.brand-start-grid a {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.7rem;
+  align-items: center;
+  padding: 0.9rem;
+  border: 1px solid rgba(228, 171, 171, 0.18);
+  border-radius: 16px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.045);
+  text-decoration: none;
+  transition: border-color 170ms ease, background 170ms ease, transform 170ms ease;
+}
+
+.brand-start-grid a:hover {
+  border-color: rgba(153, 0, 0, 0.38);
+  background: rgba(153, 0, 0, 0.06);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.brand-start-grid > a > i:first-child {
+  width: 1.1rem;
+  color: var(--accent-strong);
+  text-align: center;
+}
+
+.brand-start-grid > a > i:last-child {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.brand-start-grid span {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.brand-start-grid strong {
+  color: var(--text);
+}
+
+.brand-start-grid small {
+  color: var(--muted);
+  font-size: 0.79rem;
+  line-height: 1.35;
 }
 
 .music-context {
@@ -5062,6 +5209,7 @@ a:focus-visible,
   .music-hero,
   .music-context,
   .brand-hero,
+  .brand-plugin-feature,
   .contact-hero,
   .product-hero,
   .product-demo-spotlight,
@@ -5078,6 +5226,7 @@ a:focus-visible,
   .learn-notes,
   .learn-pillars,
   .brand-process-steps,
+  .brand-start-grid,
   .music-grid,
   .brand-grid,
   .contact-grid {

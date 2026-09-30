@@ -11,51 +11,63 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
     <div class="brand-hero">
       <div class="brand-hero-copy">
         <p class="eyebrow">About</p>
-        <h1 class="page-title">Independent sound design built around mood, clarity, and usable texture.</h1>
-        <p class="page-lead">Kreativ Sound is Andrei Olaru's independent sound-design project: ambient, experimental, and cinematic materials that help creators move quickly without sacrificing identity.</p>
+        <h1 class="page-title">Sound design for darker electronic and cinematic work.</h1>
+        <p class="page-lead">Kreativ Sound is Andrei Olaru's independent catalog of preset banks, sample packs, browser tools, and instruments.</p>
+        <div class="brand-hero-actions">
+          <a class="button primary" href="/sounds/">Browse Sounds <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          <a class="button secondary" href="/plugins/">Explore Plugins <i class="fa-solid fa-plug" aria-hidden="true"></i></a>
+        </div>
       </div>
       <div class="brand-hero-panel">
-        <p class="product-section-kicker">What this is</p>
-        <h2>A focused catalog, not a trend machine</h2>
-        <p>Each release is meant to give producers, editors, and sound designers a stronger starting point: darker tone, faster workflow, and fewer generic sounds.</p>
+        <p class="product-section-kicker">Made by Andrei Olaru</p>
+        <h2>Built from real creative work.</h2>
+        <p>Every release begins with a practical role: establish atmosphere, introduce movement, or add tension without slowing a session down.</p>
+        <a class="brand-artist-link" href="/music/">Hear the Olaru project <i class="fa-solid fa-headphones" aria-hidden="true"></i></a>
       </div>
     </div>
 
-    <section class="brand-process" aria-labelledby="brand-process-title">
-      <div class="brand-process-intro">
-        <p class="product-section-kicker">Made for the moment before the track takes shape</p>
-        <h2 id="brand-process-title">A small palette with a clear point of view.</h2>
-        <p>Every pack begins with a specific job: establish space, introduce movement, add pressure, or leave a mark at a transition. The aim is to make choosing and shaping sound feel faster, not more crowded.</p>
+    <section class="brand-plugin-feature" aria-labelledby="brand-plugins-title">
+      <a class="brand-plugin-art" href="/plugins/ghostform" aria-label="Explore KS Ghostform">
+        <img src="/assets/thumbs/ghostform-interface.png" width="1005" height="649" alt="KS Ghostform synthesizer interface showing the Voltage Sleep preset" loading="lazy" decoding="async" />
+      </a>
+      <div class="brand-plugin-copy">
+        <p class="product-section-kicker">New: Kreativ Sound Plugins</p>
+        <h2 id="brand-plugins-title">A new space for instruments.</h2>
+        <p>Plugins are now part of Kreativ Sound. KS Ghostform is a free evolving drone and string synth for cinematic beds, deep drones, and ambient texture.</p>
+        <div class="brand-plugin-facts" aria-label="KS Ghostform facts">
+          <span>Free plugin</span>
+          <span>144 factory presets</span>
+          <span>macOS AU/VST3 · Windows VST3</span>
+        </div>
+        <div class="brand-plugin-actions">
+          <a class="button primary" href="/plugins/">Explore Plugins <i class="fa-solid fa-plug" aria-hidden="true"></i></a>
+          <a class="button secondary" href="/plugins/ghostform">See KS Ghostform <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
       </div>
-      <ol class="brand-process-steps">
-        <li><strong>Define the role</strong><span>Choose a limited family of pads, drones, sequences, one-shots, or FX around one kind of musical tension.</span></li>
-        <li><strong>Keep the character</strong><span>Build enough variation for a session while protecting the imperfect detail that makes a sound recognizable.</span></li>
-        <li><strong>Use it in context</strong><span>Bring the same material into Olaru music and practical guides, then keep the catalog connected to real creative work.</span></li>
-      </ol>
     </section>
 
-    <div class="brand-route-actions" aria-label="Explore Kreativ Sound">
-      <a class="button primary" href="/sounds/">Browse the sound catalog <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-      <a class="button secondary" href="/music/">Hear the Olaru project <i class="fa-solid fa-headphones" aria-hidden="true"></i></a>
-      <a class="button secondary" href="/updates/#guides">Read practical guides <i class="fa-solid fa-book-open" aria-hidden="true"></i></a>
-    </div>
-
-    <div class="brand-grid">
-      <article class="product-panel product-panel-modern product-panel-accent">
-        <p class="product-section-kicker">Catalog</p>
-        <h2>What Kreativ Sound releases</h2>
-        <p>Preset packs, sample collections, and free companion releases for music production, film edits, transitions, dark ambient work, and cinematic electronic sessions.</p>
-      </article>
-      <article class="product-panel product-panel-modern">
-        <p class="product-section-kicker">Principle</p>
-        <h2>Built for practical use</h2>
-        <p>Every release keeps a clear sound identity, practical file formats, and textures that can go straight into a session.</p>
-      </article>
-      <article class="product-panel product-panel-modern">
-        <p class="product-section-kicker">Context</p>
-        <h2>Part of the KREATIV ecosystem</h2>
-        <p>Kreativ Sound sits inside the wider <a href="https://madebykreativ.com" target="_blank" rel="noopener noreferrer">KREATIV</a> network of independent creative tools and assets, alongside design and publishing projects with the same direct, product-led mindset.</p>
-      </article>
-    </div>
+    <section class="brand-start" aria-labelledby="brand-start-title">
+      <div class="brand-start-head">
+        <p class="product-section-kicker">Explore Kreativ Sound</p>
+        <h2 id="brand-start-title">Start with what you need.</h2>
+      </div>
+      <div class="brand-start-grid">
+        <a href="/sounds/">
+          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+          <span><strong>Sounds</strong><small>Preset banks and sample packs for atmosphere, motion, and texture.</small></span>
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
+        <a href="/tools/">
+          <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+          <span><strong>Tools</strong><small>Free browser tools for generating, shaping, and preparing material.</small></span>
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
+        <a href="/music/">
+          <i class="fa-solid fa-headphones" aria-hidden="true"></i>
+          <span><strong>Music</strong><small>Hear the Olaru releases that put the same palette into context.</small></span>
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </section>
   </section>
 </BaseLayout>
