@@ -1,45 +1,223 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { products } from "../../lib/products";
+import { productPages } from "../../lib/product-pages";
+import toolReleases from "../../data/tool-releases.json";
+
+const catalogGroups = [
+  { label: "Plugins", category: "Tools", plugin: true },
+  { label: "Bundles", category: "Bundle" },
+  { label: "Preset packs", category: "Presets" },
+  { label: "Sample packs", category: "Samples" },
+  { label: "Free packs", category: "Free" },
+  { label: "Legacy archive", category: "Legacy" }
+].map(({ label, category, plugin }) => ({
+  label,
+  names: products
+    .filter((product) => product.category === category && product.status !== "comingSoon"
+      && (!plugin || product.detailsUrl?.startsWith("/plugins/")))
+    .map((product) => productPages.find((page) => page.route === product.detailsUrl)?.headline || product.title)
+    .sort((a, b) => a.localeCompare(b))
+})).filter((group) => group.names.length);
+
+catalogGroups.splice(1, 0, {
+  label: "Browser tools",
+  names: Object.values(toolReleases).map((release) => release.name).sort((a, b) => a.localeCompare(b))
+});
 ---
 <BaseLayout
   title="Contact | Kreativ Sound"
-  description="Contact Kreativ Sound for product support, licensing questions, collaboration requests, custom use cases, and store or Patreon links."
+  description="Get in touch with Kreativ Sound for product support, licensing questions, and collaborations. Email info@kreativsound.com."
   canonical="https://kreativsound.com/contact/"
   activeNav="contact"
 >
-  <section class="card page-main contact-page-modern">
-    <div class="contact-hero">
-      <div class="contact-hero-copy">
-        <p class="eyebrow">Contact</p>
-        <h1 class="page-title">Licensing, partnerships, support, and direct requests.</h1>
-        <p class="page-lead">Use the channels below for product questions, release-related communication, collaborations, or custom use cases tied to the catalog.</p>
-      </div>
-      <div class="contact-hero-panel">
-        <p class="product-section-kicker">Response path</p>
-        <h2>Start with email for anything specific</h2>
-        <p>Email is the best route for licensing and direct requests. Store and Patreon links are there for product access and ongoing support.</p>
-      </div>
-    </div>
+  <section class="card page-main contact-page-modern contact-simple" aria-labelledby="contact-title">
+    <header>
+      <p class="eyebrow">Contact</p>
+      <h1 id="contact-title" class="page-title">Get in touch.</h1>
+      <p class="page-lead">Product support, licensing, or collaborations. Send Andrei a message.</p>
+    </header>
 
-    <div class="contact-grid">
-      <a class="contact-card" href="mailto:info@kreativsound.com">
-        <span class="contact-card-icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span>
-        <span class="learn-card-kicker">Email</span>
-        <h2>info@kreativsound.com</h2>
-        <p>For licensing, support, partnerships, and custom questions.</p>
+    <form class="contact-form" action="https://formsubmit.co/info@kreativsound.com" method="POST" aria-label="Contact Andrei" aria-describedby="contact-privacy">
+      <input type="hidden" name="_subject" value="Kreativ Sound — contact enquiry" />
+      <input type="hidden" name="_template" value="table" />
+      <input class="contact-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <div class="contact-field-row">
+        <div class="contact-field">
+          <label for="contact-name">Name</label>
+          <input id="contact-name" name="name" type="text" autocomplete="name" maxlength="100" required />
+        </div>
+        <div class="contact-field">
+          <label for="contact-email">Email</label>
+          <input id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" required />
+        </div>
+      </div>
+
+      <div class="contact-field">
+        <label for="contact-product">Product or enquiry</label>
+        <select id="contact-product" name="product" required>
+          <option value="" selected disabled>Select a product or general enquiry</option>
+          <option value="General enquiry">General enquiry / collaboration</option>
+          <option value="Other product">Other / not listed</option>
+          {catalogGroups.map((group) => (
+            <optgroup label={group.label}>
+              {group.names.map((name) => <option value={name}>{name}</option>)}
+            </optgroup>
+          ))}
+        </select>
+      </div>
+
+      <div class="contact-field">
+        <label for="contact-message">Message</label>
+        <textarea id="contact-message" name="message" rows="5" maxlength="5000" placeholder="How can I help? For support, describe what happened and what you expected." required></textarea>
+      </div>
+
+      <div class="contact-field">
+        <label for="contact-system">OS / DAW / browser <span>(optional)</span></label>
+        <input id="contact-system" name="system" type="text" maxlength="200" placeholder="For support, e.g. macOS 15, Ableton Live 12" />
+      </div>
+
+      <p id="contact-privacy" class="contact-form-note">Sent through FormSubmit, with a spam check before delivery. <a href="/privacy/">Privacy details</a>.</p>
+      <button class="button primary" type="submit">Send message</button>
+    </form>
+
+    <p class="contact-direct">Prefer email? <a href="mailto:info@kreativsound.com">info@kreativsound.com</a></p>
+
+    <nav class="contact-other-links" aria-label="Store">
+      <a href="https://kreativ.gumroad.com" target="_blank" rel="noopener noreferrer">
+        <strong>Gumroad store <span aria-hidden="true">↗</span></strong>
+        <span>Browse releases and free downloads.</span>
       </a>
-      <a class="contact-card" href="https://kreativ.gumroad.com" target="_blank" rel="noopener noreferrer">
-        <span class="contact-card-icon"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
-        <span class="learn-card-kicker">Store</span>
-        <h2>kreativ.gumroad.com</h2>
-        <p>Browse the current releases, free downloads, and catalog updates.</p>
-      </a>
-      <a class="contact-card" href="https://www.patreon.com/cw/kreativsound" target="_blank" rel="noopener noreferrer">
-        <span class="contact-card-icon"><i class="fa-brands fa-patreon" aria-hidden="true"></i></span>
-        <span class="learn-card-kicker">Patreon</span>
-        <h2>patreon.com/cw/kreativsound</h2>
-        <p>Support ongoing work and follow future sound releases more closely.</p>
-      </a>
-    </div>
+    </nav>
   </section>
 </BaseLayout>
+
+<style>
+  .contact-simple {
+    max-width: 680px;
+    gap: 1.5rem;
+  }
+
+  .contact-simple .page-lead {
+    max-width: 45ch;
+    margin-bottom: 0;
+  }
+
+  .contact-form,
+  .contact-field {
+    display: grid;
+    gap: 0.45rem;
+    min-width: 0;
+  }
+
+  .contact-form {
+    gap: 1rem;
+  }
+
+  .contact-field-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .contact-field label {
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .contact-field label span {
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .contact-field input,
+  .contact-field select,
+  .contact-field textarea {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 46px;
+    padding: 0.75rem;
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 1rem;
+    color-scheme: light;
+  }
+
+  :global([data-theme="dark"]) .contact-field input,
+  :global([data-theme="dark"]) .contact-field select,
+  :global([data-theme="dark"]) .contact-field textarea {
+    color-scheme: dark;
+  }
+
+  .contact-field input::placeholder,
+  .contact-field textarea::placeholder {
+    color: var(--muted);
+    opacity: 1;
+  }
+
+  .contact-field textarea {
+    resize: vertical;
+  }
+
+  .contact-field input:focus-visible,
+  .contact-field select:focus-visible,
+  .contact-field textarea:focus-visible {
+    outline: 2px solid var(--accent-strong);
+    outline-offset: 2px;
+  }
+
+  .contact-form .button {
+    justify-self: start;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .contact-honey {
+    display: none;
+  }
+
+  .contact-form-note,
+  .contact-direct {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-other-links {
+    display: grid;
+    gap: 1rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .contact-other-links a {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.25rem 0;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .contact-other-links a:hover strong {
+    text-decoration: underline;
+  }
+
+  .contact-other-links a > span {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 480px) {
+    .contact-other-links,
+    .contact-field-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
