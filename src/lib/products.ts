@@ -82,7 +82,7 @@ export const products: Product[] = [
     }
   },
   {
-    title: "Preset Mutator Free - Vital Preset Generator",
+    title: "Preset Mutator Free - Synth Preset Generator",
     category: "Tools",
     status: "free",
     featuredRank: 4,
@@ -99,17 +99,36 @@ export const products: Product[] = [
     homeImageSrcSet: "/assets/home/preset-mutator-480.webp 480w, /assets/home/preset-mutator-720.webp 720w",
     format: "Free browser tool",
     count: "3 variants per run",
-    useCase: "Free local-first Vital preset starts from scratch ideas, existing presets, and audio sources"
+    useCase: "Local-first preset starts for Vital, Serum 2 beta, and Pigments beta"
+  },
+  {
+    title: "Callisto Drift - 128 Arturia Jup-8 V4 Presets",
+    category: "Presets",
+    status: "available",
+    featuredRank: 3,
+    ...standardSoundPackPrice,
+    url: "https://kreativ.gumroad.com/l/callisto-drift-jup-8-v4-presets",
+    detailsUrl: "/sounds/callisto-drift-jup-8-v4-presets",
+    badge: "New",
+    extraAction: {
+      label: "Try Lite",
+      url: "/sounds/callisto-drift-lite-jup-8-v4-presets"
+    },
+    thumbnail: "/assets/thumbs/callisto-drift-thumb.webp",
+    coverImage: "/assets/thumbs/callisto-drift.webp",
+    homeImage: "/assets/home/callisto-drift-720.webp",
+    homeImageSrcSet: "/assets/home/callisto-drift-480.webp 480w, /assets/home/callisto-drift-720.webp 720w",
+    format: "Arturia Jup-8 V4 presets",
+    count: "128 presets",
+    useCase: "Cold pads, dark sequences, pressure-heavy basses, and expressive leads"
   },
   {
     title: "JUNO NOCTURNES - 96 Arturia JUN-6 V Presets",
     category: "Presets",
     status: "available",
-    featuredRank: 3,
     ...standardSoundPackPrice,
     url: "https://kreativ.gumroad.com/l/juno-nocturnes",
     detailsUrl: "/sounds/juno-nocturnes-jun-6-v-presets",
-    badge: "New",
     extraAction: {
       label: "Try Lite",
       url: "/sounds/juno-nocturnes-lite-jun-6-v-presets"
@@ -186,7 +205,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/neolith.jpg",
     coverImage: "/assets/thumbs/neolith-cover.webp",
     format: "Softube Models presets",
-    count: "Full pack",
+    count: "64 presets",
     useCase: "Analog tension and cinematic weight"
   },
   {
@@ -260,8 +279,8 @@ export const products: Product[] = [
     detailsUrl: "/sounds/sfxs-2-sound-effects",
     thumbnail: "/assets/thumbs/sfxs-2.jpg",
     coverImage: "/assets/thumbs/sfxs-2-cover.webp",
-    format: "WAV samples",
-    count: "FX pack",
+    format: "24-bit WAV samples",
+    count: "34 sound effects",
     useCase: "Cinematic accents and transitions",
     demo: {
       label: "Listen to demo",
@@ -278,7 +297,7 @@ export const products: Product[] = [
     detailsUrl: "/sounds/noize-2-noise-textures",
     thumbnail: "/assets/thumbs/noize-2.jpg",
     coverImage: "/assets/thumbs/noize-2-cover.webp",
-    format: "WAV samples",
+    format: "24-bit WAV samples",
     count: "Noise pack",
     useCase: "Abstract noise and glitch layers",
     demo: {
@@ -296,7 +315,7 @@ export const products: Product[] = [
     detailsUrl: "/sounds/enigma-2-cinematic-atmospheres",
     thumbnail: "/assets/thumbs/enigma-2.jpg",
     coverImage: "/assets/thumbs/enigma-2-cover.webp",
-    format: "WAV samples",
+    format: "24-bit WAV samples",
     count: "Atmosphere pack",
     useCase: "Dark suspense beds",
     demo: {
@@ -314,8 +333,8 @@ export const products: Product[] = [
     detailsUrl: "/sounds/bleeps-2-percussion-sounds",
     thumbnail: "/assets/thumbs/bleeps-2.jpg",
     coverImage: "/assets/thumbs/bleeps-2-cover.webp",
-    format: "WAV samples",
-    count: "Percussion pack",
+    format: "24-bit WAV samples",
+    count: "44 sounds",
     useCase: "Percussive one-shots and rhythmic FX",
     demo: {
       label: "Listen to demo",
@@ -332,7 +351,7 @@ export const products: Product[] = [
     detailsUrl: "/sounds/space-2-atmospheres-textures",
     thumbnail: "/assets/thumbs/space-2.jpg",
     coverImage: "/assets/thumbs/space-2-cover.webp",
-    format: "WAV samples",
+    format: "24-bit WAV samples",
     count: "Atmosphere pack",
     useCase: "Sci-fi ambience and distant environments",
     demo: {
@@ -350,7 +369,7 @@ export const products: Product[] = [
     detailsUrl: "/sounds/tectonic-2-dark-subs-textures",
     thumbnail: "/assets/thumbs/tectonic-2.jpg",
     coverImage: "/assets/thumbs/tectonic-2-cover.webp",
-    format: "WAV samples",
+    format: "24-bit WAV samples",
     count: "Low-end pack",
     useCase: "Low-end pressure and subterranean textures",
     demo: {
@@ -368,7 +387,7 @@ export const products: Product[] = [
     detailsUrl: "/sounds/horror-2-cinematic-textures",
     thumbnail: "/assets/thumbs/horror-2.jpg",
     coverImage: "/assets/thumbs/horror-2-cover.webp",
-    format: "WAV samples",
+    format: "24-bit WAV samples",
     count: "Horror pack",
     useCase: "Horror stingers and uneasy drones",
     demo: {
@@ -378,12 +397,28 @@ export const products: Product[] = [
     }
   },
   {
+    title: "Callisto Drift Lite - 32 Free Arturia Jup-8 V4 Presets",
+    category: "Free",
+    status: "free",
+    url: "https://kreativ.gumroad.com/l/callisto-drift-lite-jup-8-v4-presets",
+    detailsUrl: "/sounds/callisto-drift-lite-jup-8-v4-presets",
+    badge: "New",
+    extraAction: {
+      label: "Full Bank",
+      url: "/sounds/callisto-drift-jup-8-v4-presets"
+    },
+    thumbnail: "/assets/thumbs/callisto-drift-lite-thumb.webp",
+    coverImage: "/assets/thumbs/callisto-drift-lite.webp",
+    format: "Arturia Jup-8 V4 presets",
+    count: "32 presets",
+    useCase: "Free cold pads, dark sequences, basses, leads, FX, keys, and choir"
+  },
+  {
     title: "Juno Nocturnes Lite - Free Arturia JUN-6 V Presets",
     category: "Free",
     status: "free",
     url: "https://kreativ.gumroad.com/l/juno-nocturnes-lite",
     detailsUrl: "/sounds/juno-nocturnes-lite-jun-6-v-presets",
-    badge: "New",
     extraAction: {
       label: "Full Bank",
       url: "/sounds/juno-nocturnes-jun-6-v-presets"
@@ -455,16 +490,16 @@ export const products: Product[] = [
     useCase: "Archive built around classic Prophet V material"
   },
   {
-    title: "DAFT Plasticz Presets",
+    title: "DAFT - 102 Free reFX PlastiCZ Presets",
     category: "Legacy",
-    status: "archive",
+    status: "free",
     url: "https://kreativ.gumroad.com/l/daft-free-plasticz-presets?layout=profile",
     detailsUrl: "/sounds/daft-plasticz-presets",
     thumbnail: "/assets/thumbs/daft-plasticz.jpg",
     coverImage: "/assets/thumbs/daft-plasticz-cover.webp",
-    format: "Legacy presets",
-    count: "Archive",
-    useCase: "Legacy plastic and synthetic textures"
+    format: "reFX PlastiCZ presets",
+    count: "102 presets",
+    useCase: "Free legacy lo-fi tones, digital artifacts, and ambient textures"
   }
 ];
 

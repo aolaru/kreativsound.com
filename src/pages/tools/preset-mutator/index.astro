@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PresetMutatorDetails from "../../../components/PresetMutatorDetails.astro";
 
 const appUrl = "/preset-mutator/";
 const softwareSchema = {
@@ -51,7 +52,7 @@ const softwareSchema = {
           </div>
           <div class="product-spec-inline">
             <span class="product-spec-label">Beta formats</span>
-            <span class="product-spec-value">Serum 2 + Pigments</span>
+            <span class="product-spec-value">Free: Serum 2 + Pigments</span>
           </div>
         </div>
         <p class="product-trust-line">Runs locally in your browser. No AI preset generation. No uploads or stored presets/audio.</p>
@@ -75,7 +76,7 @@ const softwareSchema = {
             Get Pro for €19
           </a>
         </div>
-        <p class="product-value-line">Free creates 3 individual Vital variants. Pro creates 32 variants and exports the complete ZIP pack.</p>
+        <p class="product-value-line">Free creates 3 individual presets. Pro creates 32-variant ZIP packs for Vital and Serum 2 beta.</p>
       </div>
     </section>
 
@@ -134,18 +135,21 @@ const softwareSchema = {
         <article>
           <h3>Pro</h3>
           <ul>
-            <li>32 Vital preset variants per workflow.</li>
+            <li>32 preset variants per workflow for Vital and Serum 2 beta.</li>
             <li>Full 32-preset ZIP export.</li>
-            <li>One-time €19 purchase with local token activation.</li>
+            <li>One-time €19 purchase; activate with your Gumroad license key.</li>
+            <li>Pigments is not included in Pro.</li>
           </ul>
         </article>
       </div>
     </section>
 
+    <PresetMutatorDetails />
+
     <section class="product-cta-strip">
       <div class="product-cta-copy">
         <p class="product-section-kicker">Release focus</p>
-        <p class="product-cta-line">Start free for a focused three-variant set, or use Pro when the session needs a full 32-preset Vital pack.</p>
+        <p class="product-cta-line">Start free for three variants, or use Pro for a 32-preset Vital or Serum 2 beta pack.</p>
       </div>
       <div class="product-actions">
         <a class="button primary" href={appUrl}>

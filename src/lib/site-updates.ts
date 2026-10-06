@@ -11,6 +11,9 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-10-06", kind: "new", title: "Callisto Drift and Lite added to the catalog", description: "The Arturia Jup-8 V4 bank now has website details and Gumroad download links: 128 presets for €9 or 32 presets free in Lite.", href: "/sounds/callisto-drift-jup-8-v4-presets" },
+  { date: "2026-10-06", kind: "fix", title: "Preset Mutator product information corrected", description: "Free and Pro details now distinguish stable and beta synth targets, explain Gumroad license-key activation, and clarify that source files stay local.", href: "/tools/preset-mutator/" },
+  { date: "2026-10-06", kind: "fix", title: "Guides and sound-pack specifications corrected", description: "Six guides now render their headings and links correctly. Product pages show verified preset counts, 24-bit WAV formats, and download sizes.", href: "/updates/#guides" },
   { date: "2026-09-25", kind: "release", title: "KS Ghostform released", description: "A free evolving drone and string synthesizer is now available with 144 factory presets, macOS AU/VST3 support, Windows VST3 support, MIDI automation, and no activation required.", href: "/plugins/ghostform" },
   { date: "2026-09-14", kind: "release", title: "Preset Mutator Free v0.5.0", description: "Arturia Pigments beta joins Scratch, Preset, and Audio with local `.pgtx` generation, bounded mutations, and byte-safe resource preservation.", href: "/preset-mutator/changelog/" },
   { date: "2026-09-13", kind: "update", title: "Preset Mutator Free v0.4.12", description: "The new Wide character direction creates broader stereo presets by influencing width, unison, and chorus decisions.", href: "/preset-mutator/changelog/" },

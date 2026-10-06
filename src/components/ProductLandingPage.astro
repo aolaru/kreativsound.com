@@ -1,4 +1,5 @@
 ---
+import PresetMutatorDetails from "./PresetMutatorDetails.astro";
 import type { ProductPage } from "../lib/product-pages";
 
 type PurchaseAction = {
@@ -221,6 +222,8 @@ const breadcrumbSchema = {
       </div>
     </section>
   ) : null}
+
+  {product.slug === "preset-mutator" ? <PresetMutatorDetails /> : null}
 
   {product.includedGroups.length ? (
     <section class="product-landing-section product-included-section" aria-labelledby="product-included-title">

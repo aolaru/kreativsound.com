@@ -104,9 +104,9 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
     variant: "bundle"
   },
   "preset-mutator": {
-    title: "Preset Mutator Free | Vital Preset Generator",
+    title: "Preset Mutator Free | Synth Preset Generator",
     headline: "Preset Mutator Free",
-    description: "Preset Mutator Free is a free browser-based Vital preset generator for creating preset starts from scratch ideas, existing presets, or short audio sources.",
+    description: "Create three local preset variants for Vital, Serum 2 beta, or Arturia Pigments beta from scratch ideas, existing presets, or short audio sources.",
     kicker: "Free browser tool",
     secondaryUrl: "/preset-mutator/",
     secondaryLabel: "Open Preset Mutator Free",
@@ -115,7 +115,22 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   "juno-nocturnes-jun-6-v-presets": {
     headline: "JUNO NOCTURNES",
     description: "Juno Nocturnes is a 96-preset Arturia JUN-6 V bank for dark ambient pads, drones, sequences, basses, leads, keys, and FX.",
-    kicker: "New preset pack"
+    kicker: "JUN-6 V preset pack"
+  },
+  "callisto-drift-jup-8-v4-presets": {
+    headline: "Callisto Drift",
+    description: "128 Arturia Jup-8 V4 presets for dark ambient, cinematic scoring, and experimental electronic production. Includes a .jup4x bank and PDF catalogue for €9.",
+    kicker: "New Jup-8 V4 preset bank"
+  },
+  "callisto-drift-lite-jup-8-v4-presets": {
+    headline: "Callisto Drift Lite",
+    description: "32 free Arturia Jup-8 V4 presets: cold pads, dark sequences, basses, leads, FX, keys, and a synthetic choir. Includes a .jup4x bank and PDF catalogue.",
+    kicker: "Free Jup-8 V4 preset bank"
+  },
+  "daft-plasticz-presets": {
+    headline: "DAFT",
+    description: "102 free legacy presets for reFX PlastiCZ, with lo-fi tones, digital artifacts, and ambient textures. Requires a compatible PlastiCZ setup.",
+    primaryLabel: "Download Free"
   },
   "juno-nocturnes-lite-jun-6-v-presets": {
     headline: "Juno Nocturnes Lite",
@@ -150,6 +165,23 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
 };
 
 const liteComparisons: Record<string, ProductLiteComparison> = {
+  "callisto-drift-lite-jup-8-v4-presets": {
+    title: "Callisto Drift Lite vs Full",
+    intro: "Try every core category free. The full bank gives you four times the presets and deeper category coverage.",
+    liteLabel: "Lite",
+    fullLabel: "Full Callisto Drift",
+    rows: [
+      { label: "Included", lite: "32 presets", full: "128 presets" },
+      { label: "Pads / sequences", lite: "12 pads (6 wild), 8 sequences", full: "47 pads (16 wild), 43 sequences" },
+      { label: "Other sounds", lite: "4 basses, 4 leads, 2 FX, 1 key, 1 choir", full: "15 basses, 16 leads, 5 FX, 1 key, 1 choir" },
+      { label: "Price", lite: "Free", full: "€9" }
+    ],
+    upgradeUrl: "https://kreativ.gumroad.com/l/callisto-drift-jup-8-v4-presets",
+    upgradeLabel: "Get full Callisto Drift",
+    secondaryUrl: "/sounds/callisto-drift-jup-8-v4-presets",
+    secondaryLabel: "View full details",
+    note: "Both editions require Arturia Jup-8 V4 and include a native .jup4x bank and PDF preset catalogue."
+  },
   "juno-nocturnes-lite-jun-6-v-presets": {
     title: "Juno Nocturnes Lite vs Full",
     intro: "Juno Nocturnes Lite is the free entry point. The full bank expands the same Arturia JUN-6 V direction into a larger dark ambient preset palette.",

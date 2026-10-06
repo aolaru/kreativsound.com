@@ -12,6 +12,11 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+const earlyPresetMutatorAnnouncement = [
+  "audio-alchemy-free-launch-2026-04-02",
+  "tools-lineup-update-2026-04-04",
+  "preset-mutator-direction-2026-05-06"
+].includes(post.id.replace(/\.md$/, ""));
 const formattedDate = post.data.published
   ? new Date(post.data.published).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
   : "";
@@ -66,6 +71,11 @@ const articleSchema = {
       ) : null}
     </p>
     <div class="stack article-stack">
+      {earlyPresetMutatorAnnouncement ? (
+        <aside class="product-panel" aria-label="Current Preset Mutator support">
+          <p>This article describes an earlier release. Today, Vital is stable; Serum 2 is beta in Free and Pro; Pigments beta is Free only. <a href="/tools/preset-mutator/">See current formats and activation instructions.</a></p>
+        </aside>
+      ) : null}
       <Content />
     </div>
   </article>

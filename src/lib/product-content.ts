@@ -86,28 +86,77 @@ export const landingCopyOverrides = {
     ]
   },
   "preset-mutator": {
-    subtitle: "Browser-Based Vital Preset Generator",
-    shortMeta: "Free browser tool • 3 variants per run • Vital presets",
-    ctaLine: "Open the free browser tool and export playable Vital preset variants.",
+    subtitle: "Local-first preset starts for Vital, Serum 2 beta, and Arturia Pigments beta.",
+    shortMeta: "Free browser tool • 3 variants per run • Vital stable • Serum 2 and Pigments beta",
+    ctaLine: "Open the free browser tool and export three preset variants.",
     finalCtaTitle: "Open Preset Mutator Free.",
-    finalCtaText: "Create three Vital preset variants from scratch intent, one source preset, or a short audio source.",
+    finalCtaText: "Create three preset variants from scratch intent, one source preset, or a short audio source.",
     longDescription: [
-      "Preset Mutator Free creates Vital preset starts from scratch ideas, existing Vital presets, or short audio sources.",
-      "It is built for quick sketches: generate a playable direction, then finish the sound inside Vital.",
-      "The tool runs locally in your browser and exports individual `.vital` variants without uploads or accounts."
+      "Preset Mutator Free creates preset starts from scratch ideas, existing presets, or short audio sources. Vital export is stable; Serum 2 and Arturia Pigments are beta targets.",
+      "Generate a playable direction, then finish the sound inside the matching synth. Free exports three individual presets per run; Pro creates 32-variant ZIP packs for Vital and Serum 2 beta.",
+      "Your source presets and audio stay in your browser. Free needs no account or activation. Pro verifies a purchased Gumroad license key online; earlier signed tokens remain supported."
     ],
     specifications: [
       { label: "Product type", value: "Browser sound-design tool" },
-      { label: "Format", value: "Vital preset generation and export" },
-      { label: "Output", value: "3 Vital preset variants per run" },
-      { label: "Best for", value: "Fast Vital preset starts, preset mutation, audio-to-preset experiments, and sound-design sketching" },
+      { label: "Formats", value: "Vital (.vital), Serum 2 beta (.SerumPreset), Arturia Pigments beta (.pgtx)" },
+      { label: "Output", value: "3 individual preset variants per run" },
+      { label: "Best for", value: "Preset starts, preset mutation, and audio-to-preset experiments" },
       { label: "Processing", value: "Local browser processing" },
       { label: "Price", value: "Free" }
     ],
     requirements: [
       "A modern web browser is required to run Preset Mutator Free.",
-      "Vital is required to load and edit the generated preset files.",
+      "The matching instrument — Vital, Serum 2, or Arturia Pigments — is required to load and edit its generated presets.",
       "Generated presets are best treated as starting points for sound design, not final mix-ready presets."
+    ]
+  },
+  "callisto-drift-jup-8-v4-presets": {
+    subtitle: "128 Arturia Jup-8 V4 presets for dark ambient, cinematic scoring, and experimental electronic production.",
+    shortMeta: "128 presets • Jup-8 V4 .jup4x bank • €9",
+    ctaLine: "Get the complete 128-preset bank, or try 32 sounds free in Callisto Drift Lite.",
+    longDescription: [
+      "Callisto Drift explores the colder edge of the Jupiter sound: slow atmospheres, fractured sequences, pressure-heavy basses, and expressive leads.",
+      "The bank includes 47 pads (16 wild experimental designs), 43 sequences, 15 basses, 16 leads, 5 sound effects, 1 key, and 1 synthetic choir, with velocity and modulation-wheel programming.",
+      "The v1.1 download includes the native .jup4x bank, a complete PDF preset catalogue, README, release notes, and licence."
+    ],
+    specifications: [
+      { label: "Product type", value: "Preset bank" },
+      { label: "Synth", value: "Arturia Jup-8 V4" },
+      { label: "Format", value: "Native .jup4x preset bank" },
+      { label: "Version", value: "1.1" },
+      { label: "Preset count", value: "128 presets" },
+      { label: "Categories", value: "47 pads, 43 sequences, 15 basses, 16 leads, 5 FX, 1 key, 1 synthetic choir" },
+      { label: "Performance", value: "Velocity, modulation wheel, and preset-specific effects" },
+      { label: "Included", value: "PDF preset catalogue, README, release notes, and licence" },
+      { label: "Checkout", value: "Gumroad • €9" }
+    ],
+    requirements: [
+      "Arturia Jup-8 V4 is required and is not included. Tested with Jup-8 V4 4.6.4.6366.",
+      "Unzip the download and import the included .jup4x bank through the Jup-8 V4 preset browser."
+    ]
+  },
+  "callisto-drift-lite-jup-8-v4-presets": {
+    subtitle: "32 free Arturia Jup-8 V4 presets from the cold, dark Callisto Drift palette.",
+    shortMeta: "32 presets • Jup-8 V4 .jup4x bank • Free download",
+    ctaLine: "Download the free 32-preset bank from Gumroad.",
+    longDescription: [
+      "Callisto Drift Lite introduces the full bank's cold pads, dark sequences, pressure-heavy basses, and expressive leads in a compact free selection.",
+      "It includes 12 pads (6 wild experimental designs), 8 sequences, 4 basses, 4 leads, 2 FX, 1 key, and 1 synthetic choir, with velocity and modulation-wheel programming.",
+      "The download includes a native .jup4x bank and complete PDF preset catalogue. The €9 full edition expands the same palette to 128 presets."
+    ],
+    specifications: [
+      { label: "Product type", value: "Free preset bank" },
+      { label: "Synth", value: "Arturia Jup-8 V4" },
+      { label: "Format", value: "Native .jup4x preset bank" },
+      { label: "Preset count", value: "32 presets" },
+      { label: "Categories", value: "12 pads, 8 sequences, 4 basses, 4 leads, 2 FX, 1 key, 1 synthetic choir" },
+      { label: "Performance", value: "Velocity and modulation wheel" },
+      { label: "Included", value: "PDF preset catalogue" },
+      { label: "Checkout", value: "Free Gumroad download" }
+    ],
+    requirements: [
+      "Arturia Jup-8 V4 is required and is not included. Tested with Jup-8 V4 4.6.4.6366.",
+      "Unzip the download and import the included .jup4x bank through the Jup-8 V4 preset browser."
     ]
   },
   "juno-nocturnes-jun-6-v-presets": {
@@ -180,7 +229,7 @@ export const landingCopyOverrides = {
       { label: "Categories", value: "Pads, drones, basses, bells, leads, plucks, sweeps, strings, FX" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
-      { label: "Checkout", value: "PayPal or Gumroad" }
+      { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [
       "Native Instruments FM8 is required to use these presets.",
@@ -229,6 +278,7 @@ export const landingCopyOverrides = {
       { label: "Format", value: "Synplant 2 presets" },
       { label: "Preset count", value: "32+ patches" },
       { label: "Focus", value: "Organic movement, evolving tone, ambient beds" },
+      { label: "Download size", value: "1.91 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -241,7 +291,7 @@ export const landingCopyOverrides = {
   },
   "neolith-softube-models-presets": {
     subtitle: "Softube Models Presets for Analog Weight and Cinematic Tension",
-    shortMeta: "Full pack • Softube Models presets • Analog cinematic tone",
+    shortMeta: "64 presets • Softube Synth Models • 2.09 MB download",
     ctaLine: "Download the Softube Models preset pack.",
     longDescription: [
       "NEOLITH is a preset pack for Softube Models shaped around analog-forward tone, heavy synth body, and controlled cinematic pressure.",
@@ -252,7 +302,8 @@ export const landingCopyOverrides = {
       { label: "Product type", value: "Preset bank" },
       { label: "Synth", value: "Softube Models" },
       { label: "Format", value: "Softube Models presets" },
-      { label: "Preset count", value: "Full pack" },
+      { label: "Preset count", value: "64 presets" },
+      { label: "Download size", value: "2.09 MB" },
       { label: "Focus", value: "Analog weight, cinematic tension, pressure-building synth beds" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
@@ -308,9 +359,10 @@ export const landingCopyOverrides = {
       { label: "Format", value: "Pigments preset bank" },
       { label: "Preset count", value: "128 presets" },
       { label: "Categories", value: "Drones, industrial textures, melodic keys, FX and noise" },
+      { label: "Download size", value: "415 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
-      { label: "Checkout", value: "Gumroad or PayPal" }
+      { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [
       "Arturia Pigments is required to use these presets.",
@@ -333,6 +385,7 @@ export const landingCopyOverrides = {
       { label: "Format", value: "FabFilter One presets" },
       { label: "Preset count", value: "132 patches" },
       { label: "Focus", value: "Warm basses, focused leads, simple tonal layers" },
+      { label: "Download size", value: "588 KB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -359,6 +412,7 @@ export const landingCopyOverrides = {
       { label: "Preset count", value: "64 patches" },
       { label: "Focus", value: "Driven basses, analog grit, darker mono tone" },
       { label: "Audio demo", value: "Included" },
+      { label: "Download size", value: "3.79 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -385,6 +439,7 @@ export const landingCopyOverrides = {
       { label: "Preset count", value: "96 patches" },
       { label: "Focus", value: "Airy melodic movement, soft motion, layered atmosphere" },
       { label: "Audio demo", value: "Included" },
+      { label: "Download size", value: "2.4 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -397,7 +452,7 @@ export const landingCopyOverrides = {
   },
   "sfxs-2-sound-effects": {
     subtitle: "WAV Sound Effects for Creative Accents and Cinematic Transitions",
-    shortMeta: "FX pack • WAV samples • Audio demo included",
+    shortMeta: "34 sound effects • 24-bit WAV • 116 MB download",
     ctaLine: "Download the creative sound-effects collection.",
     longDescription: [
       "SFXS 2 is a focused sound-effects collection built for creative accents, cinematic transitions, and small design details that add motion quickly.",
@@ -406,10 +461,11 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Sample collection" },
-      { label: "Format", value: "WAV samples" },
-      { label: "Collection", value: "FX pack" },
+      { label: "Format", value: "24-bit WAV samples" },
+      { label: "Sound count", value: "34 original sound effects" },
       { label: "Focus", value: "Sound effects, transitions, accents, design details" },
       { label: "Audio demo", value: "Included" },
+      { label: "Download size", value: "116 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -422,7 +478,7 @@ export const landingCopyOverrides = {
   },
   "noize-2-noise-textures": {
     subtitle: "WAV Noise Textures and FX for Abstract Sound Design",
-    shortMeta: "Noise pack • WAV samples • Audio demo included",
+    shortMeta: "Noise pack • 24-bit WAV • 103 MB download",
     ctaLine: "Download the experimental noise texture collection.",
     longDescription: [
       "NOIZE 2 is an experimental noise and FX collection built for abstract layers, glitch detail, unstable motion, and texture shaping.",
@@ -431,10 +487,11 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Sample collection" },
-      { label: "Format", value: "WAV samples" },
+      { label: "Format", value: "24-bit WAV samples" },
       { label: "Collection", value: "Noise pack" },
       { label: "Focus", value: "Noise textures, glitch layers, abstract FX" },
       { label: "Audio demo", value: "Included" },
+      { label: "Download size", value: "103 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -447,7 +504,7 @@ export const landingCopyOverrides = {
   },
   "enigma-2-cinematic-atmospheres": {
     subtitle: "WAV Cinematic Atmospheres for Mystery, Suspense, and Dark Beds",
-    shortMeta: "Atmosphere pack • WAV samples • Audio demo included",
+    shortMeta: "Atmosphere pack • 24-bit WAV • 76.2 MB download",
     ctaLine: "Download the cinematic atmosphere collection.",
     longDescription: [
       "ENIGMA 2 is a cinematic atmosphere collection focused on dark tension beds, restrained mystery, and slow-building ambiguity.",
@@ -456,10 +513,11 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Sample collection" },
-      { label: "Format", value: "WAV samples" },
+      { label: "Format", value: "24-bit WAV samples" },
       { label: "Collection", value: "Atmosphere pack" },
       { label: "Focus", value: "Mystery, suspense beds, dark cinematic ambience" },
       { label: "Audio demo", value: "Included" },
+      { label: "Download size", value: "76.2 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -472,7 +530,7 @@ export const landingCopyOverrides = {
   },
   "bleeps-2-percussion-sounds": {
     subtitle: "WAV Percussion Sounds for Synthetic One-Shots and Rhythm Accents",
-    shortMeta: "Percussion pack • WAV samples • Audio demo included",
+    shortMeta: "44 sounds • 24-bit WAV • 5.15 MB download",
     ctaLine: "Download the experimental percussion collection.",
     longDescription: [
       "BLEEPS 2 is an experimental percussion sample pack built for strange rhythm accents, synthetic one-shots, and sharper percussive detail.",
@@ -481,10 +539,11 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Sample collection" },
-      { label: "Format", value: "WAV samples" },
-      { label: "Collection", value: "Percussion pack" },
+      { label: "Format", value: "24-bit WAV samples" },
+      { label: "Sound count", value: "44 sounds" },
       { label: "Focus", value: "Experimental percussion, one-shots, rhythmic FX" },
       { label: "Audio demo", value: "Included" },
+      { label: "Download size", value: "5.15 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -497,7 +556,7 @@ export const landingCopyOverrides = {
   },
   "space-2-atmospheres-textures": {
     subtitle: "WAV Space Atmospheres and Textures for Sci-Fi Ambience",
-    shortMeta: "Atmosphere pack • WAV samples • Audio demo included",
+    shortMeta: "Atmosphere pack • 24-bit WAV • 89.8 MB download",
     ctaLine: "Download the space atmosphere collection.",
     longDescription: [
       "SPACE 2 is an atmosphere and texture library shaped for sci-fi ambience, distant environments, and suspended motion.",
@@ -506,10 +565,11 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Sample collection" },
-      { label: "Format", value: "WAV samples" },
+      { label: "Format", value: "24-bit WAV samples" },
       { label: "Collection", value: "Atmosphere pack" },
       { label: "Focus", value: "Sci-fi ambience, distant environments, suspended textures" },
       { label: "Audio demo", value: "Included" },
+      { label: "Download size", value: "89.8 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -522,7 +582,7 @@ export const landingCopyOverrides = {
   },
   "tectonic-2-dark-subs-textures": {
     subtitle: "WAV Dark Subs and Underground Textures for Low-End Pressure",
-    shortMeta: "Low-end pack • WAV samples • Audio demo included",
+    shortMeta: "Low-end pack • 24-bit WAV • 94.9 MB download",
     ctaLine: "Download the dark subs and texture collection.",
     longDescription: [
       "TECTONIC 2 is a dark subs and underground texture collection focused on low-end pressure, subterranean atmosphere, and cinematic heaviness.",
@@ -531,10 +591,11 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Sample collection" },
-      { label: "Format", value: "WAV samples" },
+      { label: "Format", value: "24-bit WAV samples" },
       { label: "Collection", value: "Low-end pack" },
       { label: "Focus", value: "Dark subs, low-end pressure, subterranean textures" },
       { label: "Audio demo", value: "Included" },
+      { label: "Download size", value: "94.9 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -547,7 +608,7 @@ export const landingCopyOverrides = {
   },
   "horror-2-cinematic-textures": {
     subtitle: "WAV Horror Textures for Stingers, Uneasy Drones, and Threat Cues",
-    shortMeta: "Horror pack • WAV samples • Audio demo included",
+    shortMeta: "Horror pack • 24-bit WAV • 86.2 MB download",
     ctaLine: "Download the cinematic horror texture collection.",
     longDescription: [
       "HORROR 2 is a cinematic horror texture collection focused on uneasy drones, threat cues, stingers, and darker atmosphere.",
@@ -556,10 +617,11 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Sample collection" },
-      { label: "Format", value: "WAV samples" },
+      { label: "Format", value: "24-bit WAV samples" },
       { label: "Collection", value: "Horror pack" },
       { label: "Focus", value: "Uneasy drones, stingers, threat cues, dark atmosphere" },
       { label: "Audio demo", value: "Included" },
+      { label: "Download size", value: "86.2 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -612,6 +674,7 @@ export const landingCopyOverrides = {
       { label: "Format", value: "Pigments preset bank" },
       { label: "Preset count", value: "32 presets" },
       { label: "Categories", value: "Drones, industrial textures, melodic keys, FX and noise" },
+      { label: "Download size", value: "113 MB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Free Gumroad download" }
@@ -637,6 +700,7 @@ export const landingCopyOverrides = {
       { label: "Format", value: "PRO-53 presets" },
       { label: "Preset count", value: "215 sounds" },
       { label: "Focus", value: "Dark ambient presets and archive atmospheres" },
+      { label: "Download size", value: "490 KB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
@@ -671,25 +735,28 @@ export const landingCopyOverrides = {
     ]
   },
   "daft-plasticz-presets": {
-    subtitle: "Legacy Presets for Plastic Synthetic Texture and Archive Sound Design",
-    shortMeta: "Archive • Legacy presets • Synthetic texture",
-    ctaLine: "Download the legacy preset archive.",
+    subtitle: "102 free legacy presets for reFX PlastiCZ: lo-fi tones, digital artifacts, and ambient textures.",
+    shortMeta: "102 presets • reFX PlastiCZ • 368 KB download • Free legacy archive",
+    ctaLine: "Download the free reFX PlastiCZ preset archive.",
     longDescription: [
-      "DAFT Plasticz is a legacy preset archive focused on plastic, synthetic textures and older sound-design experiments.",
+      "DAFT is a free 102-preset archive for reFX PlastiCZ, focused on lo-fi tones, digital artifacts, and ambient textures.",
       "The release shows a brighter, more synthetic side of the older catalog.",
       "DAFT Plasticz is archive material for older plastic and synthetic tones."
     ],
     specifications: [
       { label: "Product type", value: "Legacy preset archive" },
-      { label: "Format", value: "Legacy presets" },
-      { label: "Collection", value: "Archive" },
+      { label: "Synth", value: "reFX PlastiCZ" },
+      { label: "Format", value: "reFX PlastiCZ presets" },
+      { label: "Preset count", value: "102 presets" },
+      { label: "Download size", value: "368 KB" },
+      { label: "Price", value: "Free" },
       { label: "Focus", value: "Plastic synthetic textures and older sound-design experiments" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [
-      "Use the compatible legacy instrument or host setup referenced in the download files.",
+      "reFX PlastiCZ is required and is not included. This is a discontinued legacy instrument.",
       "Compatibility may depend on older software versions, plugin formats, or operating systems.",
       "This release is a legacy archive download."
     ]

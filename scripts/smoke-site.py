@@ -69,7 +69,7 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "KS Ghostform", "JUNO NOCTURNES", "Preset Mutator Free", "Kreativ Kollection V1", "Optional analytics"],
+            "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "KS Ghostform", "Callisto Drift", "Preset Mutator Free", "Kreativ Kollection V1", "Optional analytics"],
             "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
             "/updates/": ["Kreativ Sound Updates and Changelog", "New releases, updates, and practical guides.", "New products and major launches.", "Improvements grouped by month.", "September 2026", "August 2026", f"{preset_mutator_pro['name']} v{preset_mutator_pro['version']}", f"{preset_mutator_free['name']} v{preset_mutator_free['version']}", f"{wave_mutator['name']} {wave_mutator['releaseLabel']} v{wave_mutator['version']}", "Site-maintenance history", "Release notes", "Practical sound-design guides.", "The current tools and plugin line", "32 variants per run", "KS Ghostform", "144 factory presets"],
             "/plugins/ghostform": ["KS Ghostform", "Download Free", "144 factory presets", "macOS AU and VST3", "Windows 64-bit VST3", "Product Specifications", "Requirements"],
@@ -77,12 +77,13 @@ def main() -> int:
             "/tools/pattern-mutator/": ["Pattern Mutator Lite", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "Free piano roll"],
             "/tools/pattern-mutator/changelog/": ["Pattern Mutator Lite", "Changelog", "Current release", f"v{pattern_mutator['version']}", "Back to Pattern Mutator Lite"],
             "/tools/wave-mutator/changelog/": ["Wave Mutator Lite", "Changelog", "Current beta release", f"v{wave_mutator['version']}", "Current beta limits"],
-            "/tools/preset-mutator/": ["Preset Mutator Free", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "32 Vital preset variants per workflow."],
+            "/tools/preset-mutator/": ["Preset Mutator Free", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "32 preset variants per workflow for Vital and Serum 2 beta.", "Supported synths", "Activate Pro", "Gumroad license-key verification", "earlier signed Pro tokens still work", "Not included"],
+            "/sounds/preset-mutator": ["Serum 2", "Arturia Pigments", "Supported synths", "Activate Pro", "Gumroad license-key verification", "Not included"],
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
             "/plugins/": ["New free plugin", "KS Ghostform", "144 factory sounds", "Download Free", "Product Details"],
             "/about/": ["Sounds", "About"],
-            "/contact/": ["Sounds", "info@kreativsound.com"],
+            "/contact/": ["Sounds", "info@kreativsound.com", '<option value="Callisto Drift"', '<option value="Callisto Drift Lite"'],
             "/privacy/": ["Privacy Policy", "Optional analytics", "Google Analytics", "Cloudflare Web Analytics"],
             "/terms/": ["Terms of Use", "Purchases", "Product License"],
             "/refunds/": ["Refund Policy", "Refund requests", "Gumroad and PayPal purchases"],
@@ -92,17 +93,20 @@ def main() -> int:
             "/sounds/": ["Browse Sound", "Need placement ideas?", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs", "Legacy Archive"],
             "/sounds/kreativ-kollection-v1": ["Get the bundle on Gumroad", "49 EUR", "16 products", "Kreativ Kollection V1", "JUNO NOCTURNES", "Description", "What's Included", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements", "Related sounds", "View full catalog"],
+            "/sounds/callisto-drift-jup-8-v4-presets": ["Buy on Gumroad", "Try Lite free", "128 presets", "9 EUR", ".jup4x", "4.6.4.6366", "PDF preset catalogue", "https://kreativ.gumroad.com/l/callisto-drift-jup-8-v4-presets"],
+            "/sounds/callisto-drift-lite-jup-8-v4-presets": ["Download Free", "32 presets", "Lite vs Full", "Get full Callisto Drift", ".jup4x", "4.6.4.6366", "https://kreativ.gumroad.com/l/callisto-drift-lite-jup-8-v4-presets"],
+            "/sounds/daft-plasticz-presets": ["Download Free", "102 presets", "reFX PlastiCZ", "368 KB", "discontinued legacy instrument"],
             "/sounds/operators-fm8-presets": ["Buy on Gumroad", "Try Lite free", "OPERATORS", "64 presets", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-lite-jun-6-v-presets": ["Download Free", "Juno Nocturnes Lite", "16 presets", "Lite vs Full", "Upgrade to full Juno Nocturnes"],
             "/sounds/velvet-ruins-vital-presets": ["Buy on Gumroad", "Try Lite free", "VELVET RUINS 2", "256 presets", "ATMOS, MOTION, DUST, and SPACE", "backward compatibility", "Installation guide", "30-day money-back guarantee", "Vital or Vital Free", "Product Specifications", "Requirements"],
             "/sounds/velvet-ruins-lite-vital-presets": ["Download Free", "VELVET RUINS Lite", "32 presets", "8 cinematic experiments", "ATMOS, MOTION, DUST, and SPACE", "Vital or Vital Free", "Lite vs Full", "Upgrade to VELVET RUINS 2"],
             "/sounds/black-arcology-pigments-presets": ["Buy on Gumroad", "Try Lite free", "BLACK ARCOLOGY", "Product Specifications", "Requirements"],
-            "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "Description", "Product Specifications", "Requirements"],
+            "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "64 presets", "2.09 MB", "Product Specifications", "Requirements"],
             "/sounds/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Description", "Product Specifications", "Requirements"],
-            "/sounds/sfxs-2-sound-effects": ["SFXS 2", "Listen to demo", "/assets/audio/sfxs-2-demo-01.mp3"],
+            "/sounds/sfxs-2-sound-effects": ["SFXS 2", "Listen to demo", "34 original sound effects", "24-bit WAV", "116 MB", "/assets/audio/sfxs-2-demo-01.mp3"],
             "/sounds/noize-2-noise-textures": ["NOIZE 2", "Listen to demo", "/assets/audio/noize-2-demo-01.mp3"],
             "/sounds/enigma-2-cinematic-atmospheres": ["ENIGMA 2", "Listen to demo", "/assets/audio/enigma-2-demo-01.mp3"],
-            "/sounds/bleeps-2-percussion-sounds": ["BLEEPS 2", "Listen to demo", "/assets/audio/bleeps-2-demo-01.mp3"],
+            "/sounds/bleeps-2-percussion-sounds": ["BLEEPS 2", "Listen to demo", "44 sounds", "24-bit WAV", "5.15 MB", "/assets/audio/bleeps-2-demo-01.mp3"],
             "/sounds/space-2-atmospheres-textures": ["SPACE 2", "Listen to demo", "/assets/audio/space-2-demo-01.mp3"],
             "/sounds/tectonic-2-dark-subs-textures": ["TECTONIC 2", "Listen to demo", "/assets/audio/tectonic-2-demo-01.mp3"],
             "/sounds/horror-2-cinematic-textures": ["HORROR 2", "Listen to demo", "/assets/audio/horror-2-demo-01.mp3"],
@@ -118,7 +122,7 @@ def main() -> int:
                 require(dom, 'id="main-content"', route, errors)
                 require(dom, 'class="site-header"', route, errors)
                 require(dom, 'href="/sounds/"', route, errors)
-                require(dom, 'href="/sounds/juno-nocturnes-jun-6-v-presets"', route, errors)
+                require(dom, 'href="/sounds/callisto-drift-jup-8-v4-presets"', route, errors)
                 require(dom, 'href="/sounds/operators-fm8-presets"', route, errors)
                 require(dom, 'href="/sounds/kreativ-kollection-v1"', route, errors)
                 require(dom, 'href="/sounds/preset-mutator"', route, errors)
@@ -134,6 +138,8 @@ def main() -> int:
                 forbid(dom, 'action="https://www.google.com/search"', route, errors)
                 require(dom, 'action="/search/"', route, errors)
             if route == "/sounds/":
+                require(dom, "Callisto Drift", route, errors)
+                require(dom, "Callisto Drift Lite", route, errors)
                 require(dom, 'class="catalog-anchor-links"', route, errors)
                 require(dom, 'href="#catalog-presets"', route, errors)
                 require(dom, 'href="#catalog-samples"', route, errors)
@@ -143,6 +149,7 @@ def main() -> int:
                 forbid(dom, 'data-catalog-category=', route, errors)
                 forbid(dom, 'data-catalog-more', route, errors)
                 require(dom, 'class="product-card-demo-player"', route, errors)
+                require(dom, 'controls preload="none"', route, errors)
             if route.startswith("/sounds/") and route != "/sounds/":
                 require(dom, 'class="product-breadcrumbs"', route, errors)
                 require(dom, 'href="/sounds/"', route, errors)
@@ -157,6 +164,30 @@ def main() -> int:
             if route.startswith("/posts/"):
                 require(dom, '"@type":"Article"', route, errors)
                 require(dom, '"name":"Andrei Olaru"', route, errors)
+
+        repaired_guides = [
+            "crafting-ambient-textures",
+            "how-to-layer-bioforms-for-organic-motion-2026-03-14",
+            "how-to-shape-vital-presets-for-dark-motion-2026-03-27",
+            "how-to-use-audio-alchemy-free-2026-04-02",
+            "how-to-use-tectonic-2-for-low-end-pressure-2026-03-14",
+            "three-ways-to-use-neolith-for-cinematic-tension-2026-03-14",
+        ]
+        for guide in repaired_guides:
+            route = f"/posts/{guide}.html"
+            dom = fetch_html(base_url + route)
+            require(dom, "<h2>1.", route, errors)
+            require(dom, "<h2>3.", route, errors)
+            forbid(dom, "&lt;h2", route, errors)
+            forbid(dom, "&lt;a ", route, errors)
+            if guide != "crafting-ambient-textures":
+                require(dom, 'class="article-cta"', route, errors)
+                require(dom, 'href="/updates/#guides"', route, errors)
+
+        search = json.loads(fetch_html(base_url + "/search-index.json"))
+        for slug in ["callisto-drift-jup-8-v4-presets", "callisto-drift-lite-jup-8-v4-presets"]:
+            if not any(entry["url"].rstrip("/") == f"/sounds/{slug}" for entry in search):
+                errors.append(f"Search index: missing {slug}")
 
         if errors:
             print("Smoke test failed:")

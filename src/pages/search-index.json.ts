@@ -68,14 +68,14 @@ const staticEntries: SearchEntry[] = [
     url: "/preset-mutator/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
-    description: "Create Vital preset starts from scratch ideas, existing presets, or one short audio source."
+    description: "Create three local preset variants for Vital, Serum 2 beta, or Arturia Pigments beta from scratch ideas, existing presets, or short audio."
   },
   {
     title: "Preset Mutator Pro",
     url: "/preset-mutator-pro/",
     type: "Tool",
     thumbnail: "/preset-mutator-pro/preset-mutator-mark.svg",
-    description: "Open the purchased Pro workflow to activate a license, generate 32 Vital variants, and export ZIP preset packs."
+    description: "Activate with a Gumroad license key, generate 32 variants for Vital or Serum 2 beta, and export ZIP preset packs. Pigments is not included in Pro."
   },
   {
     title: "Preset Mutator Free Changelog",
@@ -96,21 +96,21 @@ const staticEntries: SearchEntry[] = [
     url: "/tools/preset-mutator/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
-    description: "Free browser tool for creating 3 Vital preset variants from scratch, one preset, or one audio source. Preset Mutator Pro creates 32-variant ZIP packs."
+    description: "Free exports 3 presets for Vital, Serum 2 beta, and Pigments beta. Pro exports 32-variant ZIP packs for Vital and Serum 2 beta. Includes activation instructions."
   },
   {
     title: "Audio to Preset",
     url: "/preset-mutator/audio/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
-    description: "Analyze one short source sound locally and export Vital preset variants."
+    description: "Analyze one short sound locally and export presets for Vital, Serum 2 beta, or Pigments beta."
   },
   {
     title: "Mutate Preset",
     url: "/preset-mutator/mutate/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
-    description: "Load one Vital preset and create related playable variants in the browser."
+    description: "Load a Vital, Serum 2 beta, or Pigments beta preset and create related variants locally."
   },
   {
     title: "Wave Mutator Lite",

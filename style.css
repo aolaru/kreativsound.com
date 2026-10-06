@@ -5430,6 +5430,7 @@ a:focus-visible,
   }
 
   .product-lite-comparison-table tbody th {
+    width: 100%;
     margin-bottom: 0.45rem;
   }
 

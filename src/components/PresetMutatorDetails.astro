@@ -1,0 +1,34 @@
+---
+import { presetMutatorActivation, presetMutatorFormats } from "../lib/preset-mutator-support";
+---
+<section class="product-landing-section product-lite-comparison" aria-labelledby="preset-mutator-formats-title">
+  <h2 id="preset-mutator-formats-title">Supported synths</h2>
+  <div class="product-lite-comparison-table-wrap">
+    <table class="product-lite-comparison-table">
+      <thead>
+        <tr><th scope="col">Synth / format</th><th scope="col">Free</th><th scope="col">Pro</th></tr>
+      </thead>
+      <tbody>
+        {presetMutatorFormats.map((format) => (
+          <tr>
+            <th scope="row">{format.synth} <small>{format.extension}</small></th>
+            <td data-label="Free">{format.free}</td>
+            <td data-label="Pro">{format.pro}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p>Free exports 3 individual presets per run. Pro exports 32 variants as a ZIP pack. Beta formats may need further refinement in the matching synth; the synth itself is not included.</p>
+</section>
+<section class="product-landing-section" aria-labelledby="preset-mutator-activation-title">
+  <h2 id="preset-mutator-activation-title">Activate Pro</h2>
+  <ol>{presetMutatorActivation.steps.map((step) => <li>{step}</li>)}</ol>
+  <p>{presetMutatorActivation.verification}</p>
+  <p>{presetMutatorActivation.privacy}</p>
+  <p>Missing your key? <a href="https://gumroad.com/license-key-lookup" target="_blank" rel="noopener noreferrer">Find your Gumroad purchase</a> or <a href="/contact/">contact support</a>.</p>
+</section>
+<style>
+  th small { display: block; font-weight: normal; overflow-wrap: anywhere; }
+  li + li { margin-top: .4rem; }
+</style>
