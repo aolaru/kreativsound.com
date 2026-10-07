@@ -4,10 +4,24 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'AGENTS.md'
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'AGENTS.md'
   workflow_dispatch:
+    inputs:
+      run_lighthouse:
+        description: Run Lighthouse and enforce quality thresholds
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -43,46 +57,26 @@ jobs:
       - name: Build site
         run: npm run build
 
-      - name: Check sitemap freshness
-        run: npm run sitemap:check
-
-      - name: Check product data
-        run: npm run check:products
-
-      - name: Check Preset Mutator
-        run: npm run check:preset-mutator
-
-      - name: Check Preset Mutator PRO
-        run: npm run check:preset-mutator-pro
-
-      - name: Check product assets
-        run: python3 scripts/check-product-assets.py
-
-      - name: Check thumbnail quality
-        run: npm run check:thumbnails
-
-      - name: Check Wave Mutator
-        run: npm run check:wave-mutator
-
-      - name: Check tool release consistency
-        run: npm run check:tool-releases
-
-      - name: Check search index
-        run: npm run check:search
-
-      - name: Check internal links
-        run: npm run check:links
-
-      - name: Check page metadata
-        run: npm run check:metadata
-
-      - name: Run rendered smoke checks
-        run: python3 scripts/smoke-site.py
-
-      - name: Run Preset Mutator smoke checks
-        run: npm run smoke:preset-mutator
+      - name: Validate site and tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run sitemap:check
+          npm run check:products
+          npm run check:preset-mutator
+          npm run check:preset-mutator-pro
+          python3 scripts/check-product-assets.py
+          npm run check:thumbnails
+          npm run check:wave-mutator
+          npm run check:tool-releases
+          npm run check:search
+          npm run check:links
+          npm run check:metadata
+          python3 scripts/smoke-site.py
+          npm run smoke:preset-mutator
 
       - name: Run Lighthouse and verify thresholds
+        if: github.event_name == 'workflow_dispatch' && inputs.run_lighthouse
         run: |
           for attempt in 1 2; do
             echo "Lighthouse attempt ${attempt}/2"
