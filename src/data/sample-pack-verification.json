@@ -1,0 +1,13 @@
+{
+  "verifiedOn": "2026-10-07",
+  "source": "WAV headers in the seven local Kreativ Kollection V1 delivery archives; macOS resource files excluded",
+  "packs": {
+    "sfxs-2-sound-effects": { "count": 34, "format": "24-bit WAV samples", "archiveBytes": 122025820, "sampleRates": [44100], "bitDepths": [24] },
+    "noize-2-noise-textures": { "count": 32, "format": "24-bit WAV samples", "archiveBytes": 107574032, "sampleRates": [44100], "bitDepths": [24] },
+    "enigma-2-cinematic-atmospheres": { "count": 12, "format": "24-bit WAV samples", "archiveBytes": 79923520, "sampleRates": [44100], "bitDepths": [24] },
+    "bleeps-2-percussion-sounds": { "count": 44, "format": "16/24-bit WAV samples", "archiveBytes": 5402984, "sampleRates": [44100], "bitDepths": [16, 24], "bitDepthNote": "43 files at 24-bit PCM; 1 at 16-bit PCM" },
+    "space-2-atmospheres-textures": { "count": 10, "format": "24-bit WAV samples", "archiveBytes": 94134019, "sampleRates": [44100], "bitDepths": [24] },
+    "tectonic-2-dark-subs-textures": { "count": 7, "format": "16/24-bit WAV samples", "archiveBytes": 99553066, "sampleRates": [44100], "bitDepths": [16, 24], "bitDepthNote": "6 files at 24-bit PCM; 1 at 16-bit PCM" },
+    "horror-2-cinematic-textures": { "count": 8, "format": "24-bit / 32-bit float WAV", "archiveBytes": 90414039, "sampleRates": [44100, 48000], "bitDepths": [24, 32], "bitDepthNote": "7 files at 24-bit PCM; 1 at 32-bit float" }
+  }
+}

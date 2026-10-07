@@ -298,7 +298,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/noize-2.jpg",
     coverImage: "/assets/thumbs/noize-2-cover.webp",
     format: "24-bit WAV samples",
-    count: "Noise pack",
+    count: "32 sounds",
     useCase: "Abstract noise and glitch layers",
     demo: {
       label: "Listen to demo",
@@ -316,7 +316,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/enigma-2.jpg",
     coverImage: "/assets/thumbs/enigma-2-cover.webp",
     format: "24-bit WAV samples",
-    count: "Atmosphere pack",
+    count: "12 sounds",
     useCase: "Dark suspense beds",
     demo: {
       label: "Listen to demo",
@@ -333,7 +333,7 @@ export const products: Product[] = [
     detailsUrl: "/sounds/bleeps-2-percussion-sounds",
     thumbnail: "/assets/thumbs/bleeps-2.jpg",
     coverImage: "/assets/thumbs/bleeps-2-cover.webp",
-    format: "24-bit WAV samples",
+    format: "16/24-bit WAV samples",
     count: "44 sounds",
     useCase: "Percussive one-shots and rhythmic FX",
     demo: {
@@ -352,7 +352,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/space-2.jpg",
     coverImage: "/assets/thumbs/space-2-cover.webp",
     format: "24-bit WAV samples",
-    count: "Atmosphere pack",
+    count: "10 sounds",
     useCase: "Sci-fi ambience and distant environments",
     demo: {
       label: "Listen to demo",
@@ -369,8 +369,8 @@ export const products: Product[] = [
     detailsUrl: "/sounds/tectonic-2-dark-subs-textures",
     thumbnail: "/assets/thumbs/tectonic-2.jpg",
     coverImage: "/assets/thumbs/tectonic-2-cover.webp",
-    format: "24-bit WAV samples",
-    count: "Low-end pack",
+    format: "16/24-bit WAV samples",
+    count: "7 sounds",
     useCase: "Low-end pressure and subterranean textures",
     demo: {
       label: "Listen to demo",
@@ -387,8 +387,8 @@ export const products: Product[] = [
     detailsUrl: "/sounds/horror-2-cinematic-textures",
     thumbnail: "/assets/thumbs/horror-2.jpg",
     coverImage: "/assets/thumbs/horror-2-cover.webp",
-    format: "24-bit WAV samples",
-    count: "Horror pack",
+    format: "24-bit / 32-bit float WAV",
+    count: "8 sounds",
     useCase: "Horror stingers and uneasy drones",
     demo: {
       label: "Listen to demo",

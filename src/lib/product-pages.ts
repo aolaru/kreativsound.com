@@ -1,5 +1,6 @@
 import { products, type Product, type ProductCategory } from "./products";
 import { landingCopyOverrides, type ProductLandingCopy } from "./product-content";
+import { productInstallations, type ProductInstallation } from "./product-installation";
 
 export type ProductIncludedGroup = {
   title: string;
@@ -61,6 +62,7 @@ export type ProductPage = {
   demo?: { label: string; src: string; type?: string };
   specifications: Array<{ label: string; value: string }>;
   requirements: string[];
+  installation?: ProductInstallation;
   longDescription: string[];
   includedGroups: ProductIncludedGroup[];
   relatedProducts: ProductRelatedItem[];
@@ -511,6 +513,7 @@ export const productPages: ProductPage[] = products
       demo: product.demo,
       specifications: copy?.specifications || defaultSpecifications(product),
       requirements: copy?.requirements || defaultRequirements(product),
+      installation: productInstallations[slug],
       longDescription: copy?.longDescription || defaultLongDescription(product, name, description),
       includedGroups: buildIncludedGroups(copy?.includedProducts),
       relatedProducts: buildRelatedProducts(product),

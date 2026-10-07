@@ -3,6 +3,7 @@ import path from "node:path";
 import { products } from "../src/lib/products.ts";
 import { productRedirects } from "../src/lib/product-routes.ts";
 import { landingCopyOverrides } from "../src/lib/product-content.ts";
+import { productInstallations } from "../src/lib/product-installation.ts";
 
 const rootDir = process.cwd();
 const publicDir = path.join(rootDir, "public");
@@ -106,6 +107,37 @@ for (const [slug, content] of Object.entries(landingCopyOverrides)) {
   if (!content.longDescription?.length) errors.push(`${slug}: missing longDescription.`);
   if (!content.specifications?.length) errors.push(`${slug}: missing specifications.`);
   if (!content.requirements?.length) errors.push(`${slug}: missing requirements.`);
+}
+
+for (const product of products) {
+  const slug = slugFromDetailsUrl(product.detailsUrl);
+  if (["Presets", "Free", "Legacy"].includes(product.category) || slug === "ghostform") {
+    if (!productInstallations[slug]?.steps.length) errors.push(`${slug}: missing installation steps.`);
+  }
+}
+for (const [slug, installation] of Object.entries(productInstallations)) {
+  if (!productSlugSet.has(slug)) errors.push(`${slug}: installation does not match a product.`);
+  if (installation.steps.some((step) => !hasText(step))) errors.push(`${slug}: empty installation step.`);
+  if (installation.sourceUrl && !installation.sourceUrl.startsWith("https://")) errors.push(`${slug}: invalid installation source URL.`);
+}
+
+const sampleVerification = JSON.parse(fs.readFileSync(path.join(rootDir, "src/data/sample-pack-verification.json"), "utf8"));
+for (const [slug, expected] of Object.entries(sampleVerification.packs)) {
+  const product = products.find((item) => slugFromDetailsUrl(item.detailsUrl) === slug);
+  const copy = landingCopyOverrides[slug];
+  if (!product || !copy) {
+    errors.push(`${slug}: missing verified sample pack.`);
+    continue;
+  }
+  if (Number.parseInt(product.count, 10) !== expected.count) errors.push(`${slug}: catalog count differs from archive audit.`);
+  if (product.format !== expected.format) errors.push(`${slug}: catalog format differs from archive audit.`);
+  const soundCount = copy.specifications.find((spec) => spec.label === "Sound count")?.value;
+  if (Number.parseInt(soundCount || "", 10) !== expected.count) errors.push(`${slug}: product-page count differs from archive audit.`);
+  const specifications = copy.specifications.map((spec) => spec.value).join(" ");
+  for (const rate of expected.sampleRates) {
+    if (!specifications.includes(`${rate / 1000} kHz`)) errors.push(`${slug}: missing verified sample rate ${rate}.`);
+  }
+  if (expected.bitDepthNote && !specifications.includes(expected.bitDepthNote)) errors.push(`${slug}: missing mixed-format disclosure.`);
 }
 
 for (const redirect of productRedirects) {

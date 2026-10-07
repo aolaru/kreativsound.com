@@ -11,6 +11,8 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-10-07", kind: "update", title: "Installation help and Ghostform release details added", description: "Preset-bank pages now include short import steps. Ghostform lists version 1.0.0, its PDF manual, platform-specific installation, and initial release notes.", href: "/plugins/ghostform#product-installation-title" },
+  { date: "2026-10-07", kind: "fix", title: "Sample-pack counts and audio formats verified", description: "All seven WAV packs now show file counts and sample rates. BLEEPS 2, TECTONIC 2, and HORROR 2 explicitly identify their mixed bit-depth formats.", href: "/sounds/" },
   { date: "2026-10-06", kind: "new", title: "Callisto Drift and Lite added to the catalog", description: "The Arturia Jup-8 V4 bank now has website details and Gumroad download links: 128 presets for €9 or 32 presets free in Lite.", href: "/sounds/callisto-drift-jup-8-v4-presets" },
   { date: "2026-10-06", kind: "fix", title: "Preset Mutator product information corrected", description: "Free and Pro details now distinguish stable and beta synth targets, explain Gumroad license-key activation, and clarify that source files stay local.", href: "/tools/preset-mutator/" },
   { date: "2026-10-06", kind: "fix", title: "Guides and sound-pack specifications corrected", description: "Six guides now render their headings and links correctly. Product pages show verified preset counts, 24-bit WAV formats, and download sizes.", href: "/updates/#guides" },

@@ -16,25 +16,28 @@ export const landingCopyOverrides = {
     shortMeta: "Free plugin • 144 factory presets • macOS AU/VST3 • Windows VST3",
     ctaLine: "Download KS Ghostform free from Gumroad.",
     finalCtaTitle: "Download KS Ghostform free.",
-    finalCtaText: "Get the full instrument, 144 factory presets, and MIDI automation with no activation or license key.",
+    finalCtaText: "Get the full instrument and 144 factory presets, with no activation or license key.",
     longDescription: [
       "KS Ghostform is a free evolving drone and string synthesizer built for slow harmonic movement, cinematic beds, deep drones, and textured ambient sound design.",
       "Two oscillator workflows, a sub oscillator, filter movement, echo, reverb, and a Variation engine make it easy to move from a stable source into more animated, uncertain, or spacious material.",
-      "The instrument includes 144 factory presets covering drones, pads, basses, leads, plucks, and experimental textures. It supports full MIDI automation and needs no activation or license key."
+      "The instrument includes 144 factory presets covering drones, pads, basses, leads, plucks, and experimental textures. It supports host automation and MIDI mapping through your DAW, with no activation or license key."
     ],
     specifications: [
       { label: "Product type", value: "Free software synthesizer" },
+      { label: "Version", value: "1.0.0" },
       { label: "Formats", value: "macOS AU and VST3; Windows 64-bit VST3" },
       { label: "Preset count", value: "144 factory presets" },
       { label: "Sound palette", value: "Drones, pads, basses, leads, plucks, and experimental textures" },
       { label: "Core engine", value: "Two oscillators, sub oscillator, filter movement, echo, reverb, and Variation engine" },
-      { label: "Automation", value: "Full MIDI automation" },
+      { label: "Automation", value: "Host automation and MIDI mapping through your DAW" },
+      { label: "Manual", value: "Ghostform User Manual v1.0 (PDF)" },
       { label: "Activation", value: "No activation or license key" },
       { label: "Delivery", value: "Free Gumroad download" }
     ],
     requirements: [
       "macOS 11 or later: signed and notarized universal AU and VST3 for Apple Silicon and Intel Macs.",
-      "Windows: a 64-bit DAW that supports VST3 plug-ins.",
+      "Windows: a 64-bit DAW that supports VST3 plug-ins. A minimum Windows version has not been specified.",
+      "KS Ghostform is a plug-in, not a standalone application.",
       "After installation, restart or rescan plug-ins in your DAW."
     ]
   },
@@ -310,8 +313,8 @@ export const landingCopyOverrides = {
       { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [
-      "Softube Models is required to use these presets.",
-      "You need a DAW or host that can load the Softube instrument format used by the pack.",
+      "The matching Softube instrument is required: Model 72 for MONOGRIT (20 presets), Model 80 for POLYMOD (24 presets), or Model 84 for CHROMA (20 presets).",
+      "The three banks use the native .spt format. The instruments themselves are not included.",
       "Use these presets for dark scoring, pressure beds, electronic production, and cinematic synth layers."
     ]
   },
@@ -463,6 +466,7 @@ export const landingCopyOverrides = {
       { label: "Product type", value: "Sample collection" },
       { label: "Format", value: "24-bit WAV samples" },
       { label: "Sound count", value: "34 original sound effects" },
+      { label: "Sample rate / channels", value: "44.1 kHz stereo" },
       { label: "Focus", value: "Sound effects, transitions, accents, design details" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "116 MB" },
@@ -478,7 +482,7 @@ export const landingCopyOverrides = {
   },
   "noize-2-noise-textures": {
     subtitle: "WAV Noise Textures and FX for Abstract Sound Design",
-    shortMeta: "Noise pack • 24-bit WAV • 103 MB download",
+    shortMeta: "32 sounds • 24-bit WAV • 103 MB download",
     ctaLine: "Download the experimental noise texture collection.",
     longDescription: [
       "NOIZE 2 is an experimental noise and FX collection built for abstract layers, glitch detail, unstable motion, and texture shaping.",
@@ -488,7 +492,8 @@ export const landingCopyOverrides = {
     specifications: [
       { label: "Product type", value: "Sample collection" },
       { label: "Format", value: "24-bit WAV samples" },
-      { label: "Collection", value: "Noise pack" },
+      { label: "Sound count", value: "32 sounds" },
+      { label: "Sample rate / channels", value: "44.1 kHz stereo" },
       { label: "Focus", value: "Noise textures, glitch layers, abstract FX" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "103 MB" },
@@ -504,7 +509,7 @@ export const landingCopyOverrides = {
   },
   "enigma-2-cinematic-atmospheres": {
     subtitle: "WAV Cinematic Atmospheres for Mystery, Suspense, and Dark Beds",
-    shortMeta: "Atmosphere pack • 24-bit WAV • 76.2 MB download",
+    shortMeta: "12 sounds • 24-bit WAV • 76.2 MB download",
     ctaLine: "Download the cinematic atmosphere collection.",
     longDescription: [
       "ENIGMA 2 is a cinematic atmosphere collection focused on dark tension beds, restrained mystery, and slow-building ambiguity.",
@@ -514,7 +519,8 @@ export const landingCopyOverrides = {
     specifications: [
       { label: "Product type", value: "Sample collection" },
       { label: "Format", value: "24-bit WAV samples" },
-      { label: "Collection", value: "Atmosphere pack" },
+      { label: "Sound count", value: "12 sounds" },
+      { label: "Sample rate / channels", value: "44.1 kHz stereo" },
       { label: "Focus", value: "Mystery, suspense beds, dark cinematic ambience" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "76.2 MB" },
@@ -530,7 +536,7 @@ export const landingCopyOverrides = {
   },
   "bleeps-2-percussion-sounds": {
     subtitle: "WAV Percussion Sounds for Synthetic One-Shots and Rhythm Accents",
-    shortMeta: "44 sounds • 24-bit WAV • 5.15 MB download",
+    shortMeta: "44 sounds • 16/24-bit WAV • 5.15 MB download",
     ctaLine: "Download the experimental percussion collection.",
     longDescription: [
       "BLEEPS 2 is an experimental percussion sample pack built for strange rhythm accents, synthetic one-shots, and sharper percussive detail.",
@@ -539,8 +545,10 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Sample collection" },
-      { label: "Format", value: "24-bit WAV samples" },
+      { label: "Format", value: "Stereo WAV samples" },
       { label: "Sound count", value: "44 sounds" },
+      { label: "Sample rate", value: "44.1 kHz" },
+      { label: "Bit depth", value: "43 files at 24-bit PCM; 1 at 16-bit PCM" },
       { label: "Focus", value: "Experimental percussion, one-shots, rhythmic FX" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "5.15 MB" },
@@ -556,7 +564,7 @@ export const landingCopyOverrides = {
   },
   "space-2-atmospheres-textures": {
     subtitle: "WAV Space Atmospheres and Textures for Sci-Fi Ambience",
-    shortMeta: "Atmosphere pack • 24-bit WAV • 89.8 MB download",
+    shortMeta: "10 sounds • 24-bit WAV • 89.8 MB download",
     ctaLine: "Download the space atmosphere collection.",
     longDescription: [
       "SPACE 2 is an atmosphere and texture library shaped for sci-fi ambience, distant environments, and suspended motion.",
@@ -566,7 +574,8 @@ export const landingCopyOverrides = {
     specifications: [
       { label: "Product type", value: "Sample collection" },
       { label: "Format", value: "24-bit WAV samples" },
-      { label: "Collection", value: "Atmosphere pack" },
+      { label: "Sound count", value: "10 sounds" },
+      { label: "Sample rate / channels", value: "44.1 kHz stereo" },
       { label: "Focus", value: "Sci-fi ambience, distant environments, suspended textures" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "89.8 MB" },
@@ -582,7 +591,7 @@ export const landingCopyOverrides = {
   },
   "tectonic-2-dark-subs-textures": {
     subtitle: "WAV Dark Subs and Underground Textures for Low-End Pressure",
-    shortMeta: "Low-end pack • 24-bit WAV • 94.9 MB download",
+    shortMeta: "7 sounds • 16/24-bit WAV • 94.9 MB download",
     ctaLine: "Download the dark subs and texture collection.",
     longDescription: [
       "TECTONIC 2 is a dark subs and underground texture collection focused on low-end pressure, subterranean atmosphere, and cinematic heaviness.",
@@ -591,8 +600,10 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Sample collection" },
-      { label: "Format", value: "24-bit WAV samples" },
-      { label: "Collection", value: "Low-end pack" },
+      { label: "Format", value: "Stereo WAV samples" },
+      { label: "Sound count", value: "7 sounds" },
+      { label: "Sample rate", value: "44.1 kHz" },
+      { label: "Bit depth", value: "6 files at 24-bit PCM; 1 at 16-bit PCM" },
       { label: "Focus", value: "Dark subs, low-end pressure, subterranean textures" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "94.9 MB" },
@@ -608,7 +619,7 @@ export const landingCopyOverrides = {
   },
   "horror-2-cinematic-textures": {
     subtitle: "WAV Horror Textures for Stingers, Uneasy Drones, and Threat Cues",
-    shortMeta: "Horror pack • 24-bit WAV • 86.2 MB download",
+    shortMeta: "8 sounds • Mixed-format stereo WAV • 86.2 MB download",
     ctaLine: "Download the cinematic horror texture collection.",
     longDescription: [
       "HORROR 2 is a cinematic horror texture collection focused on uneasy drones, threat cues, stingers, and darker atmosphere.",
@@ -617,8 +628,10 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Sample collection" },
-      { label: "Format", value: "24-bit WAV samples" },
-      { label: "Collection", value: "Horror pack" },
+      { label: "Format", value: "Stereo WAV samples" },
+      { label: "Sound count", value: "8 sounds" },
+      { label: "Sample rate", value: "7 files at 44.1 kHz; 1 at 48 kHz" },
+      { label: "Bit depth", value: "7 files at 24-bit PCM; 1 at 32-bit float" },
       { label: "Focus", value: "Uneasy drones, stingers, threat cues, dark atmosphere" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "86.2 MB" },

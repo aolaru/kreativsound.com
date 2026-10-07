@@ -69,10 +69,10 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "Updates", "About", "Contact", "Latest release", "KS Ghostform", "Callisto Drift", "Preset Mutator Free", "Kreativ Kollection V1", "Optional analytics"],
+            "/": ["Sounds", "Updates", "About", "Support", "Latest release", "KS Ghostform", "Callisto Drift", "Preset Mutator Free", "Kreativ Kollection V1", "Optional analytics"],
             "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
             "/updates/": ["Kreativ Sound Updates and Changelog", "New releases, updates, and practical guides.", "New products and major launches.", "Improvements grouped by month.", "September 2026", "August 2026", f"{preset_mutator_pro['name']} v{preset_mutator_pro['version']}", f"{preset_mutator_free['name']} v{preset_mutator_free['version']}", f"{wave_mutator['name']} {wave_mutator['releaseLabel']} v{wave_mutator['version']}", "Site-maintenance history", "Release notes", "Practical sound-design guides.", "The current tools and plugin line", "32 variants per run", "KS Ghostform", "144 factory presets"],
-            "/plugins/ghostform": ["KS Ghostform", "Download Free", "144 factory presets", "macOS AU and VST3", "Windows 64-bit VST3", "Product Specifications", "Requirements"],
+            "/plugins/ghostform": ["KS Ghostform", "Download Free", "144 factory presets", "macOS AU and VST3", "Windows 64-bit VST3", "Product Specifications", "Requirements", "Version 1.0.0", "Release notes", "Ghostform User Manual v1.0", "Installation", "not a standalone application"],
             "/tools/": ["Preset Mutator Free", "3 free / 32 Pro", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "Wave Mutator Lite", "Pattern Mutator Lite"],
             "/tools/pattern-mutator/": ["Pattern Mutator Lite", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "Free piano roll"],
             "/tools/pattern-mutator/changelog/": ["Pattern Mutator Lite", "Changelog", "Current release", f"v{pattern_mutator['version']}", "Back to Pattern Mutator Lite"],
@@ -104,13 +104,27 @@ def main() -> int:
             "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "64 presets", "2.09 MB", "Product Specifications", "Requirements"],
             "/sounds/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Description", "Product Specifications", "Requirements"],
             "/sounds/sfxs-2-sound-effects": ["SFXS 2", "Listen to demo", "34 original sound effects", "24-bit WAV", "116 MB", "/assets/audio/sfxs-2-demo-01.mp3"],
-            "/sounds/noize-2-noise-textures": ["NOIZE 2", "Listen to demo", "/assets/audio/noize-2-demo-01.mp3"],
-            "/sounds/enigma-2-cinematic-atmospheres": ["ENIGMA 2", "Listen to demo", "/assets/audio/enigma-2-demo-01.mp3"],
-            "/sounds/bleeps-2-percussion-sounds": ["BLEEPS 2", "Listen to demo", "44 sounds", "24-bit WAV", "5.15 MB", "/assets/audio/bleeps-2-demo-01.mp3"],
-            "/sounds/space-2-atmospheres-textures": ["SPACE 2", "Listen to demo", "/assets/audio/space-2-demo-01.mp3"],
-            "/sounds/tectonic-2-dark-subs-textures": ["TECTONIC 2", "Listen to demo", "/assets/audio/tectonic-2-demo-01.mp3"],
-            "/sounds/horror-2-cinematic-textures": ["HORROR 2", "Listen to demo", "/assets/audio/horror-2-demo-01.mp3"],
+            "/sounds/noize-2-noise-textures": ["NOIZE 2", "32 sounds", "44.1 kHz", "Listen to demo", "/assets/audio/noize-2-demo-01.mp3"],
+            "/sounds/enigma-2-cinematic-atmospheres": ["ENIGMA 2", "12 sounds", "44.1 kHz", "Listen to demo", "/assets/audio/enigma-2-demo-01.mp3"],
+            "/sounds/bleeps-2-percussion-sounds": ["BLEEPS 2", "Listen to demo", "44 sounds", "43 files at 24-bit PCM; 1 at 16-bit PCM", "44.1 kHz", "5.15 MB", "/assets/audio/bleeps-2-demo-01.mp3"],
+            "/sounds/space-2-atmospheres-textures": ["SPACE 2", "10 sounds", "44.1 kHz", "Listen to demo", "/assets/audio/space-2-demo-01.mp3"],
+            "/sounds/tectonic-2-dark-subs-textures": ["TECTONIC 2", "7 sounds", "6 files at 24-bit PCM; 1 at 16-bit PCM", "44.1 kHz", "Listen to demo", "/assets/audio/tectonic-2-demo-01.mp3"],
+            "/sounds/horror-2-cinematic-textures": ["HORROR 2", "8 sounds", "7 files at 44.1 kHz; 1 at 48 kHz", "7 files at 24-bit PCM; 1 at 32-bit float", "Listen to demo", "/assets/audio/horror-2-demo-01.mp3"],
         }
+
+        for hub in ("sounds", "plugins"):
+            for page in (DIST / hub).rglob("*.html"):
+                dom = page.read_text(encoding="utf-8")
+                installation_heading = '<h2 id="product-installation-title"'
+                if installation_heading not in dom:
+                    continue
+                label = str(page.relative_to(DIST))
+                requirements_position = dom.find('<h2 id="product-requirements-title"')
+                installation_position = dom.find(installation_heading)
+                if requirements_position == -1 or requirements_position > installation_position:
+                    errors.append(f"{label}: Installation must follow Requirements.")
+                if dom.count(installation_heading) != 1:
+                    errors.append(f"{label}: expected exactly one Installation heading.")
 
         for route, needles in pages.items():
             dom = fetch_html(base_url + route)
@@ -156,6 +170,14 @@ def main() -> int:
             if route.startswith("/plugins/") and route != "/plugins/":
                 require(dom, 'class="product-breadcrumbs"', route, errors)
                 require(dom, 'href="/plugins/"', route, errors)
+            if route == "/plugins/ghostform":
+                section_ids = ["product-requirements-title", "product-installation-title", "ghostform-release-title"]
+                positions = [dom.find(f'<h2 id="{section_id}"') for section_id in section_ids]
+                if -1 in positions or positions != sorted(positions):
+                    errors.append(f"{route}: expected Requirements → Installation → Release notes.")
+                for section_id in section_ids:
+                    if dom.count(f'<h2 id="{section_id}"') != 1:
+                        errors.append(f"{route}: expected exactly one {section_id} heading.")
             if route == "/music/":
                 forbid(dom, "Rethyn", route, errors)
                 forbid(dom, "Holo Signal", route, errors)

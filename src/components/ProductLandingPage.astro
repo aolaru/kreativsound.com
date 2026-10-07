@@ -269,6 +269,32 @@ const breadcrumbSchema = {
     </section>
   ) : null}
 
+  {product.installation ? (
+    <section class="product-landing-section product-help-section" aria-labelledby="product-installation-title">
+      <h2 id="product-installation-title">Installation</h2>
+      <ol>
+        {product.installation.steps.map((step) => <li>{step}</li>)}
+      </ol>
+      {product.installation.sourceUrl ? (
+        <p><a href={product.installation.sourceUrl} target="_blank" rel="noopener noreferrer">{product.installation.sourceLabel || "Installation guide"}</a></p>
+      ) : null}
+      <p>Need help? <a href="/contact/">Contact support</a> with your product, operating system, and instrument or DAW version.</p>
+    </section>
+  ) : null}
+
+  {product.slug === "ghostform" ? (
+    <section class="product-landing-section product-help-section" aria-labelledby="ghostform-release-title">
+      <h2 id="ghostform-release-title">Release notes</h2>
+      <p><strong>Version 1.0.0</strong> — initial release, September 25, 2026.</p>
+      <ul>
+        <li>144 factory presets; two oscillator workflows, sub oscillator, effects, and Variation engine.</li>
+        <li>Universal macOS AU/VST3 and Windows 64-bit VST3 downloads.</li>
+        <li>Host automation and MIDI mapping through your DAW; no activation required.</li>
+      </ul>
+      <p>The Gumroad download also includes the Ghostform User Manual v1.0 (PDF).</p>
+    </section>
+  ) : null}
+
   <section class="product-landing-section product-discovery" aria-labelledby="product-discovery-title">
     <div class="product-discovery-head">
       <div>
@@ -323,3 +349,25 @@ const breadcrumbSchema = {
     </section>
   ) : null}
 </article>
+
+<style>
+  .product-help-section {
+    color: #513337;
+    font-size: 1.02rem;
+    line-height: 1.78;
+    overflow-wrap: anywhere;
+  }
+
+  .product-help-section :is(ul, ol) {
+    padding-left: 1.5rem;
+    margin: 0.85rem 0;
+  }
+
+  .product-help-section li + li {
+    margin-top: 0.6rem;
+  }
+
+  .product-help-section p + p {
+    margin-top: 0.85rem;
+  }
+</style>
