@@ -77,7 +77,7 @@ def main() -> int:
             "/tools/pattern-mutator/": ["Pattern Mutator Lite", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "Free piano roll"],
             "/tools/pattern-mutator/changelog/": ["Pattern Mutator Lite", "Changelog", "Current release", f"v{pattern_mutator['version']}", "Back to Pattern Mutator Lite"],
             "/tools/wave-mutator/changelog/": ["Wave Mutator Lite", "Changelog", "Current beta release", f"v{wave_mutator['version']}", "Current beta limits"],
-            "/tools/preset-mutator/": ["Preset Mutator Free", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "32 preset variants per workflow for Vital and Serum 2 beta.", "Supported synths", "Activate Pro", "Gumroad license-key verification", "earlier signed Pro tokens still work", "Not included"],
+            "/tools/preset-mutator/": ["Preset Mutator Free", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "32 preset variants per workflow for Vital, Serum 2 beta, and Pigments beta.", "Supported synths", "Activate Pro", "Gumroad license-key verification", "earlier signed Pro tokens still work", "Not included"],
             "/sounds/preset-mutator": ["Serum 2", "Arturia Pigments", "Supported synths", "Activate Pro", "Gumroad license-key verification", "Not included"],
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
