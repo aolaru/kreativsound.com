@@ -19,11 +19,19 @@ import {
   parseSerum2Container,
   summarizeSerum2Preset,
 } from "../apps/preset-mutator-pro/public/engine/serum2-format.js";
+import {
+  applyGeneratedPresetToPigments,
+  buildPigmentsBank,
+  generatePigmentsPresetVariants,
+  parsePigmentsBank,
+  readPigmentsParameter,
+} from "../apps/preset-mutator-pro/public/engine/pigments-format.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 const appDir = path.join(rootDir, "apps/preset-mutator-pro/public");
 const serumSeedPath = path.join(appDir, "assets/seeds/serum2/raw/KS Serum 2 Base.SerumPreset");
+const pigmentsSeedPath = path.join(appDir, "assets/seeds/pigments/raw/KS Pigments Base.pgtpreset");
 const toolReleases = JSON.parse(await readFile(path.join(rootDir, "src/data/tool-releases.json"), "utf8"));
 const releaseVersion = `v${toolReleases.presetMutatorPro.version}`;
 const failures = [];
@@ -89,12 +97,15 @@ assert(manifest.includes('"scope": "/preset-mutator-pro/"'), "Manifest: legacy r
 assert(serviceWorker.includes("preset-mutator-pro-shell"), "Service worker: Pro cache namespace is missing");
 assert(serviceWorker.includes("./changelog/index.html"), "Service worker: changelog should be cached");
 assert(serviceWorker.includes("./engine/serum2-format.js"), "Service worker: Serum 2 format engine should be cached");
+assert(serviceWorker.includes("./engine/pigments-format.js"), "Service worker: Pigments format engine should be cached");
 assert(serviceWorker.includes("./vendor/zstd.js"), "Service worker: Serum 2 codec should be cached");
+assert(serviceWorker.includes("KS%20Pigments%20Base.pgtpreset"), "Service worker: Pigments seed should be cached");
 assert(licenseScript.includes('LICENSE_PRODUCT = "preset-mutator-pro"'), "License verifier: product identifier changed unexpectedly");
 assert(licenseScript.includes('GUMROAD_PRODUCT_ID = "-A9fzCUAIYZ0QZKoRvyOQA=="'), "License verifier: Gumroad product identifier changed unexpectedly");
 assert(licenseScript.includes("GUMROAD_VERIFY_URL"), "License verifier: Gumroad verification endpoint is missing");
 assert(await exists("assets/seeds/vital/raw/KS Dread Lantern.vital"), "Legacy Pro: missing Vital seed assets");
 assert(await exists("assets/seeds/serum2/raw/KS Serum 2 Base.SerumPreset"), "Pro: missing Serum 2 seed asset");
+assert(await exists("assets/seeds/pigments/raw/KS Pigments Base.pgtpreset"), "Pro: missing Pigments seed asset");
 assert(changelogHtml.includes("Preset Mutator Pro Changelog"), "Changelog: page title is missing");
 assert(changelogHtml.includes(releaseVersion), "Changelog: current version is missing");
 assert(changelogHtml.includes("Current release"), "Changelog: current release marker is missing");
@@ -107,8 +118,21 @@ for (const page of ["index.html", "audio/index.html", "mutate/index.html"]) {
 const scratchHtml = await read("index.html");
 assert(scratchHtml.includes('id="synth-select"'), "Scratch: synth target selector is missing");
 assert(scratchHtml.includes('data-intent-keyword="wide"'), "Scratch: Wide character keyword is missing");
-assert((await read("audio/index.html")).includes('id="synth-select"'), "Audio: synth target selector is missing");
-assert((await read("mutate/index.html")).includes(".SerumPreset"), "Mutate Preset: Serum 2 upload support is missing");
+assert(scratchHtml.includes('value="pigments"'), "Scratch: Pigments target is missing");
+assert(scratchHtml.includes('data-synth-target="pigments"'), "Scratch: Pigments target control is missing");
+const audioHtml = await read("audio/index.html");
+assert(audioHtml.includes('id="synth-select"'), "Audio: synth target selector is missing");
+assert(audioHtml.includes('value="pigments"'), "Audio: Pigments target is missing");
+const mutateHtml = await read("mutate/index.html");
+assert(mutateHtml.includes(".SerumPreset"), "Mutate Preset: Serum 2 upload support is missing");
+assert(mutateHtml.includes(".pgtx"), "Mutate Preset: Pigments bank upload support is missing");
+
+const scratchApp = await read("app.js");
+const audioApp = await read("audio/app.js");
+const mutateApp = await read("mutate/app.js");
+assert(scratchApp.includes("pigments-export.js"), "Scratch: Pigments export engine is not connected");
+assert(audioApp.includes("pigments-export.js"), "Audio: Pigments export engine is not connected");
+assert(mutateApp.includes("pigments-format.js"), "Mutate Preset: Pigments mutation engine is not connected");
 
 const templateFiles = Object.values(VELVET_TEMPLATE_LIBRARY).flat();
 assert(templateFiles.length === 16, "Velvet library: expected 16 curated templates");
@@ -204,6 +228,33 @@ const serumMutations = generateSerum2PresetVariants({
 assert(serumMutations.length === 32, "Serum 2: mutation should produce a 32-variant Pro pack");
 assert(serumMutations.every((preset) => preset.downloadName.endsWith(".SerumPreset")), "Serum 2: mutation downloads must use .SerumPreset");
 assert(serumMutations.every((preset) => preset.changedParameters.length >= 8), "Serum 2: mutations should change useful parameters");
+
+const pigmentsSeed = new Uint8Array(await readFile(pigmentsSeedPath));
+assert(pigmentsSeed.length > 100000, "Pigments: seed is missing or incomplete");
+const pigmentsText = applyGeneratedPresetToPigments(pigmentsSeed, scratchPack[0]);
+const pigmentsOutput = buildPigmentsBank(pigmentsText, scratchPack[0].name);
+const pigmentsRoundTrip = await parsePigmentsBank(pigmentsOutput, `${scratchPack[0].name}.pgtx`);
+assert(new TextDecoder().decode(pigmentsOutput.subarray(0, 2)) === "PK", "Pigments: generated bank is not a .pgtx ZIP container");
+assert(pigmentsRoundTrip.summary.name === scratchPack[0].name, "Pigments: generated name did not survive round trip");
+assert(pigmentsRoundTrip.summary.author === "Kreativ Sound", "Pigments: generated author is incorrect");
+assert(pigmentsRoundTrip.entryName.startsWith("Pigments/User/Preset Mutator Pro/"), "Pigments: generated bank is not stored in the Pro pack path");
+assert(readPigmentsParameter(pigmentsRoundTrip.presetText, "Filter1_Cutoff") > 0, "Pigments: filter mapping is missing");
+
+const pigmentsMutations = generatePigmentsPresetVariants({
+  sourcePreset: pigmentsRoundTrip,
+  strategy: mutationStrategy,
+  variationSeed: 48271,
+});
+assert(pigmentsMutations.length === 32, "Pigments: mutation should produce a 32-variant Pro pack");
+assert(new Set(pigmentsMutations.map((preset) => preset.groupKey)).size === 8, "Pigments: mutation pack should use eight directional groups");
+assert(pigmentsMutations.every((preset) => preset.changedParameters.length >= 16), "Pigments: mutations should change useful parameters");
+assert(pigmentsMutations.some((preset) => preset.changedParameters.some((key) => /FM|ClusterDW|Waveshaper_Drive/.test(key))), "Pigments: dirt controls should reach safe harmonic parameters");
+
+for (const variant of [pigmentsMutations[0], pigmentsMutations.at(-1)]) {
+  const variantBytes = buildPigmentsBank(variant.presetText, variant.name);
+  const parsedVariant = await parsePigmentsBank(variantBytes, `${variant.name}.pgtx`);
+  assert(parsedVariant.summary.name === variant.name, `Pigments: ${variant.name} failed .pgtx round trip`);
+}
 
 if (failures.length) {
   console.error("Preset Mutator Pro QA failed:");

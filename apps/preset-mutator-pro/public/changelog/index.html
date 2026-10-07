@@ -58,13 +58,28 @@
         <header class="changelog-hero">
           <p class="eyebrow">Preset Mutator Pro</p>
           <h1 id="changelog-title">Preset Mutator Pro Changelog</h1>
-          <p>A concise public record of improvements and fixes for the local-first tool that creates 32 Vital variants per run.</p>
+          <p>A concise public record of improvements and fixes for the local-first tool that creates 32 synth preset variants per run.</p>
         </header>
 
         <ol class="changelog-list">
           <li>
             <article class="changelog-entry is-current">
               <span class="changelog-current-label">Current release</span>
+              <header class="changelog-entry-head">
+                <h2>v0.5.0</h2>
+                <time datetime="2026-10-07">October 7, 2026</time>
+              </header>
+              <p>Added Arturia Pigments beta across all three Pro workflows.</p>
+              <ul>
+                <li>Scratch and Audio now generate 32 importable Pigments <code>.pgtx</code> banks with full ZIP-pack export.</li>
+                <li>Preset mode accepts a Pigments <code>.pgtx</code> bank and creates 32 bounded mutations across eight directional groups.</li>
+                <li>Embedded Pigments resources are preserved byte-for-byte through generation and mutation.</li>
+                <li>Existing Pro activation and license-key compatibility remain unchanged.</li>
+              </ul>
+            </article>
+          </li>
+          <li>
+            <article class="changelog-entry">
               <header class="changelog-entry-head">
                 <h2>v0.4.11</h2>
                 <time datetime="2026-09-13">September 13, 2026</time>
@@ -207,7 +222,7 @@
       </section>
 
       <footer class="app-footer">
-        <p>Kreativ Sound browser tool for 32-variant Vital preset packs.</p>
+        <p>Kreativ Sound browser tool for 32-variant Vital, Serum 2, and Pigments preset packs.</p>
         <p class="app-version"><a href="/preset-mutator-pro/">Back to Preset Mutator Pro</a></p>
       </footer>
     </main>

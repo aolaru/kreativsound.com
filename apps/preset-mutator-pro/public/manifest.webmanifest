@@ -2,7 +2,7 @@
   "id": "/preset-mutator-pro/",
   "name": "Preset Mutator Pro",
   "short_name": "Mutator Pro",
-  "description": "Preset Mutator Pro access for verified customers.",
+  "description": "Create 32-variant Vital, Serum 2, and Arturia Pigments preset packs locally in your browser.",
   "start_url": "/preset-mutator-pro/",
   "scope": "/preset-mutator-pro/",
   "display": "standalone",

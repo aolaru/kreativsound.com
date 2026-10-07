@@ -67,6 +67,23 @@
   --synth-soft: rgba(41, 193, 235, 0.12);
 }
 
+[data-synth="pigments"] {
+  --neon-blue: #f0a629;
+  --neon-mid: #e25878;
+  --neon-pink: #b9328d;
+  --synth-accent: #a23a68;
+  --synth-accent-bright: #c43f78;
+  --synth-border: rgba(190, 57, 119, 0.4);
+  --synth-soft: rgba(232, 151, 51, 0.12);
+}
+
+[data-theme="dark"][data-synth="pigments"] {
+  --synth-accent: #ffb64d;
+  --synth-accent-bright: #ffcf70;
+  --synth-border: rgba(255, 184, 73, 0.42);
+  --synth-soft: rgba(218, 66, 137, 0.13);
+}
+
 * {
   box-sizing: border-box;
 }

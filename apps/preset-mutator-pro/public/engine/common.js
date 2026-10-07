@@ -10,7 +10,17 @@ export function clamp(value, min = 0, max = 1) {
 }
 
 export function applySynthTheme(synth) {
-  document.documentElement.dataset.synth = synth === "serum2" ? "serum2" : "vital";
+  document.documentElement.dataset.synth = ["serum2", "pigments"].includes(synth) ? synth : "vital";
+}
+
+export function synthTargetDetails(synth) {
+  if (synth === "serum2") {
+    return { name: "Serum 2", extension: ".SerumPreset", badge: "SERUM 2", beta: true };
+  }
+  if (synth === "pigments") {
+    return { name: "Arturia Pigments", extension: ".pgtx", badge: "PIGMENTS", beta: true };
+  }
+  return { name: "Vital", extension: ".vital", badge: "VITAL", beta: false };
 }
 
 export function lerp(min, max, amount) {

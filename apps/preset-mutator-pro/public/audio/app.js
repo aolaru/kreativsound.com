@@ -1,8 +1,9 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { applySynthTheme, clamp, createGenerationSeed, ensureJsZip, familyLabel, formatHz, sanitizeFileName } from "../engine/common.js";
+import { applySynthTheme, clamp, createGenerationSeed, ensureJsZip, familyLabel, formatHz, sanitizeFileName, synthTargetDetails } from "../engine/common.js";
 import { AUDIO_PRO_PACK_COUNT, buildAudioProfile as createAudioProfile, buildAudioProPack } from "../engine/audio-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "../engine/vital-export.js";
 import { createSerum2PresetBlob } from "../engine/serum2-export.js";
+import { createPigmentsPresetBlob } from "../engine/pigments-export.js";
 import {
   clearLegacyUnlocks,
   clearLicenseToken,
@@ -699,9 +700,26 @@ async function loadSerumSeedPreset() {
   return bytes.slice();
 }
 
+async function loadPigmentsSeedPreset() {
+  const cacheKey = "pigments-base";
+  if (state.seedCache.has(cacheKey)) {
+    return state.seedCache.get(cacheKey).slice();
+  }
+  const response = await fetch(new URL("../assets/seeds/pigments/raw/KS%20Pigments%20Base.pgtpreset", import.meta.url));
+  if (!response.ok) {
+    throw new Error("Could not load the Pigments seed preset.");
+  }
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  state.seedCache.set(cacheKey, bytes);
+  return bytes.slice();
+}
+
 async function buildPresetBlob(preset) {
   if (elements.synthSelect.value === "serum2") {
     return createSerum2PresetBlob(await loadSerumSeedPreset(), preset);
+  }
+  if (elements.synthSelect.value === "pigments") {
+    return createPigmentsPresetBlob(await loadPigmentsSeedPreset(), preset);
   }
   return buildVitalPresetBlob(preset);
 }
@@ -724,11 +742,12 @@ function renderPresets(presets) {
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
   elements.presetsPanel.classList.toggle("is-pack", presets.length > 0);
   if (!presets.length) {
+    const synth = synthTargetDetails(elements.synthSelect.value);
     const emptyMessage = !state.originalBuffer
       ? "Load a short source sound to begin."
       : state.proPreviewUnlocked
-        ? `Source ready. Generate a 32-variant ${elements.synthSelect.value === "serum2" ? "Serum 2" : "Vital"} preset pack.`
-        : `Source ready. Activate Pro to generate a 32-variant ${elements.synthSelect.value === "serum2" ? "Serum 2" : "Vital"} preset pack.`;
+        ? `Source ready. Generate a 32-variant ${synth.name} preset pack.`
+        : `Source ready. Activate Pro to generate a 32-variant ${synth.name} preset pack.`;
     elements.presetList.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
     return;
   }
@@ -786,6 +805,7 @@ function renderPresets(presets) {
 }
 
 function buildPresetCard(preset, role, totalCount) {
+    const synth = synthTargetDetails(elements.synthSelect.value);
     const card = document.createElement("article");
     card.className = "preset-card";
     const maxRows = 4;
@@ -813,8 +833,8 @@ function buildPresetCard(preset, role, totalCount) {
       <div class="param-list">${paramRows}</div>
       <div class="preset-actions">
         <button class="download-button" type="button">
-          <span class="download-badge" aria-hidden="true">${elements.synthSelect.value === "serum2" ? "SERUM 2" : "VITAL"}</span>
-          <span>Download ${elements.synthSelect.value === "serum2" ? ".SerumPreset" : ".vital"}</span>
+          <span class="download-badge" aria-hidden="true">${synth.badge}</span>
+          <span>Download ${synth.extension}</span>
         </button>
       </div>
     `;
@@ -1230,11 +1250,11 @@ async function restoreLicense() {
 
 elements.fileInput.addEventListener("change", handleFileChange);
 elements.synthSelect.addEventListener("change", () => {
-  const isSerum = elements.synthSelect.value === "serum2";
+  const synth = synthTargetDetails(elements.synthSelect.value);
   applySynthTheme(elements.synthSelect.value);
-  elements.heroTitle.textContent = `Turn audio into ${isSerum ? "Serum 2" : "Vital"} preset variants`;
-  elements.heroLede.textContent = `Load one short source sound, shape the mapping, and export playable ${isSerum ? "Serum 2" : "Vital"} variants.`;
-  elements.exportFormatProof.textContent = isSerum ? "Serum 2 .SerumPreset files" : "Vital .vital files";
+  elements.heroTitle.textContent = `Turn audio into ${synth.name} preset variants`;
+  elements.heroLede.textContent = `Load one short source sound, shape the mapping, and export playable ${synth.name} variants.`;
+  elements.exportFormatProof.textContent = `${synth.name} ${synth.extension} files`;
   renderPresets(state.presets);
 });
 elements.waveformPanel.addEventListener("dragenter", handleDropZoneDrag);

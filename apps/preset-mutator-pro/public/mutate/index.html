@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preset Mutator Pro | Mutate Preset</title>
-    <meta name="description" content="Preset Mutator Pro access for verified customers. Load one Vital or Serum 2 preset locally and export a 32-variant preset pack." />
+    <meta name="description" content="Preset Mutator Pro access for verified customers. Load one Vital, Serum 2, or Arturia Pigments preset locally and export a 32-variant preset pack." />
     <meta name="theme-color" content="#f8e9e9" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Preset Mutator" />
@@ -13,12 +13,12 @@
     <meta property="og:site_name" content="Kreativ Sound" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Preset Mutator Pro | Mutate Preset" />
-    <meta property="og:description" content="Mutate one Vital or Serum 2 preset into related local preset variants in the browser." />
+    <meta property="og:description" content="Mutate one Vital, Serum 2, or Arturia Pigments preset into related local preset variants in the browser." />
     <meta property="og:url" content="https://kreativsound.com/preset-mutator-pro/mutate/" />
     <meta property="og:image" content="https://kreativsound.com/preset-mutator-pro/preset-mutator-mark.svg" />
     <meta property="twitter:card" content="summary" />
     <meta property="twitter:title" content="Preset Mutator Pro | Mutate Preset" />
-    <meta property="twitter:description" content="Mutate one Vital or Serum 2 preset into related local preset variants in the browser." />
+    <meta property="twitter:description" content="Mutate one Vital, Serum 2, or Arturia Pigments preset into related local preset variants in the browser." />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -28,7 +28,7 @@
         "operatingSystem": "Web browser",
         "url": "https://kreativsound.com/preset-mutator-pro/mutate/",
         "image": "https://kreativsound.com/preset-mutator-pro/preset-mutator-mark.svg",
-        "description": "Preset Mutator loads one Vital or Serum 2 preset locally and exports related preset variants.",
+        "description": "Preset Mutator loads one Vital, Serum 2, or Arturia Pigments preset locally and exports related preset variants.",
         "isPartOf": {
           "@type": "SoftwareApplication",
           "name": "Preset Mutator Pro",
@@ -109,7 +109,7 @@
         <div class="mode-proof-grid" aria-label="Mutate Preset summary">
           <div>
             <span>Current source</span>
-            <strong>One Vital or Serum 2 preset</strong>
+            <strong>One Vital, Serum 2, or Pigments preset</strong>
           </div>
           <div>
             <span>Pro output</span>
@@ -158,8 +158,8 @@
           <div class="section-head">
             <div>
               <h2>Source Preset</h2>
-              <p class="muted">Load one `.vital` or `.SerumPreset` file, then shape a 32-variant pack from the source.</p>
-              <p class="input-note">Preset data stays local in your browser.</p>
+              <p class="muted">Load one `.vital`, `.SerumPreset`, or Pigments `.pgtx` file, then shape a 32-variant pack from the source.</p>
+              <p class="input-note">Preset data stays local in your browser. Serum 2 and Pigments support are currently beta.</p>
             </div>
           </div>
           <p class="upload-message" id="upload-message" hidden></p>
@@ -169,9 +169,9 @@
               <div class="preset-drop-cta" id="preset-drop-cta">
                 <label class="upload">
                   <span>Choose a preset</span>
-                  <input id="file-input" type="file" accept=".vital,.SerumPreset,application/json" />
+                  <input id="file-input" type="file" accept=".vital,.SerumPreset,.pgtx,application/json,application/zip,application/octet-stream" />
                 </label>
-                <p class="drop-note">Drag and drop a `.vital` or `.SerumPreset` file here.</p>
+                <p class="drop-note">Drag and drop a `.vital`, `.SerumPreset`, or `.pgtx` file here.</p>
               </div>
               <div class="preset-summary" id="preset-summary" hidden>
                 <div>
@@ -302,14 +302,14 @@
             <p class="muted">High-level preset details read from the uploaded file.</p>
           </div>
           <div class="metric-grid" id="source-metrics">
-            <p class="empty-state">Load a preset to inspect its current Vital structure.</p>
+            <p class="empty-state">Load a preset to inspect its current structure.</p>
           </div>
           </section>
 
           <section class="panel analysis-panel">
           <div class="section-head">
             <h2>Mutation Strategy</h2>
-            <p class="muted">The controls bias which Vital zones get pushed harder.</p>
+            <p class="muted">The controls bias which compatible synth zones get pushed harder.</p>
           </div>
           <div class="metric-grid" id="strategy-metrics">
             <p class="empty-state">Controls will summarize here once a preset is loaded.</p>
@@ -324,13 +324,13 @@
           <p class="muted">Each export preserves the format of your uploaded source file.</p>
         </div>
         <div class="preset-list" id="preset-list">
-          <p class="empty-state">Load one `.vital` or `.SerumPreset` file, unlock Pro, then generate a 32-variant preset pack.</p>
+          <p class="empty-state">Load one `.vital`, `.SerumPreset`, or `.pgtx` file, unlock Pro, then generate a 32-variant preset pack.</p>
         </div>
       </section>
 
       <footer class="app-footer">
         <p>Kreativ Sound browser tool for preset-driven mutation.</p>
-        <p class="app-version">Preset Mutator Pro v0.4.11 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator-pro/changelog/">Changelog</a></p>
+        <p class="app-version">Preset Mutator Pro v0.5.0 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator-pro/changelog/">Changelog</a></p>
       </footer>
     </main>
 

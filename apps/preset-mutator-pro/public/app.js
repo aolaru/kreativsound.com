@@ -1,5 +1,5 @@
 import { PresetMutatorKnob } from "./preset-mutator-knob.js";
-import { applySynthTheme, createGenerationSeed, ensureJsZip, familyLabel, noteName, sanitizeFileName } from "./engine/common.js";
+import { applySynthTheme, createGenerationSeed, ensureJsZip, familyLabel, noteName, sanitizeFileName, synthTargetDetails } from "./engine/common.js";
 import {
   buildScratchProfile,
   buildScratchProPack,
@@ -7,6 +7,7 @@ import {
 } from "./engine/scratch-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "./engine/vital-export.js";
 import { createSerum2PresetBlob } from "./engine/serum2-export.js";
+import { createPigmentsPresetBlob } from "./engine/pigments-export.js";
 import {
   clearLegacyUnlocks,
   clearLicenseToken,
@@ -196,14 +197,16 @@ function renderPresets(presets) {
   elements.presetsPanel.classList.toggle("has-results", presets.length > 0);
   elements.presetsPanel.classList.toggle("is-pack", presets.length > 0);
   if (!presets.length) {
+    const synth = synthTargetDetails(elements.synthSelect.value);
     const emptyMessage = state.proUnlocked
-      ? `Choose your direction, then generate a 32-variant ${elements.synthSelect.value === "serum2" ? "Serum 2" : "Vital"} preset pack.`
-      : `Activate Pro, then generate a 32-variant ${elements.synthSelect.value === "serum2" ? "Serum 2" : "Vital"} preset pack from your selected direction.`;
+      ? `Choose your direction, then generate a 32-variant ${synth.name} preset pack.`
+      : `Activate Pro, then generate a 32-variant ${synth.name} preset pack from your selected direction.`;
     elements.presetList.innerHTML = `<p class="empty-state">${emptyMessage}</p>`;
     return;
   }
 
   for (const preset of presets) {
+    const synth = synthTargetDetails(elements.synthSelect.value);
     const card = document.createElement("article");
     card.className = "preset-card";
     card.innerHTML = `
@@ -223,8 +226,8 @@ function renderPresets(presets) {
       <div class="param-list">${preset.parameters.map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`).join("")}</div>
       <div class="preset-actions">
         <button class="download-button" type="button">
-          <span class="download-badge" aria-hidden="true">${elements.synthSelect.value === "serum2" ? "SERUM 2" : "VITAL"}</span>
-          <span>Download ${elements.synthSelect.value === "serum2" ? ".SerumPreset" : ".vital"}</span>
+          <span class="download-badge" aria-hidden="true">${synth.badge}</span>
+          <span>Download ${synth.extension}</span>
         </button>
       </div>
     `;
@@ -287,9 +290,26 @@ async function loadSerumSeedPreset() {
   return bytes.slice();
 }
 
+async function loadPigmentsSeedPreset() {
+  const cacheKey = "pigments-base";
+  if (state.seedCache.has(cacheKey)) {
+    return state.seedCache.get(cacheKey).slice();
+  }
+  const response = await fetch(new URL("./assets/seeds/pigments/raw/KS%20Pigments%20Base.pgtpreset", import.meta.url));
+  if (!response.ok) {
+    throw new Error("Could not load the Pigments seed preset.");
+  }
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  state.seedCache.set(cacheKey, bytes);
+  return bytes.slice();
+}
+
 async function buildPresetBlob(preset) {
   if (elements.synthSelect.value === "serum2") {
     return createSerum2PresetBlob(await loadSerumSeedPreset(), preset);
+  }
+  if (elements.synthSelect.value === "pigments") {
+    return createPigmentsPresetBlob(await loadPigmentsSeedPreset(), preset);
   }
   return buildVitalPresetBlob(preset);
 }
@@ -442,22 +462,21 @@ function refreshProfile() {
 }
 
 function syncSynthTargetUi(announce = false) {
-  const isSerum = elements.synthSelect.value === "serum2";
+  const synth = synthTargetDetails(elements.synthSelect.value);
   applySynthTheme(elements.synthSelect.value);
   document.querySelectorAll("[data-synth-target]").forEach((button) => {
     const isActive = button.dataset.synthTarget === elements.synthSelect.value;
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
   });
-  elements.heroTitle.textContent = `Create a ${isSerum ? "Serum 2" : "Vital"} preset from intent`;
-  elements.heroLede.textContent = `Choose a direction, shape the feel, and export playable ${isSerum ? "Serum 2" : "Vital"} starting points.`;
-  elements.exportFormatProof.textContent = isSerum ? "Serum 2 .SerumPreset files" : "Vital .vital files";
-  elements.downloadFormatHint.textContent = isSerum
-    ? "Generate 32 presets and export the complete Serum 2 ZIP pack."
-    : "Generate 32 presets and export the complete Vital ZIP pack.";
+  const article = elements.synthSelect.value === "pigments" ? "an" : "a";
+  elements.heroTitle.textContent = `Create ${article} ${synth.name} preset from intent`;
+  elements.heroLede.textContent = `Choose a direction, shape the feel, and export playable ${synth.name} starting points.`;
+  elements.exportFormatProof.textContent = `${synth.name} ${synth.extension} files`;
+  elements.downloadFormatHint.textContent = `Generate 32 presets and export the complete ${synth.name} ZIP pack.`;
   renderPresets(state.presets);
   if (announce) {
-    updateStatus(isSerum ? "Serum 2 beta target selected." : "Vital target selected.");
+    updateStatus(synth.beta ? `${synth.name} beta target selected.` : "Vital target selected.");
   }
 }
 

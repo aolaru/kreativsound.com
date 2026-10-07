@@ -11,6 +11,7 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-10-07", kind: "release", title: "Preset Mutator Pro v0.5.0", description: "Arturia Pigments beta joins all three Pro workflows with 32-variant `.pgtx` generation, grouped mutation packs, and ZIP export.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-10-07", kind: "update", title: "Installation help and Ghostform release details added", description: "Preset-bank pages now include short import steps. Ghostform lists version 1.0.0, its PDF manual, platform-specific installation, and initial release notes.", href: "/plugins/ghostform#product-installation-title" },
   { date: "2026-10-07", kind: "fix", title: "Sample-pack counts and audio formats verified", description: "All seven WAV packs now show file counts and sample rates. BLEEPS 2, TECTONIC 2, and HORROR 2 explicitly identify their mixed bit-depth formats.", href: "/sounds/" },
   { date: "2026-10-06", kind: "new", title: "Callisto Drift and Lite added to the catalog", description: "The Arturia Jup-8 V4 bank now has website details and Gumroad download links: 128 presets for €9 or 32 presets free in Lite.", href: "/sounds/callisto-drift-jup-8-v4-presets" },

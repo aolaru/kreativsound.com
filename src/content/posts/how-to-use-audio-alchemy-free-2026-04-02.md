@@ -20,7 +20,7 @@ decoding="async"
 />
 </figure>
 <p>Preset Mutator works best when you treat Audio to Preset mode like a fast sketch tool. Give it one short source sound, keep the input simple, and let it produce three starting presets you can refine from there.</p>
-<p>Vital export is stable. Serum 2 and Arturia Pigments are also available as beta targets in Free. Pro supports Vital and Serum 2 beta; Pigments is not yet included in Pro.</p>
+<p>Vital export is stable. Serum 2 and Arturia Pigments are available as beta targets in both Free and Pro.</p>
 
 <h2>1. Use one clear source sound</h2>
 <p>Short pads, plucks, bass notes, drones, and textures usually work better than full tracks. The cleaner the source, the easier it is for the tool to infer useful tone, motion, and envelope information.</p>

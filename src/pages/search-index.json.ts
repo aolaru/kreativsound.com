@@ -75,7 +75,7 @@ const staticEntries: SearchEntry[] = [
     url: "/preset-mutator-pro/",
     type: "Tool",
     thumbnail: "/preset-mutator-pro/preset-mutator-mark.svg",
-    description: "Activate with a Gumroad license key, generate 32 variants for Vital or Serum 2 beta, and export ZIP preset packs. Pigments is not included in Pro."
+    description: "Activate with a Gumroad license key, generate 32 variants for Vital, Serum 2 beta, or Arturia Pigments beta, and export ZIP preset packs."
   },
   {
     title: "Preset Mutator Free Changelog",
@@ -96,7 +96,7 @@ const staticEntries: SearchEntry[] = [
     url: "/tools/preset-mutator/",
     type: "Tool",
     thumbnail: "/preset-mutator/preset-mutator-mark.svg",
-    description: "Free exports 3 presets for Vital, Serum 2 beta, and Pigments beta. Pro exports 32-variant ZIP packs for Vital and Serum 2 beta. Includes activation instructions."
+    description: "Free exports 3 presets for Vital, Serum 2 beta, and Pigments beta. Pro exports 32-variant ZIP packs for all three synths. Includes activation instructions."
   },
   {
     title: "Audio to Preset",

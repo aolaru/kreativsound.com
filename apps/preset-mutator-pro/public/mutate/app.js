@@ -1,5 +1,5 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { applySynthTheme, createGenerationSeed, ensureJsZip, slugifyFilename } from "../engine/common.js";
+import { applySynthTheme, createGenerationSeed, ensureJsZip, slugifyFilename, synthTargetDetails } from "../engine/common.js";
 import {
   buildPresetMutateStrategy,
   generatePresetVariants as createPresetVariants,
@@ -8,6 +8,8 @@ import {
 } from "../engine/preset-mutate-engine.js";
 import { generateSerum2PresetVariants, summarizeSerum2Preset } from "../engine/serum2-format.js";
 import { createSerum2VariantBlob, parseSerum2Preset } from "../engine/serum2-export.js";
+import { generatePigmentsPresetVariants } from "../engine/pigments-format.js";
+import { createPigmentsVariantBlob, parsePigmentsBank } from "../engine/pigments-export.js";
 import {
   clearLegacyUnlocks,
   clearLicenseToken,
@@ -187,6 +189,7 @@ function renderSourceMetrics() {
 
   const summary = state.sourcePreset.summary;
   const metrics = [
+    ["Format", synthTargetDetails(state.sourceFormat).name],
     ["Author", summary.author],
     ["Sample", summary.sampleName],
     ["Wavetables", String(summary.wavetableCount)],
@@ -235,7 +238,7 @@ function renderStrategyMetrics() {
 }
 
 function summarizeVariantFocus(variant) {
-  const changed = variant.changedParameters.join(" ");
+  const changed = variant.changedParameters.join(" ").toLowerCase();
   const focus = [];
 
   if (/(cutoff|resonance|transpose|tune|keytrack|pre_)/.test(changed)) {
@@ -321,6 +324,13 @@ function generateVariants() {
     dirt: elements.dirtRange.value,
   };
   const generationSeed = createGenerationSeed();
+  if (state.sourceFormat === "pigments") {
+    return generatePigmentsPresetVariants({
+      sourcePreset: state.sourcePreset,
+      strategy: buildStrategyWeights(),
+      variationSeed: generationSeed,
+    });
+  }
   if (state.sourceFormat === "serum2") {
     return generateSerum2PresetVariants({
       sourcePreset: state.sourcePreset,
@@ -340,9 +350,14 @@ function generateVariants() {
 
 async function downloadVariant(variant) {
   try {
-  const payload = state.sourceFormat === "serum2"
-    ? await createSerum2VariantBlob(variant)
-    : { fileName: variant.downloadName, blob: new Blob([JSON.stringify(variant.data)], { type: "application/json" }) };
+  let payload;
+  if (state.sourceFormat === "serum2") {
+    payload = await createSerum2VariantBlob(variant);
+  } else if (state.sourceFormat === "pigments") {
+    payload = createPigmentsVariantBlob(variant);
+  } else {
+    payload = { fileName: variant.downloadName, blob: new Blob([JSON.stringify(variant.data)], { type: "application/json" }) };
+  }
   const blob = payload.blob;
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
@@ -377,6 +392,9 @@ async function downloadVariantPack() {
       if (state.sourceFormat === "serum2") {
         const payload = await createSerum2VariantBlob(variant);
         zip.file(payload.fileName, payload.blob);
+      } else if (state.sourceFormat === "pigments") {
+        const payload = createPigmentsVariantBlob(variant);
+        zip.file(payload.fileName, payload.blob);
       } else {
         zip.file(variant.downloadName, JSON.stringify(variant.data, null, 2));
       }
@@ -405,11 +423,12 @@ async function downloadVariantPack() {
 
 function renderVariants() {
   if (!state.generatedVariants.length) {
-    elements.presetList.innerHTML = `<p class="empty-state">Choose one <strong>.vital</strong> or <strong>.SerumPreset</strong> file, then click <strong>${currentActionLabel()}</strong> to create new playable mutations.</p>`;
+    elements.presetList.innerHTML = `<p class="empty-state">Choose one <strong>.vital</strong>, <strong>.SerumPreset</strong>, or <strong>.pgtx</strong> file, then click <strong>${currentActionLabel()}</strong> to create new playable mutations.</p>`;
     return;
   }
 
   elements.presetList.innerHTML = "";
+  const synth = synthTargetDetails(state.sourceFormat);
   const groups = new Map();
   for (const variant of state.generatedVariants) {
     const key = variant.groupKey || "pro";
@@ -464,7 +483,7 @@ function renderVariants() {
           </div>
           <div>
             <span class="metric-label">Format</span>
-            <strong>${state.sourceFormat === "serum2" ? "Serum 2" : "Vital"}</strong>
+            <strong>${synth.name}</strong>
           </div>
           <div>
             <span class="metric-label">Best use</span>
@@ -479,8 +498,8 @@ function renderVariants() {
         </div>
         <div class="preset-actions">
           <button class="download-button" type="button">
-            <span class="download-badge">${state.sourceFormat === "serum2" ? "SERUM 2" : "VITAL"}</span>
-            <span>Download ${state.sourceFormat === "serum2" ? ".SerumPreset" : ".vital"}</span>
+            <span class="download-badge">${synth.badge}</span>
+            <span>Download ${synth.extension}</span>
           </button>
         </div>
       `;
@@ -528,39 +547,50 @@ async function loadPreset(file) {
   const lowerName = file.name.toLowerCase();
   const isVital = lowerName.endsWith(".vital");
   const isSerum = lowerName.endsWith(".serumpreset");
-  if (!isVital && !isSerum) {
+  const isPigments = lowerName.endsWith(".pgtx");
+  if (!isVital && !isSerum && !isPigments) {
     state.sourcePreset = null;
     state.sourceFile = null;
     state.sourceFormat = null;
     state.generatedVariants = [];
-    setUploadMessage("Unsupported file type. Please use a valid .vital or .SerumPreset file.");
+    setUploadMessage("Unsupported file type. Please use a valid .vital, .SerumPreset, or .pgtx file.");
     updateSourceUi();
     renderVariants();
     return;
   }
 
   try {
-    const document = isSerum ? await parseSerum2Preset(await file.arrayBuffer()) : null;
-    const data = document?.data || JSON.parse(await file.text());
-    if (!isSerum && (!data || typeof data !== "object" || typeof data.settings !== "object" || Array.isArray(data.settings))) {
-      throw new Error("Vital preset is missing a valid settings object.");
+    let sourcePreset;
+    let summary;
+    if (isPigments) {
+      sourcePreset = await parsePigmentsBank(await file.arrayBuffer(), file.name);
+      summary = sourcePreset.summary;
+    } else if (isSerum) {
+      const document = await parseSerum2Preset(await file.arrayBuffer());
+      summary = summarizeSerum2Preset(document);
+      sourcePreset = { ...document, summary, fileName: file.name, format: "serum2" };
+    } else {
+      const data = JSON.parse(await file.text());
+      if (!data || typeof data !== "object" || typeof data.settings !== "object" || Array.isArray(data.settings)) {
+        throw new Error("Vital preset is missing a valid settings object.");
+      }
+      summary = summarizeVitalPreset(data);
+      sourcePreset = { data, summary, fileName: file.name, format: "vital" };
     }
-
-    const summary = isSerum ? summarizeSerum2Preset(document) : summarizeVitalPreset(data);
     if (!summary.scalarKeys.length) {
       throw new Error("No safe parameters were found in this preset.");
     }
 
-    state.sourcePreset = isSerum ? { ...document, summary, fileName: file.name } : { data, summary, fileName: file.name };
+    state.sourcePreset = sourcePreset;
     state.sourceFile = file;
-    state.sourceFormat = isSerum ? "serum2" : "vital";
+    state.sourceFormat = isPigments ? "pigments" : isSerum ? "serum2" : "vital";
     state.generatedVariants = [];
     state.lastGenerationMode = "pro";
     setUploadMessage("");
     updateSourceUi();
     renderVariants();
     analyticsEvent("source_loaded", {
-      source_type: isSerum ? "serum2_preset" : "vital_preset",
+      source_type: isPigments ? "pigments_bank" : isSerum ? "serum2_preset" : "vital_preset",
       source_wavetables_bucket: countBucket(summary.wavetableCount),
       source_modulations_bucket: countBucket(summary.modulationCount),
       safe_parameter_bucket: countBucket(summary.scalarKeys.length),

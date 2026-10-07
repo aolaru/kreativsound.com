@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Preset Mutator Pro | From Scratch</title>
-    <meta name="description" content="Preset Mutator Pro access for verified customers. Create 32 Vital or Serum 2 preset variants and export a ZIP locally in the browser." />
+    <meta name="description" content="Preset Mutator Pro access for verified customers. Create 32 Vital, Serum 2, or Arturia Pigments preset variants and export a ZIP locally in the browser." />
     <meta name="theme-color" content="#f8e9e9" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-title" content="Preset Mutator" />
@@ -13,12 +13,12 @@
     <meta property="og:site_name" content="Kreativ Sound" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Preset Mutator Pro | From Scratch" />
-    <meta property="og:description" content="Create Vital or Serum 2 preset starts from scratch ideas in a local-first browser tool." />
+    <meta property="og:description" content="Create Vital, Serum 2, or Arturia Pigments preset starts from scratch ideas in a local-first browser tool." />
     <meta property="og:url" content="https://kreativsound.com/preset-mutator-pro/" />
     <meta property="og:image" content="https://kreativsound.com/preset-mutator-pro/preset-mutator-mark.svg" />
     <meta property="twitter:card" content="summary" />
     <meta property="twitter:title" content="Preset Mutator Pro | From Scratch" />
-    <meta property="twitter:description" content="Create Vital or Serum 2 preset starts from scratch ideas in a local-first browser tool." />
+    <meta property="twitter:description" content="Create Vital, Serum 2, or Arturia Pigments preset starts from scratch ideas in a local-first browser tool." />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -167,6 +167,7 @@
               <select class="sr-only" id="synth-select" tabindex="-1" aria-hidden="true">
                 <option value="vital">Vital</option>
                 <option value="serum2">Serum 2 (Beta)</option>
+                <option value="pigments">Arturia Pigments (Beta)</option>
               </select>
               <div class="synth-target-options" role="group" aria-label="Choose synth target">
                 <button class="synth-target-option is-active" type="button" data-synth-target="vital" aria-pressed="true">
@@ -176,6 +177,11 @@
                 <button class="synth-target-option" type="button" data-synth-target="serum2" aria-pressed="false">
                   <span>Serum 2</span>
                   <small>.SerumPreset</small>
+                  <span class="target-badge">Beta</span>
+                </button>
+                <button class="synth-target-option" type="button" data-synth-target="pigments" aria-pressed="false">
+                  <span>Pigments</span>
+                  <small>.pgtx</small>
                   <span class="target-badge">Beta</span>
                 </button>
               </div>
@@ -322,8 +328,8 @@
       </section>
 
       <footer class="app-footer">
-        <p>Kreativ Sound browser tool for synth preset generation. Vital and Serum 2 are live; Pigments 7 is planned.</p>
-        <p class="app-version">Preset Mutator Pro v0.4.11 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator-pro/changelog/">Changelog</a></p>
+        <p>Kreativ Sound browser tool for Vital, Serum 2, and Arturia Pigments preset generation.</p>
+        <p class="app-version">Preset Mutator Pro v0.5.0 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator-pro/changelog/">Changelog</a></p>
       </footer>
     </main>
 

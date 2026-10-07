@@ -96,7 +96,7 @@ export const landingCopyOverrides = {
     finalCtaText: "Create three preset variants from scratch intent, one source preset, or a short audio source.",
     longDescription: [
       "Preset Mutator Free creates preset starts from scratch ideas, existing presets, or short audio sources. Vital export is stable; Serum 2 and Arturia Pigments are beta targets.",
-      "Generate a playable direction, then finish the sound inside the matching synth. Free exports three individual presets per run; Pro creates 32-variant ZIP packs for Vital and Serum 2 beta.",
+      "Generate a playable direction, then finish the sound inside the matching synth. Free exports three individual presets per run; Pro creates 32-variant ZIP packs for Vital, Serum 2 beta, and Pigments beta.",
       "Your source presets and audio stay in your browser. Free needs no account or activation. Pro verifies a purchased Gumroad license key online; earlier signed tokens remain supported."
     ],
     specifications: [
