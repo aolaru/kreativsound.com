@@ -5,6 +5,9 @@ description: "A practical guide to using Black Arcology for dark industrial dron
 canonical: "https://kreativsound.com/posts/how-to-use-black-arcology-for-industrial-drones-2026-05-06.html"
 ogImage: "https://kreativsound.com/assets/thumbs/black-arcology.webp"
 section: learn
+updated: "2026-10-07"
+requirements: "Arturia Pigments, BLACK ARCOLOGY or its free Lite bank, and a DAW."
+outcome: "Build a four-bar industrial drone with a clear root and slow movement."
 published: "2026-05-06"
 featured: false
 draft: false
@@ -24,7 +27,7 @@ draft: false
 <p>Black Arcology works best when you treat drones as pressure and movement, not just long notes. Start with one sound that already carries the mood, then build around it carefully.</p>
 
 <h2>1. Start with one low-moving drone</h2>
-<p>Pick a drone preset that has slow internal motion. Hold one note or a sparse interval and listen for movement before adding more layers. If the sound already creates tension, do not cover it too quickly.</p>
+<p>Load one drone preset in Pigments and hold a root note for four bars. Listen to its internal motion before adding a fifth or another track.</p>
 
 <h2>2. Keep the root simple</h2>
 <p>Industrial drones become more useful when the harmonic center is clear. Use one root note, a fifth, or a narrow cluster. Save wider chords for melodic keys or transitions.</p>
@@ -33,7 +36,7 @@ draft: false
 <p>If the drone needs more weight, layer an industrial texture quietly under it. The second layer should add friction, air, or mechanical detail instead of simply making the sound louder.</p>
 
 <h2>4. Automate movement slowly</h2>
-<p>Small filter, macro, or effects changes over several bars usually work better than fast modulation. The drone should feel alive without distracting from the scene or track.</p>
+<p>Automate one filter or macro gradually across the four bars. Compare with automation disabled and lower the amount if it distracts from the cue.</p>
 
 <p>The strongest Black Arcology drones usually come from restraint: one dark center, one texture layer, and slow movement that creates pressure over time.</p>
 

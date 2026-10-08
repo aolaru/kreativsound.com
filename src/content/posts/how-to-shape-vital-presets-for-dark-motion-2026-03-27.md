@@ -4,6 +4,9 @@ description: "A short practical guide to shaping Vital presets for dark motion w
 canonical: "https://kreativsound.com/posts/how-to-shape-vital-presets-for-dark-motion-2026-03-27.html"
 ogImage: "https://kreativsound.com/assets/thumbs/velvet-ruins.jpg"
 section: learn
+updated: "2026-10-07"
+requirements: "Vital or Vital Free, an editable preset, and a DAW or synth host."
+outcome: "Shape a darker preset with one controlled modulation source."
 published: "2026-03-27"
 featured: false
 draft: false
@@ -25,10 +28,10 @@ decoding="async"
 <p>Pick one oscillator that already carries the tone. Do not stack too much too early. If the base is right, the rest can stay light.</p>
 
 <h2>2. Use motion on one layer only</h2>
-<p>Let one modulation lane move the sound. Keep the second layer stable. This makes the preset feel alive without sounding random.</p>
+<p>On a copy of your preset, assign a slow LFO to the filter cutoff with a small modulation amount. Leave pitch stable and compare the sound with the assignment disabled.</p>
 
 <h2>3. Darken before you widen</h2>
-<p>Get the tone right first. Pull some top end, keep the mids controlled, then open the stereo image if it still needs space. Width before tone usually makes dark presets feel weaker.</p>
+<p>Lower the filter cutoff until the top end stops dominating. Check the preset in your mix before adding unison or chorus, then compare at the same output level.</p>
 
 <p>The main idea is simple: one tonal core, one controlled movement layer, and less brightness than you think.</p>
 <div class="article-cta">

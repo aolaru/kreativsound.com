@@ -4,8 +4,9 @@ description: "Catalog artwork was consolidated into local optimized thumbnails s
 canonical: "https://kreativsound.com/posts/catalog-media-refresh-2026-02-25.html"
 ogImage: "https://kreativsound.com/og-image.svg"
 section: news
-kind: release
+kind: site
 published: "2026-02-25"
+historical: true
 featured: false
 draft: false
 ---

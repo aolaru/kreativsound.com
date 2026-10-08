@@ -18,7 +18,10 @@ const earlyPresetMutatorAnnouncement = [
   "preset-mutator-direction-2026-05-06"
 ].includes(post.id.replace(/\.md$/, ""));
 const formattedDate = post.data.published
-  ? new Date(post.data.published).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  ? new Date(`${post.data.published}T12:00:00`).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  : "";
+const formattedUpdated = post.data.updated
+  ? new Date(`${post.data.updated}T12:00:00`).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
   : "";
 const articleSchema = {
   "@context": "https://schema.org",
@@ -43,7 +46,7 @@ const articleSchema = {
   },
   ...(post.data.published ? {
     datePublished: post.data.published,
-    dateModified: post.data.published
+    dateModified: post.data.updated || post.data.published
   } : {})
 };
 ---
@@ -55,11 +58,12 @@ const articleSchema = {
   ogType="article"
   publishedTime={post.data.published || ""}
   robots={post.data.draft ? "noindex,nofollow" : "index,follow"}
-  activeNav={post.data.section === "learn" ? "news" : post.data.section}
+  activeNav="updates"
   bodyClass=""
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(articleSchema)}></script>
   <article class="card page-main">
+    <a class="article-back" href={post.data.section === "learn" ? "/updates/#guides" : "/updates/"}>← Back to {post.data.section === "learn" ? "Guides" : "Updates"}</a>
     <h1 class="page-title">{post.data.title}</h1>
     <p class="article-meta">
       <span>By {post.data.author}</span>
@@ -69,14 +73,32 @@ const articleSchema = {
           <time datetime={post.data.published}>Published {formattedDate}</time>
         </>
       ) : null}
+      {post.data.updated && post.data.updated !== post.data.published ? (
+        <><span aria-hidden="true">|</span><time datetime={post.data.updated}>Last updated {formattedUpdated}</time></>
+      ) : null}
     </p>
     <div class="stack article-stack">
       {earlyPresetMutatorAnnouncement ? (
         <aside class="product-panel" aria-label="Current Preset Mutator support">
           <p>This article describes an earlier release. Today, Vital is stable; Serum 2 and Pigments are beta in Free and Pro. <a href="/tools/preset-mutator/">See current formats and activation instructions.</a></p>
         </aside>
+      ) : post.data.historical ? (
+        <aside class="product-panel" aria-label="Historical announcement">
+          <p><strong>Historical announcement.</strong> This records the site or product as it was on the publication date. <a href="/updates/">See current releases and updates.</a></p>
+        </aside>
       ) : null}
+      {post.data.section === "learn" && (post.data.requirements || post.data.outcome) && (
+        <aside class="product-panel guide-summary" aria-label="Guide requirements and result">
+          {post.data.requirements && <p><strong>You need:</strong> {post.data.requirements}</p>}
+          {post.data.outcome && <p><strong>Result:</strong> {post.data.outcome}</p>}
+        </aside>
+      )}
       <Content />
     </div>
   </article>
 </BaseLayout>
+<style>
+  .article-back { display: inline-block; margin-bottom: 1rem; font-size: .85rem; font-weight: 700; }
+  .guide-summary p { margin: .35rem 0; }
+  .article-stack :global(.article-image-wide) { width: min(100%, 560px); height: auto; object-fit: contain; }
+</style>

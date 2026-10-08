@@ -4,6 +4,9 @@ description: "A short practical guide to using TECTONIC 2 for low-end pressure i
 canonical: "https://kreativsound.com/posts/how-to-use-tectonic-2-for-low-end-pressure-2026-03-14.html"
 ogImage: "https://kreativsound.com/assets/thumbs/tectonic-2.jpg"
 section: learn
+updated: "2026-10-07"
+requirements: "TECTONIC 2 WAV files and a DAW that imports WAV audio; no synth is required."
+outcome: "Create a controlled low-end build before a scene or section change."
 published: "2026-03-14"
 featured: false
 draft: false
@@ -22,10 +25,10 @@ decoding="async"
 <p>TECTONIC 2 works best when the low end feels present, not loud.</p>
 
 <h2>1. Keep it controlled</h2>
-<p>Start lower than you think. Low-end pressure works when it stays steady and does not take over the mix.</p>
+<p>Import one low texture to an audio track and lower its fader before playback. Check the master meter with the rest of the cue playing; reduce the track if it clips or masks the bass.</p>
 
 <h2>2. Use it before the impact</h2>
-<p>Bring it in early and let it build slowly. That makes the next section feel heavier without needing more layers.</p>
+<p>Place the texture before the transition and draw a gradual volume fade into it. Audition the transition with and without the layer, keeping the following impact clear.</p>
 
 <h2>3. Pair it with sparse top detail</h2>
 <p>A little noise or texture on top is enough. The low end should carry the weight. Everything else should stay out of the way.</p>

@@ -6,6 +6,7 @@ ogImage: "https://kreativsound.com/og-image.svg"
 section: news
 kind: site
 published: "2026-03-05"
+historical: true
 featured: false
 draft: false
 ---

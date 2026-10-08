@@ -1,310 +1,111 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { siteUpdates, type SiteUpdate, type SiteUpdateKind } from "../../lib/site-updates";
-import { displayToolReleaseVersion, toolReleases } from "../../lib/tool-releases";
+import UpdateLogEntry from "../../components/UpdateLogEntry.astro";
+import UpdateArticleCard from "../../components/UpdateArticleCard.astro";
+import { siteUpdates, type SiteUpdate } from "../../lib/site-updates";
 
 const posts = (await getCollection("posts", ({ data }) => !data.draft))
   .sort((a, b) => (b.data.published || "").localeCompare(a.data.published || ""));
-const guidePosts = posts.filter((post) => post.data.section === "learn");
-const releasePosts = posts.filter((post) => post.data.section === "news" && post.data.kind === "release");
-const customerUpdates = siteUpdates
-  .filter((item) => item.audience !== "maintenance")
-  .sort((a, b) => b.date.localeCompare(a.date));
-const maintenanceUpdates = siteUpdates
-  .filter((item) => item.audience === "maintenance")
-  .sort((a, b) => b.date.localeCompare(a.date));
-const newReleaseUpdates = customerUpdates.filter((item) => item.kind === "new" || item.kind === "release");
-const productUpdates = customerUpdates.filter((item) => item.kind === "update" || item.kind === "fix");
-const presetMutatorFree = toolReleases.presetMutatorFree;
-const presetMutatorPro = toolReleases.presetMutatorPro;
-const waveMutator = toolReleases.waveMutator;
-
-const kindLabels: Record<SiteUpdateKind, string> = {
-  new: "New",
-  release: "Release",
-  update: "Update",
-  fix: "Fix"
-};
-
-function formatDate(date: string) {
-  return new Date(`${date}T12:00:00`).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  });
-}
+const guides = posts.filter((post) => post.data.section === "learn");
+const ordered = [...siteUpdates].sort((a, b) => b.date.localeCompare(a.date));
+const launches = ordered.filter((item) => item.audience !== "maintenance" && ["new", "release"].includes(item.kind));
+const productUpdates = ordered.filter((item) => item.audience !== "maintenance" && ["update", "fix"].includes(item.kind));
+const maintenance = ordered.filter((item) => item.audience === "maintenance");
+const linkedArticles = new Set(ordered.map((item) => item.releaseNote));
+const archivedArticles = posts.filter((post) => post.data.section === "news" && !linkedArticles.has(`/posts/${post.id.replace(/\.md$/, "")}.html`));
 
 function groupByMonth(items: SiteUpdate[]) {
   const groups = new Map<string, SiteUpdate[]>();
-
   for (const item of items) {
     const key = item.date.slice(0, 7);
-    const monthItems = groups.get(key) || [];
-    monthItems.push(item);
-    groups.set(key, monthItems);
+    groups.set(key, [...(groups.get(key) || []), item]);
   }
-
-  return Array.from(groups, ([key, monthItems]) => ({
-    key,
-    label: new Date(`${key}-01T12:00:00`).toLocaleDateString("en-US", {
-      month: "long",
-      year: "numeric"
-    }),
-    items: monthItems
+  return Array.from(groups, ([key, items]) => ({
+    key, items,
+    label: new Date(`${key}-01T12:00:00`).toLocaleDateString("en-US", { month: "long", year: "numeric" })
   }));
 }
-
-const updateMonths = groupByMonth(productUpdates);
-const maintenanceMonths = groupByMonth(maintenanceUpdates);
-
-function hrefFor(post: (typeof posts)[number]) {
-  return `/posts/${post.id.replace(/\.md$/, "")}.html`;
-}
-
-function imageFor(post: (typeof posts)[number]) {
-  return new URL(post.data.ogImage || "https://kreativsound.com/og-image.svg").pathname;
-}
+const months = groupByMonth(productUpdates);
 ---
-<BaseLayout
-  title="Updates & Changelog | Kreativ Sound"
-  description="Kreativ Sound updates and public changelog: releases, fixes, catalog and tool changes, plus practical sound-design guides."
-  canonical="https://kreativsound.com/updates/"
-  activeNav="updates"
-  ogImage="https://kreativsound.com/assets/thumbs/juno-nocturnes.webp"
->
+<BaseLayout title="Updates & Changelog | Kreativ Sound"
+  description="New Kreativ Sound releases, product updates grouped by month, and practical guides."
+  canonical="https://kreativsound.com/updates/" activeNav="updates"
+  ogImage="https://kreativsound.com/assets/thumbs/juno-nocturnes.webp">
   <section class="card page-main updates-page">
     <header class="updates-hero">
-      <div>
-        <p class="eyebrow">Kreativ Sound Updates and Changelog</p>
-        <h1 class="page-title">New releases, updates, and practical guides.</h1>
-        <p class="page-lead">New sound packs, browser tools, and practical workflows—kept focused on what you can use in a session.</p>
-        <div class="updates-quick-stats" aria-label="Updates categories">
-          <a href="#new-releases"><strong>{newReleaseUpdates.length}</strong><span>New releases</span></a>
-          <a href="#product-updates"><strong>{productUpdates.length}</strong><span>Updates</span></a>
-          <a href="#releases"><strong>{releasePosts.length}</strong><span>Release notes</span></a>
-          <a href="#guides"><strong>{guidePosts.length}</strong><span>Guides</span></a>
-        </div>
-      </div>
-      <aside class="updates-direction" aria-label="Updates page scope">
-        <p class="product-section-kicker">Useful first</p>
-        <h2>What changed, then how to use it.</h2>
-        <p>Use the log for current products and tools, release notes for context, and guides for practical decisions around the catalog.</p>
-        <a href="#new-releases">Browse new releases <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
-      </aside>
+      <p class="eyebrow">Kreativ Sound Updates and Changelog</p>
+      <h1 class="page-title">New releases, updates, and practical guides.</h1>
+      <p class="page-lead">Find a new release, check what changed, or follow a short workflow.</p>
+      <nav class="updates-jump-links" aria-label="Updates categories">
+        <a href="#new-releases">New releases</a><a href="#product-updates">Monthly updates</a><a href="#guides">Guides</a>
+      </nav>
     </header>
 
-    <section class="updates-log updates-releases" id="new-releases" aria-labelledby="new-releases-title">
+    <section class="updates-log" id="new-releases" aria-labelledby="new-releases-title">
+      <span id="releases" aria-hidden="true"></span>
       <div class="updates-section-head">
-        <p class="product-section-kicker">New releases</p>
-        <h2 id="new-releases-title">New products and major launches.</h2>
-        <p>New sound packs, tools, and substantial product launches, listed newest first.</p>
+        <h2 id="new-releases-title">New releases</h2>
+        <p>The latest six launches and catalog additions.</p>
       </div>
-      <ul class="updates-log-list">
-        {newReleaseUpdates.map((item) => (
-          <li>
-            <a class="updates-log-entry" href={item.href}>
-              <time datetime={item.date}>{formatDate(item.date)}</time>
-              <span class:list={["updates-log-kind", `is-${item.kind}`]}>{kindLabels[item.kind]}</span>
-              <span class="updates-log-copy">
-                <strong>{item.title}</strong>
-                <span>{item.description}</span>
-              </span>
-              <i class="fa-solid fa-arrow-up-right-from-square updates-log-arrow" aria-hidden="true"></i>
-            </a>
-          </li>
-        ))}
+      <ul class="updates-log-list" data-latest-launches>
+        {launches.slice(0, 6).map((item) => <li><UpdateLogEntry item={item} /></li>)}
       </ul>
+      {launches.length > 6 && <details class="news-archive updates-archive">
+        <summary><span><strong>Earlier launches</strong><small>{launches.length - 6} entries</small></span><span class="disclosure-arrow" aria-hidden="true">⌄</span></summary>
+        <ul class="updates-log-list">{launches.slice(6).map((item) => <li><UpdateLogEntry item={item} /></li>)}</ul>
+      </details>}
     </section>
 
-    <section class="updates-log updates-monthly" id="product-updates" aria-labelledby="product-updates-title">
+    <section class="updates-log" id="product-updates" aria-labelledby="product-updates-title">
       <div class="updates-section-head">
-        <p class="product-section-kicker">Product updates</p>
-        <h2 id="product-updates-title">Improvements grouped by month.</h2>
-        <p>Tool, catalog, and product refinements are grouped by month and ordered newest first.</p>
+        <h2 id="product-updates-title">Monthly product updates</h2>
+        <p>Version releases, improvements, and fixes. Open a month to see its history.</p>
       </div>
       <div class="updates-month-list">
-        {updateMonths.map((month) => (
-          <section class="updates-month-group" aria-labelledby={`updates-month-${month.key}`}>
-            <div class="updates-month-heading">
-              <h3 id={`updates-month-${month.key}`}>{month.label}</h3>
-              <span>{month.items.length} {month.items.length === 1 ? "update" : "updates"}</span>
-            </div>
-            <ul class="updates-log-list">
-              {month.items.map((item) => (
-                <li>
-                  <a class="updates-log-entry" href={item.href}>
-                    <time datetime={item.date}>{formatDate(item.date)}</time>
-                    <span class:list={["updates-log-kind", `is-${item.kind}`]}>{kindLabels[item.kind]}</span>
-                    <span class="updates-log-copy">
-                      <strong>{item.title}</strong>
-                      <span>{item.description}</span>
-                    </span>
-                    <i class="fa-solid fa-arrow-up-right-from-square updates-log-arrow" aria-hidden="true"></i>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
+        {months.map((month, index) => <details class="updates-month-group" data-update-month={month.key} open={index === 0}>
+          <summary class="updates-month-heading"><h3>{month.label}</h3><span>{month.items.length} {month.items.length === 1 ? "update" : "updates"} <span class="disclosure-arrow" aria-hidden="true">⌄</span></span></summary>
+          <ul class="updates-log-list">{month.items.map((item) => <li><UpdateLogEntry item={item} /></li>)}</ul>
+        </details>)}
       </div>
     </section>
 
-    {maintenanceUpdates.length ? <details class="news-archive updates-archive updates-maintenance" id="site-maintenance">
-      <summary>
-        <span>
-          <strong>Site-maintenance history</strong>
-          <small>{maintenanceUpdates.length} reliability, analytics, and publishing notes grouped by month</small>
-        </span>
-        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-      </summary>
-      <div class="updates-month-list">
-        {maintenanceMonths.map((month) => (
-          <section class="updates-month-group" aria-labelledby={`maintenance-month-${month.key}`}>
-            <div class="updates-month-heading">
-              <h3 id={`maintenance-month-${month.key}`}>{month.label}</h3>
-              <span>{month.items.length} {month.items.length === 1 ? "note" : "notes"}</span>
-            </div>
-            <ul class="updates-log-list">
-              {month.items.map((item) => (
-                <li>
-                  <a class="updates-log-entry" href={item.href}>
-                    <time datetime={item.date}>{formatDate(item.date)}</time>
-                    <span class:list={["updates-log-kind", `is-${item.kind}`]}>{kindLabels[item.kind]}</span>
-                    <span class="updates-log-copy">
-                      <strong>{item.title}</strong>
-                      <span>{item.description}</span>
-                    </span>
-                    <i class="fa-solid fa-arrow-up-right-from-square updates-log-arrow" aria-hidden="true"></i>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-      </div>
-    </details> : null}
-
-    <div class="news-sections updates-editorial">
-      <section class="news-panel" id="releases" aria-labelledby="release-notes-title">
-        <div class="news-panel-head">
-          <p class="product-section-kicker">Release notes</p>
-          <h2 id="release-notes-title">The story behind recent releases.</h2>
-          <p>Launch context, catalog direction, and the details behind current sound packs and free drops.</p>
-        </div>
-        <ul class="news-card-list" id="release-notes-list" data-content-list>
-          {releasePosts.map((post) => (
-            <li>
-              <a class="news-card news-card-release" href={hrefFor(post)}>
-                <img class="news-card-art" src={imageFor(post)} alt={`${post.data.title} artwork`} width="96" height="96" loading="lazy" decoding="async" />
-                <span class="news-card-copy">
-                  <time datetime={post.data.published}>{formatDate(post.data.published)}</time>
-                  <span class="news-card-title">{post.data.title}</span>
-                  <span class="news-card-summary">{post.data.description}</span>
-                  <span class="news-card-action">Read release note <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-        <button class="button secondary content-list-toggle" type="button" data-content-toggle aria-controls="release-notes-list" aria-expanded="false" hidden>
-          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-          <span>Show more release notes</span>
-        </button>
-      </section>
-
-      <section class="news-panel" id="guides" aria-labelledby="practical-guides-title">
-        <div class="news-panel-head">
-          <p class="product-section-kicker">Guides</p>
-          <h2 id="practical-guides-title">Practical sound-design guides.</h2>
-          <p>Direct workflows tied to current products, synths, and production decisions.</p>
-        </div>
-        <ul class="news-card-list" id="guide-list" data-content-list>
-          {guidePosts.map((post) => (
-            <li>
-              <a class="news-card news-card-release" href={hrefFor(post)}>
-                <img class="news-card-art" src={imageFor(post)} alt={`${post.data.title} artwork`} width="96" height="96" loading="lazy" decoding="async" />
-                <span class="news-card-copy">
-                  {post.data.published ? <time datetime={post.data.published}>{formatDate(post.data.published)}</time> : null}
-                  <span class="news-card-title">{post.data.title}</span>
-                  <span class="news-card-summary">{post.data.description}</span>
-                  <span class="news-card-action">Read guide <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-        <button class="button secondary content-list-toggle" type="button" data-content-toggle aria-controls="guide-list" aria-expanded="false" hidden>
-          <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-          <span>Show more guides</span>
-        </button>
-      </section>
-    </div>
-
-    <section class="updates-tools" id="tools" aria-labelledby="tools-updates-title">
-      <div class="updates-section-head">
-        <p class="product-section-kicker">Tools &amp; plugins</p>
-        <h2 id="tools-updates-title">The current tools and plugin line, clearly scoped.</h2>
-        <p>Start with a quick free workflow, move to Pro when you need a larger batch, and find current plugin releases here.</p>
-      </div>
-      <div class="updates-tool-grid">
-        <article class="updates-tool-card">
-          <div class="updates-tool-card-head">
-            <span class="updates-tool-version">{displayToolReleaseVersion(presetMutatorFree)}</span>
-            <span class="updates-tool-status">{presetMutatorFree.status}</span>
-          </div>
-          <h3>{presetMutatorFree.name}</h3>
-          <p>Create three variants for Vital, Serum 2 beta, or Pigments beta from an intent, a preset, or short audio. Processing stays local and no account is required.</p>
-          <ul>
-            <li>3 variants per run</li>
-            <li>Individual downloads in the selected synth format</li>
-            <li>Scratch, Preset, and Audio modes</li>
-          </ul>
-          <a href="/preset-mutator/">Open free tool <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-        </article>
-        <article class="updates-tool-card is-pro">
-          <div class="updates-tool-card-head">
-            <span class="updates-tool-version">{displayToolReleaseVersion(presetMutatorPro)}</span>
-            <span class="updates-tool-status">{presetMutatorPro.status}</span>
-          </div>
-          <h3>{presetMutatorPro.name}</h3>
-          <p>Build 32-variant ZIP packs for Vital, Serum 2 beta, and Pigments beta. Pro is a one-time purchase activated with your Gumroad license key; earlier signed tokens still work.</p>
-          <ul>
-            <li>32 variants per run</li>
-            <li>Full pack ZIP export</li>
-            <li>Local browser workflow</li>
-          </ul>
-          <a href="https://kreativ.gumroad.com/l/preset-mutator" target="_blank" rel="noopener noreferrer">Get Pro for €19 <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
-        </article>
-        <article class="updates-tool-card">
-          <div class="updates-tool-card-head">
-            <span class="updates-tool-version">{displayToolReleaseVersion(waveMutator)}</span>
-            <span class="updates-tool-status">{waveMutator.status}</span>
-          </div>
-          <h3>{waveMutator.name}</h3>
-          <p>Prepare WAV files locally with cleanup, delivery profiles, pack export, and preview-montage tools for sound-design and sample-pack workflows.</p>
-          <ul>
-            <li>Four delivery profiles</li>
-            <li>Single-file and ZIP export</li>
-            <li>MP3 preview montages</li>
-          </ul>
-          <a href="/tools/wave-mutator/">Open Wave Mutator Lite <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-        </article>
-        <article class="updates-tool-card">
-          <div class="updates-tool-card-head">
-            <span class="updates-tool-version">New release</span>
-            <span class="updates-tool-status">Free plugin</span>
-          </div>
-          <h3>KS Ghostform</h3>
-          <p>A free evolving drone and string synthesizer for slow harmonic movement, cinematic beds, deep drones, and textured ambient work.</p>
-          <ul>
-            <li>144 factory presets</li>
-            <li>macOS AU/VST3 and Windows VST3</li>
-            <li>No activation or license key</li>
-          </ul>
-          <a href="/plugins/ghostform">Explore KS Ghostform <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-        </article>
-      </div>
+    <section class="updates-log" id="guides" aria-labelledby="practical-guides-title">
+      <div class="updates-section-head"><h2 id="practical-guides-title">Practical sound-design guides</h2><p>Each guide lists what you need and what you will make.</p></div>
+      <ul class="news-card-list">{guides.slice(0, 4).map((post) => <li><UpdateArticleCard post={post} /></li>)}</ul>
+      {guides.length > 4 && <details class="news-archive updates-archive">
+        <summary><span><strong>More guides</strong><small>{guides.length - 4} workflows</small></span><span class="disclosure-arrow" aria-hidden="true">⌄</span></summary>
+        <ul class="news-card-list">{guides.slice(4).map((post) => <li><UpdateArticleCard post={post} /></li>)}</ul>
+      </details>}
     </section>
+
+    <details class="news-archive updates-archive" id="site-maintenance">
+      <summary><span><strong>Website maintenance</strong><small>{maintenance.length} publishing, navigation, and reliability notes</small></span><span class="disclosure-arrow" aria-hidden="true">⌄</span></summary>
+      {groupByMonth(maintenance).map((month) => <section>
+        <h3>{month.label}</h3><ul class="updates-log-list">{month.items.map((item) => <li><UpdateLogEntry item={item} /></li>)}</ul>
+      </section>)}
+    </details>
+    {archivedArticles.length > 0 && <details class="news-archive updates-archive">
+      <summary><span><strong>Article archive</strong><small>Earlier release coverage and website announcements</small></span><span class="disclosure-arrow" aria-hidden="true">⌄</span></summary>
+      <ul class="news-card-list">{archivedArticles.map((post) => <li><UpdateArticleCard post={post} /></li>)}</ul>
+    </details>}
+    <nav class="updates-jump-links updates-browse" id="tools" aria-label="Explore current products">
+      <a class="button secondary" href="/tools/">Browse Tools</a><a class="button secondary" href="/plugins/">Browse Plugins</a>
+    </nav>
   </section>
 </BaseLayout>
+<style>
+  .updates-hero { display: block; }
+  .updates-jump-links { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1rem; }
+  .updates-jump-links > a { font-weight: 700; }
+  .updates-browse { padding-top: 1rem; }
+  .updates-month-group { display: block; }
+  .updates-month-heading { cursor: pointer; list-style: none; padding: .8rem 0; }
+  .updates-month-heading::-webkit-details-marker { display: none; }
+  .updates-month-heading h3 { margin: 0; }
+  .disclosure-arrow { display: inline-block; font-size: 1.2rem; line-height: 1; }
+  .updates-month-heading .disclosure-arrow { margin-left: .5rem; }
+  details[open] > summary .disclosure-arrow { transform: rotate(180deg); }
+  summary:focus-visible { outline: 2px solid var(--accent, #a90000); outline-offset: 4px; }
+  #releases { scroll-margin-top: 2rem; }
+</style>

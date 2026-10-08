@@ -1,11 +1,12 @@
 ---
 title: "Sound Catalog Discovery Update"
-description: "The Kreativ Sound catalog now offers direct paths by synth, sound style, and free packs, making it faster to find a useful starting point."
+description: "An August 2026 record of catalog filters and browsing changes; current navigation is available in the sound catalog."
 canonical: "https://kreativsound.com/posts/catalog-discovery-update-2026-08-19.html"
 ogImage: "https://kreativsound.com/og-image.svg"
 section: news
 kind: site
 published: "2026-08-19"
+historical: true
 featured: false
 draft: false
 ---

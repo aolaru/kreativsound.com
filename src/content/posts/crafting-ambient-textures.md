@@ -4,6 +4,9 @@ description: "A short practical workflow for building ambient textures from a to
 canonical: "https://kreativsound.com/posts/crafting-ambient-textures.html"
 ogImage: "https://kreativsound.com/assets/thumbs/bioforms.jpg"
 section: learn
+updated: "2026-10-07"
+requirements: "A DAW and two tonal or texture sources; no specific pack is required."
+outcome: "Make a four-bar ambient bed with one stable layer and one moving layer."
 published: "2026-03-16"
 featured: false
 draft: false
@@ -22,10 +25,10 @@ decoding="async"
 <p>Ambient textures work better when each layer has one job. Keep the stack simple.</p>
 
 <h2>1. Start with one stable bed</h2>
-<p>Pick one tonal layer and let it hold the space. If the first sound already feels wide and deep, stop there before adding more.</p>
+<p>Hold a root note and a fifth for four bars on one pad track. Leave this layer unchanged while you build the texture around it.</p>
 
 <h2>2. Add movement slowly</h2>
-<p>Bring in a second layer for drift, not for size. Slow modulation, light filtering, and gentle stereo change usually do enough.</p>
+<p>Add a quieter texture on a second track. Automate one filter sweep across the four bars, then mute the track to check that it adds motion without hiding the pad.</p>
 
 <h2>3. Use detail at the edges</h2>
 <p>Noise, texture, and small transients should sit around the main bed, not fight it. Keep these layers lower than you think.</p>

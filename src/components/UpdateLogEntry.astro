@@ -1,0 +1,20 @@
+---
+import type { SiteUpdate } from "../lib/site-updates";
+const { item } = Astro.props as { item: SiteUpdate };
+const labels = { new: "New", release: "Launch", update: "Update", fix: "Fix" };
+const date = new Date(`${item.date}T12:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+const external = item.href?.startsWith("https://");
+---
+<div>
+  <a class="updates-log-entry" href={item.href || "/updates/"} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>
+    <time datetime={item.date}>{date}</time>
+    <span class:list={["updates-log-kind", `is-${item.kind}`]}>{labels[item.kind]}</span>
+    <span class="updates-log-copy"><strong>{item.title}</strong><span>{item.description}</span></span>
+    <i class:list={["fa-solid", external ? "fa-arrow-up-right-from-square" : "fa-arrow-right", "updates-log-arrow"]} aria-hidden="true"></i>
+  </a>
+  {item.releaseNote && <a class="release-note-link" href={item.releaseNote} aria-label={`Read release notes for ${item.title}`}>Read release notes <span aria-hidden="true">→</span></a>}
+</div>
+<style>
+  .release-note-link { display: inline-block; margin: .35rem 0 .75rem 13.4rem; font-size: .85rem; font-weight: 700; }
+  @media (max-width: 720px) { .release-note-link { margin-left: 0; } }
+</style>

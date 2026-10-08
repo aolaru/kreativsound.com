@@ -7,15 +7,19 @@ ogImage: "https://kreativsound.com/assets/thumbs/black-arcology.webp"
 section: news
 kind: release
 published: "2026-04-30"
+updated: "2026-10-07"
 featured: false
 draft: false
 ---
-<p>Kreativ Sound has released <a href="/sounds/black-arcology-pigments-presets">Black Arcology</a> and <a href="/sounds/black-arcology-lite-pigments-presets">Black Arcology Lite</a> for Arturia Pigments, introducing a darker preset line built around industrial drones, evolving keys, fractured FX, and cinematic machine tension.</p>
+<p><a href="/sounds/black-arcology-pigments-presets">Black Arcology</a> is a preset bank for Arturia Pigments built around industrial drones, evolving keys, and fractured FX.</p>
 
-<p><strong>Black Arcology</strong> is the full release, with 128 presets shaped for producers working in darker electronic, industrial, ambient, soundtrack, and experimental contexts. The collection focuses on usable movement, pressure, weight, and texture rather than generic preset-bank coverage.</p>
+<h2>Full or Lite</h2>
+<p>The full bank includes 128 presets. <a href="/sounds/black-arcology-lite-pigments-presets">Black Arcology Lite</a> offers 32 free presets from the same palette to test in your own sessions.</p>
 
-<p><strong>Black Arcology Lite</strong> is the free entry point. It offers 32 presets drawn from the same world, giving Pigments users a compact way to test the palette before moving into the full version.</p>
+<h2>Requirements</h2>
+<p>Arturia Pigments is required and is not included. The product pages list the bank format, compatibility, and import steps.</p>
 
-<p>This release was designed for musicians and sound designers who need mood quickly: industrial atmospheres, noir-influenced melodic tones, damaged transitions, and evolving layers that can sit inside full arrangements without extensive rebuilding.</p>
-
-<p><strong>Press release</strong>: Kreativ Sound announces the release of Black Arcology for Arturia Pigments, a new preset collection focused on dark cinematic motion, industrial texture, and modern sound design weight. Alongside the full version, Black Arcology Lite is now available as a free companion release, offering a compact introduction to the same sonic direction. Together, the two releases establish a new Pigments-focused line built for tension, atmosphere, and expressive production work.</p>
+<div class="article-cta">
+  <a class="button primary" href="/sounds/black-arcology-lite-pigments-presets">Try Lite Free</a>
+  <a class="button secondary" href="/sounds/black-arcology-pigments-presets">View Full Bank</a>
+</div>

@@ -4,6 +4,7 @@ from __future__ import annotations
 import sys
 import threading
 import json
+import re
 from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -71,7 +72,11 @@ def main() -> int:
         pages = {
             "/": ["Sounds", "Updates", "About", "Support", "Latest release", "KS Ghostform", "Callisto Drift", "Preset Mutator Free", "Kreativ Kollection V1", "Optional analytics"],
             "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
-            "/updates/": ["Kreativ Sound Updates and Changelog", "New releases, updates, and practical guides.", "New products and major launches.", "Improvements grouped by month.", "September 2026", "August 2026", f"{preset_mutator_pro['name']} v{preset_mutator_pro['version']}", f"{preset_mutator_free['name']} v{preset_mutator_free['version']}", f"{wave_mutator['name']} {wave_mutator['releaseLabel']} v{wave_mutator['version']}", "Site-maintenance history", "Release notes", "Practical sound-design guides.", "The current tools and plugin line", "32 variants per run", "KS Ghostform", "144 factory presets"],
+            "/updates/": ["Kreativ Sound Updates and Changelog", "New releases, updates, and practical guides.", "Monthly product updates", "September 2026", "August 2026", f"{preset_mutator_pro['name']} v{preset_mutator_pro['version']}", f"{preset_mutator_free['name']} v{preset_mutator_free['version']}", f"{wave_mutator['name']} {wave_mutator['releaseLabel']} v{wave_mutator['version']}", "Website maintenance", "Read release notes", "Practical sound-design guides", "Earlier launches", "More guides", "Browse Tools", "Browse Plugins", "KS Ghostform", "144 factory presets"],
+            "/posts/ghostform-release-2026-10-07.html": ["144 factory presets", "macOS 11", "64-bit VST3", "Ghostform User Manual v1.0", "September 25, 2026", "Published October 7, 2026", "https://kreativ.gumroad.com/l/ks-ghostform"],
+            "/posts/callisto-drift-release-2026-10-07.html": ["128 presets", "32 presets", ".jup4x", "4.6.4.6366", "Published October 7, 2026", "https://kreativ.gumroad.com/l/callisto-drift-lite-jup-8-v4-presets", "https://kreativ.gumroad.com/l/callisto-drift-jup-8-v4-presets"],
+            "/posts/catalog-discovery-update-2026-08-19.html": ["Historical announcement.", "Published August 19, 2026", "See current releases and updates."],
+            "/posts/black-arcology-release-2026-04-30.html": ["128 presets", "32 free presets", "Last updated October 7, 2026", "Requirements"],
             "/plugins/ghostform": ["KS Ghostform", "Download Free", "144 factory presets", "macOS AU and VST3", "Windows 64-bit VST3", "Product Specifications", "Requirements", "Version 1.0.0", "Release notes", "Ghostform User Manual v1.0", "Installation", "not a standalone application"],
             "/tools/": ["Preset Mutator Free", "3 free / 32 Pro", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "Wave Mutator Lite", "Pattern Mutator Lite"],
             "/tools/pattern-mutator/": ["Pattern Mutator Lite", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "Free piano roll"],
@@ -83,7 +88,7 @@ def main() -> int:
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
             "/plugins/": ["New free plugin", "KS Ghostform", "144 factory sounds", "Download Free", "Product Details"],
             "/about/": ["Sounds", "About"],
-            "/contact/": ["Sounds", "info@kreativsound.com", '<option value="Callisto Drift"', '<option value="Callisto Drift Lite"'],
+            "/contact/": ["Support | Kreativ Sound", "Get help with a product or purchase.", "info@kreativsound.com", '<option value="Callisto Drift"', '<option value="Callisto Drift Lite"', 'name="product_version"', 'id="contact-product-help"', 'action="https://formsubmit.co/info@kreativsound.com"', 'data-help-url="/plugins/ghostform#product-installation-title"', 'data-help-url="/tools/preset-mutator/#preset-mutator-activation-title"'],
             "/privacy/": ["Privacy Policy", "Optional analytics", "Google Analytics", "Cloudflare Web Analytics"],
             "/terms/": ["Terms of Use", "Purchases", "Product License"],
             "/refunds/": ["Refund Policy", "Refund requests", "Gumroad and PayPal purchases"],
@@ -130,6 +135,21 @@ def main() -> int:
             dom = fetch_html(base_url + route)
             for needle in needles:
                 require(dom, needle, route, errors)
+
+            if route == "/contact/":
+                forbid(dom, "Browse releases and free downloads.", route, errors)
+                forbid(dom, "contact-other-links", route, errors)
+                for help_url in re.findall(r'data-help-url="([^"]+)"', dom):
+                    path, _, fragment = help_url.partition("#")
+                    if not path.startswith("/") or path.startswith("//"):
+                        errors.append(f"{route}: expected internal product help URL, got {help_url}")
+                        continue
+                    help_dom = fetch_html(base_url + path)
+                    if fragment:
+                        require(help_dom, f'id="{fragment}"', f"{route} help link {help_url}", errors)
+                version_field = re.search(r'<input\b[^>]*id="contact-version"[^>]*>', dom)
+                if not version_field or "required" in version_field.group():
+                    errors.append(f"{route}: product version must be an optional form field.")
 
             if route == "/":
                 require(dom, 'href="#latest-featured"', route, errors)
@@ -184,8 +204,33 @@ def main() -> int:
                 require(dom, "data-music-player-toggle", route, errors)
                 require(dom, "data-src=", route, errors)
             if route.startswith("/posts/"):
-                require(dom, '"@type":"Article"', route, errors)
+                require(dom, '"@type":"Article"' if "how-to-" in route else '"@type":"NewsArticle"', route, errors)
                 require(dom, '"name":"Andrei Olaru"', route, errors)
+                require(dom, 'href="/updates/"', route, errors)
+            if route == "/posts/black-arcology-release-2026-04-30.html":
+                forbid(dom, "Press release", route, errors)
+
+        updates_dom = fetch_html(base_url + "/updates/")
+        launches = re.search(r'<ul[^>]*data-latest-launches[^>]*>(.*?)</ul>', updates_dom, re.S)
+        if not launches or len(re.findall(r"<li\b", launches.group(1))) != 6:
+            errors.append("/updates/: expected exactly six visible launches.")
+        if launches and re.search(r"Preset Mutator (Free|Pro) v", launches.group(1)):
+            errors.append("/updates/: tool versions must be monthly updates, not launches.")
+        months = re.findall(r'<details\b[^>]*data-update-month="[^"]+"[^>]*>', updates_dom)
+        if not months or [bool(re.search(r"\bopen(?:\s|=|>)", month)) for month in months] != [True] + [False] * (len(months) - 1):
+            errors.append("/updates/: only the newest product-update month should start open.")
+        maintenance = re.search(r'<details\b[^>]*id="site-maintenance"[^>]*>', updates_dom)
+        if not maintenance or re.search(r"\bopen(?:\s|=|>)", maintenance.group(0)):
+            errors.append("/updates/: website maintenance must start collapsed.")
+        log_source = (ROOT / "src" / "lib" / "site-updates.ts").read_text(encoding="utf-8")
+        descriptions = re.findall(r'description: "([^"]+)"', log_source)
+        for description in descriptions:
+            if len(description.split()) > 20 or len(re.findall(r"[.!?](?:\s|$)", description)) != 1 or not description.endswith((".", "!", "?")):
+                errors.append(f"/updates/: expected a single log sentence of at most 20 words: {description}")
+        for removed in ("Useful first", "updates-tool-grid", "updates-quick-stats"):
+            forbid(updates_dom, removed, "/updates/", errors)
+        for slug in ("ghostform-release-2026-10-07", "callisto-drift-release-2026-10-07"):
+            require(updates_dom, f'href="/posts/{slug}.html"', "/updates/", errors)
 
         repaired_guides = [
             "crafting-ambient-textures",
@@ -205,6 +250,21 @@ def main() -> int:
             if guide != "crafting-ambient-textures":
                 require(dom, 'class="article-cta"', route, errors)
                 require(dom, 'href="/updates/#guides"', route, errors)
+
+        for source in (ROOT / "src" / "content" / "posts").glob("*.md"):
+            text = source.read_text(encoding="utf-8")
+            if "section: learn" not in text or "draft: true" in text:
+                continue
+            route = f"/posts/{source.stem}.html"
+            dom = fetch_html(base_url + route)
+            for required in ("You need:", "Result:", 'href="/updates/#guides"'):
+                require(dom, required, route, errors)
+            updated = re.search(r'^updated: "([^"]+)"', text, re.M)
+            if updated:
+                require(dom, "Last updated", route, errors)
+                require(dom, f'"dateModified":"{updated.group(1)}"', route, errors)
+            require(updates_dom, f'href="{route}"', "/updates/", errors)
+            forbid(dom, "planned to expand later", route, errors)
 
         search = json.loads(fetch_html(base_url + "/search-index.json"))
         for slug in ["callisto-drift-jup-8-v4-presets", "callisto-drift-lite-jup-8-v4-presets"]:

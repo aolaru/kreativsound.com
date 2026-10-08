@@ -4,6 +4,9 @@ description: "A short guide to getting better results from Preset Mutator using 
 canonical: "https://kreativsound.com/posts/how-to-use-audio-alchemy-free-2026-04-02.html"
 ogImage: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg"
 section: learn
+updated: "2026-10-07"
+requirements: "A modern browser, a short audio source, and the matching synth for the selected export format."
+outcome: "Create three playable preset starts from one audio source; this is not audio reconstruction."
 published: "2026-04-02"
 featured: false
 draft: false
@@ -23,7 +26,7 @@ decoding="async"
 <p>Vital export is stable. Serum 2 and Arturia Pigments are available as beta targets in both Free and Pro.</p>
 
 <h2>1. Use one clear source sound</h2>
-<p>Short pads, plucks, bass notes, drones, and textures usually work better than full tracks. The cleaner the source, the easier it is for the tool to infer useful tone, motion, and envelope information.</p>
+<p>Open Audio to Preset, select the synth you own, and load one short pad, pluck, bass note, drone, or texture. Avoid a full mix: the source should have one clear identity.</p>
 
 <h2>2. Start with Auto Detect</h2>
 <p>If the sound already has a clear identity, let the tool classify it first. If the result feels too soft, too bright, or too static, then step in with the manual controls instead of forcing the input mode too early.</p>
@@ -32,7 +35,7 @@ decoding="async"
 <p><strong>Darker / Brighter</strong> nudges the preset toward more or less high-end energy. <strong>Steadier / More Motion</strong> changes how animated the result feels. Small moves usually work better than extreme ones.</p>
 
 <h2>4. Compare the three presets as directions, not final answers</h2>
-<p>The free version is meant to generate playable starting points. If one variant gets the character right but feels too exaggerated, use it as the base and continue shaping inside the matching synth.</p>
+<p>Download all three variants and audition the same note in the matching synth. Choose the closest tone or movement, then adjust its envelope and output level in your session.</p>
 
 <p>The simplest way to get stronger results is to keep the source short, focused, and musically obvious.</p>
 <div class="article-cta">

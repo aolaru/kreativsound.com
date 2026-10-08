@@ -4,8 +4,9 @@ description: "BIOFORMS catalog updates clarified the Synplant 2 preset bank, imp
 canonical: "https://kreativsound.com/posts/bioforms-update-2026-02-26.html"
 ogImage: "https://kreativsound.com/assets/thumbs/bioforms.jpg"
 section: news
-kind: release
+kind: site
 published: "2026-02-26"
+historical: true
 featured: false
 draft: false
 ---

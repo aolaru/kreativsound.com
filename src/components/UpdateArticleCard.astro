@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from "astro:content";
+const { post } = Astro.props as { post: CollectionEntry<"posts"> };
+const href = `/posts/${post.id.replace(/\.md$/, "")}.html`;
+const image = new URL(post.data.ogImage || "https://kreativsound.com/og-image.svg").pathname;
+const date = post.data.updated || post.data.published;
+const formatted = date && new Date(`${date}T12:00:00`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+---
+<a class="news-card news-card-release" href={href}>
+  <img class="news-card-art" src={image} alt="" width="96" height="96" loading="lazy" decoding="async" />
+  <span class="news-card-copy">
+    {date && <time datetime={date}>{post.data.updated ? "Updated " : ""}{formatted}</time>}
+    <span class="news-card-title">{post.data.title}</span>
+    <span class="news-card-summary">{post.data.outcome || post.data.description}</span>
+    <span class="news-card-action">{post.data.section === "learn" ? "Read guide" : "Read article"} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+  </span>
+</a>

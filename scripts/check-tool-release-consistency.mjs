@@ -57,7 +57,7 @@ const [updatesPage, updatesLog, smokeSite, sitemap] = await Promise.all([
 ]);
 
 assert(!/v\d+\.\d+\.\d+/.test(updatesPage), "Updates page: release versions must come from tool-releases.json, not hard-coded text.");
-assert(updatesPage.includes('from "../../lib/tool-releases"'), "Updates page: tool release registry is not imported.");
+assert(updatesPage.includes('from "../../lib/site-updates"'), "Updates page: the shared updates log is not imported.");
 assert(smokeSite.includes('"tool-releases.json"') && smokeSite.includes("json.loads(TOOL_RELEASES"), "Rendered smoke test: tool release registry is not loaded.");
 
 for (const [key, surface] of Object.entries(surfaces)) {
@@ -92,10 +92,6 @@ for (const [key, surface] of Object.entries(surfaces)) {
   }
 
   assert(sitemap.includes(`<loc>https://kreativsound.com${release.changelog}</loc>`), `Sitemap: missing ${release.changelog}.`);
-}
-
-for (const key of ["presetMutatorFree", "presetMutatorPro", "waveMutator"]) {
-  assert(updatesPage.includes(`toolReleases.${key}`), `Updates page: ${key} card is not registry-backed.`);
 }
 
 if (failures.length) {

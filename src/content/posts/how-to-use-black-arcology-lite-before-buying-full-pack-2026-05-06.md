@@ -5,6 +5,9 @@ description: "Use Black Arcology Lite as a quick test of the Pigments sound pale
 canonical: "https://kreativsound.com/posts/how-to-use-black-arcology-lite-before-buying-full-pack-2026-05-06.html"
 ogImage: "https://kreativsound.com/assets/thumbs/black-arcology-lite.webp"
 section: learn
+updated: "2026-10-07"
+requirements: "Arturia Pigments, the free 32-preset BLACK ARCOLOGY Lite bank, and a short DAW sketch."
+outcome: "Test a drone, melodic preset, and FX transition in context before deciding whether to upgrade."
 published: "2026-05-06"
 featured: false
 draft: false
@@ -27,7 +30,7 @@ draft: false
 <p>Move through drones, industrial textures, melodic keys, and FX instead of only browsing the first few sounds. The full version expands each direction, so the Lite pack is most useful when you test the whole range.</p>
 
 <h2>2. Place presets inside a real sketch</h2>
-<p>Do not judge the pack only from isolated playing. Drop one drone under a cue, use one key as a melodic layer, and test one FX sound as a transition. The palette is built for context.</p>
+<p>Make an eight-bar sketch. Hold one drone underneath, play a short phrase with a melodic preset, and place one FX preset at the transition. Test each part separately before combining them.</p>
 
 <h2>3. Listen for tone and movement</h2>
 <p>The important question is not only whether a preset sounds impressive alone. Listen for dark tone, controlled movement, and whether the sound leaves enough space for other elements.</p>
@@ -35,7 +38,7 @@ draft: false
 <h2>4. Upgrade if you need more depth</h2>
 <p>If the Lite version gives you the right mood but not enough variation, the full Black Arcology pack expands the same world to 128 presets with deeper category coverage.</p>
 
-<p>Use Lite first when you want a low-friction test. Move to the full pack when the sound direction fits your work and you need more options in the same world.</p>
+<p>Keep the presets that fit the sketch. If none fit after level and tone adjustments, a larger bank may not solve the mismatch.</p>
 
 <div class="article-cta">
   <a class="button primary" href="/sounds/black-arcology-lite-pigments-presets">Download Black Arcology Lite</a>

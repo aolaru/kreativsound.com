@@ -5,8 +5,9 @@ description: "Preset Mutator Free v0.4.6 and PRO v0.4.7 now begin from more vari
 canonical: "https://kreativsound.com/posts/preset-mutator-release-2026-08-28.html"
 ogImage: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg"
 section: news
-kind: release
+kind: site
 published: "2026-08-28"
+historical: true
 featured: false
 draft: false
 ---

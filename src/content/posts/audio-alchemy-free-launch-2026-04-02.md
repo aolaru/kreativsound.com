@@ -6,6 +6,7 @@ ogImage: "https://kreativsound.com/preset-mutator/preset-mutator-mark.svg"
 section: news
 kind: release
 published: "2026-04-02"
+historical: true
 featured: false
 draft: false
 ---
