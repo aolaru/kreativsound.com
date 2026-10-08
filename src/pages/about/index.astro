@@ -3,71 +3,121 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 ---
 <BaseLayout
   title="About | Kreativ Sound"
-  description="About Kreativ Sound, an independent sound-design project creating atmospheric presets, sample packs, browser tools, and dark cinematic textures."
+  description="Independent sound design by Andrei Olaru: atmospheric preset banks, sample packs, free and Pro browser tools, and instruments for darker music."
   canonical="https://kreativsound.com/about/"
   activeNav="about"
 >
-  <section class="card page-main brand-page">
-    <div class="brand-hero">
-      <div class="brand-hero-copy">
-        <p class="eyebrow">About</p>
-        <h1 class="page-title">Sound design for darker electronic and cinematic work.</h1>
-        <p class="page-lead">Kreativ Sound is Andrei Olaru's independent catalog of preset banks, sample packs, browser tools, and instruments.</p>
-        <div class="brand-hero-actions">
-          <a class="button primary" href="/sounds/">Browse Sounds <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-          <a class="button secondary" href="/plugins/">Explore Plugins <i class="fa-solid fa-plug" aria-hidden="true"></i></a>
-        </div>
-      </div>
-      <div class="brand-hero-panel">
-        <p class="product-section-kicker">Made by Andrei Olaru</p>
-        <h2>Built from real creative work.</h2>
-        <p>Every release begins with a practical role: establish atmosphere, introduce movement, or add tension without slowing a session down.</p>
-        <a class="brand-artist-link" href="/music/">Hear the Olaru project <i class="fa-solid fa-headphones" aria-hidden="true"></i></a>
-      </div>
-    </div>
+  <section class="card page-main brand-page about-concise" aria-labelledby="about-title">
+    <header class="about-intro">
+      <p class="eyebrow">About</p>
+      <h1 id="about-title" class="page-title">Independent sound design by Andrei Olaru.</h1>
+      <p class="page-lead">I'm Andrei, the creator of Kreativ Sound. I make preset banks, sample packs, browser tools, and instruments for dark electronic, ambient, and cinematic music.</p>
+      <p class="about-note">My focus is atmosphere, movement, and texture: sounds that work as starting points, not finished answers. The same palette runs through my music as Olaru.</p>
+    </header>
 
-    <section class="brand-plugin-feature" aria-labelledby="brand-plugins-title">
-      <a class="brand-plugin-art" href="/plugins/ghostform" aria-label="Explore KS Ghostform">
+    <section class="about-instruments" aria-labelledby="about-instruments-title">
+      <a class="about-synth-image" href="/plugins/ghostform" aria-label="See KS Ghostform product details">
         <img src="/assets/thumbs/ghostform-interface.png" width="1005" height="649" alt="KS Ghostform synthesizer interface showing the Voltage Sleep preset" loading="lazy" decoding="async" />
       </a>
-      <div class="brand-plugin-copy">
-        <p class="product-section-kicker">New: Kreativ Sound Plugins</p>
-        <h2 id="brand-plugins-title">A new space for instruments.</h2>
-        <p>Plugins are now part of Kreativ Sound. KS Ghostform is a free evolving drone and string synth for cinematic beds, deep drones, and ambient texture.</p>
-        <div class="brand-plugin-facts" aria-label="KS Ghostform facts">
-          <span>Free plugin</span>
-          <span>144 factory presets</span>
-          <span>macOS AU/VST3 · Windows VST3</span>
-        </div>
-        <div class="brand-plugin-actions">
-          <a class="button primary" href="/plugins/">Explore Plugins <i class="fa-solid fa-plug" aria-hidden="true"></i></a>
-          <a class="button secondary" href="/plugins/ghostform">See KS Ghostform <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-        </div>
+      <div>
+        <h2 id="about-instruments-title">Sounds, tools, and instruments.</h2>
+        <p class="about-note">Alongside sound packs, I develop free and Pro browser tools and plugins. KS Ghostform is my free drone and string synthesizer for evolving ambient textures.</p>
       </div>
     </section>
 
-    <section class="brand-start" aria-labelledby="brand-start-title">
-      <div class="brand-start-head">
-        <p class="product-section-kicker">Explore Kreativ Sound</p>
-        <h2 id="brand-start-title">Start with what you need.</h2>
-      </div>
-      <div class="brand-start-grid">
-        <a href="/sounds/">
-          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
-          <span><strong>Sounds</strong><small>Preset banks and sample packs for atmosphere, motion, and texture.</small></span>
-          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-        </a>
-        <a href="/tools/">
-          <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
-          <span><strong>Tools</strong><small>Free browser tools for generating, shaping, and preparing material.</small></span>
-          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-        </a>
-        <a href="/music/">
-          <i class="fa-solid fa-headphones" aria-hidden="true"></i>
-          <span><strong>Music</strong><small>Hear the Olaru releases that put the same palette into context.</small></span>
-          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-        </a>
-      </div>
-    </section>
+    <nav class="about-explore" aria-label="Explore Kreativ Sound">
+      <a class="button secondary" href="/plugins/">Plugins</a>
+      <a class="button secondary" href="/sounds/">Sounds</a>
+      <a class="button secondary" href="/tools/">Tools</a>
+      <a class="button secondary" href="/music/">Music</a>
+    </nav>
+
+    <p class="about-purchases">Purchases and downloads are handled through Gumroad. For installation, licensing, or purchase questions, <a href="/contact/">contact Support</a>.</p>
   </section>
 </BaseLayout>
+
+<style>
+  .about-concise {
+    max-width: 840px;
+    gap: 1.75rem;
+  }
+
+  .about-intro .page-title {
+    max-width: 23ch;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    line-height: 1.15;
+  }
+
+  .about-intro .page-lead,
+  .about-note {
+    max-width: 65ch;
+    margin-bottom: 0;
+  }
+
+  .about-note {
+    color: var(--muted);
+  }
+
+  .about-intro > .about-note {
+    margin-top: 0.8rem;
+  }
+
+  .about-instruments {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .about-instruments h2 {
+    margin: 0 0 0.6rem;
+    font-size: 1.25rem;
+  }
+
+  .about-instruments p {
+    margin: 0;
+  }
+
+  .about-synth-image {
+    display: block;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #15131a;
+  }
+
+  .about-synth-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .about-explore {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .about-purchases {
+    margin: 0;
+    padding-top: 1rem;
+    border-top: 1px solid var(--card-border);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 600px) {
+    .about-instruments {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .about-explore {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .about-explore .button {
+      justify-content: center;
+    }
+  }
+</style>

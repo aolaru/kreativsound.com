@@ -87,7 +87,7 @@ def main() -> int:
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
             "/plugins/": ["New free plugin", "KS Ghostform", "144 factory sounds", "Download Free", "Product Details"],
-            "/about/": ["Sounds", "About"],
+            "/about/": ["Independent sound design by Andrei Olaru.", "I'm Andrei, the creator of Kreativ Sound.", "my music as Olaru", "free and Pro browser tools", "KS Ghostform", "/assets/thumbs/ghostform-interface.png", 'aria-label="Explore Kreativ Sound"', "Purchases and downloads are handled through Gumroad.", "contact Support"],
             "/contact/": ["Support | Kreativ Sound", "Get help with a product or purchase.", "info@kreativsound.com", '<option value="Callisto Drift"', '<option value="Callisto Drift Lite"', 'name="product_version"', 'id="contact-product-help"', 'action="https://formsubmit.co/info@kreativsound.com"', 'data-help-url="/plugins/ghostform#product-installation-title"', 'data-help-url="/tools/preset-mutator/#preset-mutator-activation-title"'],
             "/privacy/": ["Privacy Policy", "Optional analytics", "Google Analytics", "Cloudflare Web Analytics"],
             "/terms/": ["Terms of Use", "Purchases", "Product License"],
@@ -135,6 +135,19 @@ def main() -> int:
             dom = fetch_html(base_url + route)
             for needle in needles:
                 require(dom, needle, route, errors)
+
+            if route == "/about/":
+                forbid(dom, "New: Kreativ Sound Plugins", route, errors)
+                forbid(dom, "brand-plugin-facts", route, errors)
+                forbid(dom, "Start with what you need.", route, errors)
+                content = re.search(r'<nav\b[^>]*aria-label="Explore Kreativ Sound"[^>]*>(.*?)</nav>', dom, re.S)
+                if not content:
+                    errors.append(f"{route}: missing compact exploration navigation.")
+                elif re.findall(r'href="([^"]+)"', content.group(1)) != ["/plugins/", "/sounds/", "/tools/", "/music/"]:
+                    errors.append(f"{route}: expected Plugins, Sounds, Tools, Music in that order.")
+                main_content = re.search(r'<main\b[^>]*>(.*?)</main>', dom, re.S)
+                if main_content and len(re.sub(r'<[^>]+>', ' ', main_content.group(1)).split()) > 130:
+                    errors.append(f"{route}: keep the About page at 130 words or fewer.")
 
             if route == "/contact/":
                 forbid(dom, "Browse releases and free downloads.", route, errors)
