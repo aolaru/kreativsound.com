@@ -12,6 +12,7 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-10-10", kind: "new", title: "KS BurnShaper added to Plugins", description: "Three-band distortion combines editable A/B curves, six character modes, Afterburn, and 144 factory presets.", href: "/plugins/burnshaper", releaseNote: "/posts/burnshaper-release-2026-10-10.html" },
   { date: "2026-10-07", kind: "update", title: "Updates overview and guides refreshed", description: "Launches, monthly updates, and guides now have separate, shorter sections.", href: "/updates/", audience: "maintenance" },
   { date: "2026-10-07", kind: "update", title: "Preset Mutator Pro v0.5.0", description: "Pigments beta now supports 32-preset ZIP packs across all three Pro modes.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-10-07", kind: "update", title: "Installation help and Ghostform release details added", description: "Product pages now include preset import steps and Ghostform setup instructions.", href: "/plugins/ghostform#product-installation-title" },

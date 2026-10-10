@@ -63,6 +63,7 @@ const productSchema = {
           "@type": "Offer",
           url,
           availability: "https://schema.org/InStock",
+          ...(product.priceValidUntil ? { priceValidUntil: product.priceValidUntil } : {}),
           ...(product.priceAmount
             ? {
                 price: String(product.priceAmount),
@@ -279,6 +280,13 @@ const breadcrumbSchema = {
         <p><a href={product.installation.sourceUrl} target="_blank" rel="noopener noreferrer">{product.installation.sourceLabel || "Installation guide"}</a></p>
       ) : null}
       <p>Need help? <a href="/contact/">Contact support</a> with your product, operating system, and instrument or DAW version.</p>
+    </section>
+  ) : null}
+
+  {product.slug === "burnshaper" ? (
+    <section class="product-landing-section product-help-section" aria-labelledby="burnshaper-release-title">
+      <h2 id="burnshaper-release-title">Release notes</h2>
+      <p><a href="/posts/burnshaper-release-2026-10-10.html">Read the BurnShaper announcement</a> for the feature overview and launch offer. Current downloads and included release information are available on <a href="https://kreativ.gumroad.com/l/ks-burnshaper" target="_blank" rel="noopener noreferrer">Gumroad</a>.</p>
     </section>
   ) : null}
 

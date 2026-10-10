@@ -20,6 +20,7 @@ function productImageSrcSet(product: Product) {
 }
 
 function productKicker(product: Product) {
+  if (product.detailsUrl?.startsWith("/plugins/")) return product.badge?.toLowerCase() === "new" ? "Latest release" : "Plugin";
   if (product.category === "Bundle") return "Flagship bundle";
   if (product.category === "Tools") return "Creative tool";
   if (product.badge?.toLowerCase() === "new") return "Latest release";
@@ -31,6 +32,7 @@ function primaryActionLabel(product: Product) {
   if (product.category === "Tools" && product.appUrl) return "Open Tool";
   if (product.status === "free") return "Download Free";
   if (product.status === "archive") return "Open Archive";
+  if (product.detailsUrl?.startsWith("/plugins/")) return "Buy on Gumroad";
   if (product.category === "Tools") return "Get Tool";
   return "Buy on Gumroad";
 }

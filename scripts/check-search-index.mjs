@@ -58,6 +58,7 @@ for (const requiredRoute of [
   "/sounds/kreativ-kollection-v1",
   "/sounds/preset-mutator",
   "/plugins/ghostform",
+  "/plugins/burnshaper",
   "/tools/wave-mutator/",
   "/preset-mutator/",
   "/preset-mutator/audio/",

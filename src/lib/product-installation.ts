@@ -31,6 +31,17 @@ const vital: ProductInstallation = {
 };
 
 export const productInstallations: Record<string, ProductInstallation> = {
+  "burnshaper": {
+    steps: [
+      "Download the ZIP for your operating system from Gumroad. Unzip it and read the included installation guide; there is no installer.",
+      "macOS: copy the complete .component bundle to ~/Library/Audio/Plug-Ins/Components for AU, or the complete .vst3 bundle to ~/Library/Audio/Plug-Ins/VST3 for VST3.",
+      "Windows: install the required Microsoft Visual C++ v14 x64 Redistributable (14.44 or later), then copy the complete .vst3 bundle to C:\\Program Files\\Common Files\\VST3\\. If security software blocks the unsigned plugin, contact support; do not disable protections.",
+      "Restart or rescan plug-ins in your DAW and add BurnShaper as an audio effect. Open the information button beside BURNSHAPER, choose Licence, and activate online with your Gumroad licence key.",
+      "Once activation is saved, the plugin works offline. Re-activate on a new computer/account or if the activation receipt is deleted."
+    ],
+    sourceUrl: "https://kreativ.gumroad.com/l/ks-burnshaper",
+    sourceLabel: "Downloads, installation guides, and customer terms"
+  },
   "ghostform": {
     steps: [
       "Download the macOS or Windows archive and the Ghostform User Manual v1.0 from Gumroad. Unzip the archive.",

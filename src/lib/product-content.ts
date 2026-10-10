@@ -1,3 +1,5 @@
+import { burnshaperOffer } from "./plugin-offers.ts";
+
 export type ProductLandingCopy = {
   subtitle: string;
   shortMeta: string;
@@ -11,6 +13,38 @@ export type ProductLandingCopy = {
 };
 
 export const landingCopyOverrides = {
+  "burnshaper": {
+    subtitle: "Creative three-band distortion for drums, bass, synths, loops, and experimental sound design.",
+    shortMeta: "144 factory presets • Six character modes • macOS AU/VST3 • Windows x64 VST3",
+    ctaLine: burnshaperOffer.note,
+    finalCtaTitle: "Shape your sound with KS BurnShaper.",
+    finalCtaText: `${burnshaperOffer.note} Includes a lifetime, no-questions-asked refund promise.`,
+    longDescription: [
+      "Control distortion separately in the low, mid, and high bands, with draggable crossovers and band solo/mute. Blend two editable ten-point waveshaping curves with smooth, hard, or stepped segments.",
+      "Choose Direct, Tube, Tape, Hard, Fold, or Digital character. Input filtering and nine output filter modes shape the result, while Scream, Instability, and a switchable Afterburn tail add resonance, movement, and space.",
+      "Start with 144 factory presets in Utility, Warm, Aggressive, and Digital categories. Variation explores new combinations; custom sounds save as .burnshape presets. The distortion engine uses fixed 4x oversampling, wet/dry Mix, stereo meters, and output protection. Auto Match adjusts gain gradually; it does not guarantee exact perceived-loudness matching.",
+      "Activate once online with your Gumroad licence key, then use the saved activation offline without recurring checks, device binding, subscriptions, or an activation-count limit. Unactivated copies pass dry audio. A new computer/account or deleted activation receipt requires reactivation. Audio, presets, and DAW projects are not uploaded during activation."
+    ],
+    specifications: [
+      { label: "Product type", value: "Creative multiband distortion effect" },
+      { label: "Formats", value: "macOS AU and VST3; Windows x64 VST3" },
+      { label: "Preset count", value: "144 factory presets: Utility, Warm, Aggressive, and Digital" },
+      { label: "Distortion", value: "Three bands; editable ten-point A/B curves; Direct, Tube, Tape, Hard, Fold, and Digital modes" },
+      { label: "Oversampling", value: "Fixed 4x" },
+      { label: "Afterburn", value: "Switchable diffused tail, 50 ms to 2.5 seconds" },
+      { label: "Custom presets", value: ".burnshape files" },
+      { label: "Activation", value: "Gumroad licence key; one-time online activation, then offline use" },
+      { label: "Licence", value: "One individual user, multiple owned or controlled computers; commercial rendered audio permitted without extra royalties" },
+      { label: "Refunds", value: "Lifetime, no-questions-asked full refunds through Kreativ Sound" },
+      { label: "Delivery", value: "Separate ZIP downloads with installation guides; no installer" }
+    ],
+    requirements: [
+      "macOS 12 or later: universal Apple Silicon/Intel AU and VST3, Developer ID signed, Apple-notarized, and stapled. Standalone is not included.",
+      "Windows: a 64-bit host supporting x64 VST3, plus Microsoft Visual C++ v14 x64 Redistributable version 14.44 or later.",
+      "The Windows VST3 is unsigned. Native build and automated licensing tests passed, but native Windows DAW and minimum-OS qualification remain unverified. Security software may warn or block it; do not disable protections. Contact support if blocked.",
+      "First activation requires internet and the licence key from your Gumroad purchase. Offline-first activation is not available. Do not share licence keys or activation receipts."
+    ]
+  },
   "ghostform": {
     subtitle: "Free evolving drone and string synthesizer for slow harmonic movement, cinematic beds, deep drones, and textured ambient sound design.",
     shortMeta: "Free plugin • 144 factory presets • macOS AU/VST3 • Windows VST3",

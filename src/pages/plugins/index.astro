@@ -1,40 +1,68 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { products } from "../../lib/products";
+import { productPages } from "../../lib/product-pages";
+
+const plugins = products.filter((product) => product.detailsUrl?.startsWith("/plugins/"))
+  .sort((a, b) => (a.featuredRank || 99) - (b.featuredRank || 99))
+  .map((product) => ({ product, page: productPages.find((page) => page.route === product.detailsUrl)! }));
 ---
 <BaseLayout
   title="Plugins | Kreativ Sound"
-  description="Kreativ Sound instruments and effects for atmospheric, cinematic, and textural work. KS Ghostform is available now as a free drone and string synthesizer."
+  description="Explore KS BurnShaper multiband distortion and the free KS Ghostform synthesizer: independent instruments and effects from Kreativ Sound."
   canonical="https://kreativsound.com/plugins/"
   activeNav="plugins"
 >
   <section class="card page-main plugins-page" aria-labelledby="plugins-title">
     <header class="plugins-intro">
-      <p class="eyebrow">New free plugin</p>
-      <h1 id="plugins-title" class="page-title">KS Ghostform</h1>
-      <p class="page-lead">An evolving drone and string synth for cinematic beds, deep drones, and textured ambient work.</p>
+      <p class="eyebrow">Kreativ Sound Plugins</p>
+      <h1 id="plugins-title" class="page-title">Instruments and effects.</h1>
+      <p class="page-lead">Independent plugins for atmosphere, texture, and creative sound design.</p>
     </header>
 
-    <article class="plugins-release-card" aria-label="KS Ghostform release">
-      <a class="plugins-release-art" href="/plugins/ghostform" aria-label="View KS Ghostform details">
-        <img src="/assets/thumbs/ghostform-interface.png" width="1005" height="649" alt="KS Ghostform synthesizer interface showing the Voltage Sleep preset" loading="eager" decoding="async" fetchpriority="high" />
+    {plugins.map(({ product, page }, index) => (
+    <article class="plugins-release-card" aria-labelledby={`${page.slug}-title`}>
+      <a class="plugins-release-art" href={page.route} aria-label={`View ${page.headline} details`}>
+        <img src={page.image} width={page.slug === "burnshaper" ? "1672" : "1005"} height={page.slug === "burnshaper" ? "941" : "649"} alt={`${page.headline} interface and product artwork`} loading={index === 0 ? "eager" : "lazy"} decoding="async" fetchpriority={index === 0 ? "high" : "auto"} />
       </a>
       <div class="plugins-release-copy">
-        <dl class="plugins-release-meta" aria-label="KS Ghostform facts">
-          <div><dt>Presets</dt><dd>144 factory sounds</dd></div>
-          <div><dt>Formats</dt><dd>macOS AU/VST3 · Windows VST3</dd></div>
-          <div><dt>Access</dt><dd>Free · no activation</dd></div>
+        <div>
+          <p class="eyebrow">{product.badge?.toLowerCase() === "new" ? "New release" : page.kicker}</p>
+          <h2 id={`${page.slug}-title`}>{page.headline}</h2>
+          <p class="plugins-release-description">{page.subtitle}</p>
+        </div>
+        <dl class="plugins-release-meta" aria-label={`${page.headline} facts`}>
+          <div><dt>Presets</dt><dd>{product.count}</dd></div>
+          <div><dt>Formats</dt><dd>{product.format}</dd></div>
+          <div><dt>Access</dt><dd>{product.status === "free" ? "Free · no activation" : product.price}</dd></div>
         </dl>
         <div class="product-actions">
-          <a class="button primary" data-track="generate_lead" data-track-product="ghostform" data-track-placement="plugins_feature" href="https://kreativ.gumroad.com/l/ks-ghostform" target="_blank" rel="noopener noreferrer">
-            <i class="fa-solid fa-download" aria-hidden="true"></i>
-            Download Free
+          <a class="button primary" data-track={product.status === "free" ? "generate_lead" : "begin_checkout"} data-track-product={page.slug} data-track-placement="plugins_feature" href={page.primaryUrl} target="_blank" rel="noopener noreferrer">
+            {page.primaryLabel}
           </a>
-          <a class="button secondary" href="/plugins/ghostform">
-            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-            Product Details
-          </a>
+          <a class="button secondary" href={page.route}>Product Details</a>
         </div>
       </div>
     </article>
+    ))}
   </section>
 </BaseLayout>
+
+<style>
+  .plugins-release-card {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: center;
+  }
+  .plugins-release-copy { display: grid; gap: 1rem; }
+  .plugins-release-copy .eyebrow { margin: 0; font-size: 0.7rem; }
+  .plugins-release-copy h2 { font-size: clamp(1.6rem, 3vw, 2rem); margin: .35rem 0 .55rem; }
+  .plugins-release-description { margin: 0; color: var(--muted); }
+  .plugins-release-meta { grid-template-columns: 1fr; gap: .45rem; }
+  .plugins-release-meta div { display: grid; grid-template-columns: 4.5rem minmax(0, 1fr); align-items: baseline; gap: .6rem; padding: 0; border: 0; background: none; }
+  .plugins-release-meta dt { color: var(--accent-strong); }
+  .plugins-release-meta dd { margin: 0; font-size: .9rem; }
+  :global([data-theme="dark"]) .plugins-release-card { background: var(--card); }
+  @media (max-width: 700px) {
+    .plugins-release-card { grid-template-columns: 1fr; }
+  }
+</style>

@@ -57,6 +57,7 @@ export type ProductPage = {
   price?: string;
   priceAmount?: number;
   priceCurrency?: string;
+  priceValidUntil?: string;
   ctaLine?: string;
   demoBlurb?: string;
   demo?: { label: string; src: string; type?: string };
@@ -87,6 +88,15 @@ type ProductPageOverride = Partial<Pick<
 >>;
 
 const productPageOverrides: Record<string, ProductPageOverride> = {
+  "burnshaper": {
+    title: "KS BurnShaper | Creative Multiband Distortion",
+    headline: "KS BurnShaper",
+    description: "KS BurnShaper is a three-band distortion effect with editable A/B waveshaping curves, six character modes, Afterburn, and 144 factory presets.",
+    kicker: "Multiband distortion plugin",
+    variant: "flagship",
+    primaryUrl: "https://kreativ.gumroad.com/l/ks-burnshaper",
+    primaryLabel: "Buy on Gumroad"
+  },
   "ghostform": {
     title: "KS Ghostform | Free Drone & String Synth",
     headline: "KS Ghostform",
@@ -508,6 +518,7 @@ export const productPages: ProductPage[] = products
       price: product.price,
       priceAmount: product.priceAmount,
       priceCurrency: product.priceCurrency,
+      priceValidUntil: product.priceValidUntil,
       ctaLine: copy?.ctaLine,
       demoBlurb: demoBlurb(product, name),
       demo: product.demo,

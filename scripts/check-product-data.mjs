@@ -4,6 +4,7 @@ import { products } from "../src/lib/products.ts";
 import { productRedirects } from "../src/lib/product-routes.ts";
 import { landingCopyOverrides } from "../src/lib/product-content.ts";
 import { productInstallations } from "../src/lib/product-installation.ts";
+import { getBurnshaperOffer } from "../src/lib/plugin-offers.ts";
 
 const rootDir = process.cwd();
 const publicDir = path.join(rootDir, "public");
@@ -41,6 +42,14 @@ function assertUnique(values, label, errors) {
 }
 
 const errors = [];
+const introOffer = getBurnshaperOffer(new Date("2026-10-10T12:00:00Z"));
+const regularOffer = getBurnshaperOffer(new Date("2026-11-10T12:00:00Z"));
+if (introOffer.priceAmount !== 9 || introOffer.priceValidUntil !== "2026-11-08") {
+  errors.push("BurnShaper: introductory offer must be €9 with a dated expiry.");
+}
+if (regularOffer.priceAmount !== 19 || regularOffer.priceValidUntil !== undefined) {
+  errors.push("BurnShaper: builds after the introductory offer must use €19.");
+}
 const productSlugs = products.map((product) => slugFromDetailsUrl(product.detailsUrl)).filter(Boolean);
 const productSlugSet = new Set(productSlugs);
 const landingCopySlugSet = new Set(Object.keys(landingCopyOverrides));
@@ -111,7 +120,7 @@ for (const [slug, content] of Object.entries(landingCopyOverrides)) {
 
 for (const product of products) {
   const slug = slugFromDetailsUrl(product.detailsUrl);
-  if (["Presets", "Free", "Legacy"].includes(product.category) || slug === "ghostform") {
+  if (["Presets", "Free", "Legacy"].includes(product.category) || product.detailsUrl?.startsWith("/plugins/")) {
     if (!productInstallations[slug]?.steps.length) errors.push(`${slug}: missing installation steps.`);
   }
 }

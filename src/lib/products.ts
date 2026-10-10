@@ -1,3 +1,5 @@
+import { burnshaperOffer } from "./plugin-offers.ts";
+
 export type ProductCategory = "Bundle" | "Tools" | "Presets" | "Samples" | "Free" | "Legacy";
 export type ProductStatus = "available" | "comingSoon" | "free" | "archive";
 
@@ -32,6 +34,7 @@ export type Product = {
   price?: string;
   priceAmount?: number;
   priceCurrency?: string;
+  priceValidUntil?: string;
   demo?: ProductDemo;
 };
 
@@ -43,13 +46,32 @@ const standardSoundPackPrice = {
 
 export const products: Product[] = [
   {
+    title: "KS BurnShaper — Creative Multiband Distortion",
+    category: "Tools",
+    status: "available",
+    featuredRank: 1,
+    url: "https://kreativ.gumroad.com/l/ks-burnshaper",
+    detailsUrl: "/plugins/burnshaper",
+    badge: "New",
+    thumbnail: "/assets/thumbs/burnshaper.webp",
+    coverImage: "/assets/thumbs/burnshaper-interface.webp",
+    homeImage: "/assets/thumbs/burnshaper-interface.webp",
+    format: "macOS AU/VST3 + Windows x64 VST3",
+    count: "144 factory presets",
+    useCase: "Three-band distortion, editable A/B curves, resonant filters, and Afterburn for drums, bass, synths, and sound design",
+    price: burnshaperOffer.price,
+    priceAmount: burnshaperOffer.priceAmount,
+    priceCurrency: burnshaperOffer.priceCurrency,
+    priceValidUntil: burnshaperOffer.priceValidUntil
+  },
+  {
     title: "KS Ghostform — Free Evolving Drone & String Synth",
     category: "Tools",
     status: "free",
-    featuredRank: 1,
+    featuredRank: 6,
     url: "https://kreativ.gumroad.com/l/ks-ghostform",
     detailsUrl: "/plugins/ghostform",
-    badge: "New",
+    badge: "Free plugin",
     thumbnail: "/assets/thumbs/ghostform.png",
     coverImage: "/assets/thumbs/ghostform-interface.png",
     homeImage: "/assets/thumbs/ghostform.png",
