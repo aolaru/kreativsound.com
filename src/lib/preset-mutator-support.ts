@@ -2,7 +2,7 @@
 export const presetMutatorFormats = [
   { synth: "Vital", extension: ".vital", free: "Stable", pro: "Stable" },
   { synth: "Serum 2", extension: ".SerumPreset", free: "Beta", pro: "Beta" },
-  { synth: "Arturia Pigments", extension: ".pgtx", free: "Beta", pro: "Not included" }
+  { synth: "Arturia Pigments", extension: ".pgtx", free: "Beta", pro: "Beta" }
 ];
 
 export const presetMutatorActivation = {

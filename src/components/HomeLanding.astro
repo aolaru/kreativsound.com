@@ -1,4 +1,5 @@
 ---
+import TimedOfferText from "./TimedOfferText.astro";
 import { products, type Product } from "../lib/products";
 
 const homepageProducts = products
@@ -102,7 +103,7 @@ function appActionUrl(product: Product) {
         {latestProduct.price ? (
           <div>
             <dt>Price</dt>
-            <dd>{latestProduct.price}</dd>
+            <dd><TimedOfferText productUrl={latestProduct.detailsUrl} value={latestProduct.price} /></dd>
           </div>
         ) : null}
       </dl>
@@ -156,7 +157,7 @@ function appActionUrl(product: Product) {
         {product.price ? (
           <div>
             <dt>Price</dt>
-            <dd>{product.price}</dd>
+            <dd><TimedOfferText productUrl={product.detailsUrl} value={product.price} /></dd>
           </div>
         ) : null}
       </dl>

@@ -20,7 +20,7 @@ The plugin includes 144 factory presets, fixed 4x oversampling, wet/dry Mix, out
 ## Requirements and activation
 
 - macOS 12 or later: universal Apple Silicon/Intel AU and VST3, signed and notarized. No standalone application.
-- Windows: x64 VST3 in a 64-bit host, with Microsoft Visual C++ v14 x64 Redistributable 14.44 or later. The plugin is unsigned; native Windows DAW and minimum-OS qualification remain unverified. Do not disable security protections if installation is blocked; contact Support.
+- Windows: x64 VST3 in a 64-bit host, with Microsoft Visual C++ v14 x64 Redistributable 14.44 or later. Successfully tested by Kreativ Sound in Reason 13 on Windows. The plugin is unsigned; a minimum supported Windows version has not been established. Do not disable security protections if installation is blocked; contact Support.
 - Activate once online with your Gumroad licence key. Saved activation works offline without recurring checks or an activation-count limit. New computers/accounts or deleted activation receipts require reactivation.
 
 ## Launch offer

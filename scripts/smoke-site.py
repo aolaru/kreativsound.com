@@ -5,6 +5,7 @@ import sys
 import threading
 import json
 import re
+import subprocess
 from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -56,6 +57,10 @@ def main() -> int:
         return 1
 
     releases = json.loads(TOOL_RELEASES.read_text(encoding="utf-8"))
+    offers = json.loads(subprocess.check_output([
+        "node", "--input-type=module", "-e",
+        'import { kollectionOffer } from "./src/lib/plugin-offers.ts"; console.log(JSON.stringify({ kollection: kollectionOffer.price }));'
+    ], cwd=ROOT, text=True))
     preset_mutator_free = releases["presetMutatorFree"]
     preset_mutator_pro = releases["presetMutatorPro"]
     wave_mutator = releases["waveMutator"]
@@ -78,14 +83,14 @@ def main() -> int:
             "/posts/catalog-discovery-update-2026-08-19.html": ["Historical announcement.", "Published August 19, 2026", "See current releases and updates."],
             "/posts/black-arcology-release-2026-04-30.html": ["128 presets", "32 free presets", "Last updated October 7, 2026", "Requirements"],
             "/plugins/ghostform": ["KS Ghostform", "Download Free", "144 factory presets", "macOS AU and VST3", "Windows 64-bit VST3", "Product Specifications", "Requirements", "Version 1.0.0", "Release notes", "Ghostform User Manual v1.0", "Installation", "not a standalone application"],
-            "/plugins/burnshaper": ["KS BurnShaper", "Buy on Gumroad", "144 factory presets", "macOS 12", "14.44", "unsigned", "unverified", "do not disable protections", "Direct, Tube, Tape, Hard, Fold, or Digital", "fixed 4x oversampling", "Gumroad licence key", "Unactivated copies pass dry audio", "Requirements", "Installation", "Release notes", "Lifetime, no-questions-asked", "https://kreativ.gumroad.com/l/ks-burnshaper", "/assets/thumbs/burnshaper-interface.webp"],
+            "/plugins/burnshaper": ["KS BurnShaper", "Buy on Gumroad", "144 factory presets", "macOS 12", "14.44", "unsigned", "Reason 13 on Windows", "a minimum supported Windows version has not been established", "do not disable protections", "Direct, Tube, Tape, Hard, Fold, or Digital", "fixed 4x oversampling", "Gumroad licence key", "Unactivated copies pass dry audio", "Requirements", "Installation", "Release notes", "Lifetime, no-questions-asked", "https://kreativ.gumroad.com/l/ks-burnshaper", "/assets/thumbs/burnshaper-interface.webp"],
             "/posts/burnshaper-release-2026-10-10.html": ["KS BurnShaper", "144 factory presets", "macOS 12", "Windows", "unsigned", "November 9", "€19", "https://kreativ.gumroad.com/l/ks-burnshaper"],
             "/tools/": ["Preset Mutator Free", "3 free / 32 Pro", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "Wave Mutator Lite", "Pattern Mutator Lite"],
             "/tools/pattern-mutator/": ["Pattern Mutator Lite", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "Free piano roll"],
             "/tools/pattern-mutator/changelog/": ["Pattern Mutator Lite", "Changelog", "Current release", f"v{pattern_mutator['version']}", "Back to Pattern Mutator Lite"],
             "/tools/wave-mutator/changelog/": ["Wave Mutator Lite", "Changelog", "Current beta release", f"v{wave_mutator['version']}", "Current beta limits"],
-            "/tools/preset-mutator/": ["Preset Mutator Free", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "32 preset variants per workflow for Vital, Serum 2 beta, and Pigments beta.", "Supported synths", "Activate Pro", "Gumroad license-key verification", "earlier signed Pro tokens still work", "Not included"],
-            "/sounds/preset-mutator": ["Serum 2", "Arturia Pigments", "Supported synths", "Activate Pro", "Gumroad license-key verification", "Not included"],
+            "/tools/preset-mutator/": ["Preset Mutator Free", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "32 preset variants per workflow for Vital, Serum 2 beta, and Pigments beta.", "Supported synths", "Activate Pro", "Gumroad license-key verification", "earlier signed Pro tokens still work"],
+            "/sounds/preset-mutator": ["Serum 2", "Arturia Pigments", "Supported synths", "Activate Pro", "Gumroad license-key verification"],
             "/learn/": ["Sounds", "Practical guides now live with Updates.", "Browse practical guides", "Search guides"],
             "/music/": ["Music", "Olaru", "Memories", "bandcamp.com/EmbeddedPlayer/album=3005188030"],
             "/plugins/": ["Instruments and effects.", "KS BurnShaper", "KS Ghostform", "144 factory presets", "Buy on Gumroad", "Download Free", "Product Details", "https://kreativ.gumroad.com/l/ks-burnshaper", "https://kreativ.gumroad.com/l/ks-ghostform"],
@@ -98,7 +103,7 @@ def main() -> int:
             "/posts/how-to-use-juno-nocturnes-for-dark-ambient-2026-07-18.html": ["By Andrei Olaru", "Published July 18, 2026", "How to Use JUNO NOCTURNES for Dark Ambient"],
             "/search/": ["Find sounds, music, tools, and articles.", "Search Kreativ Sound", "Enter a product, album, artist, synth, format, guide, or tool."],
             "/sounds/": ["Browse Sound", "Need placement ideas?", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs", "Legacy Archive"],
-            "/sounds/kreativ-kollection-v1": ["Get the bundle on Gumroad", "49 EUR", "16 products", "Kreativ Kollection V1", "JUNO NOCTURNES", "Description", "What's Included", "Product Specifications", "Requirements"],
+            "/sounds/kreativ-kollection-v1": ["Get the bundle on Gumroad", offers["kollection"], "16 products", "Kreativ Kollection V1", "JUNO NOCTURNES", "Description", "What's Included", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements", "Related sounds", "View full catalog"],
             "/sounds/callisto-drift-jup-8-v4-presets": ["Buy on Gumroad", "Try Lite free", "128 presets", "9 EUR", ".jup4x", "4.6.4.6366", "PDF preset catalogue", "https://kreativ.gumroad.com/l/callisto-drift-jup-8-v4-presets"],
             "/sounds/callisto-drift-lite-jup-8-v4-presets": ["Download Free", "32 presets", "Lite vs Full", "Get full Callisto Drift", ".jup4x", "4.6.4.6366", "https://kreativ.gumroad.com/l/callisto-drift-lite-jup-8-v4-presets"],
@@ -139,9 +144,15 @@ def main() -> int:
                 require(dom, needle, route, errors)
 
             if route == "/plugins/burnshaper":
+                forbid(dom, "Windows DAW and minimum-OS qualification remain unverified", route, errors)
                 if dom.find('id="product-installation-title"') > dom.find('id="burnshaper-release-title"'):
                     errors.append(f"{route}: release notes must follow Installation.")
                 forbid(dom, "Download Free", route, errors)
+            if route in ("/tools/preset-mutator/", "/sounds/preset-mutator"):
+                forbid(dom, "Not included", route, errors)
+                pigments = re.search(r'<tr\b[^>]*>\s*<th\b[^>]*>Arturia Pigments[\s\S]*?</tr>', dom)
+                if not pigments or re.findall(r'<td\b[^>]*>\s*(Beta)\s*</td>', pigments.group()) != ["Beta", "Beta"]:
+                    errors.append(f"{route}: Pigments support must be Beta in both Free and Pro.")
             if route == "/plugins/":
                 if dom.find('id="burnshaper-title"') > dom.find('id="ghostform-title"'):
                     errors.append(f"{route}: the new BurnShaper release must precede Ghostform.")

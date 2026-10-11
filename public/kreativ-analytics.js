@@ -2,6 +2,7 @@
   const consentKey = "kreativ-analytics-consent";
   const measurementId = "G-QRTJS1KZD9";
   const pendingEvents = [];
+  let scheduledLoad = null;
 
   function getConsent() {
     try {
@@ -29,14 +30,20 @@
   }
 
   function loadAnalytics() {
-    if (window.__kreativAnalyticsLoaded) return;
+    scheduledLoad = null;
+    // Consent can change while an idle callback or timer is waiting.
+    if (getConsent() !== "accepted" || window.__kreativAnalyticsLoaded) return;
 
     window.__kreativAnalyticsLoaded = true;
+    window[`ga-disable-${measurementId}`] = false;
     window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function gtag() { window.dataLayer.push(arguments); };
+    window.gtag = function gtag() {
+      if (getConsent() === "accepted") window.dataLayer.push(arguments);
+    };
 
     const google = document.createElement("script");
     google.async = true;
+    google.id = "kreativ-google-analytics";
     google.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
     document.head.appendChild(google);
 
@@ -46,17 +53,33 @@
 
     const cloudflare = document.createElement("script");
     cloudflare.type = "module";
+    cloudflare.id = "kreativ-cloudflare-analytics";
     cloudflare.src = "https://static.cloudflareinsights.com/beacon.min.js";
     cloudflare.dataset.cfBeacon = '{"token":"4d2ef2573cb8456282aa65a1d9defd9d"}';
     document.head.appendChild(cloudflare);
   }
 
   function scheduleAnalytics() {
+    if (getConsent() !== "accepted" || window.__kreativAnalyticsLoaded || scheduledLoad) return;
     if ("requestIdleCallback" in window) {
-      window.requestIdleCallback(loadAnalytics, { timeout: 2500 });
+      scheduledLoad = { type: "idle", id: window.requestIdleCallback(loadAnalytics, { timeout: 2500 }) };
     } else {
-      window.setTimeout(loadAnalytics, 1400);
+      scheduledLoad = { type: "timer", id: window.setTimeout(loadAnalytics, 1400) };
     }
+  }
+
+  function stopAnalytics() {
+    window[`ga-disable-${measurementId}`] = true;
+    if (scheduledLoad?.type === "idle") window.cancelIdleCallback?.(scheduledLoad.id);
+    if (scheduledLoad?.type === "timer") window.clearTimeout(scheduledLoad.id);
+    scheduledLoad = null;
+    pendingEvents.length = 0;
+    if (Array.isArray(window.dataLayer)) window.dataLayer.length = 0;
+    document.getElementById("kreativ-google-analytics")?.remove();
+    document.getElementById("kreativ-cloudflare-analytics")?.remove();
+    // Removing a script cannot undo provider listeners already installed.
+    // Reload only when providers loaded; the saved decline prevents reloading them.
+    if (window.__kreativAnalyticsLoaded) window.location.reload();
   }
 
   function addConsentStyles() {
@@ -90,6 +113,7 @@
       <div>
         <h2 id="analytics-consent-title">Optional analytics</h2>
         <p>Help improve Kreativ Sound with Google Analytics and Cloudflare Web Analytics. This page works without them.</p>
+        <p>Declining after acceptance reloads open Kreativ Sound pages to stop tracking. Save or download unsaved work first.</p>
       </div>
       <div class="analytics-consent-actions">
         <button type="button" data-analytics-accept>Accept analytics</button>
@@ -106,6 +130,7 @@
     panel.querySelector("[data-analytics-decline]")?.addEventListener("click", () => {
       saveConsent("declined");
       panel.remove();
+      stopAnalytics();
     });
     document.body.appendChild(panel);
     panel.querySelector("[data-analytics-accept]")?.focus();
@@ -124,7 +149,7 @@
   }
 
   window.__trackKreativEvent = (name, parameters = {}) => {
-    if (!name) return;
+    if (!name || getConsent() !== "accepted") return;
     if (window.__kreativAnalyticsLoaded && typeof window.gtag === "function") {
       window.gtag("event", name, parameters);
       return;
@@ -132,7 +157,24 @@
     pendingEvents.push([name, parameters]);
   };
   window.__loadKreativAnalytics = scheduleAnalytics;
+  window.__stopKreativAnalytics = stopAnalytics;
   window.__showKreativAnalyticsSettings = () => mountConsentPanel(true);
+  window[`ga-disable-${measurementId}`] = getConsent() !== "accepted";
+
+  function reconcileConsent() {
+    if (getConsent() === "accepted") scheduleAnalytics();
+    else stopAnalytics();
+  }
+  window.addEventListener("storage", (event) => {
+    if (event.key !== consentKey && event.key !== null) return;
+    reconcileConsent();
+  });
+  // Also recheck cookie-only preferences and pages restored from the back/forward cache.
+  window.addEventListener("focus", reconcileConsent);
+  window.addEventListener("pageshow", reconcileConsent);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) reconcileConsent();
+  });
 
   document.addEventListener("click", (event) => {
     if (!(event.target instanceof Element)) return;

@@ -1,4 +1,4 @@
-import { burnshaperOffer } from "./plugin-offers.ts";
+import { burnshaperOffer, kollectionOffer } from "./plugin-offers.ts";
 
 export type ProductCategory = "Bundle" | "Tools" | "Presets" | "Samples" | "Free" | "Legacy";
 export type ProductStatus = "available" | "comingSoon" | "free" | "archive";
@@ -94,9 +94,10 @@ export const products: Product[] = [
     format: "Native Gumroad bundle",
     count: "16 products",
     useCase: "9 preset banks and 7 WAV sound packs for ambient, cinematic, industrial, and experimental production",
-    price: "49 EUR",
-    priceAmount: 49,
-    priceCurrency: "EUR",
+    price: kollectionOffer.price,
+    priceAmount: kollectionOffer.priceAmount,
+    priceCurrency: kollectionOffer.priceCurrency,
+    priceValidUntil: kollectionOffer.priceValidUntil,
     demo: {
       label: "Kreativ Kollection V1 Demo Reel",
       src: "/assets/audio/kreativ-kollection-v1-demo-reel.mp3",

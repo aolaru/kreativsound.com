@@ -1,6 +1,8 @@
 ---
 import PresetMutatorDetails from "./PresetMutatorDetails.astro";
 import type { ProductPage } from "../lib/product-pages";
+import TimedOfferText from "./TimedOfferText.astro";
+import { timedOffers } from "../lib/plugin-offers.ts";
 
 type PurchaseAction = {
   url: string;
@@ -98,7 +100,7 @@ const breadcrumbSchema = {
   ]
 };
 ---
-<script type="application/ld+json" set:html={JSON.stringify(productSchema)} />
+<script type="application/ld+json" data-timed-offer-schema={Object.hasOwn(timedOffers, product.slug) ? product.slug : undefined} set:html={JSON.stringify(productSchema)} />
 <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 <article class={`card page-main product-page product-page-landing product-page-${product.variant}`}>
   <nav class="product-breadcrumbs" aria-label="Breadcrumb">
@@ -139,7 +141,7 @@ const breadcrumbSchema = {
 
     {product.price ? (
       <p class="product-price-line">
-        <strong>{product.price}</strong> - Instant download{product.slug === "kreativ-kollection-v1" ? " • Commercial-use license included" : ""}
+        <strong><TimedOfferText productUrl={product.route} value={product.price} /></strong> - Instant download{product.slug === "kreativ-kollection-v1" ? " • Commercial-use license included" : ""}
       </p>
     ) : null}
     {product.shortMeta ? <p class="product-landing-meta">{product.shortMeta}</p> : null}
@@ -254,7 +256,7 @@ const breadcrumbSchema = {
         {displaySpecifications.map((spec) => (
           <div>
             <dt>{spec.label}</dt>
-            <dd>{spec.value}</dd>
+            <dd>{spec.label === "Price" ? <TimedOfferText productUrl={product.route} value={spec.value} /> : spec.value}</dd>
           </div>
         ))}
       </dl>
@@ -331,7 +333,11 @@ const breadcrumbSchema = {
   {purchaseActions.length || product.finalCtaTitle || product.finalCtaText ? (
     <section class="product-final-cta" aria-labelledby="product-final-cta-title">
       <h2 id="product-final-cta-title">{product.finalCtaTitle || `Ready to download ${productName}?`}</h2>
-      <p>{product.finalCtaText || product.ctaLine || product.description}</p>
+      <p>{product.slug === "burnshaper" ? (
+        <TimedOfferText productUrl={product.route} kind="note" suffix=" Includes a lifetime, no-questions-asked refund promise." />
+      ) : product.slug === "kreativ-kollection-v1" ? (
+        <TimedOfferText productUrl={product.route} kind="note" prefix="Get the €144 collection. " />
+      ) : (product.finalCtaText || product.ctaLine || product.description)}</p>
       {purchaseActions.length || previewAction || toolActions.length ? (
         <div class="product-landing-actions">
           {purchaseActions.map((action, index) => (

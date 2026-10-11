@@ -1,10 +1,12 @@
 import fs from "node:fs";
+import "./check-product-offers.mjs";
 import path from "node:path";
 import { products } from "../src/lib/products.ts";
 import { productRedirects } from "../src/lib/product-routes.ts";
 import { landingCopyOverrides } from "../src/lib/product-content.ts";
 import { productInstallations } from "../src/lib/product-installation.ts";
-import { getBurnshaperOffer } from "../src/lib/plugin-offers.ts";
+import { getBurnshaperOffer, getKollectionOffer } from "../src/lib/plugin-offers.ts";
+import { presetMutatorFormats } from "../src/lib/preset-mutator-support.ts";
 
 const rootDir = process.cwd();
 const publicDir = path.join(rootDir, "public");
@@ -42,6 +44,12 @@ function assertUnique(values, label, errors) {
 }
 
 const errors = [];
+for (const format of presetMutatorFormats) {
+  const expected = format.synth === "Vital" ? "Stable" : "Beta";
+  if (format.free !== expected || format.pro !== expected) {
+    errors.push(`${format.synth}: Free and Pro support must match current app capabilities (${expected}).`);
+  }
+}
 const introOffer = getBurnshaperOffer(new Date("2026-10-10T12:00:00Z"));
 const regularOffer = getBurnshaperOffer(new Date("2026-11-10T12:00:00Z"));
 if (introOffer.priceAmount !== 9 || introOffer.priceValidUntil !== "2026-11-08") {
@@ -49,6 +57,19 @@ if (introOffer.priceAmount !== 9 || introOffer.priceValidUntil !== "2026-11-08")
 }
 if (regularOffer.priceAmount !== 19 || regularOffer.priceValidUntil !== undefined) {
   errors.push("BurnShaper: builds after the introductory offer must use €19.");
+}
+for (const [getOffer, expiry, before, after] of [
+  [getBurnshaperOffer, "2026-11-09T05:55:00Z", 9, 19],
+  [getKollectionOffer, "2027-02-20T00:00:00Z", 49, 69]
+]) {
+  const boundary = Date.parse(expiry);
+  const introductory = getOffer(new Date(boundary - 1));
+  const regular = getOffer(new Date(boundary));
+  if (introductory.priceAmount !== before || !introductory.priceValidUntil
+    || regular.priceAmount !== after || regular.priceValidUntil !== undefined
+    || !regular.note.includes("offer has ended")) {
+    errors.push(`Offer must switch price, expiry metadata, and copy together at ${expiry}.`);
+  }
 }
 const productSlugs = products.map((product) => slugFromDetailsUrl(product.detailsUrl)).filter(Boolean);
 const productSlugSet = new Set(productSlugs);

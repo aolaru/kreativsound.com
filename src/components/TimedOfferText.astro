@@ -1,0 +1,25 @@
+---
+import { getTimedOffer, timedOffers, type TimedOfferSlug } from "../lib/plugin-offers.ts";
+
+const { productUrl = "", value = "", kind = "price", prefix = "", suffix = "" } = Astro.props;
+const slug = productUrl.replace(/^\/+|\/+$/g, "").split("/").at(-1);
+const offerSlug = Object.hasOwn(timedOffers, slug) ? slug as TimedOfferSlug : undefined;
+const text = offerSlug ? getTimedOffer(offerSlug)[kind as "price" | "note"] : value;
+---
+<span data-timed-offer={offerSlug} data-offer-kind={offerSlug ? kind : undefined} data-offer-prefix={offerSlug ? prefix : undefined} data-offer-suffix={offerSlug ? suffix : undefined}>{prefix}{text}{suffix}</span>
+
+<script>
+  import { refreshTimedOffers } from "../lib/refresh-timed-offers.ts";
+
+  let timer: ReturnType<typeof setTimeout>;
+  function refresh() {
+    clearTimeout(timer);
+    const nextExpiry = refreshTimedOffers(document);
+    if (nextExpiry !== undefined) {
+      timer = setTimeout(refresh, Math.min(Math.max(nextExpiry - Date.now(), 1), 2147483647));
+    }
+  }
+  refresh();
+  window.addEventListener("focus", refresh);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
+</script>

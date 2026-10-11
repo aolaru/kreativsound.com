@@ -22,6 +22,11 @@ on:
         type: boolean
         required: false
         default: false
+  # Static prices need a fresh deployment after each advertised offer expires.
+  # Only two expiry-date builds per year, rather than a daily rebuild.
+  schedule:
+    - cron: '5 6 9 11 *' # BurnShaper: November 9, after 05:55 UTC
+    - cron: '5 0 20 2 *' # Kollection: February 20, after midnight UTC
 
 permissions:
   contents: read
@@ -63,6 +68,7 @@ jobs:
           set -euo pipefail
           npm run sitemap:check
           npm run check:products
+          npm run check:analytics
           npm run check:preset-mutator
           npm run check:preset-mutator-pro
           python3 scripts/check-product-assets.py

@@ -1,5 +1,6 @@
 ---
 import { categoryIds, categoryLabels, preferredCategoryOrder, products } from "../lib/products";
+import TimedOfferText from "./TimedOfferText.astro";
 
 const {
   visibleCategories = preferredCategoryOrder,
@@ -90,7 +91,7 @@ function ctaTrackingEvent(product: { status?: string }) {
                     <span class="product-title">{item.title}</span>
                   )}
                   <span class="product-meta">{item.format} | {item.count}</span>
-                  {item.price ? <span class="product-price">{item.price}</span> : null}
+                  {item.price ? <span class="product-price"><TimedOfferText productUrl={item.detailsUrl} value={item.price} /></span> : null}
                   {isBundle ? <span class="product-bundle-offer">16 products · €144 individual value</span> : null}
                   <span class="product-use">{item.useCase}</span>
                   {item.demo?.src ? (

@@ -1,4 +1,4 @@
-import { burnshaperOffer } from "./plugin-offers.ts";
+import { burnshaperOffer, kollectionOffer } from "./plugin-offers.ts";
 
 export type ProductLandingCopy = {
   subtitle: string;
@@ -41,7 +41,7 @@ export const landingCopyOverrides = {
     requirements: [
       "macOS 12 or later: universal Apple Silicon/Intel AU and VST3, Developer ID signed, Apple-notarized, and stapled. Standalone is not included.",
       "Windows: a 64-bit host supporting x64 VST3, plus Microsoft Visual C++ v14 x64 Redistributable version 14.44 or later.",
-      "The Windows VST3 is unsigned. Native build and automated licensing tests passed, but native Windows DAW and minimum-OS qualification remain unverified. Security software may warn or block it; do not disable protections. Contact support if blocked.",
+      "Successfully tested by Kreativ Sound in Reason 13 on Windows. The Windows VST3 is unsigned, and a minimum supported Windows version has not been established. Security software may warn or block it; do not disable protections. Contact support if blocked.",
       "First activation requires internet and the licence key from your Gumroad purchase. Offline-first activation is not available. Do not share licence keys or activation receipts."
     ]
   },
@@ -77,10 +77,10 @@ export const landingCopyOverrides = {
   },
   "kreativ-kollection-v1": {
     subtitle: "9 synth preset banks and 7 WAV sound packs in one native Gumroad bundle.",
-    shortMeta: "16 products • 9 preset banks • 7 WAV sound packs • €144 value • €69 later",
-    ctaLine: "Get all 16 products for €49 through February 19, 2027, then €69.",
+    shortMeta: "16 products • 9 preset banks • 7 WAV sound packs • €144 value",
+    ctaLine: kollectionOffer.note,
     finalCtaTitle: "Build a broader sound palette for less.",
-    finalCtaText: "Get the €144 collection for €49 through February 19, 2027. The price moves to €69 after the introductory period.",
+    finalCtaText: `Get the €144 collection. ${kollectionOffer.note}`,
     includedProducts: [
       "juno-nocturnes-jun-6-v-presets",
       "bioforms-synplant-2-presets",
@@ -110,7 +110,7 @@ export const landingCopyOverrides = {
       { label: "Includes", value: "16 products: 9 preset banks and 7 WAV sound packs" },
       { label: "Best for", value: "Ambient, cinematic, electronic, industrial, experimental, and darker production" },
       { label: "Individual value", value: "€144" },
-      { label: "Introductory price", value: "€49 through February 19, 2027; €69 afterward" },
+      { label: "Price", value: kollectionOffer.note },
       { label: "Delivery", value: "Separate products in your Gumroad library" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Updates", value: "Eligible included-product updates plus Dark Drones 2 free for every V1 owner when released" },

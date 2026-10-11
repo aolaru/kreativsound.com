@@ -26,6 +26,8 @@
   --cool-accent-soft: rgba(62, 167, 255, 0.3);
   --shadow-soft: 0 20px 44px rgba(4, 6, 12, 0.42);
   --shadow-card: 0 26px 62px rgba(4, 6, 12, 0.5);
+  --audio-color-scheme: dark;
+  --audio-panel: #1c2132;
 }
 
 [data-theme="light"] {
@@ -48,6 +50,8 @@
   --cool-accent-soft: rgba(47, 140, 255, 0.22);
   --shadow-soft: 0 18px 40px rgba(18, 21, 28, 0.08);
   --shadow-card: 0 26px 56px rgba(18, 21, 28, 0.12);
+  --audio-color-scheme: light;
+  --audio-panel: rgba(209, 76, 76, 0.16);
 }
 
 * {
@@ -1233,7 +1237,7 @@ a:focus-visible,
   border-color: rgba(153, 0, 0, 0.26);
   background:
     radial-gradient(320px 180px at 50% 0%, rgba(153, 0, 0, 0.14), transparent 66%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(247, 238, 238, 0.84));
+    linear-gradient(180deg, var(--card), var(--card-strong));
 }
 
 .product-card-bundle .product-thumb {
@@ -1263,8 +1267,8 @@ a:focus-visible,
   min-height: 24px;
   padding: 0.16rem 0.54rem;
   border-radius: 999px;
-  border: 1px solid rgba(90, 31, 38, 0.2);
-  background: rgba(255, 247, 245, 0.72);
+  border: 1px solid var(--card-border);
+  background: var(--card-strong);
   color: var(--accent-strong);
   font-size: 0.67rem;
   font-weight: 700;
@@ -1478,13 +1482,13 @@ a:focus-visible,
   height: 32px;
   margin: 0 auto;
   accent-color: var(--accent-bright);
-  color-scheme: light;
+  color-scheme: var(--audio-color-scheme);
   border-radius: 999px;
 }
 
 .product-card-demo-player::-webkit-media-controls-panel,
 .product-demo audio::-webkit-media-controls-panel {
-  background: rgba(209, 76, 76, 0.16);
+  background: var(--audio-panel);
 }
 
 .product-card-demo-player::-webkit-media-controls-play-button,

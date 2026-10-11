@@ -84,11 +84,7 @@ if ("serviceWorker" in navigator) {
 }
 
 function analyticsEvent(name, params = {}) {
-  if (typeof window.gtag !== "function") {
-    return;
-  }
-
-  window.gtag("event", `preset_mutator_${name}`, {
+  window.__trackKreativEvent?.(`preset_mutator_${name}`, {
     app_mode: ANALYTICS_MODE,
     ...params,
   });

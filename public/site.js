@@ -408,6 +408,8 @@ function saveAnalyticsConsent(value) {
   if (consentPanel) consentPanel.hidden = true;
   if (value === "accepted") {
     window.__loadKreativAnalytics?.();
+  } else {
+    window.__stopKreativAnalytics?.();
   }
 }
 
