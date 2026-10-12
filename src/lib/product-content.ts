@@ -18,7 +18,7 @@ export const landingCopyOverrides = {
     shortMeta: "144 factory presets • Six character modes • macOS AU/VST3 • Windows x64 VST3",
     ctaLine: burnshaperOffer.note,
     finalCtaTitle: "Shape your sound with KS BurnShaper.",
-    finalCtaText: `${burnshaperOffer.note} Includes a lifetime, no-questions-asked refund promise.`,
+    finalCtaText: `${burnshaperOffer.note} 30-day refunds for purchases from October 13, 2026, 00:00 Europe/Bucharest. Earlier buyers keep lifetime refunds.`,
     longDescription: [
       "Control distortion separately in the low, mid, and high bands, with draggable crossovers and band solo/mute. Blend two editable ten-point waveshaping curves with smooth, hard, or stepped segments.",
       "Choose Direct, Tube, Tape, Hard, Fold, or Digital character. Input filtering and nine output filter modes shape the result, while Scream, Instability, and a switchable Afterburn tail add resonance, movement, and space.",
@@ -35,7 +35,7 @@ export const landingCopyOverrides = {
       { label: "Custom presets", value: ".burnshape files" },
       { label: "Activation", value: "Gumroad licence key; one-time online activation, then offline use" },
       { label: "Licence", value: "One individual user, multiple owned or controlled computers; commercial rendered audio permitted without extra royalties" },
-      { label: "Refunds", value: "Lifetime, no-questions-asked full refunds through Kreativ Sound" },
+      { label: "Refunds", value: "30-day full refunds from October 13, 2026, 00:00 Europe/Bucharest (October 12, 21:00 UTC). Earlier purchases retain lifetime refunds." },
       { label: "Delivery", value: "Separate ZIP downloads with installation guides; no installer" }
     ],
     requirements: [

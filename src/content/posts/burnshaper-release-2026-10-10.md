@@ -27,6 +27,6 @@ The plugin includes 144 factory presets, fixed 4x oversampling, wet/dry Mix, out
 
 At publication, the introductory price is €9 through November 8, 2026; the regular price is €19 from November 9. Gumroad applies the discount automatically. This dated announcement records the launch offer; check the product page for current pricing.
 
-BurnShaper includes a lifetime, no-questions-asked full refund promise. One individual licence covers multiple owned or controlled computers and commercial rendered audio without extra royalties. Do not share licence keys or activation receipts.
+BurnShaper launched with a lifetime, no-questions-asked full refund promise. Purchases before October 13, 2026 at 00:00 Europe/Bucharest (October 12, 21:00 UTC) retain that promise. Purchases from that cutoff include a 30-day full-refund guarantee; mandatory consumer rights are unaffected. See the [refund policy](/refunds/) for details. One individual licence covers multiple owned or controlled computers and commercial rendered audio without extra royalties. Do not share licence keys or activation receipts.
 
 [View BurnShaper details and installation help](/plugins/burnshaper) · [Buy and download on Gumroad](https://kreativ.gumroad.com/l/ks-burnshaper)
