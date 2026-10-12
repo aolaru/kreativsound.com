@@ -83,7 +83,7 @@ def main() -> int:
             "/posts/catalog-discovery-update-2026-08-19.html": ["Historical announcement.", "Published August 19, 2026", "See current releases and updates."],
             "/posts/black-arcology-release-2026-04-30.html": ["128 presets", "32 free presets", "Last updated October 7, 2026", "Requirements"],
             "/plugins/ghostform": ["KS Ghostform", "Download Free", "144 factory presets", "macOS AU and VST3", "Windows 64-bit VST3", "Product Specifications", "Requirements", "Version 1.0.0", "Release notes", "Ghostform User Manual v1.0", "Installation", "not a standalone application"],
-            "/plugins/burnshaper": ["KS BurnShaper", "Buy on Gumroad", "144 factory presets", "macOS 12", "14.44", "unsigned", "Reason 13 on Windows", "a minimum supported Windows version has not been established", "do not disable protections", "Direct, Tube, Tape, Hard, Fold, or Digital", "fixed 4x oversampling", "Gumroad licence key", "Unactivated copies pass dry audio", "Requirements", "Installation", "Release notes", "Lifetime, no-questions-asked", "https://kreativ.gumroad.com/l/ks-burnshaper", "/assets/thumbs/burnshaper-interface.webp"],
+            "/plugins/burnshaper": ["KS BurnShaper", "Buy on Gumroad", "144 factory presets", "macOS 12", "14.44", "unsigned", "Reason 13 on Windows", "a minimum supported Windows version has not been established", "do not disable protections", "Direct, Tube, Tape, Hard, Fold, or Digital", "fixed 4x oversampling", "Gumroad licence key", "Unactivated copies pass dry audio", "Requirements", "Installation", "Release notes", "30-day full refunds", "Earlier purchases retain lifetime refunds", "October 12, 21:00 UTC", "https://kreativ.gumroad.com/l/ks-burnshaper", "/assets/thumbs/burnshaper-interface.webp"],
             "/posts/burnshaper-release-2026-10-10.html": ["KS BurnShaper", "144 factory presets", "macOS 12", "Windows", "unsigned", "November 9", "€19", "https://kreativ.gumroad.com/l/ks-burnshaper"],
             "/tools/": ["Preset Mutator Free", "3 free / 32 Pro", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "Wave Mutator Lite", "Pattern Mutator Lite"],
             "/tools/pattern-mutator/": ["Pattern Mutator Lite", "Generate. Lock. Mutate.", "Set the musical boundaries", "Download MIDI", "Free piano roll"],
@@ -161,7 +161,10 @@ def main() -> int:
                 require(dom, 'href="/posts/burnshaper-release-2026-10-10.html"', route, errors)
             if route == "/refunds/":
                 require(dom, "KS BurnShaper", route, errors)
-                require(dom, "lifetime, no-questions-asked full refunds", route, errors)
+                require(dom, "30-day full-refund guarantee", route, errors)
+                require(dom, "Purchases before that cutoff retain", route, errors)
+                require(dom, "does not remove earlier buyers' lifetime refund rights", route, errors)
+                require(dom, "October 12 at 21:00 UTC", route, errors)
             if route == "/license/":
                 require(dom, "KS BurnShaper plugin", route, errors)
 
