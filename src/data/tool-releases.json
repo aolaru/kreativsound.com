@@ -22,10 +22,10 @@
     "changelog": "/tools/wave-mutator/changelog/"
   },
   "patternMutator": {
-    "name": "Pattern Mutator Lite",
-    "version": "0.3.0",
-    "date": "2026-09-06",
-    "status": "Lite",
+    "name": "Pattern Mutator Free",
+    "version": "0.4.0",
+    "date": "2026-10-13",
+    "status": "Free",
     "changelog": "/tools/pattern-mutator/changelog/"
   }
 }

@@ -12,6 +12,7 @@ npm run check:products
 
 echo "[4/16] Checking Preset Mutator..."
 npm run check:preset-mutator
+npm run check:pattern-mutator
 
 echo "[5/16] Checking product assets..."
 python3 scripts/check-product-assets.py

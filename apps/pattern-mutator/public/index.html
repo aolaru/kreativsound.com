@@ -3,29 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pattern Mutator Lite | Kreativ Sound</title>
+    <title>Pattern Mutator Free | Kreativ Sound</title>
     <meta name="description" content="Generate free scale-aware MIDI patterns, lock the parts that work, mutate the rest, and export a Standard MIDI file locally in your browser." />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#15131b" />
     <link rel="canonical" href="https://kreativsound.com/tools/pattern-mutator/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="./styles.css" />
-    <script src="./app.js" defer></script>
+    <link rel="stylesheet" href="./styles.css?v=0.4.0" />
+    <script type="module" src="./app.js?v=0.4.0"></script>
   </head>
   <body>
     <main class="app-shell">
       <header class="hero">
-        <nav class="app-nav" aria-label="Pattern Mutator Lite navigation">
+        <nav class="app-nav" aria-label="Pattern Mutator Free navigation">
           <a class="back-link" href="/tools/">All tools</a>
-          <div class="brand"><span aria-hidden="true">PM</span><strong>Pattern Mutator Lite</strong></div>
-          <span class="draft-pill"><a href="/tools/pattern-mutator/changelog/">Changelog</a> <span aria-hidden="true">·</span> FIRST DRAFT</span>
+          <div class="brand"><span aria-hidden="true">PM</span><strong>Pattern Mutator Free</strong></div>
+          <span class="draft-pill"><a href="/tools/pattern-mutator/changelog/">Changelog · v0.4.0</a></span>
         </nav>
         <div class="hero-copy">
           <p class="kicker">Free local MIDI idea generator</p>
           <h1>Generate. Lock. Mutate.</h1>
           <p>Start a scale-aware MIDI pattern from nothing, keep the parts that land, and reshape only the rest.</p>
         </div>
-        <div class="workflow" aria-label="Pattern Mutator Lite workflow">
+        <div class="workflow" aria-label="Pattern Mutator Free workflow">
           <span><b>01</b> Set direction</span>
           <span><b>02</b> Generate a pattern</span>
           <span><b>03</b> Lock what works</span>
@@ -117,12 +117,42 @@
           </div>
           <div id="pattern-meta" class="pattern-meta">Choose a direction, then generate.</div>
         </div>
-        <div id="piano-roll" class="piano-roll empty" aria-label="Editable piano roll. Click empty space to add a note; drag a note to move it; drag its right edge to resize it." tabindex="0" aria-live="polite">
-          <div class="empty-pattern">Your generated MIDI pattern will appear here.</div>
+        <div class="roll-navigation" aria-label="Piano roll view controls">
+          <label for="visible-bars">View
+            <select id="visible-bars"><option value="1">1 bar</option><option value="2">2 bars</option><option value="4" selected>4 bars</option></select>
+          </label>
+          <button id="previous-page" class="quiet-button" type="button" aria-label="Previous bars" disabled>‹</button>
+          <label class="sr-only" for="view-page">Visible bar range</label>
+          <select id="view-page" disabled></select>
+          <button id="next-page" class="quiet-button" type="button" aria-label="Next bars" disabled>›</button>
+          <span id="view-summary">of 4 bars</span>
+          <label class="follow-control" for="follow-playback"><input id="follow-playback" type="checkbox" checked disabled /> Follow playback</label>
         </div>
-        <div class="legend"><span><i class="note-dot"></i> Note</span><span><i class="bar-line"></i> Bar division</span><span>One visual phrase shown; export contains the full selected length.</span></div>
+        <div class="piano-editor">
+          <div id="bar-ruler" class="bar-ruler" aria-label="Bar numbers"></div>
+          <div id="pitch-labels" class="pitch-labels" aria-hidden="true"></div>
+          <div id="piano-roll" class="piano-roll empty" aria-label="Editable piano roll. Click empty space to add a note; drag a note to move it; drag its right edge to resize it." tabindex="0">
+            <div class="empty-pattern">Generate an idea to start editing.</div>
+          </div>
+        </div>
+        <div class="piano-support-row">
+          <div class="legend"><span><i class="note-dot"></i> Note</span><span><i class="bar-line"></i> Bar division</span><span>View, edit, and play the full pattern.</span></div>
+          <div class="piano-transport" aria-label="Pattern audition controls">
+            <label class="transport-control" for="audition-sound">Sound
+              <select id="audition-sound">
+                <option value="soft" selected>Soft synth</option>
+                <option value="pluck">Pluck</option>
+                <option value="bass">Bass</option>
+                <option value="pad">Pad</option>
+              </select>
+            </label>
+            <label class="loop-control" for="loop-audition"><input id="loop-audition" type="checkbox" /> Loop</label>
+            <button id="audition" class="primary-button" type="button" disabled>▶ Play Pattern</button>
+            <button id="stop" class="quiet-button" type="button" disabled>■ Stop</button>
+          </div>
+        </div>
         <div class="editor-toolbar" aria-label="Piano roll editing controls">
-          <p><strong>Free piano roll:</strong> Click an empty grid cell to add a scale-safe note. Drag a note to move it, or drag its right edge to resize it.</p>
+          <p id="selected-note" role="status">Click to add · drag to move · drag the right edge to resize</p>
           <div class="editor-controls">
             <label class="velocity-control" for="note-velocity"><span>Selected velocity</span><output id="note-velocity-value">—</output><input id="note-velocity" type="range" min="1" max="127" value="92" disabled /></label>
             <button id="delete-note" class="quiet-button" type="button" disabled>Delete selected</button>
@@ -130,19 +160,6 @@
             <button id="redo" class="quiet-button" type="button" disabled>Redo</button>
             <button id="reset-pattern" class="quiet-button" type="button" disabled>Reset</button>
           </div>
-        </div>
-        <div class="piano-transport" aria-label="Pattern audition controls">
-          <label class="transport-control" for="audition-sound">Sound
-            <select id="audition-sound">
-              <option value="soft" selected>Soft synth</option>
-              <option value="pluck">Pluck</option>
-              <option value="bass">Bass</option>
-              <option value="pad">Pad</option>
-            </select>
-          </label>
-          <label class="loop-control" for="loop-audition"><input id="loop-audition" type="checkbox" /> Loop</label>
-          <button id="audition" class="primary-button" type="button" disabled>▶ Play Pattern</button>
-          <button id="stop" class="quiet-button" type="button" disabled>■ Stop</button>
         </div>
       </section>
 
@@ -176,7 +193,7 @@
 
       <footer class="app-footer">
         <p>Kreativ Sound browser tool for controlled MIDI pattern generation.</p>
-        <p class="app-version">Pattern Mutator Lite v0.3.0 <span aria-hidden="true">·</span> <a href="/tools/pattern-mutator/changelog/">Changelog</a> <span aria-hidden="true">·</span> <a href="/tools/">All tools</a></p>
+        <p class="app-version">Pattern Mutator Free v0.4.0 <span aria-hidden="true">·</span> <a href="/tools/pattern-mutator/changelog/">Changelog</a> <span aria-hidden="true">·</span> <a href="/tools/">All tools</a></p>
       </footer>
     </main>
   </body>

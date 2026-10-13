@@ -127,18 +127,18 @@ const staticEntries: SearchEntry[] = [
     description: "A concise public record of Wave Mutator Free beta releases, delivery-profile improvements, and current scope limits."
   },
   {
-    title: "Pattern Mutator Lite",
+    title: "Pattern Mutator Free",
     url: "/tools/pattern-mutator/",
     type: "Tool",
     thumbnail: "/assets/thumbs/preset-mutator.webp",
     description: "Generate free scale-aware MIDI patterns, lock the parts that work, mutate the rest, and export an editable MIDI file locally."
   },
   {
-    title: "Pattern Mutator Lite Changelog",
+    title: "Pattern Mutator Free Changelog",
     url: "/tools/pattern-mutator/changelog/",
     type: "Tool",
     thumbnail: "/assets/thumbs/preset-mutator.webp",
-    description: "A concise public record of Pattern Mutator Lite releases, improvements, and fixes."
+    description: "A concise public record of Pattern Mutator Free releases, improvements, and fixes."
   },
   {
     title: "Music",

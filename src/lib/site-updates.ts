@@ -13,6 +13,7 @@ export type SiteUpdate = {
 
 export const siteUpdates: SiteUpdate[] = [
   { date: "2026-10-13", kind: "update", title: "Wave Mutator Free beta v0.2.4", description: "Separate Quick Clean and Waveform Editor views, distinct Original, Edited, and Cleaned previews, and reliable WAV delivery.", href: "/tools/wave-mutator/changelog/" },
+  { date: "2026-10-13", kind: "update", title: "Pattern Mutator Free v0.4.0", description: "Reliable mutation locks, scale-safe generation, full-pattern editing and playback, and MIDI exports with tempo and exact bar length.", href: "/tools/pattern-mutator/changelog/" },
   { date: "2026-10-11", kind: "fix", title: "Preset Mutator Free v0.5.1", description: "Optional usage tracking now respects analytics consent and withdrawal across all three modes.", href: "/preset-mutator/changelog/" },
   { date: "2026-10-11", kind: "fix", title: "Preset Mutator Pro v0.5.1", description: "Optional usage tracking now respects analytics consent and withdrawal across all three modes.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-10-10", kind: "new", title: "KS BurnShaper added to Plugins", description: "Three-band distortion combines editable A/B curves, six character modes, Afterburn, and 144 factory presets.", href: "/plugins/burnshaper", releaseNote: "/posts/burnshaper-release-2026-10-10.html" },
