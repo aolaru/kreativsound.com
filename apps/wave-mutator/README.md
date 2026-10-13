@@ -1,6 +1,6 @@
-# Wave Mutator Lite
+# Wave Mutator Free
 
-Wave Mutator Lite is a free beta browser tool for preparing audio samples for sound-product releases.
+Wave Mutator Free is a free beta browser tool for preparing audio samples for sound-product releases.
 
 Core idea: drop in messy audio files and export cleaner, product-ready samples without uploading audio anywhere.
 
@@ -25,7 +25,7 @@ Inside the Kreativ Sound site, the intended URL is:
 https://kreativsound.com/tools/wave-mutator/
 ```
 
-The previous `/tools/kreativ-sample-prep/` path redirects to the Wave Mutator Lite URL.
+The previous `/tools/kreativ-sample-prep/` path redirects to the Wave Mutator Free URL.
 
 The root `predev` and `prebuild` scripts copy this source folder into `public/tools/wave-mutator/`. Treat that public copy as generated output.
 
@@ -33,10 +33,14 @@ The root `predev` and `prebuild` scripts copy this source folder into `public/to
 
 - Drag and drop WAV, AIFF, FLAC, and MP3 source files when the browser can decode them.
 - File picker upload for supported local audio files.
+- Quick Clean is the default workspace; a separate Waveform Editor view shares the same file queue.
+- Original previews untouched source audio, Edited previews manual edits, and Cleaned previews cleanup plus final WAV delivery settings.
 - Loaded file list with selectable active file.
 - Web Audio API decoding in the browser.
-- Canvas waveform preview with zoom controls.
-- Draggable waveform start/end handles for manual trim selection, including optional zero-crossing snap.
+- Canvas waveform editor with a time ruler, separate channel lanes, zoom controls, and zoom-to-selection.
+- Drag selection with exact start/end fields, selection playback, and optional zero-crossing snap.
+- Non-destructive Trim, Delete, Silence, Fade In, Fade Out, and Gain edits against the decoded source.
+- Readable per-file edit history with individual removal plus workspace undo/redo.
 - File metadata: name, duration, sample rate, channels, peak, and clipping count.
 - Extra analysis: RMS, DC offset, stereo balance, silence notes, and an estimated true peak.
 - Play, pause, stop, progress display, and waveform click-to-seek.
@@ -54,16 +58,32 @@ The root `predev` and `prebuild` scripts copy this source folder into `public/to
 - Queue controls: include/exclude, remove, clear, cancel a running batch, and save custom cleanup settings per file.
 - Drag-to-reorder queue for ZIP and preview-montage sequencing.
 - One-click local cleanup suggestion based on clipping, edge silence, and level analysis.
-- Undo/redo for cleanup settings, manual trim, per-file settings, queue selection, and reordering.
+- Undo/redo for audio edits, cleanup settings, per-file settings, queue selection, and reordering.
 - Keyboard transport: Space play/pause, S stop, Left/Right seek one second, Shift+Left/Right seek five seconds.
 - Export/import cleanup settings as local JSON files.
 - Settings JSON includes delivery profile, export, and montage values for local reuse.
 - Expanded free pack report with source format, output target, cleanup details, QA state, clipping, and duration summary.
 - Guardrails for queue count, input size, and decoded-audio memory use.
+- Cleaned playback renders the same channel conversion, sample rate, and PCM quantization as WAV/ZIP delivery. Changing WAV settings invalidates the preview while preserving manual edits.
+- Source-container metadata is read before decoding, so supported source rates are preserved independently of the playback device. Unknown headers are explicitly labelled; their decoded rate is the fallback.
+- Separate source and rendered WAV metadata; floating-point WAV exports preserve values above full scale.
+
+## Audio Regression Tests
+
+Run `npm run check:wave-mutator` for the static checks. The browser audio suite requires Playwright and Chrome and runs against the source files directly:
+
+```sh
+node scripts/test-wave-mutator.mjs
+```
+
+Set `PLAYWRIGHT_MODULE` to an absolute Playwright module path when using an external test installation. `WAVE_TEST_BROWSER` selects another installed Playwright Chromium channel.
+
+The suite checks selection edit PCM and history, fade direction and endpoints, zero trim padding, silence, transients, linked stereo normalization, non-destructive processing, mixed WAV source rates, source header parsing, MP3 decoding, and sample equality between After and WAV delivery. It also checks preview invalidation and captures desktop/mobile screenshots under `output/wave-mutator-audio-tests/`.
 
 ## Current Beta Limits
 
-- AIFF, FLAC, and MP3 decoding depends on browser support. WAV and AIFF are the most reliable source formats.
+- AIFF, FLAC, and MP3 decoding depends on browser support. WAV is the recommended interchange format; reading a container's metadata does not guarantee that the browser can decode it.
+- Cleaned is a WAV delivery preview. MP3 montage encoding is lossy and can change peaks; the montage remains a separate preview product.
 - Large packs are capped to keep processing stable in a single browser tab.
 - No LUFS normalization yet.
 - No spectral repair, denoise, or DAW-style editing.

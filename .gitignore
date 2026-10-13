@@ -10,5 +10,6 @@ public/apps/preset-mutator/
 public/preset-mutator/
 public/preset-mutator-pro/
 public/tools/wave-mutator/
+public/tools/wave-mutator-pro/
 private/
 .env.local

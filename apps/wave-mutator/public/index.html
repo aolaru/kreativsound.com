@@ -3,39 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wave Mutator Lite | Kreativ Sound</title>
+    <title>Wave Mutator Free | Kreativ Sound</title>
     <meta
       name="description"
-      content="Wave Mutator Lite is a free client-side beta audio sample cleanup tool for sound designers, musicians, and sample-pack makers."
+      content="Wave Mutator Free is a free client-side beta audio sample cleanup tool for sound designers, musicians, and sample-pack makers."
     />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://kreativsound.com/tools/wave-mutator/" />
     <meta property="og:site_name" content="Kreativ Sound" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Wave Mutator Lite | Kreativ Sound" />
+    <meta property="og:title" content="Wave Mutator Free | Kreativ Sound" />
     <meta property="og:description" content="Clean messy audio files, export WAV sample packs, and build short preview montages locally in the browser." />
     <meta property="og:url" content="https://kreativsound.com/tools/wave-mutator/" />
     <meta property="og:image" content="https://kreativsound.com/assets/thumbs/wave-mutator.jpg" />
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="Wave Mutator Lite | Kreativ Sound" />
+    <meta property="twitter:title" content="Wave Mutator Free | Kreativ Sound" />
     <meta property="twitter:description" content="Clean messy audio files, export WAV sample packs, and build short preview montages locally in the browser." />
     <meta name="theme-color" content="#121622" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="stylesheet" href="./styles.css?v=15" />
+    <link rel="stylesheet" href="./styles.css?v=18" />
     <script src="./vendor/lame.min.js" defer></script>
-    <script src="./app.js?v=17" defer></script>
+    <script src="./audio-source.js?v=1" defer></script>
+    <script src="./app.js?v=21" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "Wave Mutator Lite",
+        "name": "Wave Mutator Free",
         "applicationCategory": "MultimediaApplication",
         "operatingSystem": "Web browser",
         "url": "https://kreativsound.com/tools/wave-mutator/",
         "image": "https://kreativsound.com/assets/thumbs/wave-mutator.jpg",
-        "description": "Wave Mutator Lite cleans messy audio files, exports WAV sample packs, and creates short preview montages locally in the browser.",
+        "description": "Wave Mutator Free cleans messy audio files, exports WAV sample packs, and creates short preview montages locally in the browser.",
         "offers": {
           "@type": "Offer",
           "price": "0",
@@ -53,30 +54,35 @@
   <body>
     <main class="app-shell">
       <header class="hero">
-        <div class="app-nav" aria-label="Wave Mutator Lite navigation">
+        <div class="app-nav" aria-label="Wave Mutator Free navigation">
           <a class="brand-link" href="/tools/">All tools</a>
           <div class="app-brand">
             <span class="app-brand-mark" aria-hidden="true">WM</span>
-            <strong>Wave Mutator Lite</strong>
+            <strong>Wave Mutator Free</strong>
           </div>
-          <div class="app-version-group" aria-label="Wave Mutator Lite beta version 0.2.3">
+          <div class="app-version-group" aria-label="Wave Mutator Free beta version 0.2.4">
             <a class="app-nav-link" href="./changelog/">Changelog</a>
             <span class="version-pill beta-sticker">FREE BETA</span>
-            <span class="version-build">v0.2.3</span>
+            <span class="version-build">v0.2.4</span>
           </div>
         </div>
         <div class="hero-copy">
           <p class="kicker">Local sample cleanup</p>
-          <h1>Wave Mutator Lite</h1>
+          <h1>Wave Mutator Free</h1>
           <p class="subtitle">Add audio, choose its destination, preview a clean result, and download it. Everything stays in your browser.</p>
         </div>
 
-        <div class="local-trust-strip" aria-label="Wave Mutator Lite privacy promises">
+        <div class="local-trust-strip" aria-label="Wave Mutator Free privacy promises">
           <span>Your audio stays on your computer</span>
           <span>No file uploads</span>
           <span>No accounts required</span>
         </div>
       </header>
+
+      <div class="workspace-switch" role="group" aria-label="Workspace">
+        <button id="quick-clean-view-button" class="is-active" type="button" aria-pressed="true">Quick Clean</button>
+        <button id="editor-view-button" type="button" aria-pressed="false">Waveform Editor</button>
+      </div>
 
       <section class="top-grid" aria-label="Sample loading and preview">
         <section class="panel load-panel" aria-labelledby="load-title">
@@ -102,7 +108,7 @@
             <label class="file-button" for="file-input">Choose audio files</label>
           </div>
 
-          <section class="intent-picker" aria-labelledby="intent-title">
+          <section class="intent-picker" aria-labelledby="intent-title" data-clean-only>
             <div>
               <p class="section-kicker">Step 2</p>
               <h3 id="intent-title">What are you preparing?</h3>
@@ -147,14 +153,23 @@
         <section class="panel preview-panel" aria-labelledby="preview-title">
           <div class="section-head preview-head">
             <div>
-              <p class="section-kicker">Preview</p>
+              <p id="preview-workspace-label" class="section-kicker">Step 3</p>
               <h2 id="preview-title">Waveform</h2>
             </div>
-            <span id="preview-mode-label" class="preview-mode">Before: original</span>
+            <span id="preview-mode-label" class="preview-mode">Original</span>
+          </div>
+
+          <div class="preview-toggle-row" role="group" aria-label="Audio preview state">
+            <div class="segmented-controls">
+              <button id="preview-original-button" type="button" aria-pressed="true" disabled>Original</button>
+              <button id="preview-edited-button" type="button" aria-pressed="false" disabled>Edited</button>
+              <button id="preview-processed-button" type="button" aria-pressed="false" disabled>Cleaned</button>
+            </div>
+            <span id="preview-state-text" role="status">No audio selected.</span>
           </div>
 
           <div class="waveform-frame">
-            <canvas id="waveform" width="1200" height="260" aria-label="Audio waveform"></canvas>
+            <canvas id="waveform" width="1200" height="340" aria-label="Editable audio waveform"></canvas>
             <button id="waveform-empty-button" class="waveform-empty-button" type="button">
               Choose an audio file
             </button>
@@ -166,6 +181,7 @@
               <output id="waveform-zoom-value" aria-live="polite">100%</output>
               <button id="waveform-zoom-in" type="button" aria-label="Zoom waveform in" title="Zoom in">+</button>
               <button id="waveform-zoom-fit" type="button" title="Show full waveform">Fit</button>
+              <button id="waveform-zoom-selection" type="button" title="Zoom to the current selection" data-editor-only hidden>Selection</button>
             </div>
             <div class="history-controls">
               <button id="undo-button" type="button" aria-label="Undo last edit" title="Undo">Undo</button>
@@ -177,38 +193,91 @@
             <span id="progress-fill"></span>
           </div>
 
-          <div class="preview-toggle-row" aria-label="Before and after preview controls">
-            <div>
-              <span id="preview-state-text">Previewing the original decoded file.</span>
-            </div>
-            <div class="segmented-controls">
-              <button id="preview-original-button" type="button" disabled>Before</button>
-              <button id="preview-processed-button" type="button" disabled>After</button>
-            </div>
-          </div>
-
           <div class="transport-row">
             <button id="play-pause-button" class="primary-action" type="button" disabled>Play</button>
             <button id="stop-button" type="button" disabled>Stop</button>
             <span id="time-readout" class="time-readout">0:00.000 / 0:00.000</span>
           </div>
 
-          <div class="manual-trim-panel" aria-label="Manual trim selection">
+          <div class="quick-clean-panel" data-clean-only>
             <div>
-              <p class="section-kicker">Manual trim</p>
-              <p class="section-note">Drag the blue start/end handles to fine-tune the active region. Zoom for detailed edits.</p>
+              <strong>Use the selected delivery target</strong>
+              <span>Manual edits are included in cleanup.</span>
             </div>
-            <div class="manual-trim-readout">
-              <span>Start <strong id="trim-start-time">0:00.000</strong></span>
-              <span>End <strong id="trim-end-time">0:00.000</strong></span>
-              <label class="snap-toggle" for="snap-zero-crossings">
-                <input id="snap-zero-crossings" type="checkbox" checked />
-                <span>Snap</span>
-              </label>
-              <button id="manual-trim-reset" type="button" disabled>Reset trim</button>
+            <div class="quick-clean-actions">
+              <button id="apply-button" class="primary-action" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Preview clean result</span>
+              </button>
             </div>
           </div>
 
+          <section class="wave-editor" aria-labelledby="wave-editor-title" data-editor-only hidden>
+            <div class="wave-editor-head">
+              <div>
+                <p class="section-kicker">Edit audio</p>
+                <h3 id="wave-editor-title">Selection editor</h3>
+                <p class="section-note">Drag across the waveform, enter exact times, then apply an edit. Edits remain reversible.</p>
+              </div>
+              <button id="play-selection-button" type="button" disabled>Play selection</button>
+            </div>
+
+            <div id="editor-preview-notice" class="editor-preview-notice" hidden>
+              <span id="editor-preview-notice-text">Original is read-only.</span>
+              <button id="resume-editing-button" type="button">Edit audio</button>
+            </div>
+
+            <div class="selection-time-controls" aria-label="Selection times">
+              <label for="selection-start-input">
+                <span>Start</span>
+                <input id="selection-start-input" type="number" min="0" step="0.001" value="0" />
+              </label>
+              <label for="selection-end-input">
+                <span>End</span>
+                <input id="selection-end-input" type="number" min="0" step="0.001" value="0" />
+              </label>
+              <span class="selection-duration">Length <strong id="selection-duration">0:00.000</strong></span>
+              <label class="snap-toggle" for="snap-zero-crossings">
+                <input id="snap-zero-crossings" type="checkbox" checked />
+                <span>Snap to zero</span>
+              </label>
+              <button id="selection-clear-button" type="button" disabled>Clear selection</button>
+            </div>
+
+            <div class="selection-edit-toolbar" aria-label="Selection edit operations">
+              <button id="edit-trim-button" type="button" disabled>Trim to selection</button>
+              <button id="edit-delete-button" type="button" disabled>Delete</button>
+              <button id="edit-silence-button" type="button" disabled>Silence</button>
+              <button id="edit-fade-in-button" type="button" disabled>Fade in</button>
+              <button id="edit-fade-out-button" type="button" disabled>Fade out</button>
+              <label class="selection-gain-control" for="edit-gain-input">
+                <span>Gain</span>
+                <input id="edit-gain-input" type="number" min="-60" max="24" step="0.1" value="-3" />
+                <span>dB</span>
+              </label>
+              <button id="edit-gain-button" type="button" disabled>Apply gain</button>
+            </div>
+          </section>
+
+          <section class="edit-history" aria-labelledby="edit-history-title" data-editor-only hidden>
+            <div class="mini-head">
+              <div>
+                <p class="section-kicker">History</p>
+                <h3 id="edit-history-title">Audio edits</h3>
+              </div>
+              <button id="clear-edits-button" class="quiet-button" type="button" disabled>Clear edits</button>
+            </div>
+            <ol id="edit-history-list" class="edit-history-list">
+              <li class="empty-state">No audio edits applied.</li>
+            </ol>
+          </section>
+
+          <div class="editor-return" data-editor-only hidden>
+            <button id="return-to-clean-button" class="primary-action" type="button">Continue to Quick Clean</button>
+          </div>
+
+          <details class="file-details">
+            <summary>File details</summary>
           <dl class="meta-grid" aria-label="Selected file details">
             <div>
               <dt>File</dt>
@@ -219,12 +288,20 @@
               <dd id="meta-duration">-</dd>
             </div>
             <div>
-              <dt>Sample rate</dt>
+              <dt>Preview rate</dt>
               <dd id="meta-sample-rate">-</dd>
             </div>
             <div>
-              <dt>Channels</dt>
+              <dt>Preview channels</dt>
               <dd id="meta-channels">-</dd>
+            </div>
+            <div>
+              <dt>Source format</dt>
+              <dd id="meta-source-format">-</dd>
+            </div>
+            <div>
+              <dt>WAV delivery</dt>
+              <dd id="meta-output-format">-</dd>
             </div>
             <div>
               <dt>Current peak</dt>
@@ -235,31 +312,18 @@
               <dd id="meta-clipping">-</dd>
             </div>
           </dl>
+          </details>
         </section>
       </section>
 
-      <section class="work-grid" aria-label="Processing and export">
+      <section class="work-grid" aria-label="Processing and export" data-clean-only>
         <section class="panel process-panel" aria-labelledby="process-title">
           <div class="section-head">
             <div>
-              <p class="section-kicker">Step 3</p>
-              <h2 id="process-title">Preview a clean result</h2>
+              <p class="section-kicker">Settings</p>
+              <h2 id="process-title">Cleanup options</h2>
             </div>
             <p class="section-note">The default removes edge silence, adds click-safe fades, and targets -1 dB. Originals stay untouched.</p>
-          </div>
-
-          <div class="quick-clean-panel">
-            <div>
-              <strong>Use the selected delivery target</strong>
-              <span>Adjust the details only when this file needs special handling.</span>
-            </div>
-            <div class="quick-clean-actions">
-              <button id="apply-button" class="primary-action" type="button" disabled>
-                <span class="button-spinner" aria-hidden="true"></span>
-                <span class="button-label">Preview clean result</span>
-              </button>
-              <button id="reset-preview-button" type="button" disabled>Show original</button>
-            </div>
           </div>
 
           <details class="advanced-settings">
@@ -439,8 +503,8 @@
                 <dd id="report-normalize">-</dd>
               </div>
               <div>
-                <dt>Manual trim</dt>
-                <dd id="report-manual-trim">-</dd>
+                <dt>Selection edits</dt>
+                <dd id="report-selection-edits">-</dd>
               </div>
               <div>
                 <dt>Output peak</dt>
@@ -488,7 +552,7 @@
 
         <section class="panel export-panel" aria-labelledby="export-title">
           <div>
-            <p class="section-kicker">Export</p>
+            <p class="section-kicker">Step 4</p>
             <h2 id="export-title">Download cleaned audio</h2>
             <p class="section-note">
               Export the selected file, a cleaned ZIP pack, or a short store-preview montage.
@@ -523,7 +587,7 @@
             </label>
             <label class="field-control" for="pack-name">
               <span>ZIP pack name</span>
-              <input id="pack-name" type="text" value="wave-mutator-lite-one-shots" />
+              <input id="pack-name" type="text" value="wave-mutator-free-one-shots" />
             </label>
             <label class="field-control" for="bit-depth">
               <span>WAV format
@@ -599,6 +663,6 @@
       </section>
     </main>
 
-    <footer class="app-footer">A Kreativ Sound tool — Wave Mutator Lite beta v0.2.3 <span aria-hidden="true">·</span> <a href="./changelog/">Changelog</a></footer>
+    <footer class="app-footer">A Kreativ Sound tool — Wave Mutator Free beta v0.2.4 <span aria-hidden="true">·</span> <a href="./changelog/">Changelog</a></footer>
   </body>
 </html>

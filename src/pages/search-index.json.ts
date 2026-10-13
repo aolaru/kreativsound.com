@@ -113,18 +113,18 @@ const staticEntries: SearchEntry[] = [
     description: "Load a Vital, Serum 2 beta, or Pigments beta preset and create related variants locally."
   },
   {
-    title: "Wave Mutator Lite",
+    title: "Wave Mutator Free",
     url: "/tools/wave-mutator/",
     type: "Tool",
     thumbnail: "/assets/thumbs/wave-mutator.jpg",
     description: "Free local tool to clean messy WAV files, export sample packs, and build short preview montages."
   },
   {
-    title: "Wave Mutator Lite Changelog",
+    title: "Wave Mutator Free Changelog",
     url: "/tools/wave-mutator/changelog/",
     type: "Tool",
     thumbnail: "/assets/thumbs/wave-mutator.jpg",
-    description: "A concise public record of Wave Mutator Lite beta releases, delivery-profile improvements, and current scope limits."
+    description: "A concise public record of Wave Mutator Free beta releases, delivery-profile improvements, and current scope limits."
   },
   {
     title: "Pattern Mutator Lite",

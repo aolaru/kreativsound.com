@@ -13,6 +13,8 @@ const presetMutatorLegacyPublicDir = path.join(publicDir, "apps/preset-mutator")
 const presetMutatorLegacyUiDir = path.join(presetMutatorLegacyPublicDir, "ui");
 const waveMutatorSourceDir = path.join(rootDir, "apps/wave-mutator/public");
 const waveMutatorPublicDir = path.join(publicDir, "tools/wave-mutator");
+const waveMutatorProSourceDir = path.join(rootDir, "apps/wave-mutator-pro/public");
+const waveMutatorProPublicDir = path.join(publicDir, "tools/wave-mutator-pro");
 const patternMutatorSourceDir = path.join(rootDir, "apps/pattern-mutator/public");
 const patternMutatorPublicDir = path.join(publicDir, "tools/pattern-mutator");
 
@@ -53,7 +55,11 @@ if (!fs.existsSync(presetMutatorProSourceDir)) {
 }
 
 if (!fs.existsSync(waveMutatorSourceDir)) {
-  throw new Error("Missing apps/wave-mutator/public. Wave Mutator Lite source must be available before syncing public assets.");
+  throw new Error("Missing apps/wave-mutator/public. Wave Mutator Free source must be available before syncing public assets.");
+}
+
+if (!fs.existsSync(waveMutatorProSourceDir)) {
+  throw new Error("Missing apps/wave-mutator-pro/public. Wave Mutator Pro source must be available before syncing public assets.");
 }
 
 if (!fs.existsSync(patternMutatorSourceDir)) {
@@ -192,6 +198,10 @@ writeLegacyPresetMutatorRedirects();
 fs.rmSync(waveMutatorPublicDir, { recursive: true, force: true });
 fs.mkdirSync(path.dirname(waveMutatorPublicDir), { recursive: true });
 fs.cpSync(waveMutatorSourceDir, waveMutatorPublicDir, { recursive: true });
+
+fs.rmSync(waveMutatorProPublicDir, { recursive: true, force: true });
+fs.mkdirSync(path.dirname(waveMutatorProPublicDir), { recursive: true });
+fs.cpSync(waveMutatorProSourceDir, waveMutatorProPublicDir, { recursive: true });
 
 fs.rmSync(patternMutatorPublicDir, { recursive: true, force: true });
 fs.mkdirSync(path.dirname(patternMutatorPublicDir), { recursive: true });

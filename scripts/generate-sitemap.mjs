@@ -137,6 +137,9 @@ function shouldIndexRoute(route) {
   if (route === "/learn/") {
     return false;
   }
+  if (route === "/tools/wave-mutator-pro/") {
+    return false;
+  }
   if (route.startsWith("/preset-mutator-pro/") && route !== "/preset-mutator-pro/changelog/") {
     return false;
   }

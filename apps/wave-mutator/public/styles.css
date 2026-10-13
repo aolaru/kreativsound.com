@@ -477,6 +477,52 @@ h3 {
   margin-top: 18px;
 }
 
+.top-grid {
+  align-items: start;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.workspace-switch {
+  display: inline-flex;
+  gap: 4px;
+  margin-top: 20px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.workspace-switch button {
+  min-height: 44px;
+  border-color: transparent;
+  background: transparent;
+}
+
+.workspace-switch .is-active {
+  border-color: var(--blue);
+  background: rgba(74, 74, 255, 0.22);
+}
+
+body[data-preview-mode="original"] .preview-mode {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--line);
+}
+
+body[data-preview-mode="edited"] .preview-mode {
+  color: #ffd166;
+  border-color: rgba(255, 209, 102, 0.5);
+  background: rgba(255, 209, 102, 0.08);
+}
+
+body[data-preview-mode="cleaned"] .preview-mode {
+  color: #52f0aa;
+  border-color: rgba(82, 240, 170, 0.5);
+  background: rgba(82, 240, 170, 0.08);
+}
+
 .work-grid {
   grid-template-columns: minmax(420px, 1.2fr) minmax(300px, 0.8fr);
 }
@@ -507,6 +553,11 @@ body:not(.has-files) .work-grid {
 .section-head > div {
   display: grid;
   gap: 7px;
+}
+
+.load-panel .section-head {
+  display: grid;
+  gap: 8px;
 }
 
 .section-note,
@@ -697,7 +748,7 @@ body:not(.has-files) .work-grid {
 
 .file-list button {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(116px, auto);
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   gap: 12px;
   width: 100%;
@@ -755,7 +806,7 @@ body:not(.has-files) .work-grid {
 
 .file-badges {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 6px;
   flex-wrap: wrap;
@@ -818,6 +869,8 @@ body:not(.has-files) .work-grid {
   width: 100%;
   height: 260px;
   cursor: crosshair;
+  touch-action: none;
+  user-select: none;
 }
 
 .waveform-empty-button {
@@ -886,14 +939,24 @@ body:not(.has-files) .work-grid {
 
 .preview-toggle-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: 12px;
   margin-bottom: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 0.65rem;
-  background: rgba(255, 255, 255, 0.04);
+}
+
+.preview-toggle-row .segmented-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.preview-toggle-row button {
+  min-width: 0;
+}
+
+#preview-state-text {
+  min-height: 20px;
+  font-size: 0.82rem;
 }
 
 .preview-toggle-row span {
@@ -933,35 +996,180 @@ body:not(.has-files) .work-grid {
   font-variant-numeric: tabular-nums;
 }
 
-.manual-trim-panel {
+.wave-editor,
+.edit-history {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 16px;
-  align-items: center;
+  gap: 14px;
   margin-bottom: 18px;
-  border: 1px solid rgba(74, 74, 255, 0.2);
-  border-radius: 8px;
-  padding: 0.92rem;
-  background: rgba(74, 74, 255, 0.08);
+  border-top: 1px solid var(--line);
+  padding: 18px 0 0;
 }
 
-.manual-trim-panel > div:first-child {
+.editor-preview-notice,
+.editor-return {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.editor-preview-notice {
+  color: #ffd166;
+  font-size: 0.85rem;
+}
+
+.file-details {
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+
+.file-details summary {
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.file-details .meta-grid {
+  margin-top: 14px;
+}
+
+.wave-editor-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.wave-editor-head > div {
   display: grid;
   gap: 6px;
 }
 
-.manual-trim-readout {
+.wave-editor-head h3,
+.edit-history h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.selection-time-controls,
+.selection-edit-toolbar {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
+  align-items: end;
   flex-wrap: wrap;
-  color: var(--muted);
+  gap: 8px;
+}
+
+.selection-time-controls > label:not(.snap-toggle) {
+  display: grid;
+  gap: 5px;
+  width: 132px;
+}
+
+.selection-time-controls label > span,
+.selection-duration,
+.selection-gain-control > span {
+  color: var(--faint);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.selection-duration {
+  display: grid;
+  gap: 5px;
+  min-width: 116px;
+  padding: 0.48rem 0.2rem;
+}
+
+.selection-duration strong {
+  color: var(--text);
+  font-size: 0.9rem;
   font-variant-numeric: tabular-nums;
 }
 
-.manual-trim-readout strong {
+.selection-gain-control {
+  display: grid;
+  grid-template-columns: auto 76px auto;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 0.22rem 0.58rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.selection-gain-control input {
+  min-height: 34px;
+  padding: 0.35rem 0.45rem;
+}
+
+.edit-history {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.edit-history .mini-head {
+  margin: 0;
+}
+
+.edit-history-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.edit-history-item {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.6rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.edit-history-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  color: var(--green);
+  background: rgba(82, 240, 170, 0.1);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.edit-history-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.edit-history-copy strong {
   color: var(--text);
+  font-size: 0.88rem;
+}
+
+.edit-history-copy span {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.edit-history-remove {
+  min-height: 34px;
+  padding: 0.35rem 0.62rem;
+}
+
+body:not([data-preview-mode="edited"]) #waveform,
+body[data-workspace-view="clean"] #waveform {
+  cursor: pointer;
 }
 
 .snap-toggle {
@@ -1218,6 +1426,11 @@ select {
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.4;
+}
+
+.quick-clean-panel .button-label {
+  color: inherit;
+  font-size: inherit;
 }
 
 .quick-clean-actions {
@@ -1916,7 +2129,6 @@ select {
   }
 
   .tool-detail-grid,
-  .manual-trim-panel,
   .export-controls,
   .delivery-profile-panel,
   .export-settings-body {
@@ -1961,17 +2173,35 @@ select {
   .section-head,
   .mini-head,
   .export-panel,
-  .preview-toggle-row,
-  .manual-trim-panel {
+  .preview-toggle-row {
     align-items: flex-start;
     flex-direction: column;
   }
 
   .waveform-tools,
   .cleanup-suggestion,
-  .quick-clean-panel {
+  .quick-clean-panel,
+  .wave-editor-head {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .selection-time-controls > label:not(.snap-toggle) {
+    width: calc(50% - 4px);
+  }
+
+  .selection-edit-toolbar > button,
+  .selection-gain-control {
+    flex: 1 1 140px;
+  }
+
+  .edit-history-item {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .edit-history-remove {
+    grid-column: 2;
+    justify-self: start;
   }
 
   .quick-clean-actions {

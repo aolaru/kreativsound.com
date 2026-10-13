@@ -6,6 +6,11 @@ import { fileURLToPath } from "node:url";
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 function presetMutatorDevRoutes() {
+  const waveMutatorPages = new Map([
+    ["/tools/wave-mutator", "index.html"],
+    ["/tools/wave-mutator/", "index.html"],
+    ["/tools/wave-mutator/changelog/", "changelog/index.html"],
+  ]);
   const appHtmlRoutes = new Map([
     ["/preset-mutator/", "index.html"],
     ["/preset-mutator/scratch/", "index.html"],
@@ -45,8 +50,22 @@ function presetMutatorDevRoutes() {
             return;
           }
 
-          if (pathname === "/tools/wave-mutator" || pathname === "/tools/wave-mutator/") {
-            fs.readFile(path.join(rootDir, "apps/wave-mutator/public/index.html"), "utf8", (error, html) => {
+          const waveMutatorPage = waveMutatorPages.get(pathname);
+          if (waveMutatorPage) {
+            fs.readFile(path.join(rootDir, "apps/wave-mutator/public", waveMutatorPage), "utf8", (error, html) => {
+              if (error) {
+                next(error);
+                return;
+              }
+              response.statusCode = 200;
+              response.setHeader("Content-Type", "text/html; charset=utf-8");
+              response.end(html);
+            });
+            return;
+          }
+
+          if (pathname === "/tools/wave-mutator-pro" || pathname === "/tools/wave-mutator-pro/") {
+            fs.readFile(path.join(rootDir, "apps/wave-mutator-pro/public/index.html"), "utf8", (error, html) => {
               if (error) {
                 next(error);
                 return;

@@ -14,9 +14,9 @@
     "changelog": "/preset-mutator-pro/changelog/"
   },
   "waveMutator": {
-    "name": "Wave Mutator Lite",
-    "version": "0.2.3",
-    "date": "2026-09-07",
+    "name": "Wave Mutator Free",
+    "version": "0.2.4",
+    "date": "2026-10-13",
     "status": "Free",
     "releaseLabel": "beta",
     "changelog": "/tools/wave-mutator/changelog/"

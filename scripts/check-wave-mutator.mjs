@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 
 const rootDir = process.cwd();
 const sourceDir = path.join(rootDir, "apps/wave-mutator/public");
-const requiredFiles = ["index.html", "styles.css", "app.js", "vendor/lame.min.js"];
+const requiredFiles = ["index.html", "styles.css", "app.js", "audio-source.js", "vendor/lame.min.js"];
 const errors = [];
 
 function fail(message) {
@@ -13,7 +13,7 @@ function fail(message) {
 
 for (const file of requiredFiles) {
   if (!existsSync(path.join(sourceDir, file))) {
-    fail(`Missing Wave Mutator Lite source file: ${file}`);
+    fail(`Missing Wave Mutator Free source file: ${file}`);
   }
 }
 
@@ -21,17 +21,20 @@ if (!errors.length) {
   const html = readFileSync(path.join(sourceDir, "index.html"), "utf8");
   const app = readFileSync(path.join(sourceDir, "app.js"), "utf8");
 
-  if (!html.includes("Wave Mutator Lite")) {
-    fail("Wave Mutator Lite HTML should identify the tool by name.");
+  if (!html.includes("Wave Mutator Free")) {
+    fail("Wave Mutator Free HTML should identify the tool by name.");
   }
   if (!html.includes("./styles.css") || !html.includes("./app.js")) {
-    fail("Wave Mutator Lite HTML should load local styles.css and app.js.");
+    fail("Wave Mutator Free HTML should load local styles.css and app.js.");
   }
   if (!html.includes("./vendor/lame.min.js")) {
-    fail("Wave Mutator Lite HTML should load the bundled local MP3 encoder.");
+    fail("Wave Mutator Free HTML should load the bundled local MP3 encoder.");
   }
-  if (!app.includes("Wave Mutator Lite") && !app.includes("wave")) {
-    fail("Wave Mutator Lite app source does not look like the expected tool script.");
+  if (!html.includes("./audio-source.js")) {
+    fail("Wave Mutator Free HTML should load the source metadata reader.");
+  }
+  if (!app.includes("Wave Mutator Free") && !app.includes("wave")) {
+    fail("Wave Mutator Free app source does not look like the expected tool script.");
   }
   for (const expectedFeature of [
     "encodeBufferAsMp3",
@@ -48,9 +51,13 @@ if (!errors.length) {
     "DELIVERY_PROFILES",
     "applyDeliveryProfile",
     "renderDeliveryProfile",
+    "applyEditOperations",
+    "applySelectionEdit",
+    "renderEditHistory",
+    "zoomToSelection",
   ]) {
     if (!app.includes(expectedFeature)) {
-      fail(`Wave Mutator Lite app is missing expected release feature: ${expectedFeature}.`);
+      fail(`Wave Mutator Free app is missing expected release feature: ${expectedFeature}.`);
     }
   }
   const lame = readFileSync(path.join(sourceDir, "vendor/lame.min.js"), "utf8");
@@ -63,16 +70,16 @@ if (!errors.length) {
     encoding: "utf8",
   });
   if (syntax.status !== 0) {
-    fail(`Wave Mutator Lite app.js syntax check failed:\n${syntax.stderr || syntax.stdout}`);
+    fail(`Wave Mutator Free app.js syntax check failed:\n${syntax.stderr || syntax.stdout}`);
   }
 }
 
 if (errors.length) {
-  console.error(`Wave Mutator Lite validation failed: ${errors.length}`);
+  console.error(`Wave Mutator Free validation failed: ${errors.length}`);
   for (const error of errors) {
     console.error(`- ${error}`);
   }
   process.exit(1);
 }
 
-console.log("Wave Mutator Lite validation passed.");
+console.log("Wave Mutator Free validation passed.");

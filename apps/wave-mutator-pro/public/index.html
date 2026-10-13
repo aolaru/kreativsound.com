@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wave Mutator Pro | Kreativ Sound</title>
+    <meta
+      name="description"
+      content="Wave Mutator Pro is a private client-side audio editing beta for licensed Kreativ Sound customers."
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href="https://kreativsound.com/tools/wave-mutator-pro/" />
+    <meta property="og:site_name" content="Kreativ Sound" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Wave Mutator Pro | Kreativ Sound" />
+    <meta property="og:description" content="Clean messy audio files, export WAV sample packs, and build short preview montages locally in the browser." />
+    <meta property="og:url" content="https://kreativsound.com/tools/wave-mutator-pro/" />
+    <meta property="og:image" content="https://kreativsound.com/assets/thumbs/wave-mutator.jpg" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Wave Mutator Pro | Kreativ Sound" />
+    <meta property="twitter:description" content="Clean messy audio files, export WAV sample packs, and build short preview montages locally in the browser." />
+    <meta name="theme-color" content="#121622" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="stylesheet" href="./styles.css?v=18" />
+    <script src="./vendor/lame.min.js" defer></script>
+    <script src="./audio-source.js?v=1" defer></script>
+    <script src="./app.js?v=20" defer></script>
+    <script type="module" src="./pro-license.js?v=1"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Wave Mutator Pro",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web browser",
+        "url": "https://kreativsound.com/tools/wave-mutator-pro/",
+        "image": "https://kreativsound.com/assets/thumbs/wave-mutator.jpg",
+        "description": "Wave Mutator Pro provides licensed local audio editing, sample preparation, and product delivery workflows.",
+        "creator": {
+          "@type": "Person",
+          "name": "Andrei Olaru"
+        }
+      }
+    </script>
+  </head>
+  <body data-license-state="checking">
+    <main class="app-shell">
+      <header class="hero">
+        <div class="app-nav" aria-label="Wave Mutator Pro navigation">
+          <a class="brand-link" href="/tools/">All tools</a>
+          <div class="app-brand">
+            <span class="app-brand-mark" aria-hidden="true">WM</span>
+            <strong>Wave Mutator Pro</strong>
+          </div>
+          <div class="app-version-group" aria-label="Wave Mutator Pro beta version 0.1.0">
+            <span class="version-pill beta-sticker">PRO BETA</span>
+            <span class="version-build">v0.1.0</span>
+          </div>
+        </div>
+        <div class="hero-copy">
+          <p class="kicker">Licensed local audio editor</p>
+          <h1>Wave Mutator Pro</h1>
+          <p class="subtitle">Shape samples with precise, non-destructive editing and product-ready local delivery.</p>
+        </div>
+
+        <div class="local-trust-strip" aria-label="Wave Mutator Pro privacy promises">
+          <span>Your audio stays on your computer</span>
+          <span>No file uploads</span>
+          <span>Preset Mutator Pro license compatible</span>
+        </div>
+      </header>
+
+      <section id="pro-license-panel" class="panel pro-license-panel" aria-labelledby="pro-license-title">
+        <div class="pro-license-copy">
+          <p class="section-kicker">Shared Pro access</p>
+          <h2 id="pro-license-title">Activate the Pro workspace</h2>
+          <p>A Preset Mutator Pro license also unlocks Wave Mutator Pro. Existing browser activation is detected automatically.</p>
+        </div>
+        <p id="pro-license-checking" class="pro-license-status" role="status">Checking this browser for Pro access...</p>
+        <form id="pro-license-form" class="pro-license-form" hidden>
+          <label for="pro-license-key">Preset Mutator Pro Gumroad key or signed token</label>
+          <div class="pro-license-row">
+            <input id="pro-license-key" type="password" autocomplete="off" placeholder="Enter your existing Pro license" />
+            <button id="pro-license-activate" class="primary-action" type="submit">Activate Pro</button>
+          </div>
+          <p id="pro-license-note" class="pro-license-note" role="status">The license is stored only in this browser.</p>
+        </form>
+        <div id="pro-license-active" class="pro-license-active" hidden>
+          <span class="pro-license-badge">Pro active</span>
+          <p id="pro-license-owner">Shared Kreativ Sound Pro access verified.</p>
+        </div>
+      </section>
+
+      <section class="top-grid" aria-label="Sample loading and preview" data-pro-workspace inert>
+        <section class="panel load-panel" aria-labelledby="load-title">
+          <div class="section-head">
+            <div>
+              <p class="section-kicker">Step 1</p>
+              <h2 id="load-title">Add audio</h2>
+            </div>
+            <p class="section-note">WAV, AIFF, FLAC, and MP3 decode locally when supported by your browser.</p>
+          </div>
+
+          <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-label="Choose or drop audio files">
+            <input
+              id="file-input"
+              type="file"
+              accept=".wav,.aif,.aiff,.flac,.mp3,audio/wav,audio/wave,audio/x-wav,audio/aiff,audio/x-aiff,audio/flac,audio/mpeg"
+              multiple
+            />
+            <div class="drop-zone-copy">
+              <strong>Drop audio files here</strong>
+              <span>or choose files from your computer</span>
+            </div>
+            <label class="file-button" for="file-input">Choose audio files</label>
+          </div>
+
+          <section class="intent-picker" aria-labelledby="intent-title">
+            <div>
+              <p class="section-kicker">Step 2</p>
+              <h3 id="intent-title">What are you preparing?</h3>
+              <p id="delivery-profile-summary" class="section-note" aria-live="polite">Sample Pack is selected: a safe default for clean, product-ready audio.</p>
+            </div>
+            <div class="intent-options" role="group" aria-label="Choose delivery target">
+              <button class="intent-option" type="button" data-delivery-profile="sample-pack">
+                <strong>Sample pack</strong>
+                <span>One-shots and loops</span>
+              </button>
+              <button class="intent-option" type="button" data-delivery-profile="music-pack">
+                <strong>Music release</strong>
+                <span>44.1 kHz delivery</span>
+              </button>
+              <button class="intent-option" type="button" data-delivery-profile="game-sfx">
+                <strong>Game / video</strong>
+                <span>48 kHz delivery</span>
+              </button>
+              <button class="intent-option" type="button" data-delivery-profile="store-preview">
+                <strong>Store preview</strong>
+                <span>WAV plus MP3 demo</span>
+              </button>
+            </div>
+          </section>
+
+          <p id="status-message" class="status-message" role="status">Load one or more audio files to begin.</p>
+
+          <div class="file-list-block">
+            <div class="mini-head">
+              <h3>Loaded files</h3>
+              <div class="queue-head-actions">
+                <span id="file-count">0 files</span>
+                <button id="clear-queue-button" class="quiet-button" type="button" disabled>Clear</button>
+              </div>
+            </div>
+            <ul id="file-list" class="file-list" aria-label="Loaded audio files">
+              <li class="empty-state">No files loaded yet.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="panel preview-panel" aria-labelledby="preview-title">
+          <div class="section-head preview-head">
+            <div>
+              <p class="section-kicker">Preview</p>
+              <h2 id="preview-title">Waveform</h2>
+            </div>
+            <span id="preview-mode-label" class="preview-mode">Before: original</span>
+          </div>
+
+          <div class="waveform-frame">
+            <canvas id="waveform" width="1200" height="340" aria-label="Editable audio waveform"></canvas>
+            <button id="waveform-empty-button" class="waveform-empty-button" type="button">
+              Choose an audio file
+            </button>
+          </div>
+
+          <div class="waveform-tools" aria-label="Waveform view controls">
+            <div class="waveform-zoom-controls">
+              <button id="waveform-zoom-out" type="button" aria-label="Zoom waveform out" title="Zoom out">-</button>
+              <output id="waveform-zoom-value" aria-live="polite">100%</output>
+              <button id="waveform-zoom-in" type="button" aria-label="Zoom waveform in" title="Zoom in">+</button>
+              <button id="waveform-zoom-fit" type="button" title="Show full waveform">Fit</button>
+              <button id="waveform-zoom-selection" type="button" title="Zoom to the current selection">Selection</button>
+            </div>
+            <div class="history-controls">
+              <button id="undo-button" type="button" aria-label="Undo last edit" title="Undo">Undo</button>
+              <button id="redo-button" type="button" aria-label="Redo last edit" title="Redo">Redo</button>
+            </div>
+          </div>
+
+          <div class="progress-track" aria-hidden="true">
+            <span id="progress-fill"></span>
+          </div>
+
+          <div class="preview-toggle-row" aria-label="Before and after preview controls">
+            <div>
+              <span id="preview-state-text">Previewing the original decoded file.</span>
+            </div>
+            <div class="segmented-controls">
+              <button id="preview-original-button" type="button" disabled>Before</button>
+              <button id="preview-processed-button" type="button" disabled>After</button>
+            </div>
+          </div>
+
+          <div class="transport-row">
+            <button id="play-pause-button" class="primary-action" type="button" disabled>Play</button>
+            <button id="stop-button" type="button" disabled>Stop</button>
+            <span id="time-readout" class="time-readout">0:00.000 / 0:00.000</span>
+          </div>
+
+          <section class="wave-editor" aria-labelledby="wave-editor-title">
+            <div class="wave-editor-head">
+              <div>
+                <p class="section-kicker">Edit audio</p>
+                <h3 id="wave-editor-title">Waveform editor</h3>
+                <p id="wave-editor-description" class="section-note">Drag across the waveform, enter exact times, then apply an edit. Edits remain reversible.</p>
+              </div>
+              <div class="wave-editor-actions">
+                <div class="segmented-controls editor-mode-controls" aria-label="Waveform editing mode">
+                  <button id="selection-mode-button" class="is-active" type="button" aria-pressed="true">Selection</button>
+                  <button id="envelope-mode-button" type="button" aria-pressed="false">Volume envelope</button>
+                </div>
+                <button id="play-selection-button" type="button" disabled>Play selection</button>
+              </div>
+            </div>
+
+            <div id="selection-editor-controls">
+            <div class="selection-time-controls" aria-label="Selection times">
+              <label for="selection-start-input">
+                <span>Start</span>
+                <input id="selection-start-input" type="number" min="0" step="0.001" value="0" />
+              </label>
+              <label for="selection-end-input">
+                <span>End</span>
+                <input id="selection-end-input" type="number" min="0" step="0.001" value="0" />
+              </label>
+              <span class="selection-duration">Length <strong id="selection-duration">0:00.000</strong></span>
+              <label class="snap-toggle" for="snap-zero-crossings">
+                <input id="snap-zero-crossings" type="checkbox" checked />
+                <span>Snap to zero</span>
+              </label>
+              <button id="selection-clear-button" type="button" disabled>Clear selection</button>
+            </div>
+
+            <div class="selection-edit-toolbar" aria-label="Selection edit operations">
+              <button id="edit-trim-button" type="button" disabled>Trim to selection</button>
+              <button id="edit-delete-button" type="button" disabled>Delete</button>
+              <button id="edit-silence-button" type="button" disabled>Silence</button>
+              <button id="edit-fade-in-button" type="button" disabled>Fade in</button>
+              <button id="edit-fade-out-button" type="button" disabled>Fade out</button>
+              <label class="selection-gain-control" for="edit-gain-input">
+                <span>Gain</span>
+                <input id="edit-gain-input" type="number" min="-60" max="24" step="0.1" value="-3" />
+                <span>dB</span>
+              </label>
+              <button id="edit-gain-button" type="button" disabled>Apply gain</button>
+            </div>
+            </div>
+
+            <div id="envelope-editor-controls" class="envelope-editor-controls" hidden>
+              <div class="envelope-help">
+                <strong>Editable volume curve</strong>
+                <span>Double-click the waveform to add a point. Drag points to change time and gain.</span>
+              </div>
+              <div class="envelope-point-controls">
+                <label for="envelope-time-input">
+                  <span>Point time</span>
+                  <input id="envelope-time-input" type="number" min="0" step="0.001" value="0" />
+                </label>
+                <label for="envelope-gain-input">
+                  <span>Point gain</span>
+                  <span class="envelope-gain-input"><input id="envelope-gain-input" type="number" min="-60" max="12" step="0.1" value="0" /> dB</span>
+                </label>
+                <label for="envelope-curve-select">
+                  <span>Curve</span>
+                  <select id="envelope-curve-select">
+                    <option value="linear">Linear</option>
+                    <option value="smooth" selected>Smooth S-curve</option>
+                    <option value="exponential">Exponential</option>
+                  </select>
+                </label>
+              </div>
+              <div class="envelope-actions">
+                <button id="envelope-delete-point" type="button" disabled>Delete point</button>
+                <button id="envelope-reset" type="button" disabled>Reset curve</button>
+                <button id="envelope-apply" class="primary-action" type="button" disabled>Apply envelope</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="edit-history" aria-labelledby="edit-history-title">
+            <div class="mini-head">
+              <div>
+                <p class="section-kicker">History</p>
+                <h3 id="edit-history-title">Audio edits</h3>
+              </div>
+              <button id="clear-edits-button" class="quiet-button" type="button" disabled>Clear edits</button>
+            </div>
+            <ol id="edit-history-list" class="edit-history-list">
+              <li class="empty-state">No audio edits applied.</li>
+            </ol>
+          </section>
+
+          <dl class="meta-grid" aria-label="Selected file details">
+            <div>
+              <dt>File</dt>
+              <dd id="meta-name">No file selected</dd>
+            </div>
+            <div>
+              <dt>Duration</dt>
+              <dd id="meta-duration">-</dd>
+            </div>
+            <div>
+              <dt>Preview rate</dt>
+              <dd id="meta-sample-rate">-</dd>
+            </div>
+            <div>
+              <dt>Preview channels</dt>
+              <dd id="meta-channels">-</dd>
+            </div>
+            <div>
+              <dt>Source format</dt>
+              <dd id="meta-source-format">-</dd>
+            </div>
+            <div>
+              <dt>WAV delivery</dt>
+              <dd id="meta-output-format">-</dd>
+            </div>
+            <div>
+              <dt>Current peak</dt>
+              <dd id="meta-peak">-</dd>
+            </div>
+            <div>
+              <dt>Clipping</dt>
+              <dd id="meta-clipping">-</dd>
+            </div>
+          </dl>
+        </section>
+      </section>
+
+      <section class="work-grid" aria-label="Processing and export" data-pro-workspace inert>
+        <section class="panel process-panel" aria-labelledby="process-title">
+          <div class="section-head">
+            <div>
+              <p class="section-kicker">Step 3</p>
+              <h2 id="process-title">Preview a clean result</h2>
+            </div>
+            <p class="section-note">The default removes edge silence, adds click-safe fades, and targets -1 dB. Originals stay untouched.</p>
+          </div>
+
+          <div class="quick-clean-panel">
+            <div>
+              <strong>Use the selected delivery target</strong>
+              <span>Adjust the details only when this file needs special handling.</span>
+            </div>
+            <div class="quick-clean-actions">
+              <button id="apply-button" class="primary-action" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Preview clean result</span>
+              </button>
+              <button id="reset-preview-button" type="button" disabled>Show original</button>
+            </div>
+          </div>
+
+          <details class="advanced-settings">
+            <summary>
+              <span>Customize cleanup</span>
+              <small>Strength presets, silence detection, fades, normalization, and saved settings</small>
+            </summary>
+            <div class="advanced-settings-body">
+          <div class="controls-stack">
+            <section class="cleanup-strength" aria-labelledby="cleanup-strength-title">
+              <div>
+                <p class="section-kicker">Macro control</p>
+                <h3 id="cleanup-strength-title">Cleanup Strength</h3>
+                <p class="section-note">Choose a starting point, then fine-tune the controls below.</p>
+              </div>
+              <div class="strength-options" role="group" aria-label="Cleanup strength presets">
+                <button class="strength-preset" type="button" data-preset="gentle">
+                  <strong>Gentle</strong>
+                  <span>Light cleanup</span>
+                </button>
+                <button class="strength-preset is-active" type="button" data-preset="standard">
+                  <strong>Standard</strong>
+                  <span>Default prep</span>
+                </button>
+                <button class="strength-preset" type="button" data-preset="tight">
+                  <strong>Tight</strong>
+                  <span>Shorter edges</span>
+                </button>
+                <button class="strength-preset" type="button" data-preset="pack">
+                  <strong>Pack-ready</strong>
+                  <span>Release polish</span>
+                </button>
+              </div>
+            </section>
+
+            <section class="cleanup-suggestion" aria-labelledby="cleanup-suggestion-title">
+              <div>
+                <p class="section-kicker">Quick start</p>
+                <h3 id="cleanup-suggestion-title">Suggested cleanup</h3>
+                <p id="cleanup-suggestion-text" class="section-note">Load an audio file to get a local suggestion.</p>
+              </div>
+              <button id="apply-suggestion-button" type="button" disabled>Use suggestion</button>
+            </section>
+
+            <label class="toggle-row" for="trim-silence">
+              <span>
+                <strong>Trim leading/trailing silence</strong>
+                <small>Finds the first and last samples above the threshold.</small>
+              </span>
+              <input id="trim-silence" type="checkbox" checked />
+            </label>
+
+            <label class="control-row" for="trim-threshold">
+              <span class="control-label">Silence threshold
+                <button class="info-tooltip" type="button" aria-label="Explain silence threshold" data-tooltip="Higher values trim more aggressively. Lower values preserve quiet tails and ambience.">?</button>
+              </span>
+              <output id="trim-threshold-value">-60 dB</output>
+              <input id="trim-threshold" type="range" min="-80" max="-20" step="1" value="-60" />
+            </label>
+
+            <div class="two-control-row">
+              <label class="field-control" for="trim-min-silence">
+                <span>Minimum silence</span>
+                <input id="trim-min-silence" type="number" min="10" max="1000" step="5" value="60" />
+              </label>
+              <label class="field-control" for="trim-padding">
+                <span>Tail safety padding</span>
+                <input id="trim-padding" type="number" min="0" max="500" step="1" value="20" />
+              </label>
+            </div>
+            <p class="control-hint">Windowed detection keeps short transients and leaves a small safety margin around detected content.</p>
+
+            <label class="toggle-row" for="fade-enabled">
+              <span>
+                <strong>Add short fade in/out</strong>
+                <small>Prevents clicks after trimming.</small>
+              </span>
+              <input id="fade-enabled" type="checkbox" checked />
+            </label>
+
+            <label class="control-row" for="fade-ms">
+              <span>Fade length</span>
+              <output id="fade-ms-value">10 ms</output>
+              <input id="fade-ms" type="number" min="0" max="500" step="1" value="10" />
+            </label>
+
+            <label class="toggle-row" for="normalize-enabled">
+              <span>
+                <strong>Normalize peak level</strong>
+                <small>Scales the cleaned sample to the target peak.</small>
+              </span>
+              <input id="normalize-enabled" type="checkbox" checked />
+            </label>
+
+            <label class="control-row" for="target-peak">
+              <span class="control-label">Target peak
+                <button class="info-tooltip" type="button" aria-label="Explain target peak" data-tooltip="Sets the loudest sample after normalization. -1 dB is a safe sample-pack default.">?</button>
+              </span>
+              <output id="target-peak-value">-1 dB</output>
+              <input id="target-peak" type="number" min="-24" max="0" step="0.1" value="-1" />
+            </label>
+
+            <label class="toggle-row" for="detect-clipping">
+              <span>
+                <strong>Detect clipping</strong>
+                <small>Warns when samples reach 0.999 amplitude or higher.</small>
+              </span>
+              <input id="detect-clipping" type="checkbox" checked />
+            </label>
+          </div>
+
+          <div class="action-row">
+            <button id="save-file-override-button" type="button" disabled>Save settings for this file</button>
+            <button id="reset-file-override-button" type="button" disabled>Use global settings</button>
+            <button id="export-settings-button" type="button">Export settings</button>
+            <button id="import-settings-button" type="button">Import settings</button>
+            <input id="settings-file-input" type="file" accept="application/json,.json" hidden />
+          </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="panel analysis-panel" aria-labelledby="analysis-title">
+          <div class="section-head">
+            <div>
+              <p class="section-kicker">Analysis</p>
+              <h2 id="analysis-title">Warnings</h2>
+            </div>
+          </div>
+
+          <div id="analysis-warnings" class="analysis-warnings" aria-live="polite">
+            <p class="empty-state">Load an audio file to see clipping and processing notes.</p>
+          </div>
+
+          <details class="advanced-analysis">
+            <summary>
+              <span>Advanced analysis</span>
+              <small>Technical readouts and cleanup report</small>
+            </summary>
+            <dl class="process-report advanced-metrics" aria-label="Advanced audio analysis">
+              <div>
+                <dt>RMS</dt>
+                <dd id="meta-rms">-</dd>
+              </div>
+              <div>
+                <dt>DC offset</dt>
+                <dd id="meta-dc-offset">-</dd>
+              </div>
+              <div>
+                <dt>Stereo balance</dt>
+                <dd id="meta-stereo-balance">-</dd>
+              </div>
+              <div>
+                <dt>Leading silence</dt>
+                <dd id="meta-leading-silence">-</dd>
+              </div>
+              <div>
+                <dt>Trailing silence</dt>
+                <dd id="meta-trailing-silence">-</dd>
+              </div>
+              <div>
+                <dt>Est. true peak</dt>
+                <dd id="meta-true-peak">-</dd>
+              </div>
+            </dl>
+            <dl class="process-report" aria-label="Processing report">
+              <div>
+                <dt>Trimmed</dt>
+                <dd id="report-trimmed">-</dd>
+              </div>
+              <div>
+                <dt>Fade</dt>
+                <dd id="report-fade">-</dd>
+              </div>
+              <div>
+                <dt>Normalize gain</dt>
+                <dd id="report-normalize">-</dd>
+              </div>
+              <div>
+                <dt>Selection edits</dt>
+                <dd id="report-selection-edits">-</dd>
+              </div>
+              <div>
+                <dt>Output peak</dt>
+                <dd id="report-output-peak">-</dd>
+              </div>
+            </dl>
+          </details>
+        </section>
+
+        <details class="panel pack-review advanced-settings">
+          <summary>
+            <span>Review pack details</span>
+            <small>Optional batch QA, export inclusion, and format checks</small>
+          </summary>
+          <section class="preflight-panel" aria-labelledby="preflight-title">
+          <div class="section-head">
+            <div>
+              <p class="section-kicker">Pack QA</p>
+              <h2 id="preflight-title">Preflight report</h2>
+            </div>
+            <span id="preflight-summary" class="preflight-summary">Load audio files to check the pack.</span>
+          </div>
+          <p class="section-note">Review the full selected export queue before rendering. Warnings stay local and do not block export.</p>
+          <div id="preflight-warnings" class="preflight-warnings" aria-live="polite"></div>
+          <div class="preflight-table-wrap">
+            <table class="preflight-table">
+              <thead>
+                <tr>
+                  <th scope="col">Export</th>
+                  <th scope="col">File</th>
+                  <th scope="col">Format</th>
+                  <th scope="col">Duration</th>
+                  <th scope="col">Peak</th>
+                  <th scope="col">Est. true peak</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="preflight-body">
+                <tr><td colspan="7" class="empty-state">No files loaded yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          </section>
+        </details>
+
+        <section class="panel export-panel" aria-labelledby="export-title">
+          <div>
+            <p class="section-kicker">Export</p>
+            <h2 id="export-title">Download cleaned audio</h2>
+            <p class="section-note">
+              Export the selected file, a cleaned ZIP pack, or a short store-preview montage.
+            </p>
+          </div>
+          <div class="export-controls">
+            <div class="export-action-row">
+              <button id="export-button" class="export-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Download cleaned WAV</span>
+              </button>
+              <button id="export-zip-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Download clean ZIP</span>
+              </button>
+              <button id="export-mp3-button" type="button" disabled>
+                <span class="button-spinner" aria-hidden="true"></span>
+                <span class="button-label">Create MP3 store preview</span>
+              </button>
+              <button id="export-manifest-button" type="button" disabled>Download manifest</button>
+              <button id="cancel-export-button" class="danger-button" type="button" disabled>Cancel batch</button>
+            </div>
+            <details class="advanced-settings export-settings">
+              <summary>
+                <span>Customize export</span>
+                <small>Naming, WAV format, ZIP scope, and montage timing</small>
+              </summary>
+              <div class="advanced-settings-body export-settings-body">
+            <label class="field-control" for="naming-template">
+              <span>Naming template</span>
+              <input id="naming-template" type="text" value="{name}_clean" />
+            </label>
+            <label class="field-control" for="pack-name">
+              <span>ZIP pack name</span>
+              <input id="pack-name" type="text" value="wave-mutator-pro-one-shots" />
+            </label>
+            <label class="field-control" for="bit-depth">
+              <span>WAV format
+                <button class="info-tooltip" type="button" aria-label="Explain WAV format" data-tooltip="16-bit is widely compatible. 24-bit keeps more detail for production packs. 32-bit float preserves headroom for editing.">?</button>
+              </span>
+              <select id="bit-depth">
+                <option value="16">16-bit PCM</option>
+                <option value="24" selected>24-bit PCM</option>
+                <option value="32f">32-bit float</option>
+              </select>
+            </label>
+            <label class="field-control" for="sample-rate-mode">
+              <span>Sample rate
+                <button class="info-tooltip" type="button" aria-label="Explain sample rate" data-tooltip="Preserve original keeps the source rate. 44.1 kHz is music-friendly. 48 kHz is common for video and game audio.">?</button>
+              </span>
+              <select id="sample-rate-mode">
+                <option value="original">Preserve original</option>
+                <option value="44100">44.1 kHz</option>
+                <option value="48000">48 kHz</option>
+              </select>
+            </label>
+            <label class="field-control" for="channel-mode">
+              <span>Channels
+                <button class="info-tooltip" type="button" aria-label="Explain channel mode" data-tooltip="Preserve keeps mono or stereo as loaded. Mono sum renders a centered one-channel version for one-shots.">?</button>
+              </span>
+              <select id="channel-mode">
+                <option value="original">Preserve original</option>
+                <option value="mono">Mono sum</option>
+              </select>
+            </label>
+            <label class="field-control" for="export-scope">
+              <span>ZIP scope</span>
+              <select id="export-scope">
+                <option value="selected">Selected queue files</option>
+                <option value="all">All loaded files</option>
+              </select>
+            </label>
+            <label class="field-control" for="montage-seconds">
+              <span>Montage clip length
+                <button class="info-tooltip" type="button" aria-label="Explain montage clip length" data-tooltip="Controls how much of each cleaned file appears in the MP3 preview montage.">?</button>
+              </span>
+              <input id="montage-seconds" type="number" min="1" max="12" step="0.5" value="3" />
+            </label>
+            <label class="field-control" for="montage-gap">
+              <span>Montage gap</span>
+              <input id="montage-gap" type="number" min="0" max="3" step="0.1" value="0.35" />
+            </label>
+              </div>
+            </details>
+            <div id="batch-progress" class="batch-progress" aria-live="polite">
+              <div class="batch-progress-head">
+                <span id="batch-progress-label">Export queue idle</span>
+                <span id="batch-progress-detail">0%</span>
+              </div>
+              <div class="batch-progress-track" aria-hidden="true">
+                <span id="batch-progress-fill"></span>
+              </div>
+            </div>
+            <div class="cleaned-output-section" aria-labelledby="cleaned-output-title">
+              <div class="mini-head">
+                <div>
+                  <p class="section-kicker">Outputs</p>
+                  <h3 id="cleaned-output-title">Cleaned output cards</h3>
+                </div>
+                <span id="cleaned-output-count">0 ready</span>
+              </div>
+              <div id="cleaned-output-grid" class="cleaned-output-grid" aria-live="polite">
+                <p class="empty-state">Apply a preview or export files to see cleaned output cards.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="app-footer">A Kreativ Sound tool — Wave Mutator Pro private beta v0.1.0</footer>
+  </body>
+</html>

@@ -6,12 +6,17 @@ const state = {
   selectedId: null,
   nextId: 1,
   previewMode: "original",
+  workspaceView: "clean",
   playbackSource: null,
   playbackStartedAt: 0,
   playbackOffset: 0,
+  playbackEnd: null,
   isPlaying: false,
   animationFrame: null,
-  trimDragHandle: null,
+  selectionDragHandle: null,
+  waveformPointerStartRatio: null,
+  waveformPointerStartX: null,
+  waveformSelectionDragging: false,
   suppressNextWaveformClick: false,
   exportMode: null,
   processingMode: null,
@@ -46,6 +51,7 @@ const elements = {
   waveformZoomOut: document.querySelector("#waveform-zoom-out"),
   waveformZoomIn: document.querySelector("#waveform-zoom-in"),
   waveformZoomFit: document.querySelector("#waveform-zoom-fit"),
+  waveformZoomSelection: document.querySelector("#waveform-zoom-selection"),
   waveformZoomValue: document.querySelector("#waveform-zoom-value"),
   undoButton: document.querySelector("#undo-button"),
   redoButton: document.querySelector("#redo-button"),
@@ -54,13 +60,25 @@ const elements = {
   stopButton: document.querySelector("#stop-button"),
   timeReadout: document.querySelector("#time-readout"),
   previewModeLabel: document.querySelector("#preview-mode-label"),
+  previewWorkspaceLabel: document.querySelector("#preview-workspace-label"),
   previewOriginalButton: document.querySelector("#preview-original-button"),
+  previewEditedButton: document.querySelector("#preview-edited-button"),
   previewProcessedButton: document.querySelector("#preview-processed-button"),
+  quickCleanViewButton: document.querySelector("#quick-clean-view-button"),
+  editorViewButton: document.querySelector("#editor-view-button"),
+  returnToCleanButton: document.querySelector("#return-to-clean-button"),
+  editorOnly: document.querySelectorAll("[data-editor-only]"),
+  cleanOnly: document.querySelectorAll("[data-clean-only]"),
+  editorPreviewNotice: document.querySelector("#editor-preview-notice"),
+  editorPreviewNoticeText: document.querySelector("#editor-preview-notice-text"),
+  resumeEditingButton: document.querySelector("#resume-editing-button"),
   previewStateText: document.querySelector("#preview-state-text"),
   metaName: document.querySelector("#meta-name"),
   metaDuration: document.querySelector("#meta-duration"),
   metaSampleRate: document.querySelector("#meta-sample-rate"),
   metaChannels: document.querySelector("#meta-channels"),
+  metaSourceFormat: document.querySelector("#meta-source-format"),
+  metaOutputFormat: document.querySelector("#meta-output-format"),
   metaPeak: document.querySelector("#meta-peak"),
   metaClipping: document.querySelector("#meta-clipping"),
   metaRms: document.querySelector("#meta-rms"),
@@ -68,10 +86,21 @@ const elements = {
   metaStereoBalance: document.querySelector("#meta-stereo-balance"),
   metaLeadingSilence: document.querySelector("#meta-leading-silence"),
   metaTrailingSilence: document.querySelector("#meta-trailing-silence"),
-  trimStartTime: document.querySelector("#trim-start-time"),
-  trimEndTime: document.querySelector("#trim-end-time"),
-  manualTrimReset: document.querySelector("#manual-trim-reset"),
+  selectionClearButton: document.querySelector("#selection-clear-button"),
   snapZeroCrossings: document.querySelector("#snap-zero-crossings"),
+  selectionStartInput: document.querySelector("#selection-start-input"),
+  selectionEndInput: document.querySelector("#selection-end-input"),
+  selectionDuration: document.querySelector("#selection-duration"),
+  playSelectionButton: document.querySelector("#play-selection-button"),
+  editTrimButton: document.querySelector("#edit-trim-button"),
+  editDeleteButton: document.querySelector("#edit-delete-button"),
+  editSilenceButton: document.querySelector("#edit-silence-button"),
+  editFadeInButton: document.querySelector("#edit-fade-in-button"),
+  editFadeOutButton: document.querySelector("#edit-fade-out-button"),
+  editGainInput: document.querySelector("#edit-gain-input"),
+  editGainButton: document.querySelector("#edit-gain-button"),
+  editHistoryList: document.querySelector("#edit-history-list"),
+  clearEditsButton: document.querySelector("#clear-edits-button"),
   trimSilence: document.querySelector("#trim-silence"),
   trimThreshold: document.querySelector("#trim-threshold"),
   trimThresholdValue: document.querySelector("#trim-threshold-value"),
@@ -85,7 +114,6 @@ const elements = {
   targetPeakValue: document.querySelector("#target-peak-value"),
   detectClipping: document.querySelector("#detect-clipping"),
   applyButton: document.querySelector("#apply-button"),
-  resetPreviewButton: document.querySelector("#reset-preview-button"),
   saveFileOverrideButton: document.querySelector("#save-file-override-button"),
   resetFileOverrideButton: document.querySelector("#reset-file-override-button"),
   applySuggestionButton: document.querySelector("#apply-suggestion-button"),
@@ -97,7 +125,7 @@ const elements = {
   reportTrimmed: document.querySelector("#report-trimmed"),
   reportFade: document.querySelector("#report-fade"),
   reportNormalize: document.querySelector("#report-normalize"),
-  reportManualTrim: document.querySelector("#report-manual-trim"),
+  reportSelectionEdits: document.querySelector("#report-selection-edits"),
   reportOutputPeak: document.querySelector("#report-output-peak"),
   metaTruePeak: document.querySelector("#meta-true-peak"),
   exportButton: document.querySelector("#export-button"),
@@ -130,7 +158,7 @@ const MAX_INPUT_BYTES = 1024 * 1024 * 1024;
 const MAX_DECODED_BYTES = 1536 * 1024 * 1024;
 const DEFAULT_TRIM_WINDOW_MS = 10;
 const HISTORY_LIMIT = 40;
-const APP_VERSION = "0.2.3";
+const APP_VERSION = "0.2.4";
 const SUPPORTED_AUDIO_FORMATS = {
   wav: { label: "WAV", extensions: [".wav"], types: ["audio/wav", "audio/wave", "audio/x-wav"] },
   aiff: { label: "AIFF", extensions: [".aif", ".aiff"], types: ["audio/aiff", "audio/x-aiff"] },
@@ -204,7 +232,7 @@ const DELIVERY_PROFILES = {
       sampleRateMode: "original",
       channelMode: "original",
       namingTemplate: "{name}_clean",
-      packName: "wave-mutator-lite-one-shots",
+      packName: "wave-mutator-free-one-shots",
     },
     montage: { clipSeconds: 3, gapSeconds: 0.35 },
     summary: "24-bit WAV at the original sample rate, preserved channels, -1 dB peak, and concise one-shot previews.",
@@ -227,7 +255,7 @@ const DELIVERY_PROFILES = {
       sampleRateMode: "44100",
       channelMode: "original",
       namingTemplate: "{name}_music",
-      packName: "wave-mutator-lite-music",
+      packName: "wave-mutator-free-music",
     },
     montage: { clipSeconds: 5, gapSeconds: 0.5 },
     summary: "16-bit, 44.1 kHz WAV delivery with longer preview clips for music-focused sound packs.",
@@ -250,7 +278,7 @@ const DELIVERY_PROFILES = {
       sampleRateMode: "48000",
       channelMode: "original",
       namingTemplate: "{name}_sfx",
-      packName: "wave-mutator-lite-game-sfx",
+      packName: "wave-mutator-free-game-sfx",
     },
     montage: { clipSeconds: 3, gapSeconds: 0.3 },
     summary: "Tighter cleanup with 24-bit, 48 kHz WAV output for video and game-audio workflows.",
@@ -273,7 +301,7 @@ const DELIVERY_PROFILES = {
       sampleRateMode: "44100",
       channelMode: "original",
       namingTemplate: "{name}_preview",
-      packName: "wave-mutator-lite-store-preview",
+      packName: "wave-mutator-free-store-preview",
     },
     montage: { clipSeconds: 4, gapSeconds: 0.5 },
     summary: "16-bit, 44.1 kHz WAV settings with paced clips for local store-preview montage export.",
@@ -405,20 +433,45 @@ function getActiveBuffer(file = getSelectedFile()) {
   if (!file) {
     return null;
   }
-  if (state.previewMode === "processed" && file.processedBuffer) {
+  if (state.previewMode === "cleaned" && file.processedBuffer) {
     return file.processedBuffer;
   }
-  return file.audioBuffer;
+  return state.previewMode === "edited" ? getEditedBuffer(file) : file.audioBuffer;
 }
 
 function getActiveAnalysis(file = getSelectedFile()) {
   if (!file) {
     return null;
   }
-  if (state.previewMode === "processed" && file.processedAnalysis) {
+  if (state.previewMode === "cleaned" && file.processedAnalysis) {
     return file.processedAnalysis;
   }
-  return file.originalAnalysis;
+  return state.previewMode === "edited" ? getEditedAnalysis(file) : file.originalAnalysis;
+}
+
+function canEditAudio() {
+  return Boolean(getSelectedFile() && state.workspaceView === "editor"
+    && state.previewMode === "edited" && !isExportBusy());
+}
+
+function getUncleanedPreviewMode(file = getSelectedFile()) {
+  return state.workspaceView === "editor" || file?.editOperations?.length ? "edited" : "original";
+}
+
+function setWorkspaceView(view) {
+  if (isExportBusy()) return;
+  state.workspaceView = view === "editor" ? "editor" : "clean";
+  state.waveformPointerStartRatio = null;
+  state.selectionDragHandle = null;
+  state.waveformSelectionDragging = false;
+  state.suppressNextWaveformClick = false;
+  const file = getSelectedFile();
+  if (file) {
+    showPreviewMode(state.workspaceView === "editor" ? "edited"
+      : file.processedBuffer ? "cleaned" : getUncleanedPreviewMode(file));
+  } else {
+    updateUi();
+  }
 }
 
 function getSettings() {
@@ -465,10 +518,11 @@ function captureWorkspaceState() {
     selectedId: state.selectedId,
     files: state.files.map((file) => ({
       id: file.id,
-      trimStartRatio: file.trimStartRatio ?? 0,
-      trimEndRatio: file.trimEndRatio ?? 1,
       exportSelected: file.exportSelected !== false,
       settingsOverride: file.settingsOverride ? { ...file.settingsOverride } : null,
+      editOperations: (file.editOperations || []).map((operation) => ({ ...operation })),
+      selectionStartRatio: file.selectionStartRatio ?? 0,
+      selectionEndRatio: file.selectionEndRatio ?? 1,
     })),
   };
 }
@@ -513,7 +567,7 @@ function invalidateProcessedPreviews() {
     file.waveformCache.processed = null;
     file.batchStatus = "ready";
   }
-  state.previewMode = "original";
+  if (state.previewMode === "cleaned") state.previewMode = getUncleanedPreviewMode();
   state.montageOutput = null;
 }
 
@@ -528,10 +582,12 @@ function restoreWorkspaceState(snapshot) {
       if (!current) {
         return null;
       }
-      current.trimStartRatio = savedFile.trimStartRatio;
-      current.trimEndRatio = savedFile.trimEndRatio;
       current.exportSelected = savedFile.exportSelected;
       current.settingsOverride = savedFile.settingsOverride ? { ...savedFile.settingsOverride } : null;
+      current.editOperations = (savedFile.editOperations || []).map((operation) => ({ ...operation }));
+      current.selectionStartRatio = savedFile.selectionStartRatio ?? 0;
+      current.selectionEndRatio = savedFile.selectionEndRatio ?? 1;
+      invalidateEditCache(current);
       return current;
     })
     .filter(Boolean);
@@ -577,7 +633,7 @@ function getRawExportSettings() {
     sampleRateMode: elements.sampleRateMode.value,
     channelMode: elements.channelMode.value,
     namingTemplate: elements.namingTemplate.value.trim() || "{name}_clean",
-    packName: sanitizeFileBaseName(elements.packName.value || "wave-mutator-lite-pack"),
+    packName: sanitizeFileBaseName(elements.packName.value || "wave-mutator-free-pack"),
   };
 }
 
@@ -638,6 +694,7 @@ function renderDeliveryProfile() {
     const isActive = button.dataset.deliveryProfile === profileId;
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
+    button.disabled = isExportBusy();
   });
   elements.deliveryProfileSummary.textContent = profile
     ? `${profile.label}: ${profile.summary}`
@@ -652,7 +709,8 @@ function applyDeliveryProfile(profileId) {
   const historySnapshot = captureWorkspaceState();
   applySettingsToControls(profile.cleanup);
   applyExportSettingsToControls(profile.export, profile.montage);
-  clearGlobalProcessedPreviews(`${profile.label} delivery profile applied.`);
+  invalidateProcessedPreviews();
+  setStatus(`${profile.label} delivery profile applied.`);
   pushWorkspaceHistory(historySnapshot, "delivery profile");
   updateUi();
 }
@@ -704,12 +762,13 @@ function syncCleanupPresetUi() {
     const isActive = button.dataset.preset === matchingPreset;
     button.classList.toggle("is-active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
+    button.disabled = isExportBusy();
   });
 }
 
 function applyCleanupPreset(presetName) {
   const preset = CLEANUP_PRESETS[presetName];
-  if (!preset) {
+  if (!preset || isExportBusy()) {
     return;
   }
 
@@ -728,7 +787,7 @@ function applyCleanupPreset(presetName) {
 
   const selected = getSelectedFile();
   if (selected) {
-    clearProcessedPreview(`Cleanup Strength set to ${preset.label}. Preview the clean result to audition it.`);
+    clearGlobalProcessedPreviews(`Cleanup Strength set to ${preset.label}. Preview the clean result to audition it.`);
     pushWorkspaceHistory(historySnapshot, "cleanup preset");
     updateUi();
     return;
@@ -740,10 +799,10 @@ function applyCleanupPreset(presetName) {
 }
 
 function getCleanupSuggestion(file = getSelectedFile()) {
-  if (!file?.originalAnalysis) {
+  if (!file) {
     return null;
   }
-  const analysis = file.originalAnalysis;
+  const analysis = getEditedAnalysis(file);
   const edgeSilence = analysis.leadingSilenceSeconds + analysis.trailingSilenceSeconds;
   if (analysis.clippedSamples > 0) {
     return {
@@ -807,7 +866,7 @@ function clearProcessedPreview(reason = "") {
   selected.waveformCache.processed = null;
   selected.batchStatus = "ready";
   state.montageOutput = null;
-  state.previewMode = "original";
+  if (state.previewMode === "cleaned") state.previewMode = getUncleanedPreviewMode();
   stopPlayback();
   if (reason) {
     setStatus(reason);
@@ -829,7 +888,9 @@ function clearGlobalProcessedPreviews(reason = "") {
     cleared += 1;
   }
   state.montageOutput = null;
-  state.previewMode = "original";
+  if (state.previewMode === "cleaned" && !getSelectedFile()?.processedBuffer) {
+    state.previewMode = getUncleanedPreviewMode();
+  }
   stopPlayback();
   if (reason) {
     setStatus(cleared ? `${reason} ${cleared} preview${cleared === 1 ? " was" : "s were"} marked stale.` : reason);
@@ -838,9 +899,17 @@ function clearGlobalProcessedPreviews(reason = "") {
 }
 
 async function decodeFile(file) {
-  const audioContext = getAudioContext();
   const arrayBuffer = await file.arrayBuffer();
-  return audioContext.decodeAudioData(arrayBuffer.slice(0));
+  const sourceMetadata = readSourceAudioMetadata(arrayBuffer);
+  // Decode at the file's rate, independently of the playback device's rate.
+  const decoder = sourceMetadata.sampleRate
+    ? new OfflineAudioContext(1, 1, sourceMetadata.sampleRate)
+    : getAudioContext();
+  const audioBuffer = await decoder.decodeAudioData(arrayBuffer);
+  if (sourceMetadata.sampleRate && audioBuffer.sampleRate !== sourceMetadata.sampleRate) {
+    throw new Error("The browser could not preserve this file's source sample rate.");
+  }
+  return { audioBuffer, sourceMetadata };
 }
 
 function getQueueInputBytes() {
@@ -862,6 +931,7 @@ function canAddFile(file, queuedCount = state.files.length, queuedBytes = getQue
 }
 
 async function loadFiles(fileList) {
+  if (isExportBusy()) return;
   const files = Array.from(fileList);
   if (!files.length) {
     return;
@@ -902,7 +972,7 @@ async function loadFiles(fileList) {
   let loadedCount = 0;
   for (const file of acceptedFiles) {
     try {
-      const audioBuffer = await decodeFile(file);
+      const { audioBuffer, sourceMetadata } = await decodeFile(file);
       const sampleFile = {
         id: state.nextId,
         file,
@@ -910,19 +980,25 @@ async function loadFiles(fileList) {
         format: getAudioFormatLabel(file),
         size: file.size,
         audioBuffer,
+        sourceMetadata,
         originalAnalysis: analyzeBuffer(audioBuffer),
         processedBuffer: null,
         processedAnalysis: null,
         processReport: null,
-        trimStartRatio: 0,
-        trimEndRatio: 1,
         exportSelected: true,
         settingsOverride: null,
         batchStatus: "ready",
         waveformCache: {
           original: null,
+          edited: null,
           processed: null,
         },
+        editOperations: [],
+        editedBuffer: null,
+        editedAnalysis: null,
+        selectionStartRatio: 0,
+        selectionEndRatio: 1,
+        nextEditId: 1,
       };
       state.nextId += 1;
       state.files.push(sampleFile);
@@ -959,9 +1035,10 @@ async function loadFiles(fileList) {
 }
 
 function selectFile(id) {
+  if (isExportBusy()) return;
   stopPlayback();
   state.selectedId = id;
-  state.previewMode = "original";
+  state.previewMode = state.workspaceView === "editor" ? "edited" : "original";
   state.playbackOffset = 0;
   updateUi();
 }
@@ -1016,6 +1093,7 @@ function renderFileList() {
     });
     const button = document.createElement("button");
     button.type = "button";
+    button.disabled = isExportBusy();
     button.classList.toggle("is-selected", file.id === state.selectedId);
     button.addEventListener("click", () => selectFile(file.id));
 
@@ -1099,7 +1177,7 @@ function removeFile(id) {
   const [removed] = state.files.splice(index, 1);
   if (state.selectedId === id) {
     state.selectedId = state.files[0]?.id || null;
-    state.previewMode = "original";
+    state.previewMode = state.workspaceView === "editor" ? "edited" : "original";
     state.playbackOffset = 0;
   }
   state.montageOutput = null;
@@ -1139,12 +1217,12 @@ function getFileBadges(file) {
     badges.unshift({ label: "Excluded", type: "neutral" });
   }
 
-  if (file.originalAnalysis?.clippedSamples > 0) {
+  if (getEditedAnalysis(file)?.clippedSamples > 0) {
     badges.push({ label: "Clipping", type: "danger" });
   }
 
-  if ((file.trimStartRatio ?? 0) > 0 || (file.trimEndRatio ?? 1) < 1) {
-    badges.push({ label: "Manual trim", type: "warning" });
+  if (file.editOperations?.length) {
+    badges.push({ label: `${file.editOperations.length} edit${file.editOperations.length === 1 ? "" : "s"}`, type: "good" });
   }
 
   if (file.settingsOverride) {
@@ -1152,7 +1230,7 @@ function getFileBadges(file) {
   }
 
   if (file.processedAnalysis?.clippedSamples > 0) {
-    badges.push({ label: "After clips", type: "warning" });
+    badges.push({ label: "Cleaned clips", type: "warning" });
   }
 
   return badges;
@@ -1208,7 +1286,7 @@ function selectOutputFile(id, preferProcessed = false) {
   stopPlayback();
   state.selectedId = id;
   const file = getSelectedFile();
-  state.previewMode = preferProcessed && file?.processedBuffer ? "processed" : "original";
+  state.previewMode = preferProcessed && file?.processedBuffer ? "cleaned" : getUncleanedPreviewMode(file);
   state.playbackOffset = 0;
   updateUi();
 }
@@ -1240,6 +1318,8 @@ function renderCleanedOutputCard(file) {
   metrics.className = "cleaned-output-metrics";
   appendOutputMetric(metrics, "Duration", file.processedBuffer ? formatDuration(file.processedBuffer.duration) : "-");
   appendOutputMetric(metrics, "Peak", file.processedAnalysis ? formatDb(file.processedAnalysis.peakDb) : "-");
+  appendOutputMetric(metrics, "WAV format", file.processedBuffer
+    ? `${file.processedBuffer.sampleRate.toLocaleString()} Hz / ${file.processedBuffer.numberOfChannels} ch` : "Not rendered");
   appendOutputMetric(metrics, "Trim removed", formatTrimRemoved(file.processReport, file));
   appendOutputMetric(metrics, "Clipping", file.processedAnalysis?.clippedSamples ? `${file.processedAnalysis.clippedSamples.toLocaleString()} samples` : "None");
 
@@ -1248,7 +1328,7 @@ function renderCleanedOutputCard(file) {
 
   const previewButton = document.createElement("button");
   previewButton.type = "button";
-  previewButton.textContent = "Preview After";
+  previewButton.textContent = "Preview Cleaned";
   previewButton.disabled = busy || !file.processedBuffer;
   previewButton.addEventListener("click", () => selectOutputFile(file.id, true));
 
@@ -1339,7 +1419,7 @@ function getSelectedExportFiles() {
 }
 
 function getPreflightStatus(file) {
-  const analysis = file.processedAnalysis || file.originalAnalysis;
+  const analysis = file.processedAnalysis || getEditedAnalysis(file);
   if (file.batchStatus === "failed") {
     return { label: "Failed", type: "danger" };
   }
@@ -1399,7 +1479,7 @@ function renderPreflight() {
   }
 
   for (const file of state.files) {
-    const analysis = file.processedAnalysis || file.originalAnalysis;
+    const analysis = file.processedAnalysis || getEditedAnalysis(file);
     const status = getPreflightStatus(file);
     const row = document.createElement("tr");
     row.classList.toggle("is-excluded", file.exportSelected === false && elements.exportScope.value !== "all");
@@ -1415,8 +1495,9 @@ function renderPreflight() {
     includeCell.appendChild(include);
     row.appendChild(includeCell);
     appendPreflightCell(row, file.name, "preflight-file-name");
-    appendPreflightCell(row, `${file.audioBuffer.sampleRate / 1000} kHz | ${file.audioBuffer.numberOfChannels === 1 ? "Mono" : "Stereo"}`);
-    appendPreflightCell(row, formatDuration(file.audioBuffer.duration));
+    const displayBuffer = file.processedBuffer || getEditedBuffer(file);
+    appendPreflightCell(row, `${file.processedBuffer ? "Output" : "Decoded"}: ${displayBuffer.sampleRate / 1000} kHz | ${displayBuffer.numberOfChannels} ch`);
+    appendPreflightCell(row, formatDuration(displayBuffer.duration));
     appendPreflightCell(row, formatDb(analysis.peakDb));
     appendPreflightCell(row, formatDb(gainToDb(analysis.truePeakEstimate)));
     const statusCell = appendPreflightCell(row, status.label, `preflight-status is-${status.type}`);
@@ -1504,6 +1585,232 @@ function copyBufferRange(buffer, startSample, endSample) {
   return output;
 }
 
+function cloneAudioBuffer(buffer) {
+  return copyBufferRange(buffer, 0, buffer.length);
+}
+
+function copyBufferWithoutRange(buffer, startSample, endSample) {
+  const audioContext = getAudioContext();
+  const start = clamp(Math.floor(startSample), 0, buffer.length);
+  const end = clamp(Math.ceil(endSample), start, buffer.length);
+  const outputLength = Math.max(1, buffer.length - (end - start));
+  const output = audioContext.createBuffer(buffer.numberOfChannels, outputLength, buffer.sampleRate);
+
+  for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+    const source = buffer.getChannelData(channel);
+    const target = output.getChannelData(channel);
+    target.set(source.subarray(0, start));
+    if (start < outputLength) {
+      target.set(source.subarray(end), start);
+    }
+  }
+
+  return output;
+}
+
+function applyEditOperations(sourceBuffer, operations = []) {
+  let workingBuffer = sourceBuffer;
+
+  for (const operation of operations) {
+    const start = clamp(Math.floor(operation.startSample), 0, Math.max(0, workingBuffer.length - 1));
+    const end = clamp(Math.ceil(operation.endSample), start + 1, workingBuffer.length);
+
+    if (operation.type === "trim") {
+      workingBuffer = copyBufferRange(workingBuffer, start, end);
+      continue;
+    }
+
+    if (operation.type === "delete") {
+      if (end - start < workingBuffer.length) {
+        workingBuffer = copyBufferWithoutRange(workingBuffer, start, end);
+      }
+      continue;
+    }
+
+    const nextBuffer = cloneAudioBuffer(workingBuffer);
+    for (let channel = 0; channel < nextBuffer.numberOfChannels; channel += 1) {
+      const data = nextBuffer.getChannelData(channel);
+      const selectionLength = Math.max(1, end - start);
+      for (let index = start; index < end; index += 1) {
+        const progress = selectionLength > 1 ? (index - start) / (selectionLength - 1) : 0;
+        if (operation.type === "silence") {
+          data[index] = 0;
+        } else if (operation.type === "fade-in") {
+          data[index] *= Math.sin(progress * Math.PI * 0.5);
+        } else if (operation.type === "fade-out") {
+          data[index] *= Math.sin((1 - progress) * Math.PI * 0.5);
+        } else if (operation.type === "gain") {
+          data[index] *= dbToGain(operation.gainDb);
+        }
+      }
+    }
+    workingBuffer = nextBuffer;
+  }
+
+  return workingBuffer;
+}
+
+function invalidateEditCache(file) {
+  if (!file) return;
+  file.editedBuffer = null;
+  file.editedAnalysis = null;
+  file.waveformCache.edited = null;
+  file.processedBuffer = null;
+  file.processedAnalysis = null;
+  file.processReport = null;
+  file.waveformCache.processed = null;
+  file.batchStatus = "ready";
+  state.previewMode = getUncleanedPreviewMode();
+  state.montageOutput = null;
+}
+
+function getEditedBuffer(file) {
+  if (!file) return null;
+  if (!file.editOperations?.length) return file.audioBuffer;
+  if (!file.editedBuffer) {
+    file.editedBuffer = applyEditOperations(file.audioBuffer, file.editOperations);
+  }
+  return file.editedBuffer;
+}
+
+function getEditedAnalysis(file) {
+  if (!file) return null;
+  if (!file.editOperations?.length) return file.originalAnalysis;
+  if (!file.editedAnalysis) {
+    file.editedAnalysis = analyzeBuffer(getEditedBuffer(file));
+  }
+  return file.editedAnalysis;
+}
+
+function getSelection(file = getSelectedFile(), buffer = getEditedBuffer(file)) {
+  if (!file || !buffer) {
+    return { startRatio: 0, endRatio: 0, startSample: 0, endSample: 0, duration: 0 };
+  }
+  const startRatio = clamp(Math.min(file.selectionStartRatio ?? 0, file.selectionEndRatio ?? 0), 0, 1);
+  const endRatio = clamp(Math.max(file.selectionStartRatio ?? 0, file.selectionEndRatio ?? 0), 0, 1);
+  const startSample = clamp(Math.round(startRatio * buffer.length), 0, buffer.length);
+  const endSample = clamp(Math.round(endRatio * buffer.length), startSample, buffer.length);
+  return {
+    startRatio,
+    endRatio,
+    startSample,
+    endSample,
+    duration: (endSample - startSample) / buffer.sampleRate,
+  };
+}
+
+function setSelectionRatios(startRatio, endRatio, options = {}) {
+  const file = getSelectedFile();
+  const buffer = getEditedBuffer(file);
+  if (!file || !buffer || !canEditAudio()) return;
+
+  let start = clamp(startRatio, 0, 1);
+  let end = clamp(endRatio, 0, 1);
+  if (options.snap) {
+    start = snapRatioToZeroCrossing(file, start);
+    end = snapRatioToZeroCrossing(file, end);
+  }
+  file.selectionStartRatio = Math.min(start, end);
+  file.selectionEndRatio = Math.max(start, end);
+  updateUi();
+}
+
+function getNextEditId(file) {
+  return Math.max(0, ...(file.editOperations || []).map((operation) => operation.id || 0)) + 1;
+}
+
+function describeEditOperation(operation, sampleRate) {
+  const start = operation.startSample / sampleRate;
+  const end = operation.endSample / sampleRate;
+  const range = `${formatDuration(start)} - ${formatDuration(end)}`;
+  const gainDb = Number(operation.gainDb) || 0;
+  const labels = {
+    trim: "Trim to selection",
+    delete: "Delete selection",
+    silence: "Silence selection",
+    "fade-in": "Fade in",
+    "fade-out": "Fade out",
+    gain: `Gain ${gainDb >= 0 ? "+" : ""}${gainDb.toFixed(1)} dB`,
+  };
+  return { label: labels[operation.type] || operation.type, range };
+}
+
+function applySelectionEdit(type) {
+  const file = getSelectedFile();
+  const buffer = getEditedBuffer(file);
+  if (!file || !buffer || !canEditAudio()) return;
+  const selection = getSelection(file, buffer);
+  if (selection.endSample <= selection.startSample) {
+    setStatus("Drag across the waveform to select audio first.", "error");
+    return;
+  }
+  if (type === "delete" && selection.endSample - selection.startSample >= buffer.length) {
+    setStatus("Delete cannot remove the entire file. Use Trim to selection for a shorter range.", "error");
+    return;
+  }
+
+  const historySnapshot = captureWorkspaceState();
+  const operation = {
+    id: getNextEditId(file),
+    type,
+    startSample: selection.startSample,
+    endSample: selection.endSample,
+  };
+  if (type === "gain") {
+    operation.gainDb = clamp(Number(elements.editGainInput.value) || 0, -24, 24);
+  }
+  file.editOperations.push(operation);
+  invalidateEditCache(file);
+
+  const editedBuffer = getEditedBuffer(file);
+  if (type === "trim") {
+    file.selectionStartRatio = 0;
+    file.selectionEndRatio = 1;
+  } else if (type === "delete") {
+    const caret = clamp(selection.startSample / editedBuffer.length, 0, 1);
+    file.selectionStartRatio = caret;
+    file.selectionEndRatio = caret;
+  } else {
+    file.selectionStartRatio = clamp(selection.startSample / editedBuffer.length, 0, 1);
+    file.selectionEndRatio = clamp(selection.endSample / editedBuffer.length, 0, 1);
+  }
+
+  stopPlayback();
+  pushWorkspaceHistory(historySnapshot, describeEditOperation(operation, buffer.sampleRate).label);
+  setStatus(`${describeEditOperation(operation, buffer.sampleRate).label} applied non-destructively.`);
+  updateUi();
+}
+
+function removeEditOperation(operationId) {
+  const file = getSelectedFile();
+  if (!file || isExportBusy()) return;
+  const operation = file.editOperations.find((item) => item.id === operationId);
+  if (!operation) return;
+  const historySnapshot = captureWorkspaceState();
+  file.editOperations = file.editOperations.filter((item) => item.id !== operationId);
+  invalidateEditCache(file);
+  file.selectionStartRatio = 0;
+  file.selectionEndRatio = 1;
+  stopPlayback();
+  pushWorkspaceHistory(historySnapshot, "remove edit");
+  setStatus("Edit removed. Later operations were replayed against the original audio.");
+  updateUi();
+}
+
+function clearAudioEdits() {
+  const file = getSelectedFile();
+  if (!file?.editOperations?.length || isExportBusy()) return;
+  const historySnapshot = captureWorkspaceState();
+  file.editOperations = [];
+  invalidateEditCache(file);
+  file.selectionStartRatio = 0;
+  file.selectionEndRatio = 1;
+  stopPlayback();
+  pushWorkspaceHistory(historySnapshot, "clear audio edits");
+  setStatus("All selection edits cleared. The decoded source is unchanged.");
+  updateUi();
+}
+
 function estimateTruePeak(buffer) {
   let peak = 0;
   for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
@@ -1556,7 +1863,7 @@ function findTrimBounds(buffer, options = {}) {
   const quietThreshold = Number.isFinite(threshold) ? threshold : dbToGain(-60);
   const contentThreshold = quietThreshold * 1.414;
   const minSilenceMs = clamp(Number(options.minSilenceMs) || 60, 10, 1000);
-  const paddingMs = clamp(Number(options.paddingMs) || 20, 0, 500);
+  const paddingMs = clamp(Number.isFinite(options.paddingMs) ? options.paddingMs : 20, 0, 500);
   const windowSamples = Math.max(1, Math.round((DEFAULT_TRIM_WINDOW_MS / 1000) * buffer.sampleRate));
   const minSilentWindows = Math.max(1, Math.ceil(minSilenceMs / DEFAULT_TRIM_WINDOW_MS));
   const paddingSamples = Math.round((paddingMs / 1000) * buffer.sampleRate);
@@ -1614,7 +1921,7 @@ function applyFade(buffer, fadeMs) {
     for (let index = 0; index < fadeSamples; index += 1) {
       const amount = index / (fadeSamples - 1);
       data[index] *= Math.sin(amount * Math.PI * 0.5);
-      data[data.length - 1 - index] *= Math.cos(amount * Math.PI * 0.5);
+      data[data.length - 1 - index] *= Math.sin(amount * Math.PI * 0.5);
     }
   }
 
@@ -1628,16 +1935,6 @@ function applyGain(buffer, gain) {
       data[index] *= gain;
     }
   }
-}
-
-function getManualTrimRange(file) {
-  if (!file) {
-    return { startRatio: 0, endRatio: 1 };
-  }
-  return {
-    startRatio: clamp(file.trimStartRatio ?? 0, 0, 0.999),
-    endRatio: clamp(file.trimEndRatio ?? 1, 0.001, 1),
-  };
 }
 
 function processAudioBuffer(inputBuffer, settings = getSettings(), trimRange = { startRatio: 0, endRatio: 1 }) {
@@ -1669,7 +1966,7 @@ function processAudioBuffer(inputBuffer, settings = getSettings(), trimRange = {
     }
   }
 
-  // Apply a short linear fade after trimming so exported samples do not click at the boundaries.
+  // Sine ramps reach zero at both edges and unity towards the interior.
   if (settings.fadeEnabled && settings.fadeMs > 0) {
     report.fadeSamples = applyFade(workingBuffer, settings.fadeMs);
   }
@@ -1705,9 +2002,10 @@ function getWaveformView() {
 
 function setWaveformZoom(nextZoom) {
   const file = getSelectedFile();
+  const buffer = getActiveBuffer(file);
   const oldView = getWaveformView();
-  const focus = file
-    ? clamp((getPlaybackPosition() / Math.max(file.audioBuffer.duration, 0.001)) || (oldView.start + oldView.length / 2), 0, 1)
+  const focus = buffer
+    ? clamp((getPlaybackPosition() / Math.max(buffer.duration, 0.001)) || (oldView.start + oldView.length / 2), 0, 1)
     : 0.5;
   state.waveformZoom = clamp(nextZoom, 1, 16);
   const nextLength = 1 / state.waveformZoom;
@@ -1715,7 +2013,21 @@ function setWaveformZoom(nextZoom) {
   updateUi();
 }
 
-function buildWaveformPeaks(buffer, width, startRatio = 0, endRatio = 1) {
+function zoomToSelection() {
+  const file = getSelectedFile();
+  const selection = getSelection(file);
+  if (!file || selection.endRatio <= selection.startRatio || !canEditAudio()) return;
+  state.waveformZoom = clamp(1 / Math.max(selection.endRatio - selection.startRatio, 1 / 16), 1, 16);
+  const viewLength = 1 / state.waveformZoom;
+  state.waveformViewStart = clamp(
+    (selection.startRatio + selection.endRatio) / 2 - viewLength / 2,
+    0,
+    1 - viewLength,
+  );
+  updateUi();
+}
+
+function buildWaveformPeaks(buffer, width, startRatio = 0, endRatio = 1, channelIndex = null) {
   const pointCount = Math.max(1, Math.floor(width));
   const sourceStart = clamp(Math.floor(startRatio * buffer.length), 0, buffer.length - 1);
   const sourceEnd = clamp(Math.ceil(endRatio * buffer.length), sourceStart + 1, buffer.length);
@@ -1728,7 +2040,9 @@ function buildWaveformPeaks(buffer, width, startRatio = 0, endRatio = 1) {
     let min = 1;
     let max = -1;
 
-    for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+    const firstChannel = channelIndex === null ? 0 : clamp(channelIndex, 0, buffer.numberOfChannels - 1);
+    const lastChannel = channelIndex === null ? buffer.numberOfChannels : firstChannel + 1;
+    for (let channel = firstChannel; channel < lastChannel; channel += 1) {
       const data = buffer.getChannelData(channel);
       for (let index = start; index < end; index += 1) {
         const sample = data[index];
@@ -1753,19 +2067,28 @@ function buildWaveformPeaks(buffer, width, startRatio = 0, endRatio = 1) {
   };
 }
 
-function getWaveformPeaks(file, buffer, mode, width, view) {
+function getWaveformPeaks(file, buffer, mode, width, view, channel) {
   if (state.waveformZoom > 1) {
-    return buildWaveformPeaks(buffer, width, view.start, view.end).peaks;
+    return buildWaveformPeaks(buffer, width, view.start, view.end, channel).peaks;
   }
   const cache = file.waveformCache[mode];
   const pointWidth = Math.max(1, Math.floor(width));
-  if (cache && cache.width === pointWidth) {
-    return cache.peaks;
+  if (cache && cache.width === pointWidth && cache.channelPeaks?.length === buffer.numberOfChannels) {
+    return cache.channelPeaks[channel];
   }
 
-  const built = buildWaveformPeaks(buffer, pointWidth);
-  file.waveformCache[mode] = built;
-  return built.peaks;
+  const channelPeaks = Array.from({ length: buffer.numberOfChannels }, (_, channelIndex) => (
+    buildWaveformPeaks(buffer, pointWidth, 0, 1, channelIndex).peaks
+  ));
+  file.waveformCache[mode] = { width: pointWidth, channelPeaks };
+  return channelPeaks[channel];
+}
+
+function formatRulerTime(seconds, visibleDuration) {
+  if (visibleDuration < 0.1) return `${(seconds * 1000).toFixed(1)} ms`;
+  if (visibleDuration < 2) return `${seconds.toFixed(2)} s`;
+  if (visibleDuration < 10) return `${seconds.toFixed(1)} s`;
+  return formatDuration(seconds).slice(0, -2);
 }
 
 function drawEmptyWaveform() {
@@ -1818,84 +2141,104 @@ function drawWaveform() {
   context.setTransform(dpr, 0, 0, dpr, 0, 0);
   context.clearRect(0, 0, width, height);
 
-  const mode = state.previewMode === "processed" && file.processedBuffer ? "processed" : "original";
+  const mode = state.previewMode === "cleaned" ? "processed" : state.previewMode;
   const view = getWaveformView();
-  const peaks = getWaveformPeaks(file, buffer, mode, width, view);
-  const center = height / 2;
-  const verticalScale = height * 0.43;
+  const rulerHeight = 28;
+  const laneAreaHeight = Math.max(1, height - rulerHeight);
+  const laneHeight = laneAreaHeight / buffer.numberOfChannels;
 
   context.fillStyle = "#111624";
   context.fillRect(0, 0, width, height);
 
-  context.strokeStyle = "rgba(255,255,255,0.06)";
+  context.fillStyle = "#0d121e";
+  context.fillRect(0, 0, width, rulerHeight);
+  context.strokeStyle = "rgba(255,255,255,0.08)";
   context.lineWidth = 1;
-  for (let line = 0; line < 8; line += 1) {
-    const x = (line / 7) * width;
+  const tickCount = width < 600 ? 5 : 9;
+  for (let line = 0; line < tickCount; line += 1) {
+    const ratio = line / (tickCount - 1);
+    const x = ratio * width;
     context.beginPath();
-    context.moveTo(x, 0);
+    context.moveTo(x, rulerHeight);
     context.lineTo(x, height);
     context.stroke();
+    context.fillStyle = "rgba(255,255,255,0.64)";
+    context.font = "11px system-ui, sans-serif";
+    context.textAlign = line === 0 ? "left" : line === tickCount - 1 ? "right" : "center";
+    const seconds = (view.start + ratio * view.length) * buffer.duration;
+    context.fillText(formatRulerTime(seconds, view.length * buffer.duration), x, 18);
   }
 
-  context.strokeStyle = "rgba(255,255,255,0.14)";
-  context.beginPath();
-  context.moveTo(0, center);
-  context.lineTo(width, center);
-  context.stroke();
-
-  context.strokeStyle = state.previewMode === "processed" ? "#52f0aa" : "#4a4aff";
-  context.lineWidth = 1.5;
-  context.beginPath();
-
-  for (let x = 0; x < peaks.length; x += 1) {
-    const peak = peaks[x];
-    const yTop = center - peak.max * verticalScale;
-    const yBottom = center - peak.min * verticalScale;
-    context.moveTo(x + 0.5, yTop);
-    context.lineTo(x + 0.5, yBottom);
+  for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+    const peaks = getWaveformPeaks(file, buffer, mode, width, view, channel);
+    const laneTop = rulerHeight + channel * laneHeight;
+    const center = laneTop + laneHeight / 2;
+    const verticalScale = laneHeight * 0.42;
+    context.strokeStyle = "rgba(255,255,255,0.14)";
+    context.beginPath();
+    context.moveTo(0, center);
+    context.lineTo(width, center);
+    context.stroke();
+    context.strokeStyle = mode === "processed" ? "#52f0aa" : channel % 2 ? "#8181ff" : "#4a4aff";
+    context.lineWidth = 1.4;
+    context.beginPath();
+    for (let x = 0; x < peaks.length; x += 1) {
+      const peak = peaks[x];
+      const top = center - peak.max * verticalScale;
+      const bottom = center - peak.min * verticalScale;
+      context.moveTo(x + 0.5, top - (Math.abs(bottom - top) < 1 ? 0.5 : 0));
+      context.lineTo(x + 0.5, bottom + (Math.abs(bottom - top) < 1 ? 0.5 : 0));
+    }
+    context.stroke();
+    context.fillStyle = "rgba(255,255,255,0.66)";
+    context.font = "600 11px system-ui, sans-serif";
+    context.textAlign = "left";
+    const channelLabel = buffer.numberOfChannels === 2 ? (channel === 0 ? "L" : "R") : `CH ${channel + 1}`;
+    context.fillText(channelLabel, 9, laneTop + 18);
+    if (channel > 0) {
+      context.strokeStyle = "rgba(255,255,255,0.1)";
+      context.beginPath();
+      context.moveTo(0, laneTop);
+      context.lineTo(width, laneTop);
+      context.stroke();
+    }
   }
 
-  context.stroke();
-
-  const trimRange = getManualTrimRange(file);
-  const startX = ((trimRange.startRatio - view.start) / view.length) * width;
-  const endX = ((trimRange.endRatio - view.start) / view.length) * width;
-  context.fillStyle = "rgba(255, 51, 102, 0.18)";
-  context.fillRect(0, 0, clamp(startX, 0, width), height);
-  context.fillRect(clamp(endX, 0, width), 0, Math.max(0, width - endX), height);
-  context.fillStyle = "rgba(74, 74, 255, 0.12)";
-  context.fillRect(clamp(startX, 0, width), 0, Math.max(0, clamp(endX, 0, width) - clamp(startX, 0, width)), height);
-  context.strokeStyle = "#4a4aff";
-  context.lineWidth = 3;
-  context.beginPath();
-  if (startX >= 0 && startX <= width) {
-    context.moveTo(startX, 0);
-    context.lineTo(startX, height);
-  }
-  if (endX >= 0 && endX <= width) {
-    context.moveTo(endX, 0);
-    context.lineTo(endX, height);
-  }
-  context.stroke();
-
-  context.fillStyle = "#ffffff";
-  if (startX >= 0 && startX <= width) {
-    context.fillRect(startX - 4, 10, 8, 34);
-  }
-  if (endX >= 0 && endX <= width) {
-    context.fillRect(endX - 4, 10, 8, 34);
+  if (canEditAudio()) {
+    const selection = getSelection(file, buffer);
+    const startX = ((selection.startRatio - view.start) / view.length) * width;
+    const endX = ((selection.endRatio - view.start) / view.length) * width;
+    const visibleStart = clamp(startX, 0, width);
+    const visibleEnd = clamp(endX, 0, width);
+    context.fillStyle = "rgba(74, 74, 255, 0.2)";
+    context.fillRect(visibleStart, rulerHeight, Math.max(0, visibleEnd - visibleStart), laneAreaHeight);
+    context.strokeStyle = "#ffffff";
+    context.lineWidth = 2;
+    context.beginPath();
+    if (startX >= 0 && startX <= width) {
+      context.moveTo(startX, rulerHeight);
+      context.lineTo(startX, height);
+    }
+    if (endX >= 0 && endX <= width) {
+      context.moveTo(endX, rulerHeight);
+      context.lineTo(endX, height);
+    }
+    context.stroke();
+    if (startX >= 0 && startX <= width) {
+      context.fillRect(startX - 4, rulerHeight + 4, 8, 24);
+    }
+    if (endX >= 0 && endX <= width) {
+      context.fillRect(endX - 4, rulerHeight + 4, 8, 24);
+    }
   }
 
   const progress = buffer.duration > 0 ? getPlaybackPosition() / buffer.duration : 0;
   const progressX = ((clamp(progress, 0, 1) - view.start) / view.length) * width;
-  context.fillStyle = "rgba(255, 51, 102, 0.16)";
-  context.fillRect(0, 0, clamp(progressX, 0, width), height);
-
   context.strokeStyle = "#ff3366";
   context.lineWidth = 2;
   context.beginPath();
   if (progressX >= 0 && progressX <= width) {
-    context.moveTo(progressX, 0);
+    context.moveTo(progressX, rulerHeight);
     context.lineTo(progressX, height);
   }
   context.stroke();
@@ -1910,7 +2253,7 @@ function getPlaybackPosition() {
     return clamp(state.playbackOffset, 0, buffer.duration);
   }
   const elapsed = getAudioContext().currentTime - state.playbackStartedAt;
-  return clamp(state.playbackOffset + elapsed, 0, buffer.duration);
+  return clamp(state.playbackOffset + elapsed, 0, state.playbackEnd ?? buffer.duration);
 }
 
 function updateProgressUi() {
@@ -1951,6 +2294,7 @@ function stopPlayback() {
 
   state.isPlaying = false;
   state.playbackOffset = 0;
+  state.playbackEnd = null;
   cancelAnimationFrame(state.animationFrame);
   updateTransportButtons();
   updateProgressUi();
@@ -1982,7 +2326,7 @@ function pausePlayback() {
   drawWaveform();
 }
 
-async function playFrom(offset) {
+async function playFrom(offset, endTime = null) {
   const buffer = getActiveBuffer();
   if (!buffer) {
     return;
@@ -2004,6 +2348,7 @@ async function playFrom(offset) {
 
   const source = audioContext.createBufferSource();
   const safeOffset = offset >= buffer.duration ? 0 : clamp(offset, 0, buffer.duration);
+  const safeEnd = endTime === null ? buffer.duration : clamp(endTime, safeOffset, buffer.duration);
   source.buffer = buffer;
   source.connect(audioContext.destination);
   source.onended = () => {
@@ -2013,6 +2358,7 @@ async function playFrom(offset) {
     state.playbackSource = null;
     state.isPlaying = false;
     state.playbackOffset = 0;
+    state.playbackEnd = null;
     updateTransportButtons();
     updateProgressUi();
     drawWaveform();
@@ -2020,11 +2366,23 @@ async function playFrom(offset) {
 
   state.playbackSource = source;
   state.playbackOffset = safeOffset;
+  state.playbackEnd = endTime === null ? null : safeEnd;
   state.playbackStartedAt = audioContext.currentTime;
   state.isPlaying = true;
-  source.start(0, safeOffset);
+  source.start(0, safeOffset, Math.max(0.001, safeEnd - safeOffset));
   updateTransportButtons();
   startAnimationLoop();
+}
+
+async function playSelection() {
+  const file = getSelectedFile();
+  const buffer = getEditedBuffer(file);
+  const selection = getSelection(file, buffer);
+  if (!file || !buffer || selection.endSample <= selection.startSample || !canEditAudio()) {
+    setStatus("Select a waveform range to play it.", "error");
+    return;
+  }
+  await playFrom(selection.startSample / buffer.sampleRate, selection.endSample / buffer.sampleRate);
 }
 
 function updateTransportButtons() {
@@ -2061,6 +2419,8 @@ function renderMeta() {
     elements.metaDuration.textContent = "-";
     elements.metaSampleRate.textContent = "-";
     elements.metaChannels.textContent = "-";
+    elements.metaSourceFormat.textContent = "-";
+    elements.metaOutputFormat.textContent = "Not rendered";
     elements.metaPeak.textContent = "-";
     elements.metaClipping.textContent = "-";
     elements.metaRms.textContent = "-";
@@ -2069,16 +2429,20 @@ function renderMeta() {
     elements.metaLeadingSilence.textContent = "-";
     elements.metaTrailingSilence.textContent = "-";
     elements.metaTruePeak.textContent = "-";
-    elements.trimStartTime.textContent = "0:00.000";
-    elements.trimEndTime.textContent = "0:00.000";
     return;
   }
 
-  const trimRange = getManualTrimRange(file);
   elements.metaName.textContent = file.name;
   elements.metaDuration.textContent = formatDuration(buffer.duration);
   elements.metaSampleRate.textContent = `${buffer.sampleRate.toLocaleString()} Hz`;
   elements.metaChannels.textContent = `${buffer.numberOfChannels}`;
+  const source = file.sourceMetadata;
+  elements.metaSourceFormat.textContent = source?.sampleRate
+    ? `${source.sampleRate.toLocaleString()} Hz / ${source.channels} ch${source.bitDepth ? ` / ${source.bitDepth}-bit` : ""}`
+    : `Unverified; decoded at ${file.audioBuffer.sampleRate.toLocaleString()} Hz`;
+  elements.metaOutputFormat.textContent = file.processedBuffer
+    ? `${file.processedBuffer.sampleRate.toLocaleString()} Hz / ${file.processedBuffer.numberOfChannels} ch / ${elements.bitDepth.value === "32f" ? "32-bit float" : `${elements.bitDepth.value}-bit PCM`}`
+    : "Not rendered";
   elements.metaPeak.textContent = formatDb(analysis.peakDb);
   elements.metaClipping.textContent = analysis.clippedSamples ? `${analysis.clippedSamples.toLocaleString()} samples` : "None";
   elements.metaRms.textContent = formatDb(analysis.rmsDb);
@@ -2087,8 +2451,80 @@ function renderMeta() {
   elements.metaLeadingSilence.textContent = formatDuration(analysis.leadingSilenceSeconds);
   elements.metaTrailingSilence.textContent = formatDuration(analysis.trailingSilenceSeconds);
   elements.metaTruePeak.textContent = formatDb(gainToDb(analysis.truePeakEstimate));
-  elements.trimStartTime.textContent = formatDuration(trimRange.startRatio * file.audioBuffer.duration);
-  elements.trimEndTime.textContent = formatDuration(trimRange.endRatio * file.audioBuffer.duration);
+}
+
+function renderSelectionEditor() {
+  const file = getSelectedFile();
+  const buffer = getEditedBuffer(file);
+  const selection = getSelection(file, buffer);
+  const busy = isExportBusy();
+  const canEdit = canEditAudio();
+  elements.editorPreviewNotice.hidden = !file || state.previewMode === "edited";
+  elements.editorPreviewNoticeText.textContent = `${getPreviewLabel()} is read-only.`;
+  elements.resumeEditingButton.disabled = busy;
+  const hasSelection = selection.endSample > selection.startSample;
+  const fullSelection = Boolean(buffer && selection.startSample === 0 && selection.endSample === buffer.length);
+
+  elements.selectionStartInput.max = buffer?.duration || 0;
+  elements.selectionEndInput.max = buffer?.duration || 0;
+  if (document.activeElement !== elements.selectionStartInput) {
+    elements.selectionStartInput.value = buffer ? (selection.startSample / buffer.sampleRate).toFixed(3) : "0.000";
+  }
+  if (document.activeElement !== elements.selectionEndInput) {
+    elements.selectionEndInput.value = buffer ? (selection.endSample / buffer.sampleRate).toFixed(3) : "0.000";
+  }
+  elements.selectionDuration.textContent = formatDuration(selection.duration);
+  elements.selectionStartInput.disabled = !canEdit;
+  elements.selectionEndInput.disabled = !canEdit;
+  elements.editGainInput.disabled = !canEdit;
+  elements.playSelectionButton.disabled = !canEdit || !hasSelection;
+  elements.selectionClearButton.disabled = !canEdit || !hasSelection;
+  elements.waveformZoomSelection.disabled = !canEdit || !hasSelection || fullSelection;
+  [elements.editTrimButton, elements.editSilenceButton, elements.editFadeInButton,
+    elements.editFadeOutButton, elements.editGainButton].forEach((button) => {
+    button.disabled = !canEdit || !hasSelection;
+  });
+  elements.editDeleteButton.disabled = !canEdit || !hasSelection || fullSelection;
+}
+
+function renderEditHistory() {
+  const file = getSelectedFile();
+  const operations = file?.editOperations || [];
+  elements.editHistoryList.innerHTML = "";
+  elements.clearEditsButton.disabled = !operations.length || isExportBusy();
+
+  if (!operations.length) {
+    const empty = document.createElement("li");
+    empty.className = "empty-state";
+    empty.textContent = file ? "No audio edits applied. The decoded source is untouched." : "Load a file to start editing.";
+    elements.editHistoryList.appendChild(empty);
+    return;
+  }
+
+  operations.forEach((operation, index) => {
+    const description = describeEditOperation(operation, file.audioBuffer.sampleRate);
+    const item = document.createElement("li");
+    item.className = "edit-history-item";
+    const number = document.createElement("span");
+    number.className = "edit-history-number";
+    number.textContent = String(index + 1);
+    const copy = document.createElement("span");
+    copy.className = "edit-history-copy";
+    const label = document.createElement("strong");
+    label.textContent = description.label;
+    const range = document.createElement("span");
+    range.textContent = description.range;
+    copy.append(label, range);
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "edit-history-remove";
+    remove.textContent = "Remove";
+    remove.disabled = isExportBusy();
+    remove.setAttribute("aria-label", `Remove ${description.label}`);
+    remove.addEventListener("click", () => removeEditOperation(operation.id));
+    item.append(number, copy, remove);
+    elements.editHistoryList.appendChild(item);
+  });
 }
 
 function renderWarnings() {
@@ -2108,16 +2544,20 @@ function renderWarnings() {
 
   const notes = [];
 
+  if (!file.sourceMetadata?.sampleRate) {
+    notes.push({ type: "note", text: `Source sample rate could not be verified. Preserve original will use the decoded rate (${file.audioBuffer.sampleRate.toLocaleString()} Hz).` });
+  }
+
   if (settings.detectClipping) {
     if (analysis.clippedSamples > 0) {
       notes.push({
         type: "danger",
-        text: `${state.previewMode === "processed" ? "Processed preview" : "Original file"} has ${analysis.clippedSamples.toLocaleString()} samples at or above 0.999 amplitude. First detected near ${formatDuration(analysis.firstClipTime)}.`,
+        text: `${getPreviewLabel()} has ${analysis.clippedSamples.toLocaleString()} samples at or above 0.999 amplitude. First detected near ${formatDuration(analysis.firstClipTime)}.`,
       });
     } else {
       notes.push({
         type: "good",
-        text: `${state.previewMode === "processed" ? "Processed preview" : "Original file"} has no clipping at the 0.999 threshold.`,
+        text: `${getPreviewLabel()} has no clipping at the 0.999 threshold.`,
       });
     }
   } else {
@@ -2155,14 +2595,14 @@ function renderWarnings() {
     });
   }
 
-  if (state.previewMode !== "processed" && (analysis.leadingSilenceSeconds > 0.08 || analysis.trailingSilenceSeconds > 0.08)) {
+  if (state.previewMode !== "cleaned" && (analysis.leadingSilenceSeconds > 0.08 || analysis.trailingSilenceSeconds > 0.08)) {
     notes.push({
       type: "note",
       text: `Detected about ${formatDuration(analysis.leadingSilenceSeconds)} leading and ${formatDuration(analysis.trailingSilenceSeconds)} trailing silence at -60 dB.`,
     });
   }
 
-  if (file.processReport && state.previewMode === "processed") {
+  if (file.processReport && state.previewMode === "cleaned") {
     if (file.processReport.trimSkipped) {
       notes.push({
         type: "note",
@@ -2176,10 +2616,10 @@ function renderWarnings() {
     }
   }
 
-  if (state.previewMode !== "processed" && file.processedBuffer) {
+  if (state.previewMode !== "cleaned" && file.processedBuffer) {
     notes.push({
       type: "note",
-      text: "A processed preview exists. Preview the clean result again after changing settings, or export to render the latest settings.",
+      text: "A Cleaned preview is available for comparison.",
     });
   }
 
@@ -2190,7 +2630,7 @@ function renderWarnings() {
     elements.analysisWarnings.appendChild(item);
   }
 
-  renderReport(state.previewMode === "processed" ? file.processReport : null);
+  renderReport(state.previewMode === "cleaned" ? file.processReport : null);
 }
 
 function renderReport(report) {
@@ -2198,31 +2638,61 @@ function renderReport(report) {
     elements.reportTrimmed.textContent = "-";
     elements.reportFade.textContent = "-";
     elements.reportNormalize.textContent = "-";
-    elements.reportManualTrim.textContent = "-";
+    elements.reportSelectionEdits.textContent = "-";
     elements.reportOutputPeak.textContent = "-";
     return;
   }
 
   elements.reportTrimmed.textContent = report.trimSkipped
     ? "Skipped"
-    : formatDuration(report.trimmedSamples / getActiveBuffer().sampleRate);
+    : formatDuration(report.trimmedSamples / getSelectedFile().audioBuffer.sampleRate);
   elements.reportFade.textContent = report.fadeSamples ? `${report.fadeSamples.toLocaleString()} samples` : "Off";
   elements.reportNormalize.textContent = `${gainToDb(report.normalizeGain).toFixed(1)} dB`;
-  elements.reportManualTrim.textContent = formatDuration(report.manualTrimmedSamples / getSelectedFile().audioBuffer.sampleRate);
+  elements.reportSelectionEdits.textContent = report.selectionEditCount
+    ? `${report.selectionEditCount} applied`
+    : "None";
   elements.reportOutputPeak.textContent = formatDb(report.outputPeakDb);
 }
 
 function updateUi() {
   const selected = getSelectedFile();
-  const activeBuffer = getActiveBuffer(selected);
+  if (!selected) state.previewMode = "original";
+  if (state.previewMode === "cleaned" && !selected?.processedBuffer) {
+    state.previewMode = getUncleanedPreviewMode(selected);
+  }
   const busy = isExportBusy();
   const hasProcessedPreview = Boolean(selected?.processedBuffer);
+  const isEditor = state.workspaceView === "editor";
+
+  elements.editorOnly.forEach((element) => { element.hidden = !isEditor; });
+  elements.cleanOnly.forEach((element) => { element.hidden = isEditor; });
+  [elements.quickCleanViewButton, elements.editorViewButton, elements.returnToCleanButton].forEach((button) => {
+    button.disabled = busy;
+  });
+  elements.quickCleanViewButton.classList.toggle("is-active", !isEditor);
+  elements.editorViewButton.classList.toggle("is-active", isEditor);
+  elements.quickCleanViewButton.setAttribute("aria-pressed", String(!isEditor));
+  elements.editorViewButton.setAttribute("aria-pressed", String(isEditor));
+  elements.previewWorkspaceLabel.textContent = isEditor ? "Editor" : "Step 3";
+
+  [elements.fileInput, elements.trimSilence, elements.trimThreshold, elements.trimMinSilence,
+    elements.trimPadding, elements.fadeEnabled, elements.fadeMs, elements.normalizeEnabled,
+    elements.targetPeak, elements.detectClipping, elements.bitDepth, elements.sampleRateMode,
+    elements.channelMode, elements.namingTemplate, elements.packName, elements.exportScope,
+    elements.montageSeconds, elements.montageGap, elements.snapZeroCrossings].forEach((control) => {
+    control.disabled = busy;
+  });
 
   document.body.classList.toggle("has-files", state.files.length > 0);
   document.body.classList.toggle("has-processed-preview", hasProcessedPreview);
+  document.body.dataset.previewMode = state.previewMode;
+  document.body.dataset.workspaceView = state.workspaceView;
+  elements.snapZeroCrossings.disabled = !canEditAudio();
 
   renderFileList();
   renderMeta();
+  renderSelectionEditor();
+  renderEditHistory();
   renderWarnings();
   renderCleanupSuggestion();
   renderCleanedOutputs();
@@ -2237,8 +2707,6 @@ function updateUi() {
 
   elements.waveformEmptyButton.classList.toggle("is-hidden", Boolean(selected));
   elements.applyButton.disabled = !selected || busy;
-  elements.resetPreviewButton.disabled = !selected || state.previewMode !== "processed" || busy;
-  elements.manualTrimReset.disabled = !selected || busy || ((selected.trimStartRatio ?? 0) === 0 && (selected.trimEndRatio ?? 1) === 1);
   elements.waveformZoomOut.disabled = state.waveformZoom <= 1 || busy;
   elements.waveformZoomIn.disabled = !selected || state.waveformZoom >= 16 || busy;
   elements.waveformZoomFit.disabled = state.waveformZoom <= 1 || busy;
@@ -2282,41 +2750,57 @@ function updateUi() {
     ? "Create an MP3 preview montage from the selected cleaned files."
     : "The bundled local MP3 encoder did not load. Reload the page and try again.";
 
-  elements.previewOriginalButton.disabled = !selected;
-  elements.previewProcessedButton.disabled = !selected || !hasProcessedPreview;
-  elements.previewOriginalButton.classList.toggle("is-active", state.previewMode !== "processed");
-  elements.previewProcessedButton.classList.toggle("is-active", state.previewMode === "processed" && hasProcessedPreview);
-  elements.previewModeLabel.textContent = state.previewMode === "processed" && activeBuffer ? "After: processed" : "Before: original";
+  elements.previewOriginalButton.disabled = !selected || busy;
+  elements.previewEditedButton.disabled = !selected || busy;
+  elements.previewProcessedButton.disabled = !selected || !hasProcessedPreview || busy;
+  elements.previewProcessedButton.title = hasProcessedPreview
+    ? "Cleanup and final WAV delivery settings."
+    : "Run Quick Clean to create this preview.";
+  [[elements.previewOriginalButton, "original"], [elements.previewEditedButton, "edited"],
+    [elements.previewProcessedButton, "cleaned"]].forEach(([button, mode]) => {
+    button.classList.toggle("is-active", state.previewMode === mode);
+    button.setAttribute("aria-pressed", String(state.previewMode === mode));
+  });
+  elements.previewModeLabel.textContent = getPreviewLabel();
   elements.previewStateText.textContent = getPreviewStateText(selected, hasProcessedPreview);
+}
+
+function getPreviewLabel(mode = state.previewMode) {
+  return { original: "Original", edited: "Edited", cleaned: "Cleaned" }[mode] || "Original";
 }
 
 function getPreviewStateText(file, hasProcessedPreview) {
   if (!file) {
-    return "Load an audio file to compare the original and processed preview.";
+    return "No audio selected.";
   }
-  if (state.previewMode === "processed" && hasProcessedPreview) {
-    return "Previewing the processed result that will be used for export.";
+  if (state.previewMode === "cleaned" && hasProcessedPreview) {
+    return "Cleanup applied. Matches WAV delivery.";
   }
-  if (hasProcessedPreview) {
-    return "Previewing the original file. Switch to After to compare the cleaned preview.";
+  if (state.previewMode === "edited") {
+    const count = file.editOperations?.length || 0;
+    return count ? `${count} manual ${count === 1 ? "edit" : "edits"}. Cleanup not applied.`
+      : "No manual edits. Matches Original.";
   }
-  return "Previewing the original file. Preview the clean result to create the After version.";
+  return "Untouched source audio.";
 }
 
 function showPreviewMode(mode) {
   const file = getSelectedFile();
-  if (!file) {
+  if (!file || isExportBusy()) {
     return;
   }
   stopPlayback();
-  state.previewMode = mode === "processed" && file.processedBuffer ? "processed" : "original";
+  state.previewMode = mode === "cleaned" && file.processedBuffer ? "cleaned"
+    : mode === "edited" ? "edited" : "original";
   state.playbackOffset = 0;
+  state.waveformZoom = 1;
+  state.waveformViewStart = 0;
   updateUi();
 }
 
 async function applyProcessingPreview() {
   const file = getSelectedFile();
-  if (!file) {
+  if (!file || isExportBusy()) {
     return;
   }
 
@@ -2326,13 +2810,13 @@ async function applyProcessingPreview() {
     setProcessingMode("preview");
     setStatus(`Processing preview locally: ${file.name}`);
     await waitForPaint();
-    const result = processAudioBuffer(file.audioBuffer, getSettingsForFile(file), getManualTrimRange(file));
+    const result = await renderDeliveryAudio(file);
     file.processedBuffer = result.buffer;
     file.processedAnalysis = result.analysis;
     file.processReport = result.report;
     file.batchStatus = result.analysis.clippedSamples ? "warning" : "preview";
     file.waveformCache.processed = null;
-    state.previewMode = "processed";
+    state.previewMode = "cleaned";
     state.playbackOffset = 0;
     setStatus("Processing preview updated. Export will use these cleanup settings.", "success");
   } catch (error) {
@@ -2341,18 +2825,6 @@ async function applyProcessingPreview() {
   } finally {
     setProcessingMode(null);
   }
-}
-
-function resetPreview() {
-  const file = getSelectedFile();
-  if (!file) {
-    return;
-  }
-  stopPlayback();
-  state.previewMode = "original";
-  state.playbackOffset = 0;
-  setStatus("Showing the original decoded audio. Export still uses current cleanup settings.");
-  updateUi();
 }
 
 function saveSettingsForSelectedFile() {
@@ -2379,7 +2851,7 @@ function resetSettingsForSelectedFile() {
 
 function exportCleanupSettings() {
   const payload = {
-    tool: "Wave Mutator Lite",
+    tool: "Wave Mutator Free",
     version: APP_VERSION,
     exportedAt: new Date().toISOString(),
     cleanup: getSettings(),
@@ -2389,7 +2861,7 @@ function exportCleanupSettings() {
   };
   downloadBlob(
     new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }),
-    "wave-mutator-lite-cleanup-settings.json",
+    "wave-mutator-free-cleanup-settings.json",
   );
   setStatus("Downloaded local cleanup settings.", "success");
 }
@@ -2423,13 +2895,13 @@ async function importCleanupSettings(file) {
     const parsed = JSON.parse(await file.text());
     const settings = parsed.cleanup || parsed;
     if (!isValidImportedSettings(settings)) {
-      throw new Error("The file does not contain a valid Wave Mutator Lite cleanup configuration.");
+      throw new Error("The file does not contain a valid Wave Mutator Free cleanup configuration.");
     }
     if (parsed.export && !isValidImportedExportSettings(parsed.export)) {
-      throw new Error("The file does not contain valid Wave Mutator Lite export settings.");
+      throw new Error("The file does not contain valid Wave Mutator Free export settings.");
     }
     if (parsed.montage && !isValidImportedMontageSettings(parsed.montage)) {
-      throw new Error("The file does not contain valid Wave Mutator Lite montage settings.");
+      throw new Error("The file does not contain valid Wave Mutator Free montage settings.");
     }
     const historySnapshot = captureWorkspaceState();
     applySettingsToControls(settings);
@@ -2442,7 +2914,7 @@ async function importCleanupSettings(file) {
     updateUi();
   } catch (error) {
     console.error(error);
-    setStatus("Could not import cleanup settings. Choose a valid Wave Mutator Lite JSON settings file.", "error");
+    setStatus("Could not import cleanup settings. Choose a valid Wave Mutator Free JSON settings file.", "error");
   } finally {
     elements.settingsFileInput.value = "";
   }
@@ -2504,8 +2976,7 @@ async function resampleBuffer(buffer, sampleRateMode) {
   const length = Math.max(1, Math.round(buffer.duration * targetSampleRate));
   const OfflineContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
   if (!OfflineContext) {
-    setStatus("This browser cannot resample audio offline. Exporting at the original sample rate.", "error");
-    return buffer;
+    throw new Error("This browser cannot render the requested sample rate.");
   }
 
   const offlineContext = new OfflineContext(buffer.numberOfChannels, length, targetSampleRate);
@@ -2519,6 +2990,38 @@ async function resampleBuffer(buffer, sampleRateMode) {
 async function prepareExportBuffer(buffer, exportSettings = getExportSettings()) {
   const channelConverted = convertChannelMode(buffer, exportSettings.channelMode);
   return resampleBuffer(channelConverted, exportSettings.sampleRateMode);
+}
+
+async function renderDeliveryAudio(file, exportSettings = getExportSettings()) {
+  const result = processAudioBuffer(getEditedBuffer(file), getSettingsForFile(file), { startRatio: 0, endRatio: 1 });
+  const buffer = await prepareExportBuffer(result.buffer, exportSettings);
+  // Preview the same quantized samples written by encodeWav, including PCM clipping.
+  // Processing already created a private copy; the original PCM stays untouched.
+  for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+    const data = buffer.getChannelData(channel);
+    for (let index = 0; index < data.length; index += 1) {
+      data[index] = quantizeWavSample(data[index], exportSettings.bitDepth);
+    }
+  }
+  const analysis = analyzeBuffer(buffer);
+  return {
+    buffer,
+    analysis,
+    report: {
+      ...result.report,
+      outputPeakDb: analysis.peakDb,
+      selectionEditCount: file.editOperations?.length || 0,
+    },
+  };
+}
+
+function quantizeWavSample(value, bitDepth = "16") {
+  if (bitDepth === "32f") {
+    return value;
+  }
+  const sample = clamp(value, -1, 1);
+  const negativeScale = bitDepth === "24" ? 0x800000 : 0x8000;
+  return clamp(Math.round(sample * negativeScale), -negativeScale, negativeScale - 1) / negativeScale;
 }
 
 function encodeWav(buffer, options = {}) {
@@ -2553,18 +3056,18 @@ function encodeWav(buffer, options = {}) {
   const channels = Array.from({ length: channelCount }, (_, channel) => buffer.getChannelData(channel));
   for (let sampleIndex = 0; sampleIndex < buffer.length; sampleIndex += 1) {
     for (let channel = 0; channel < channelCount; channel += 1) {
-      const sample = clamp(channels[channel][sampleIndex], -1, 1);
+      const sample = quantizeWavSample(channels[channel][sampleIndex], bitDepth);
       if (isFloat) {
         view.setFloat32(offset, sample, true);
         offset += 4;
       } else if (bitDepth === "24") {
-        const intSample = Math.round(sample < 0 ? sample * 0x800000 : sample * 0x7fffff);
+        const intSample = Math.round(sample * 0x800000);
         view.setUint8(offset, intSample & 0xff);
         view.setUint8(offset + 1, (intSample >> 8) & 0xff);
         view.setUint8(offset + 2, (intSample >> 16) & 0xff);
         offset += 3;
       } else {
-        const intSample = Math.round(sample < 0 ? sample * 0x8000 : sample * 0x7fff);
+        const intSample = Math.round(sample * 0x8000);
         view.setInt16(offset, intSample, true);
         offset += 2;
       }
@@ -2703,11 +3206,11 @@ function downloadBlob(blob, fileName) {
 
 function createManifestText(files, exportSettings = getExportSettings()) {
   const reviewFiles = files.filter((file) => getPreflightStatus(file).type !== "good");
-  const clippedFiles = files.filter((file) => (file.processedAnalysis || file.originalAnalysis).clippedSamples > 0);
-  const totalDuration = files.reduce((total, file) => total + (file.processedBuffer || file.audioBuffer).duration, 0);
+  const clippedFiles = files.filter((file) => (file.processedAnalysis || getEditedAnalysis(file)).clippedSamples > 0);
+  const totalDuration = files.reduce((total, file) => total + (file.processedBuffer || getEditedBuffer(file)).duration, 0);
   const rows = files.map((file, index) => {
-    const outputBuffer = file.processedBuffer || file.audioBuffer;
-    const analysis = file.processedAnalysis || file.originalAnalysis;
+    const outputBuffer = file.processedBuffer || getEditedBuffer(file);
+    const analysis = file.processedAnalysis || getEditedAnalysis(file);
     const settings = getSettingsForFile(file);
     const report = file.processReport;
     const status = getPreflightStatus(file);
@@ -2715,16 +3218,18 @@ function createManifestText(files, exportSettings = getExportSettings()) {
       `${index + 1}. ${makeExportFileName(file.name, index + 1, exportSettings)}`,
       `   Source: ${file.name} (${file.format || "Audio"})`,
       `   Source duration: ${formatDuration(file.audioBuffer.duration)} | Output duration: ${formatDuration(outputBuffer.duration)}`,
-      `   Source format: ${file.audioBuffer.sampleRate} Hz | ${file.audioBuffer.numberOfChannels} channel(s)`,
+      `   Source format: ${file.sourceMetadata?.sampleRate ? `${file.sourceMetadata.sampleRate} Hz | ${file.sourceMetadata.channels} channel(s)` : "unverified"}`,
+      `   Decoded format: ${file.audioBuffer.sampleRate} Hz | ${file.audioBuffer.numberOfChannels} channel(s)`,
+      `   Rendered WAV: ${file.processedBuffer ? `${file.processedBuffer.sampleRate} Hz | ${file.processedBuffer.numberOfChannels} channel(s)` : "not rendered"}`,
       `   Export target: ${exportSettings.bitDepth === "32f" ? "32-bit float" : `${exportSettings.bitDepth}-bit PCM`} | ${exportSettings.sampleRateMode === "original" ? "original sample rate" : `${Number(exportSettings.sampleRateMode) / 1000} kHz`} | ${exportSettings.channelMode === "mono" ? "mono sum" : "original channels"}`,
       `   Peak: ${formatDb(analysis.peakDb)} | Estimated true peak: ${formatDb(gainToDb(analysis.truePeakEstimate))} | Clipping: ${analysis.clippedSamples ? `${analysis.clippedSamples.toLocaleString()} samples` : "none"}`,
       `   Cleanup: Trim ${settings.trimSilence ? `${settings.trimThresholdDb} dB, ${settings.trimMinSilenceMs} ms minimum, ${settings.trimPaddingMs} ms padding` : "off"} | Fade ${settings.fadeEnabled ? `${settings.fadeMs} ms` : "off"} | Normalize ${settings.normalizeEnabled ? `${settings.targetPeakDb} dBFS` : "off"}`,
-      `   Edits: Manual trim ${report?.manualTrimmedSamples ? formatDuration(report.manualTrimmedSamples / file.audioBuffer.sampleRate) : "none"} | Auto trim ${report?.trimSkipped ? "skipped" : report?.trimmedSamples ? formatDuration(report.trimmedSamples / file.audioBuffer.sampleRate) : report ? "none" : "not previewed"} | Settings ${file.settingsOverride ? "custom" : "global"}`,
+      `   Edits: Selection operations ${file.editOperations?.length || 0} | Auto trim ${report?.trimSkipped ? "skipped" : report?.trimmedSamples ? formatDuration(report.trimmedSamples / file.audioBuffer.sampleRate) : report ? "none" : "not previewed"} | Settings ${file.settingsOverride ? "custom" : "global"}`,
       `   QA: ${status.label}${file.exportSelected === false ? " | Excluded from selected export scope" : ""}`,
     ].join("\n");
   });
   return [
-    "Wave Mutator Lite free pack report",
+    "Wave Mutator Free free pack report",
     `Created locally: ${new Date().toISOString()}`,
     `Pack: ${exportSettings.packName}`,
     `Delivery profile: ${exportSettings.deliveryProfileLabel}`,
@@ -2734,7 +3239,7 @@ function createManifestText(files, exportSettings = getExportSettings()) {
     "",
     ...rows,
     "",
-    "All audio was processed locally in Wave Mutator Lite. No files were uploaded.",
+    "All audio was processed locally in Wave Mutator Free. No files were uploaded.",
   ].join("\n");
 }
 
@@ -2777,7 +3282,7 @@ function uniqueFileName(name, usedNames) {
 }
 
 function makeMontageFileName(exportSettings = getExportSettings()) {
-  return `${sanitizeFileBaseName(exportSettings.packName || "wave-mutator-lite-pack")}_preview_montage.mp3`;
+  return `${sanitizeFileBaseName(exportSettings.packName || "wave-mutator-free-pack")}_preview_montage.mp3`;
 }
 
 function readBufferSample(buffer, channel, sampleIndex) {
@@ -2821,7 +3326,7 @@ async function buildPreviewMontageBuffer(onProgress) {
       renderFileList();
       onProgress?.(`Preparing montage clip ${index + 1} of ${montageFiles.length}: ${file.name}`, percent, `${index}/${montageFiles.length}`);
 
-      const result = processAudioBuffer(file.audioBuffer, getSettingsForFile(file), getManualTrimRange(file));
+      const result = await renderDeliveryAudio(file);
       const resampled = await resampleBuffer(result.buffer, String(montageSettings.sampleRate));
       const clipSamples = Math.min(resampled.length, Math.round(montageSettings.clipSeconds * montageSettings.sampleRate));
       if (clipSamples <= 0) {
@@ -2927,7 +3432,7 @@ async function exportMp3Montage() {
     };
 
     const montageBuffer = await buildPreviewMontageBuffer(progress);
-    state.previewMode = "processed";
+    state.previewMode = "cleaned";
     updateUi();
 
     const mp3Blob = await encodeBufferAsMp3(montageBuffer, progress);
@@ -2959,7 +3464,7 @@ async function exportMp3Montage() {
 
 async function exportSelectedFile() {
   const file = getSelectedFile();
-  if (!file) {
+  if (!file || isExportBusy()) {
     return;
   }
 
@@ -2968,15 +3473,15 @@ async function exportSelectedFile() {
     setExportMode("wav");
     setBatchProgress(`Rendering selected WAV: ${file.name}`, 15, "Preparing");
     const exportSettings = getExportSettings();
-    const result = processAudioBuffer(file.audioBuffer, getSettingsForFile(file), getManualTrimRange(file));
+    const result = await renderDeliveryAudio(file, exportSettings);
     setBatchProgress(`Encoding selected WAV: ${file.name}`, 65, "Encoding");
-    const exportBuffer = await prepareExportBuffer(result.buffer, exportSettings);
+    const exportBuffer = result.buffer;
     file.processedBuffer = result.buffer;
     file.processedAnalysis = result.analysis;
     file.processReport = result.report;
     file.batchStatus = result.analysis.clippedSamples ? "warning" : "processed";
     file.waveformCache.processed = null;
-    state.previewMode = "processed";
+    state.previewMode = "cleaned";
 
     const blob = encodeWav(exportBuffer, exportSettings);
     const fileName = makeExportFileName(file.name, 1, exportSettings);
@@ -3024,14 +3529,15 @@ async function exportAllAsZip() {
         setStatus(`Batch processing ${index + 1} of ${queueFiles.length}: ${file.name}`);
         setBatchProgress(`Cleaning ${index + 1} of ${queueFiles.length}: ${file.name}`, percent, `${index}/${queueFiles.length}`);
         await waitForPaint();
-        const result = processAudioBuffer(file.audioBuffer, getSettingsForFile(file), getManualTrimRange(file));
-        const exportBuffer = await prepareExportBuffer(result.buffer, exportSettings);
+        const result = await renderDeliveryAudio(file, exportSettings);
+        const exportBuffer = result.buffer;
         const blob = encodeWav(exportBuffer, exportSettings);
         const fileName = uniqueFileName(makeExportFileName(file.name, index + 1, exportSettings), usedNames);
 
         file.processedBuffer = result.buffer;
         file.processedAnalysis = result.analysis;
         file.processReport = result.report;
+        file.waveformCache.processed = null;
         file.batchStatus = result.analysis.clippedSamples ? "warning" : "processed";
         zipEntries.push({ name: fileName, blob });
       } catch (error) {
@@ -3108,18 +3614,18 @@ function waveformRatioFromEvent(event) {
   return view.start + localRatio * view.length;
 }
 
-function trimHandleFromEvent(event) {
+function selectionHandleFromEvent(event) {
   const file = getSelectedFile();
-  if (!file) {
+  if (!file || !canEditAudio()) {
     return null;
   }
 
   const rect = elements.waveform.getBoundingClientRect();
   const x = event.clientX - rect.left;
-  const trimRange = getManualTrimRange(file);
+  const selection = getSelection(file);
   const view = getWaveformView();
-  const startX = ((trimRange.startRatio - view.start) / view.length) * rect.width;
-  const endX = ((trimRange.endRatio - view.start) / view.length) * rect.width;
+  const startX = ((selection.startRatio - view.start) / view.length) * rect.width;
+  const endX = ((selection.endRatio - view.start) / view.length) * rect.width;
   const hitSize = 14;
 
   if (Math.abs(x - startX) <= hitSize) {
@@ -3131,26 +3637,19 @@ function trimHandleFromEvent(event) {
   return null;
 }
 
-function clearProcessedForManualEdit() {
-  const file = getSelectedFile();
-  if (!file) {
-    return;
-  }
-  file.processedBuffer = null;
-  file.processedAnalysis = null;
-  file.processReport = null;
-  file.waveformCache.processed = null;
-  file.batchStatus = "ready";
-  state.previewMode = "original";
+// Kept as a compatibility alias for the browser self-tests and older embeds.
+function trimHandleFromEvent(event) {
+  return selectionHandleFromEvent(event);
 }
 
 function snapRatioToZeroCrossing(file, ratio) {
   if (!elements.snapZeroCrossings.checked) {
     return ratio;
   }
-  const data = file.audioBuffer.getChannelData(0);
+  const buffer = getEditedBuffer(file);
+  const data = buffer.getChannelData(0);
   const target = clamp(Math.round(ratio * (data.length - 1)), 0, data.length - 1);
-  const searchRadius = Math.max(1, Math.round(file.audioBuffer.sampleRate * 0.012));
+  const searchRadius = Math.max(1, Math.round(buffer.sampleRate * 0.012));
   let nearest = target;
   let nearestDistance = Infinity;
 
@@ -3173,74 +3672,106 @@ function snapRatioToZeroCrossing(file, ratio) {
   return nearest / Math.max(1, data.length - 1);
 }
 
-function updateManualTrim(handle, ratio) {
+function updateSelectionHandle(handle, ratio) {
   const file = getSelectedFile();
+  const buffer = getEditedBuffer(file);
   if (!file) {
     return;
   }
-
-  const minGap = Math.max(1 / file.audioBuffer.length, 0.002);
-  clearProcessedForManualEdit();
 
   const snappedRatio = snapRatioToZeroCrossing(file, ratio);
   if (handle === "start") {
-    file.trimStartRatio = clamp(snappedRatio, 0, file.trimEndRatio - minGap);
+    file.selectionStartRatio = clamp(snappedRatio, 0, 1);
   } else {
-    file.trimEndRatio = clamp(snappedRatio, file.trimStartRatio + minGap, 1);
+    file.selectionEndRatio = clamp(snappedRatio, 0, 1);
   }
-
-  state.playbackOffset = 0;
+  if (file.selectionStartRatio > file.selectionEndRatio) {
+    [file.selectionStartRatio, file.selectionEndRatio] = [file.selectionEndRatio, file.selectionStartRatio];
+    state.selectionDragHandle = handle === "start" ? "end" : "start";
+  }
+  state.playbackOffset = clamp(file.selectionStartRatio, 0, 1) * buffer.duration;
   updateUi();
 }
 
-function resetManualTrim() {
+function clearWaveformSelection() {
   const file = getSelectedFile();
-  if (!file) {
+  const buffer = getEditedBuffer(file);
+  if (!file || !canEditAudio()) {
     return;
   }
+  const caret = buffer?.duration ? clamp(state.playbackOffset / buffer.duration, 0, 1) : 0;
   stopPlayback();
-  const historySnapshot = captureWorkspaceState();
-  clearProcessedForManualEdit();
-  file.trimStartRatio = 0;
-  file.trimEndRatio = 1;
-  pushWorkspaceHistory(historySnapshot, "manual trim reset");
-  setStatus("Manual trim reset for the selected file.");
+  file.selectionStartRatio = caret;
+  file.selectionEndRatio = caret;
+  setStatus("Selection cleared.");
   updateUi();
+}
+
+function updateSelectionFromTimeInputs() {
+  const file = getSelectedFile();
+  const buffer = getEditedBuffer(file);
+  if (!file || !buffer || !canEditAudio()) return;
+  const startSeconds = clamp(Number(elements.selectionStartInput.value) || 0, 0, buffer.duration);
+  const endSeconds = clamp(Number(elements.selectionEndInput.value) || 0, 0, buffer.duration);
+  setSelectionRatios(startSeconds / buffer.duration, endSeconds / buffer.duration);
 }
 
 function handleWaveformPointerDown(event) {
-  const handle = trimHandleFromEvent(event);
-  if (!handle) {
+  const file = getSelectedFile();
+  if (!file || !canEditAudio()) {
     return;
   }
 
   event.preventDefault();
   stopPlayback();
-  beginWorkspaceEdit("manual trim");
-  state.trimDragHandle = handle;
-  state.suppressNextWaveformClick = true;
+  state.selectionDragHandle = selectionHandleFromEvent(event);
+  state.waveformPointerStartRatio = waveformRatioFromEvent(event);
+  state.waveformPointerStartX = event.clientX;
+  state.waveformSelectionDragging = Boolean(state.selectionDragHandle);
   elements.waveform.setPointerCapture?.(event.pointerId);
-  updateManualTrim(handle, waveformRatioFromEvent(event));
+  if (state.selectionDragHandle) {
+    updateSelectionHandle(state.selectionDragHandle, state.waveformPointerStartRatio);
+  }
 }
 
 function handleWaveformPointerMove(event) {
-  if (!state.trimDragHandle) {
+  if (state.waveformPointerStartRatio === null) {
     return;
   }
   event.preventDefault();
-  updateManualTrim(state.trimDragHandle, waveformRatioFromEvent(event));
+  if (!state.waveformSelectionDragging && Math.abs(event.clientX - state.waveformPointerStartX) >= 4) {
+    state.waveformSelectionDragging = true;
+    state.selectionDragHandle = "end";
+    const file = getSelectedFile();
+    file.selectionStartRatio = snapRatioToZeroCrossing(file, state.waveformPointerStartRatio);
+    file.selectionEndRatio = file.selectionStartRatio;
+  }
+  if (state.waveformSelectionDragging) {
+    updateSelectionHandle(state.selectionDragHandle, waveformRatioFromEvent(event));
+  }
 }
 
 function handleWaveformPointerUp(event) {
-  if (!state.trimDragHandle) {
+  if (state.waveformPointerStartRatio === null) {
     return;
   }
   event.preventDefault();
   elements.waveform.releasePointerCapture?.(event.pointerId);
-  state.trimDragHandle = null;
-  commitWorkspaceEdit();
-  setStatus("Manual trim updated. Preview the clean result to audition it.");
-  updateUi();
+  const dragged = state.waveformSelectionDragging;
+  const clickRatio = state.waveformPointerStartRatio;
+  state.selectionDragHandle = null;
+  state.waveformPointerStartRatio = null;
+  state.waveformPointerStartX = null;
+  state.waveformSelectionDragging = false;
+  if (dragged) {
+    state.suppressNextWaveformClick = true;
+    const selection = getSelection();
+    setStatus(`Selected ${formatDuration(selection.duration)} for editing.`);
+    updateUi();
+  } else {
+    seekToRatio(clickRatio);
+    state.suppressNextWaveformClick = true;
+  }
 }
 
 function handleWaveformClick(event) {
@@ -3322,6 +3853,7 @@ function bindEvents() {
   elements.waveformZoomOut.addEventListener("click", () => setWaveformZoom(state.waveformZoom / 2));
   elements.waveformZoomIn.addEventListener("click", () => setWaveformZoom(state.waveformZoom * 2));
   elements.waveformZoomFit.addEventListener("click", () => setWaveformZoom(1));
+  elements.waveformZoomSelection.addEventListener("click", zoomToSelection);
   elements.undoButton.addEventListener("click", undoWorkspaceEdit);
   elements.redoButton.addEventListener("click", redoWorkspaceEdit);
 
@@ -3369,13 +3901,18 @@ function bindEvents() {
   });
 
   elements.stopButton.addEventListener("click", stopPlayback);
+  elements.playSelectionButton.addEventListener("click", () => {
+    playSelection().catch((error) => {
+      console.error(error);
+      setStatus("Selection playback could not start.", "error");
+    });
+  });
   elements.waveform.addEventListener("click", handleWaveformClick);
   elements.waveform.addEventListener("pointerdown", handleWaveformPointerDown);
   elements.waveform.addEventListener("pointermove", handleWaveformPointerMove);
   elements.waveform.addEventListener("pointerup", handleWaveformPointerUp);
   elements.waveform.addEventListener("pointercancel", handleWaveformPointerUp);
   elements.applyButton.addEventListener("click", applyProcessingPreview);
-  elements.resetPreviewButton.addEventListener("click", resetPreview);
   elements.saveFileOverrideButton.addEventListener("click", saveSettingsForSelectedFile);
   elements.resetFileOverrideButton.addEventListener("click", resetSettingsForSelectedFile);
   elements.applySuggestionButton.addEventListener("click", applyCleanupSuggestion);
@@ -3383,8 +3920,26 @@ function bindEvents() {
   elements.importSettingsButton.addEventListener("click", () => elements.settingsFileInput.click());
   elements.settingsFileInput.addEventListener("change", (event) => importCleanupSettings(event.target.files[0]));
   elements.previewOriginalButton.addEventListener("click", () => showPreviewMode("original"));
-  elements.previewProcessedButton.addEventListener("click", () => showPreviewMode("processed"));
-  elements.manualTrimReset.addEventListener("click", resetManualTrim);
+  elements.previewEditedButton.addEventListener("click", () => showPreviewMode("edited"));
+  elements.previewProcessedButton.addEventListener("click", () => showPreviewMode("cleaned"));
+  elements.quickCleanViewButton.addEventListener("click", () => setWorkspaceView("clean"));
+  elements.editorViewButton.addEventListener("click", () => setWorkspaceView("editor"));
+  elements.returnToCleanButton.addEventListener("click", () => {
+    setWorkspaceView("clean");
+    elements.applyButton.scrollIntoView({ behavior: "smooth", block: "center" });
+    elements.applyButton.focus({ preventScroll: true });
+  });
+  elements.resumeEditingButton.addEventListener("click", () => showPreviewMode("edited"));
+  elements.selectionClearButton.addEventListener("click", clearWaveformSelection);
+  elements.selectionStartInput.addEventListener("change", updateSelectionFromTimeInputs);
+  elements.selectionEndInput.addEventListener("change", updateSelectionFromTimeInputs);
+  elements.editTrimButton.addEventListener("click", () => applySelectionEdit("trim"));
+  elements.editDeleteButton.addEventListener("click", () => applySelectionEdit("delete"));
+  elements.editSilenceButton.addEventListener("click", () => applySelectionEdit("silence"));
+  elements.editFadeInButton.addEventListener("click", () => applySelectionEdit("fade-in"));
+  elements.editFadeOutButton.addEventListener("click", () => applySelectionEdit("fade-out"));
+  elements.editGainButton.addEventListener("click", () => applySelectionEdit("gain"));
+  elements.clearEditsButton.addEventListener("click", clearAudioEdits);
   elements.exportButton.addEventListener("click", exportSelectedFile);
   elements.exportZipButton.addEventListener("click", exportAllAsZip);
   elements.exportMp3Button.addEventListener("click", exportMp3Montage);
@@ -3445,7 +4000,13 @@ function bindEvents() {
     elements.channelMode,
     elements.exportScope,
   ].forEach((control) => {
-    control.addEventListener("input", updateUi);
+    control.addEventListener("input", () => {
+      if ([elements.bitDepth, elements.sampleRateMode, elements.channelMode].includes(control)) {
+        invalidateProcessedPreviews();
+        setStatus("WAV delivery settings changed. Preview the clean result again.");
+      }
+      updateUi();
+    });
   });
 
   window.addEventListener("keydown", handleKeyboardShortcut);

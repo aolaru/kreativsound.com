@@ -3,19 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wave Mutator Lite Changelog | Kreativ Sound</title>
-    <meta name="description" content="A concise public record of Wave Mutator Lite beta releases, improvements, and known scope limits." />
+    <title>Wave Mutator Free Changelog | Kreativ Sound</title>
+    <meta name="description" content="A concise public record of Wave Mutator Free beta releases, improvements, and known scope limits." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://kreativsound.com/tools/wave-mutator/changelog/" />
     <meta name="theme-color" content="#121622" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="../styles.css?v=15" />
+    <link rel="stylesheet" href="../styles.css?v=17" />
     <script defer src="/kreativ-analytics.js?v=20260819"></script>
   </head>
   <body>
     <main class="app-shell wave-changelog-shell">
-      <nav class="app-nav" aria-label="Wave Mutator Lite changelog navigation">
-        <a class="brand-link" href="/tools/wave-mutator/">Open Wave Mutator Lite</a>
+      <nav class="app-nav" aria-label="Wave Mutator Free changelog navigation">
+        <a class="brand-link" href="/tools/wave-mutator/">Open Wave Mutator Free</a>
         <div class="app-brand">
           <span class="app-brand-mark" aria-hidden="true">WM</span>
           <strong>Changelog</strong>
@@ -25,7 +25,7 @@
 
       <section class="wave-changelog-page" aria-labelledby="changelog-title">
         <header class="wave-changelog-hero">
-          <p class="section-kicker">Wave Mutator Lite beta</p>
+          <p class="section-kicker">Wave Mutator Free beta</p>
           <h1 id="changelog-title">Changelog</h1>
           <p>A public record of release milestones, practical improvements, and the current scope of the local sample-cleanup workflow.</p>
         </header>
@@ -34,6 +34,28 @@
           <li>
             <article class="wave-changelog-entry is-current">
               <span>Current beta release</span>
+              <header>
+                <h2>v0.2.4</h2>
+                <time datetime="2026-10-13">October 13, 2026</time>
+              </header>
+              <p>Clearer preview states and separate cleanup and editing views, with more reliable audio delivery.</p>
+              <ul>
+                <li>Renamed the free edition to Wave Mutator Free across the app, site pages, and local export labels.</li>
+                <li>Separated Quick Clean and Waveform Editor views, with explicit Original, Edited, and Cleaned previews.</li>
+                <li>Original playback now always uses untouched source audio. Editing is limited to the Edited state; Cleaned matches WAV delivery.</li>
+                <li>Corrected the fade-out direction and zero-millisecond trim padding.</li>
+                <li>Cleaned playback now includes WAV channel conversion, resampling, and bit depth, with matching output measurements.</li>
+                <li>Source rates are read before decoding; source metadata and rendered WAV metadata are shown separately.</li>
+                <li>32-bit float WAV preserves headroom. Delivery setting changes invalidate existing previews.</li>
+                <li>Added browser audio regression tests for processing, decoding, WAV payloads, ZIP delivery, and montage export.</li>
+                <li>Turned the waveform into a time-ruler editor with separate channel lanes, drag selection, exact times, selection playback, and zoom-to-selection.</li>
+                <li>Added non-destructive Trim, Delete, Silence, Fade In, Fade Out, and Gain operations with removable edit history and undo/redo.</li>
+              </ul>
+            </article>
+          </li>
+          <li>
+            <article class="wave-changelog-entry">
+              <span>Beta release</span>
               <header>
                 <h2>v0.2.3</h2>
                 <time datetime="2026-09-07">September 7, 2026</time>
@@ -53,11 +75,11 @@
                 <h2>v0.2.2</h2>
                 <time datetime="2026-09-05">September 5, 2026</time>
               </header>
-              <p>Renamed Wave Mutator to Wave Mutator Lite to clarify the focused local sample-preparation workflow.</p>
+              <p>Introduced tier-specific branding to clarify the focused local sample-preparation workflow.</p>
               <ul>
-                <li>The public name, browser metadata, search records, changelog, and supporting guides now use Wave Mutator Lite.</li>
+                <li>Updated the public name, browser metadata, search records, changelog, and supporting guides.</li>
                 <li>Existing links continue to use <code>/tools/wave-mutator/</code> so bookmarks and shared URLs stay valid.</li>
-                <li>Default pack names, settings exports, and local reports now use the Wave Mutator Lite name.</li>
+                <li>Aligned default pack names, settings exports, and local reports with the edition name.</li>
               </ul>
             </article>
           </li>
@@ -93,13 +115,13 @@
 
         <aside class="wave-changelog-scope">
           <strong>Current beta limits</strong>
-          <p>Wave Mutator Lite does not yet offer LUFS normalization, spectral editing, AI tagging, or full DAW-style repair. The tool is designed for clear, local preparation rather than replacement of a mastering or restoration suite.</p>
+          <p>Wave Mutator Free does not yet offer LUFS normalization, spectral editing, AI tagging, or full DAW-style repair. The tool is designed for clear, local preparation rather than replacement of a mastering or restoration suite.</p>
         </aside>
       </section>
 
       <footer class="app-footer">
-        <p>Wave Mutator Lite is a local-first Kreativ Sound browser tool.</p>
-        <p><a href="/tools/wave-mutator/">Open Wave Mutator Lite</a> <span aria-hidden="true">·</span> <a href="/tools/">All tools</a></p>
+        <p>Wave Mutator Free is a local-first Kreativ Sound browser tool.</p>
+        <p><a href="/tools/wave-mutator/">Open Wave Mutator Free</a> <span aria-hidden="true">·</span> <a href="/tools/">All tools</a></p>
       </footer>
     </main>
   </body>
