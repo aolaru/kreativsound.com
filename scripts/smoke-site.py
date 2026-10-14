@@ -75,7 +75,7 @@ def main() -> int:
         errors: list[str] = []
 
         pages = {
-            "/": ["Sounds", "Updates", "About", "Support", "Latest release", "KS BurnShaper", "KS Ghostform", "Callisto Drift", "Preset Mutator Free", "Kreativ Kollection V1", "Optional analytics"],
+            "/": ["Sounds", "Updates", "About", "Support", "Latest release", "KS BurnShaper", "KS Ghostform", "VELVET RUINS 2", "Preset Mutator Free", "Kreativ Kollection V1", "Optional analytics"],
             "/news/": ["News moved to Updates", "Kreativ Sound Updates"],
             "/updates/": ["Kreativ Sound Updates and Changelog", "New releases, updates, and practical guides.", "Monthly product updates", "September 2026", "August 2026", f"{preset_mutator_pro['name']} v{preset_mutator_pro['version']}", f"{preset_mutator_free['name']} v{preset_mutator_free['version']}", f"{wave_mutator['name']} {wave_mutator['releaseLabel']} v{wave_mutator['version']}", "Website maintenance", "Read release notes", "Practical sound-design guides", "Earlier launches", "More guides", "Browse Tools", "Browse Plugins", "KS Ghostform", "144 factory presets"],
             "/posts/ghostform-release-2026-10-07.html": ["144 factory presets", "macOS 11", "64-bit VST3", "Ghostform User Manual v1.0", "September 25, 2026", "Published October 7, 2026", "https://kreativ.gumroad.com/l/ks-ghostform"],
@@ -199,12 +199,19 @@ def main() -> int:
                     errors.append(f"{route}: product version must be an optional form field.")
 
             if route == "/":
+                require(dom, 'class="home-feature-grid"', route, errors)
+                if len(re.findall(r'<article\b[^>]*class="card home-feature-card"', dom)) != 4:
+                    errors.append(f"{route}: expected four compact product cards below the main feature.")
                 require(dom, 'href="#latest-featured"', route, errors)
                 require(dom, 'id="main-content"', route, errors)
                 require(dom, 'class="site-header"', route, errors)
                 require(dom, 'href="/sounds/"', route, errors)
-                require(dom, 'href="/sounds/callisto-drift-jup-8-v4-presets"', route, errors)
-                require(dom, 'href="/sounds/operators-fm8-presets"', route, errors)
+                forbid(dom, 'href="/sounds/callisto-drift-jup-8-v4-presets"', route, errors)
+                forbid(dom, 'href="/sounds/operators-fm8-presets"', route, errors)
+                require(dom, 'href="/sounds/velvet-ruins-vital-presets"', route, errors)
+                homepage_titles = re.findall(r'<h2\b[^>]*id="(?:latest-title|home-feature-title-\d+)"[^>]*>(.*?)</h2>', dom)
+                if homepage_titles != ["KS BurnShaper", "KS Ghostform", "Kreativ Kollection V1", "Preset Mutator Free", "VELVET RUINS 2"]:
+                    errors.append(f"{route}: homepage must show only the five selected cards in order, got {homepage_titles!r}.")
                 require(dom, 'href="/sounds/kreativ-kollection-v1"', route, errors)
                 require(dom, 'href="/sounds/preset-mutator"', route, errors)
                 require(dom, 'href="/preset-mutator/"', route, errors)

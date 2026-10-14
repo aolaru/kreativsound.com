@@ -2,11 +2,24 @@
 import TimedOfferText from "./TimedOfferText.astro";
 import { products, type Product } from "../lib/products";
 
-const homepageProducts = products
-  .filter((product) => typeof product.featuredRank === "number")
-  .sort((a, b) => (a.featuredRank || 0) - (b.featuredRank || 0));
-const latestProduct = homepageProducts[0] || products.find((product) => product.status === "available" && product.category === "Presets") || products[0];
-const wideFeatureProducts = homepageProducts.filter((product) => product !== latestProduct);
+const homepageProductUrls = [
+  "/plugins/burnshaper",
+  "/plugins/ghostform",
+  "/sounds/kreativ-kollection-v1",
+  "/sounds/preset-mutator",
+  "/sounds/velvet-ruins-vital-presets",
+];
+const homepageProducts = homepageProductUrls
+  .map((url) => products.find((product) => product.detailsUrl === url))
+  .filter((product): product is Product => Boolean(product));
+const latestProduct = homepageProducts[0];
+const compactFeatureProducts = homepageProducts.slice(1);
+const compactDescriptions: Record<string, string> = {
+  "/plugins/ghostform": "Evolving drones and strings for cinematic and ambient music.",
+  "/sounds/kreativ-kollection-v1": "Nine preset banks and seven WAV packs in one collection.",
+  "/sounds/preset-mutator": "Generate synth preset variations locally in your browser.",
+  "/sounds/velvet-ruins-vital-presets": "Dark cinematic and experimental presets for Vital.",
+};
 
 function shortTitle(product: Product) {
   return product.title.split(/\s[-—]\s/)[0];
@@ -54,14 +67,6 @@ function cardPrimaryText(product: Product) {
   return "View Product";
 }
 
-function extraActionLabel(product: Product) {
-  if (product.appUrl) return "Open Preset Mutator Free";
-  return product.extraAction?.label;
-}
-
-function appActionUrl(product: Product) {
-  return product.appUrl || product.extraAction?.url;
-}
 ---
 <header class="home-hero" aria-labelledby="home-title">
   <p class="eyebrow">Kreativ Sound</p>
@@ -127,7 +132,7 @@ function appActionUrl(product: Product) {
         class="home-latest-art"
         src={productImage(latestProduct)}
         srcset={productImageSrcSet(latestProduct)}
-        sizes="(max-width: 760px) 92vw, 520px"
+        sizes="(max-width: 900px) 92vw, 520px"
         width="720"
         height="406"
         alt={`${shortTitle(latestProduct)} product artwork`}
@@ -139,60 +144,15 @@ function appActionUrl(product: Product) {
   </section>
 ) : null}
 
-{wideFeatureProducts.map((product, index) => (
-  <section class="home-latest card home-feature-card" aria-labelledby={`home-feature-title-${index}`}>
-    <div class="home-latest-copy">
-      <p class="featured-label">{productKicker(product)}</p>
-      <h2 id={`home-feature-title-${index}`}>{cardTitle(product)}</h2>
-      <p>{product.useCase}</p>
-      <dl class="home-product-meta">
-        <div>
-          <dt>Format</dt>
-          <dd>{product.format}</dd>
-        </div>
-        <div>
-          <dt>Included</dt>
-          <dd>{product.count}</dd>
-        </div>
-        {product.price ? (
-          <div>
-            <dt>Price</dt>
-            <dd><TimedOfferText productUrl={product.detailsUrl} value={product.price} /></dd>
-          </div>
-        ) : null}
-      </dl>
-      <div class="home-product-actions">
-        {appActionUrl(product) ? (
-          <a class="button primary" href={appActionUrl(product)}>
-            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
-            {extraActionLabel(product)}
-          </a>
-        ) : null}
-        {product.detailsUrl ? (
-          <a class="button secondary" href={product.detailsUrl}>
-            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-            {cardPrimaryText(product)}
-          </a>
-        ) : null}
-        {product.url ? (
-          <a class={appActionUrl(product) ? "button secondary" : "button primary"} data-track={primaryTrackingEvent(product)} data-track-product={product.title} data-track-placement="home_feature" href={product.url} target="_blank" rel="noopener noreferrer">
-            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-            {primaryActionLabel(product)}
-          </a>
-        ) : !appActionUrl(product) ? (
-          <span class="button secondary is-disabled" aria-disabled="true">
-            <i class="fa-solid fa-hourglass-half" aria-hidden="true"></i>
-            {primaryActionLabel(product)}
-          </span>
-        ) : null}
-      </div>
-    </div>
-    <a class="home-latest-art-link" href={product.detailsUrl || appActionUrl(product) || product.url || "/sounds/"} aria-label={`View ${cardTitle(product)}`}>
+<div class="home-feature-grid">
+{compactFeatureProducts.map((product, index) => (
+  <article class="card home-feature-card" aria-labelledby={`home-feature-title-${index}`}>
+    <a class="home-feature-art-link" href={product.detailsUrl} aria-label={`View ${cardTitle(product)}`}>
       <img
-        class="home-latest-art"
+        class="home-feature-art"
         src={productImage(product)}
         srcset={productImageSrcSet(product)}
-        sizes="(max-width: 760px) 92vw, 520px"
+        sizes="(max-width: 700px) 90vw, (max-width: 1100px) 43vw, 460px"
         width="720"
         height="406"
         alt={`${cardTitle(product)} product artwork`}
@@ -200,5 +160,40 @@ function appActionUrl(product: Product) {
         decoding="async"
       />
     </a>
-  </section>
+    <div class="home-feature-copy">
+      <p class="featured-label">{productKicker(product)}</p>
+      <h2 id={`home-feature-title-${index}`}>{cardTitle(product)}</h2>
+      <p>{compactDescriptions[product.detailsUrl || ""] || product.useCase}</p>
+      <dl class="home-feature-meta">
+        <div>
+          <dt>Included</dt>
+          <dd>{product.count}</dd>
+        </div>
+        <div>
+          <dt>Price</dt>
+          <dd>{product.price ? <TimedOfferText productUrl={product.detailsUrl} value={product.price} /> : "Free"}</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="home-feature-actions">
+        {product.appUrl ? (
+          <a class="button primary" href={product.appUrl}>
+            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+            Open Free Tool
+          </a>
+        ) : product.url ? (
+          <a class="button primary" data-track={primaryTrackingEvent(product)} data-track-product={product.title} data-track-placement="home_feature" href={product.url} target="_blank" rel="noopener noreferrer">
+            <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+            {primaryActionLabel(product)}
+          </a>
+        ) : null}
+        {product.detailsUrl ? (
+          <a class="button secondary" href={product.detailsUrl}>
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            {product.category === "Bundle" ? "View Bundle" : "Details"}
+          </a>
+        ) : null}
+    </div>
+  </article>
 ))}
+</div>
