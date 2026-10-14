@@ -494,8 +494,8 @@ export const products: Product[] = [
     status: "archive",
     url: "https://kreativ.gumroad.com/l/abyss-dark-ambient-presets-for-pro-53?layout=profile",
     detailsUrl: "/sounds/abyss-pro-53-presets",
-    thumbnail: "/assets/thumbs/abyss.jpg",
-    coverImage: "/assets/thumbs/abyss-cover.webp",
+    thumbnail: "/assets/thumbs/abyss-v33.jpg",
+    coverImage: "/assets/thumbs/abyss-cover-v33.webp",
     format: "PRO-53 presets",
     count: "256 sounds",
     useCase: "Free dark ambient toolkit"
