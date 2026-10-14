@@ -734,20 +734,21 @@ export const landingCopyOverrides = {
   },
   "abyss-pro-53-presets": {
     subtitle: "Free Dark Ambient PRO-53 Presets from the Kreativ Sound Archive",
-    shortMeta: "215 sounds • PRO-53 presets • Legacy archive",
+    shortMeta: "256 sounds • PRO-53 presets • Legacy archive",
     ctaLine: "Download the free legacy PRO-53 preset archive.",
     longDescription: [
-      "ABYSS is a free PRO-53 preset archive focused on dark ambient tone and earlier Kreativ Sound atmosphere work.",
-      "The release is preserved as a legacy sound-design snapshot: dark pads, older ambient material, and a historic preset direction from the catalog.",
+      "ABYSS is a free collection of 256 distinct presets for PRO-53, focused on dark ambient pads, drones, analog textures, effects, leads, and basses.",
+      "Version 3.3 includes 43 additions: 14 pads, 12 drones, 9 effects, 5 leads, and 3 basses. The individual presets and both included banks contain the same collection in the same order.",
       "ABYSS remains useful if you still work with PRO-53 or want older dark ambient presets from the archive."
     ],
     specifications: [
       { label: "Product type", value: "Legacy preset archive" },
+      { label: "Version", value: "3.3" },
       { label: "Synth", value: "Native Instruments PRO-53" },
-      { label: "Format", value: "PRO-53 presets" },
-      { label: "Preset count", value: "215 sounds" },
+      { label: "Format", value: "P5P presets, P5A native bank, FXB bank" },
+      { label: "Preset count", value: "256 sounds" },
       { label: "Focus", value: "Dark ambient presets and archive atmospheres" },
-      { label: "Download size", value: "490 KB" },
+      { label: "Download size", value: "518 KB" },
       { label: "Delivery", value: "Digital download" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Checkout", value: "Gumroad" }

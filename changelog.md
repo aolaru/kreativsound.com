@@ -4,6 +4,10 @@ All notable changes to this website are documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Updated the existing ABYSS catalog entry to v3.3: 256 presets, synchronized P5P/P5A/FXB formats, and the current download size. No news post was added for this quiet update.
+
 ### Added
 
 - Pattern Mutator Lite, a free local browser tool for generating scale-aware MIDI patterns, locking useful dimensions, mutating variations, and exporting Standard MIDI files.

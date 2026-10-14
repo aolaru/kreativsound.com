@@ -497,7 +497,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/abyss.jpg",
     coverImage: "/assets/thumbs/abyss-cover.webp",
     format: "PRO-53 presets",
-    count: "215 sounds",
+    count: "256 sounds",
     useCase: "Free dark ambient toolkit"
   },
   {
