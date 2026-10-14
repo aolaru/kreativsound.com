@@ -737,6 +737,7 @@ export const landingCopyOverrides = {
     shortMeta: "256 sounds • PRO-53 presets • Legacy archive",
     ctaLine: "Download the free legacy PRO-53 preset archive.",
     longDescription: [
+      "UPDATED: ABYSS v3.3 adds 43 new presets for a total of 256 sounds, with matching native and FXB banks and refreshed PRO-53-inspired artwork.",
       "ABYSS is a free collection of 256 distinct presets for PRO-53, focused on dark ambient pads, drones, analog textures, effects, leads, and basses.",
       "Version 3.3 includes 43 additions: 14 pads, 12 drones, 9 effects, 5 leads, and 3 basses. The individual presets and both included banks contain the same collection in the same order.",
       "ABYSS remains useful if you still work with PRO-53 or want older dark ambient presets from the archive."

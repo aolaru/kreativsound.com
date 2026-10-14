@@ -498,7 +498,12 @@ export const products: Product[] = [
     coverImage: "/assets/thumbs/abyss-cover-experimental-v1.webp",
     format: "PRO-53 presets",
     count: "256 sounds",
-    useCase: "Free dark ambient toolkit"
+    useCase: "Free dark ambient toolkit",
+    demo: {
+      label: "Original ABYSS audio demo (6:23)",
+      src: "/assets/audio/abyss-pro-53-demo.mp3",
+      type: "audio/mpeg"
+    }
   },
   {
     title: "The Black Angel - ReFill",
