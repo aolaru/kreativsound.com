@@ -6,6 +6,7 @@ All notable changes to this website are documented in this file.
 
 ### Changed
 
+- Replaced ABYSS cover and catalog thumbnail with the selected experimental artwork, incorporating abstract PRO-53 controls.
 - Updated the existing ABYSS catalog entry to v3.3: 256 presets, synchronized P5P/P5A/FXB formats, and the current download size. No news post was added for this quiet update.
 
 ### Added
