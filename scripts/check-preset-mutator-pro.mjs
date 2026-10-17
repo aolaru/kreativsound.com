@@ -6,6 +6,7 @@ import { promisify } from "node:util";
 import { fileURLToPath } from "node:url";
 import { decode, Encoder } from "cbor-x";
 import { Zstd } from "@hpcc-js/wasm-zstd";
+import "./check-preset-mutator-pro-license.mjs";
 import { buildAudioProPack, buildAudioProfile } from "../apps/preset-mutator-pro/public/engine/audio-engine.js";
 import { presetParameterDistance } from "../apps/preset-mutator-pro/public/engine/common.js";
 import { generatePresetVariants, presetSummary } from "../apps/preset-mutator-pro/public/engine/preset-mutate-engine.js";

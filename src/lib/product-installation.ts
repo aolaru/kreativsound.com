@@ -30,7 +30,26 @@ const vital: ProductInstallation = {
   ]
 };
 
+const serum2: ProductInstallation = {
+  steps: [
+    "Unzip the download and follow the included installation guide. Open Xfer Serum 2 in your DAW.",
+    "Copy the preset bank folder into Serum 2's Presets/User folder and refresh the preset browser.",
+    "Load a .SerumPreset file from the imported bank. Serum 1 is not supported; keep originals when saving variations."
+  ]
+};
+const miniV: ProductInstallation = {
+  steps: [
+    "Unzip the pack and read its installation notes. Choose the edition for the Mini V version you own: V2 .minibank, V3 .minix, or V4 .min4x.",
+    "Follow the included version-specific notes. Individual V4 User presets are supplied for local installation on Mac.",
+    "Native menu import of the release archives is unverified. Check the compatibility notes below the specifications; contact support if installation fails. Back up your existing presets first."
+  ]
+};
+
 export const productInstallations: Record<string, ProductInstallation> = {
+  "obsidian-serum-2-presets": serum2,
+  "obsidian-lite-serum-2-presets": serum2,
+  "analog-drift-mini-v-presets": miniV,
+  "analog-drift-lite-mini-v-presets": miniV,
   "burnshaper": {
     steps: [
       "Download the ZIP for your operating system from Gumroad. Unzip it and read the included installation guide; there is no installer.",

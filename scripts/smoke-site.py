@@ -103,7 +103,11 @@ def main() -> int:
             "/posts/how-to-use-juno-nocturnes-for-dark-ambient-2026-07-18.html": ["By Andrei Olaru", "Published July 18, 2026", "How to Use JUNO NOCTURNES for Dark Ambient"],
             "/search/": ["Find sounds, music, tools, and articles.", "Search Kreativ Sound", "Enter a product, album, artist, synth, format, guide, or tool."],
             "/sounds/": ["Browse Sound", "Need placement ideas?", "JUNO NOCTURNES", "Juno Nocturnes Lite", "Preset Packs", "Sample Packs", "Free Packs", "Legacy Archive"],
-            "/sounds/kreativ-kollection-v1": ["Get the bundle on Gumroad", offers["kollection"], "16 products", "Kreativ Kollection V1", "JUNO NOCTURNES", "Description", "What's Included", "Product Specifications", "Requirements"],
+            "/sounds/obsidian-serum-2-presets": ["OBSIDIAN", "128 unique presets", "Serum 2.1.5", "Serum 1", ".SerumPreset", "Installation", "https://kreativ.gumroad.com/l/obsidian-serum-2-presets"],
+            "/sounds/obsidian-lite-serum-2-presets": ["OBSIDIAN Lite", "32 presets", "128 unique sounds, not 160", "Enter 0", "Serum 2.1.5", "Installation", "Get OBSIDIAN Full"],
+            "/sounds/analog-drift-mini-v-presets": ["ANALOG DRIFT", "256 presets per edition", ".minibank", ".minix", ".min4x", "licensed V2 installation remains unverified", "Native menu import", "Installation"],
+            "/sounds/analog-drift-lite-mini-v-presets": ["ANALOG DRIFT Lite", "32 presets per edition", "8 basses, 8 sequences, 8 pads, and 8 effects", "Free", "Get ANALOG DRIFT Full", "Installation"],
+            "/sounds/kreativ-kollection-v1": ["Get the bundle on Gumroad", offers["kollection"], "16 products", "Kreativ Kollection V1", "JUNO NOCTURNES", "932+", "147 WAV samples", "applicable taxes, calculated at checkout", "Synth instruments are not included", "Vital or Vital Free", "Model 72 (20)", "Model 80 (24)", "Model 84 (20)", "V1 Contents and Updates", "It is not part of the current download", "new standalone products are not automatically included", "Refunds and Support", "terms displayed at checkout", "Description", "What's Included", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements", "Related sounds", "View full catalog"],
             "/sounds/callisto-drift-jup-8-v4-presets": ["Buy on Gumroad", "Try Lite free", "128 presets", "9 EUR", ".jup4x", "4.6.4.6366", "PDF preset catalogue", "https://kreativ.gumroad.com/l/callisto-drift-jup-8-v4-presets"],
             "/sounds/callisto-drift-lite-jup-8-v4-presets": ["Download Free", "32 presets", "Lite vs Full", "Get full Callisto Drift", ".jup4x", "4.6.4.6366", "https://kreativ.gumroad.com/l/callisto-drift-lite-jup-8-v4-presets"],
@@ -157,8 +161,16 @@ def main() -> int:
                 if dom.find('id="burnshaper-title"') > dom.find('id="ghostform-title"'):
                     errors.append(f"{route}: the new BurnShaper release must precede Ghostform.")
             if route == "/updates/":
+                for title in ["OBSIDIAN and Lite added to the catalog", "ANALOG DRIFT and Lite added to the catalog", "ABYSS v3.3 catalog updated", "VELVET RUINS 2 and Lite details refreshed"]:
+                    require(dom, title, route, errors)
                 require(dom, "KS BurnShaper added to Plugins", route, errors)
                 require(dom, 'href="/posts/burnshaper-release-2026-10-10.html"', route, errors)
+            if route == "/privacy/":
+                for text in ["Last updated October 17, 2026", "Pattern Mutator Free", "preset-mutator-pro-license", "Gumroad over HTTPS", "Bandcamp's privacy policy", "historical PayPal purchases"]:
+                    require(dom, text, route, errors)
+                forbid(dom, "Purchases are completed through Gumroad or PayPal", route, errors)
+            if route == "/sounds/kreativ-kollection-v1":
+                require(dom, "30-day money-back guarantee", route, errors)
             if route == "/refunds/":
                 require(dom, "KS BurnShaper", route, errors)
                 require(dom, "30-day full-refund guarantee", route, errors)
@@ -182,6 +194,8 @@ def main() -> int:
                     errors.append(f"{route}: keep the About page at 130 words or fewer.")
 
             if route == "/contact/":
+                for name in ["OBSIDIAN", "OBSIDIAN Lite", "ANALOG DRIFT", "ANALOG DRIFT Lite"]:
+                    require(dom, f'<option value="{name}"', route, errors)
                 require(dom, '<option value="KS BurnShaper"', route, errors)
                 require(dom, 'data-help-url="/plugins/burnshaper#product-installation-title"', route, errors)
                 forbid(dom, "Browse releases and free downloads.", route, errors)

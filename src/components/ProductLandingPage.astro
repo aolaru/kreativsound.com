@@ -1,5 +1,6 @@
 ---
 import PresetMutatorDetails from "./PresetMutatorDetails.astro";
+import KollectionDetails from "./KollectionDetails.astro";
 import type { ProductPage } from "../lib/product-pages";
 import TimedOfferText from "./TimedOfferText.astro";
 import { timedOffers } from "../lib/plugin-offers.ts";
@@ -141,7 +142,7 @@ const breadcrumbSchema = {
 
     {product.price ? (
       <p class="product-price-line">
-        <strong><TimedOfferText productUrl={product.route} value={product.price} /></strong> - Instant download{product.slug === "kreativ-kollection-v1" ? " • Commercial-use license included" : ""}
+        <strong><TimedOfferText productUrl={product.route} value={product.price} /></strong>{product.slug === "kreativ-kollection-v1" ? " + applicable taxes, calculated at checkout" : ""} - Instant download{product.slug === "kreativ-kollection-v1" ? " • Commercial-use license included" : ""}
       </p>
     ) : null}
     {product.shortMeta ? <p class="product-landing-meta">{product.shortMeta}</p> : null}
@@ -227,6 +228,7 @@ const breadcrumbSchema = {
   ) : null}
 
   {product.slug === "preset-mutator" ? <PresetMutatorDetails /> : null}
+  {product.slug === "kreativ-kollection-v1" ? <KollectionDetails /> : null}
 
   {product.includedGroups.length ? (
     <section class="product-landing-section product-included-section" aria-labelledby="product-included-title">
@@ -336,7 +338,7 @@ const breadcrumbSchema = {
       <p>{product.slug === "burnshaper" ? (
         <TimedOfferText productUrl={product.route} kind="note" suffix=" Includes a lifetime, no-questions-asked refund promise." />
       ) : product.slug === "kreativ-kollection-v1" ? (
-        <TimedOfferText productUrl={product.route} kind="note" prefix="Get the €144 collection. " />
+        <TimedOfferText productUrl={product.route} kind="note" prefix="Get the €144 collection. " suffix=" Applicable taxes are added and calculated at checkout." />
       ) : (product.finalCtaText || product.ctaLine || product.description)}</p>
       {purchaseActions.length || previewAction || toolActions.length ? (
         <div class="product-landing-actions">

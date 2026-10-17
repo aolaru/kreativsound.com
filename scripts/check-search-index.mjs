@@ -54,6 +54,10 @@ for (const route of sitemapPaths) {
 }
 
 for (const requiredRoute of [
+  "/sounds/obsidian-serum-2-presets",
+  "/sounds/obsidian-lite-serum-2-presets",
+  "/sounds/analog-drift-mini-v-presets",
+  "/sounds/analog-drift-lite-mini-v-presets",
   "/sounds/",
   "/sounds/kreativ-kollection-v1",
   "/sounds/preset-mutator",

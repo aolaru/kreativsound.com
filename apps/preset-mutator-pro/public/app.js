@@ -14,6 +14,7 @@ import {
   getStoredLicenseToken,
   hasLegacyUnlock,
   licenseOwnerLabel,
+  licenseVerificationMessage,
   saveLicenseToken,
   verifyLicenseToken,
 } from "./engine/license.js";
@@ -421,8 +422,8 @@ async function unlockPro() {
   const result = await verifyLicenseToken(code);
   elements.paidFeatureUnlockButton.disabled = false;
   if (!result.valid) {
-    elements.paidFeatureUnlockNote.textContent = "Gumroad could not verify this license key. Check the key and try again.";
-    analyticsEvent("unlock_attempt", { result: "invalid" });
+    elements.paidFeatureUnlockNote.textContent = licenseVerificationMessage(result);
+    analyticsEvent("unlock_attempt", { result: result.reason === "network" ? "network" : "invalid" });
     return;
   }
   state.proUnlocked = true;
@@ -437,13 +438,22 @@ async function unlockPro() {
 async function restoreLicense() {
   const storedLicense = getStoredLicenseToken();
   if (storedLicense) {
+    elements.paidFeatureUnlockButton.disabled = true;
+    elements.paidFeatureUnlockNote.textContent = "Checking saved Gumroad license key...";
     const result = await verifyLicenseToken(storedLicense);
+    elements.paidFeatureUnlockButton.disabled = false;
     if (result.valid) {
       state.proUnlocked = true;
       state.license = result.payload;
       return;
     }
-    clearLicenseToken();
+    if (result.reason === "network") {
+      elements.paidFeatureKey.value = storedLicense;
+      elements.paidFeatureUnlockNote.textContent = licenseVerificationMessage(result);
+    } else {
+      clearLicenseToken();
+      elements.paidFeatureUnlockNote.textContent = licenseVerificationMessage(result);
+    }
   }
   if (hasLegacyUnlock()) {
     clearLegacyUnlocks();
@@ -561,8 +571,8 @@ elements.paidFeatureActions?.addEventListener("click", (event) => {
   });
 });
 
-await restoreLicense();
 syncSynthTargetUi();
 refreshProfile();
 renderPresets([]);
 renderUnlockState();
+void restoreLicense().then(renderUnlockState);

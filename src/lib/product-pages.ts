@@ -88,6 +88,26 @@ type ProductPageOverride = Partial<Pick<
 >>;
 
 const productPageOverrides: Record<string, ProductPageOverride> = {
+  "obsidian-serum-2-presets": {
+    headline: "OBSIDIAN",
+    description: "128 dark cinematic Serum 2 presets, including all 32 Lite sounds plus 96 more. Tested with Serum 2.1.5; named macros, preset list, and installation guide included.",
+    kicker: "Serum 2 preset bank"
+  },
+  "obsidian-lite-serum-2-presets": {
+    headline: "OBSIDIAN Lite",
+    description: "32 free dark cinematic Serum 2 presets from the full OBSIDIAN bank, with named macros and an installation guide. Tested with Serum 2.1.5.",
+    kicker: "Free Serum 2 preset bank"
+  },
+  "analog-drift-mini-v-presets": {
+    headline: "ANALOG DRIFT",
+    description: "256 experimental vintage presets per Arturia Mini V2, V3, or V4 edition, with native banks, installation notes, and transparent compatibility caveats.",
+    kicker: "Mini V preset collection"
+  },
+  "analog-drift-lite-mini-v-presets": {
+    headline: "ANALOG DRIFT Lite",
+    description: "32 free Arturia Mini V presets per V2, V3, or V4 edition: eight basses, sequences, pads, and effects, with native banks and compatibility notes.",
+    kicker: "Free Mini V preset collection"
+  },
   "burnshaper": {
     title: "KS BurnShaper | Creative Multiband Distortion",
     headline: "KS BurnShaper",
@@ -109,7 +129,7 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   "kreativ-kollection-v1": {
     title: "Kreativ Kollection V1 | Preset & Sample Bundle",
     headline: "Kreativ Kollection V1",
-    description: "Kreativ Kollection V1 combines 9 synth preset banks and 7 WAV sound packs for ambient, cinematic, industrial, experimental, and dark electronic production.",
+    description: "Kreativ Kollection V1: 932+ presets across 9 synth banks and 147 WAV samples in 7 packs for ambient, cinematic, industrial, and experimental production.",
     kicker: "16-product flagship bundle",
     primaryUrl: "https://kreativ.gumroad.com/l/kreativ-kollection-v1",
     primaryLabel: "Get the bundle on Gumroad",
@@ -177,6 +197,38 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
 };
 
 const liteComparisons: Record<string, ProductLiteComparison> = {
+  "obsidian-lite-serum-2-presets": {
+    title: "OBSIDIAN Lite vs Full",
+    intro: "Try 32 sounds free. Full includes those same sounds plus 96 more.",
+    liteLabel: "Lite",
+    fullLabel: "OBSIDIAN Full",
+    rows: [
+      { label: "Included", lite: "32 presets", full: "128 unique presets, including all Lite sounds" },
+      { label: "Requirements", lite: "Serum 2; tested with 2.1.5", full: "Serum 2; tested with 2.1.5" },
+      { label: "Price", lite: "Free; optional contributions", full: "€9" }
+    ],
+    upgradeUrl: "https://kreativ.gumroad.com/l/obsidian-serum-2-presets",
+    upgradeLabel: "Get OBSIDIAN Full",
+    secondaryUrl: "/sounds/obsidian-serum-2-presets",
+    secondaryLabel: "View full details",
+    note: "Lite is a subset. Owning both editions gives you 128 unique sounds, not 160. Serum 1 is not supported."
+  },
+  "analog-drift-lite-mini-v-presets": {
+    title: "ANALOG DRIFT Lite vs Full",
+    intro: "Choose the edition for the Mini V version you own. All Lite sounds are included in Full.",
+    liteLabel: "Lite",
+    fullLabel: "ANALOG DRIFT Full",
+    rows: [
+      { label: "Included", lite: "32 presets per edition", full: "256 presets per edition" },
+      { label: "Versions", lite: "Mini V2, V3, and V4 banks", full: "Mini V2, V3, and V4 banks" },
+      { label: "Price", lite: "Free; optional contributions", full: "€9" }
+    ],
+    upgradeUrl: "https://kreativ.gumroad.com/l/analog-drift-mini-v-presets",
+    upgradeLabel: "Get ANALOG DRIFT Full",
+    secondaryUrl: "/sounds/analog-drift-mini-v-presets",
+    secondaryLabel: "View full details",
+    note: "These are instrument-specific editions of one collection, not additional unique sounds. Read the compatibility caveats below before downloading."
+  },
   "callisto-drift-lite-jup-8-v4-presets": {
     title: "Callisto Drift Lite vs Full",
     intro: "Try every core category free. The full bank gives you four times the presets and deeper category coverage.",

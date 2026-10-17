@@ -1,0 +1,73 @@
+---
+const banks = [
+  { name: "Juno Nocturnes", count: "96", instrument: "Arturia JUN-6 V" },
+  { name: "OPERATORS", count: "64", instrument: "Native Instruments FM8" },
+  { name: "Black Arcology", count: "128", instrument: "Arturia Pigments" },
+  { name: "Velvet Ruins 2", count: "256", instrument: "Vital or Vital Free" },
+  { name: "NEOLITH", count: "64", instrument: "Softube Model 72 (20), Model 80 (24), and Model 84 (20)" },
+  { name: "BIOFORMS", count: "34", instrument: "Sonic Charge Synplant 2" },
+  { name: "MONOLUSH", count: "132", instrument: "FabFilter One" },
+  { name: "DIRTY MODEL", count: "64", instrument: "Moog Model D" },
+  { name: "ZEPHYR", count: "96", instrument: "Moog Animoog Z" }
+];
+---
+
+<section class="product-landing-section" aria-labelledby="kollection-compatibility-title">
+  <h2 id="kollection-compatibility-title">Compatibility</h2>
+  <p>Synth instruments are not included. Each bank requires its matching instrument. You only need the instruments for the banks you want to use.</p>
+  <div class="kollection-table-wrap">
+    <table class="kollection-table">
+      <thead>
+        <tr><th scope="col">Preset bank</th><th scope="col">Count</th><th scope="col">Required instrument</th></tr>
+      </thead>
+      <tbody>
+        {banks.map((bank) => (
+          <tr><th scope="row">{bank.name}</th><td>{bank.count}</td><td>{bank.instrument}</td></tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <p>The seven WAV sound packs need no specific synth: use any DAW, sampler, or audio editor that supports WAV files. Check each linked product for installation and version requirements.</p>
+</section>
+
+<section class="product-landing-section" aria-labelledby="kollection-updates-title">
+  <h2 id="kollection-updates-title">V1 Contents and Updates</h2>
+  <ul>
+    <li><strong>Included now:</strong> the 16 products listed below, including Velvet Ruins 2 with 256 Vital presets.</li>
+    <li><strong>Free future update:</strong> Dark Drones 2 will be added to every V1 owner's Gumroad library when released. It is not part of the current download; no release date is promised.</li>
+    <li><strong>Later releases:</strong> new standalone products are not automatically included in V1. They may be sold separately or included in a future V2 or expansion.</li>
+  </ul>
+  <p>Download the included products individually from your Gumroad library for their current files and eligible updates.</p>
+</section>
+
+<section class="product-landing-section" aria-labelledby="kollection-refunds-title">
+  <h2 id="kollection-refunds-title">Refunds and Support</h2>
+  <p>Kollection includes the 30-day money-back guarantee under the terms displayed at checkout. Request a full refund within 30 days by replying to your receipt with your order reference. The bundle's checkout terms and mandatory consumer rights take precedence over general <a href="/refunds/">refund guidance</a>.</p>
+  <p>For missing files, download problems, or compatibility questions, reply to your Gumroad receipt or <a href="/contact/">contact support</a> with your order reference and a description of the issue.</p>
+</section>
+
+<style>
+  /* Product landing panels keep a light surface in both site themes. */
+  .product-landing-section { color: #513337; font-size: 1.02rem; line-height: 1.78; }
+  .product-landing-section a { color: #8a0000; text-decoration: underline; }
+  .product-landing-section p + p { margin-top: 0.85rem; }
+  .product-landing-section ul { padding-left: 1.4rem; margin: 0.8rem 0; }
+  .product-landing-section li + li { margin-top: 0.5rem; }
+  .kollection-table-wrap { overflow-x: auto; }
+  .kollection-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  .kollection-table th, .kollection-table td { padding: 0.75rem; border-bottom: 1px solid rgba(153, 0, 0, 0.16); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+  .kollection-table th:first-child { width: 30%; }
+  .kollection-table th:nth-child(2) { width: 20%; }
+  .kollection-table thead { background: rgba(128, 128, 128, 0.08); }
+  @media (max-width: 560px) {
+    .kollection-table, .kollection-table tbody { display: block; }
+    .kollection-table thead { display: none; }
+    .kollection-table tr { display: grid; grid-template-columns: minmax(0, 1fr) 5.5rem; padding: 0.7rem 0; border-bottom: 1px solid rgba(153, 0, 0, 0.16); }
+    .kollection-table th, .kollection-table td { padding: 0.15rem 0; border: 0; font-size: 0.9rem; overflow-wrap: normal; }
+    .kollection-table th:first-child { width: auto; }
+    .kollection-table td:nth-child(2) { text-align: right; white-space: nowrap; }
+    .kollection-table td:nth-child(2)::after { content: " presets"; }
+    .kollection-table td:last-child { grid-column: 1 / -1; }
+    .kollection-table td:last-child::before { content: "Requires: "; }
+  }
+</style>

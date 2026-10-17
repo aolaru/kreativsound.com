@@ -6,6 +6,7 @@ const LEGACY_UNLOCK_KEYS = [
 const LICENSE_PRODUCT = "preset-mutator-pro";
 const GUMROAD_PRODUCT_ID = "-A9fzCUAIYZ0QZKoRvyOQA==";
 const GUMROAD_VERIFY_URL = "https://api.gumroad.com/v2/licenses/verify";
+const LICENSE_VERIFY_TIMEOUT_MS = 10000;
 const LICENSE_PUBLIC_KEY = {
   kty: "EC",
   x: "c5RUK0LbcIkxe1wgnoSp4FOJiv1tVY1tYY4ngti4Lfs",
@@ -122,9 +123,12 @@ async function verifyGumroadLicenseKey(key) {
     return { valid: false, reason: "format" };
   }
 
-  try {
+  const controller = new AbortController();
+  let timeoutId;
+  const request = async () => {
     const response = await fetch(GUMROAD_VERIFY_URL, {
       method: "POST",
+      signal: controller.signal,
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         product_id: GUMROAD_PRODUCT_ID,
@@ -133,8 +137,14 @@ async function verifyGumroadLicenseKey(key) {
         increment_uses_count: "false",
       }),
     });
+    if (response.status >= 500 || response.status === 429 || response.status === 408) {
+      return { valid: false, reason: "network" };
+    }
     const result = await response.json();
     const purchase = result?.purchase;
+    if (typeof result?.success !== "boolean" || (result.success && !purchase)) {
+      return { valid: false, reason: "network" };
+    }
 
     if (
       !response.ok
@@ -156,9 +166,26 @@ async function verifyGumroadLicenseKey(key) {
         licenseKey,
       },
     };
+  };
+  try {
+    const timeout = new Promise((_, reject) => {
+      timeoutId = setTimeout(() => {
+        controller.abort();
+        reject(new Error("License verification timed out"));
+      }, LICENSE_VERIFY_TIMEOUT_MS);
+    });
+    return await Promise.race([request(), timeout]);
   } catch {
     return { valid: false, reason: "network" };
+  } finally {
+    clearTimeout(timeoutId);
   }
+}
+
+export function licenseVerificationMessage(result) {
+  return result?.reason === "network"
+    ? "Could not reach Gumroad. Saved keys are kept. Check your connection and try Activate again."
+    : "Gumroad could not verify this license key. Check the key and try again.";
 }
 
 export async function verifyLicenseToken(token) {

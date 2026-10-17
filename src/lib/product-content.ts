@@ -1,4 +1,5 @@
 import { burnshaperOffer, kollectionOffer } from "./plugin-offers.ts";
+import { newPresetCopy } from "./new-preset-content.ts";
 
 export type ProductLandingCopy = {
   subtitle: string;
@@ -13,6 +14,7 @@ export type ProductLandingCopy = {
 };
 
 export const landingCopyOverrides = {
+  ...newPresetCopy,
   "burnshaper": {
     subtitle: "Creative three-band distortion for drums, bass, synths, loops, and experimental sound design.",
     shortMeta: "144 factory presets • Six character modes • macOS AU/VST3 • Windows x64 VST3",
@@ -76,8 +78,8 @@ export const landingCopyOverrides = {
     ]
   },
   "kreativ-kollection-v1": {
-    subtitle: "9 synth preset banks and 7 WAV sound packs in one native Gumroad bundle.",
-    shortMeta: "16 products • 9 preset banks • 7 WAV sound packs • €144 value",
+    subtitle: "932+ synth presets and 147 WAV samples for dark, cinematic, and experimental production.",
+    shortMeta: "16 products • 9 preset banks • 932+ presets • 7 WAV packs • 147 samples • €144 value",
     ctaLine: kollectionOffer.note,
     finalCtaTitle: "Build a broader sound palette for less.",
     finalCtaText: `Get the €144 collection. ${kollectionOffer.note}`,
@@ -100,24 +102,28 @@ export const landingCopyOverrides = {
       "tectonic-2-dark-subs-textures"
     ],
     longDescription: [
-      "Kreativ Kollection V1 brings together 16 complete Kreativ Sound releases: 9 synth preset banks and 7 WAV sound packs spanning dark ambient, cinematic, industrial, experimental, and electronic production.",
+      "Kreativ Kollection V1 brings together 16 complete Kreativ Sound releases: 9 synth preset banks with 932+ presets and 7 sound packs with 147 WAV samples spanning dark ambient, cinematic, industrial, experimental, and electronic production.",
       "The preset side covers Arturia JUN-6 V and Pigments, Native Instruments FM8, Vital, Synplant 2, Softube Synth Models, FabFilter One, Moog Model D, and Animoog Z. The WAV side adds percussion, transitions, atmospheres, noise, subs, horror textures, and experimental sound material that works in any modern DAW.",
       "Each included product is delivered separately through your Gumroad library, so you can download only what a project needs and receive eligible product updates in the same place. Dark Drones 2 will be added free to every Kreativ Kollection V1 owner's Gumroad library when it is released."
     ],
     specifications: [
-      { label: "Product type", value: "Native Gumroad product bundle" },
+      { label: "Product type", value: "Preset and sample bundle" },
       { label: "Format", value: "Synth preset banks and WAV audio packs" },
       { label: "Includes", value: "16 products: 9 preset banks and 7 WAV sound packs" },
+      { label: "Preset count", value: "932+ presets, including 256 in Velvet Ruins 2" },
+      { label: "Sample count", value: "147 WAV samples across 7 sound packs" },
       { label: "Best for", value: "Ambient, cinematic, electronic, industrial, experimental, and darker production" },
       { label: "Individual value", value: "€144" },
       { label: "Price", value: kollectionOffer.note },
+      { label: "Taxes", value: "Applicable taxes are added and calculated at checkout." },
       { label: "Delivery", value: "Separate products in your Gumroad library" },
       { label: "License", value: "Personal and commercial music production use" },
       { label: "Updates", value: "Eligible included-product updates plus Dark Drones 2 free for every V1 owner when released" },
       { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [
-      "The preset banks require their matching instruments: Arturia JUN-6 V, Arturia Pigments, Native Instruments FM8, Vital, Synplant 2, Softube Synth Models, FabFilter One, Moog Model D, or Animoog Z.",
+      "Synth instruments are not included. Each preset bank requires its matching instrument, listed in the compatibility table above.",
+      "Velvet Ruins 2 works with Vital Free as well as paid Vital editions. NEOLITH contains separate banks for Softube Model 72, Model 80, and Model 84; you need all three instruments to use all 64 presets.",
       "The 7 WAV sound packs can be used in any DAW, sampler, or audio editor that supports standard WAV files.",
       "Please check the individual product notes inside the collection for exact plugin requirements."
     ]

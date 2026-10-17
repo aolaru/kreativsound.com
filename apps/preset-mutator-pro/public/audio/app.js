@@ -10,6 +10,7 @@ import {
   getStoredLicenseToken,
   hasLegacyUnlock,
   licenseOwnerLabel,
+  licenseVerificationMessage,
   saveLicenseToken,
   verifyLicenseToken,
 } from "../engine/license.js";
@@ -1213,8 +1214,8 @@ async function handlePaidFeatureUnlock() {
   const result = await verifyLicenseToken(key);
   elements.paidFeatureUnlockButton.disabled = false;
   if (!result.valid) {
-    elements.paidFeatureUnlockNote.textContent = "Gumroad could not verify this license key. Check the key and try again.";
-    analyticsEvent("unlock_attempt", { result: "invalid" });
+    elements.paidFeatureUnlockNote.textContent = licenseVerificationMessage(result);
+    analyticsEvent("unlock_attempt", { result: result.reason === "network" ? "network" : "invalid" });
     return;
   }
 
@@ -1231,13 +1232,22 @@ async function handlePaidFeatureUnlock() {
 async function restoreLicense() {
   const storedLicense = getStoredLicenseToken();
   if (storedLicense) {
+    elements.paidFeatureUnlockButton.disabled = true;
+    elements.paidFeatureUnlockNote.textContent = "Checking saved Gumroad license key...";
     const result = await verifyLicenseToken(storedLicense);
+    elements.paidFeatureUnlockButton.disabled = false;
     if (result.valid) {
       state.proPreviewUnlocked = true;
       state.license = result.payload;
       return;
     }
-    clearLicenseToken();
+    if (result.reason === "network") {
+      elements.paidFeatureKey.value = storedLicense;
+      elements.paidFeatureUnlockNote.textContent = licenseVerificationMessage(result);
+    } else {
+      clearLicenseToken();
+      elements.paidFeatureUnlockNote.textContent = licenseVerificationMessage(result);
+    }
   }
   if (hasLegacyUnlock()) {
     clearLegacyUnlocks();
@@ -1297,7 +1307,6 @@ for (const control of [
 
 updateControlLabels();
 applySynthTheme(elements.synthSelect.value);
-await restoreLicense();
 renderPaidFeatureState();
 renderPresets([]);
 setAnalysisVisible(false);
@@ -1306,3 +1315,7 @@ setReady(false);
 if (SELF_TEST_ENABLED) {
   loadSyntheticSource();
 }
+void restoreLicense().then(() => {
+  renderPaidFeatureState();
+  setReady(Boolean(state.originalBuffer));
+});
