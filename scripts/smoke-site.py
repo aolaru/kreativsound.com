@@ -10,6 +10,7 @@ from pathlib import Path
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.request import urlopen
+from urllib.parse import urlparse
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,7 +24,7 @@ class QuietHandler(SimpleHTTPRequestHandler):
 
     def translate_path(self, path: str) -> str:
         resolved = Path(super().translate_path(path))
-        if not resolved.exists() and not resolved.suffix:
+        if not resolved.exists() and not resolved.suffix and not urlparse(path).path.endswith("/"):
             html_file = Path(f"{resolved}.html")
             if html_file.exists():
                 return str(html_file)
@@ -73,6 +74,31 @@ def main() -> int:
     base_url = f"http://127.0.0.1:{server.server_address[1]}"
     try:
         errors: list[str] = []
+
+        # Test directory-style product URLs against the deployed artifact, not
+        # Astro's more permissive dev routing. This catches missing index files
+        # that cause GitHub Pages to return 404 for a trailing slash.
+        sitemap = (DIST / "sitemap.xml").read_text(encoding="utf-8")
+        product_routes = [
+            urlparse(url).path
+            for url in re.findall(r"<loc>([^<]+)</loc>", sitemap)
+            if re.fullmatch(r"/(?:sounds|plugins)/[^/]+", urlparse(url).path)
+        ]
+        if not product_routes:
+            errors.append("Product routing: no product URLs found in the sitemap")
+        for route in product_routes:
+            try:
+                normal = fetch_html(base_url + route)
+                trailing = fetch_html(base_url + route + "/")
+                if normal != trailing:
+                    errors.append(f"{route}: trailing-slash URL must serve the same product page")
+                require(trailing, f'href="https://kreativsound.com{route}"', route + "/ canonical", errors)
+                if route.startswith("/sounds/"):
+                    flat = fetch_html(base_url + route + ".html")
+                    if flat != normal:
+                        errors.append(f"{route}: legacy .html URL must serve the same product page")
+            except Exception as error:
+                errors.append(f"{route}: product URL variant failed: {error}")
 
         pages = {
             "/": ["Sounds", "Updates", "About", "Support", "Latest release", "KS BurnShaper", "KS Ghostform", "VELVET RUINS 2", "Preset Mutator Free", "Kreativ Kollection V1", "Optional analytics"],
