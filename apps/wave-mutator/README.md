@@ -41,6 +41,7 @@ The root `predev` and `prebuild` scripts copy this source folder into `public/to
 - Drag selection with exact start/end fields, selection playback, and optional zero-crossing snap.
 - Non-destructive Trim, Delete, Silence, Fade In, Fade Out, and Gain edits against the decoded source.
 - Readable per-file edit history with individual removal plus workspace undo/redo.
+- Removing a Trim or Delete also removes dependent later edits; the history button states this explicitly, and Undo restores the full chain.
 - File metadata: name, duration, sample rate, channels, peak, and clipping count.
 - Extra analysis: RMS, DC offset, stereo balance, silence notes, and an estimated true peak.
 - Play, pause, stop, progress display, and waveform click-to-seek.
@@ -50,6 +51,7 @@ The root `predev` and `prebuild` scripts copy this source folder into `public/to
 - Detect clipping at or above 0.999 amplitude.
 - Export the selected processed file as `original-name_clean.wav`.
 - Export the selected queue as an uncompressed ZIP with a local processing manifest.
+- Partial ZIP exports identify omitted files in the result and manifest. Retry failed WAVs creates a separate retry ZIP containing only missing files.
 - Export an MP3 preview montage through a bundled local MP3 encoder; no browser recorder support is required.
 - Naming templates with `{name}`, `{index}`, and `{i}` tokens.
 - Export quality controls for 16-bit PCM, 24-bit PCM, 32-bit float, mono sum, and optional 44.1/48 kHz resampling.
@@ -64,6 +66,9 @@ The root `predev` and `prebuild` scripts copy this source folder into `public/to
 - Settings JSON includes delivery profile, export, and montage values for local reuse.
 - Expanded free pack report with source format, output target, cleanup details, QA state, clipping, and duration summary.
 - Guardrails for queue count, input size, and decoded-audio memory use.
+- Imports run sequentially, respect the 120-file limit across overlapping drops, and can be cancelled. Clearing the queue also cancels pending imports.
+- Removing the active file stops playback, including playback starts still waiting for browser audio permission.
+- Delivery normalization runs after channel conversion and resampling, before PCM quantization, so the peak target applies to the final WAV format.
 - Cleaned playback renders the same channel conversion, sample rate, and PCM quantization as WAV/ZIP delivery. Changing WAV settings invalidates the preview while preserving manual edits.
 - Source-container metadata is read before decoding, so supported source rates are preserved independently of the playback device. Unknown headers are explicitly labelled; their decoded rate is the fallback.
 - Separate source and rendered WAV metadata; floating-point WAV exports preserve values above full scale.

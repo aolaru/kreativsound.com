@@ -169,6 +169,124 @@ try {
       assert(float.getFloat32(44, true) === 1.5 && float.getFloat32(48, true) === -1.5, "Float export must preserve headroom");
     });
 
+    await test("Normalization targets final mono and resampled delivery PCM", async () => {
+      const audio = buffer(2, 4410, 44100);
+      for (let index = 0; index < audio.length; index++) {
+        audio.getChannelData(0)[index] = Math.sin(index * 0.13) * 0.5;
+      }
+      const source = audio.getChannelData(0).slice();
+      const file = { audioBuffer: audio, settingsOverride: { ...settings, normalizeEnabled: true, targetPeakDb: -1 } };
+      for (const channelMode of ["mono", "original"]) {
+        for (const sampleRateMode of ["original", "48000"]) {
+          for (const bitDepth of ["16", "24", "32f"]) {
+            const result = await renderDeliveryAudio(file, { ...getExportSettings(), channelMode, sampleRateMode, bitDepth });
+            assert(near(result.analysis.peak, dbToGain(-1), 1 / 32768), "Final delivery peak must hit -1 dBFS after conversion");
+            assert(result.analysis.clippedSamples === 0, "Normalization must leave the requested headroom");
+            const unnormalized = await prepareExportBuffer(audio, { channelMode, sampleRateMode });
+            assert(near(result.report.normalizeGain, dbToGain(-1) / analyzeBuffer(unnormalized).peak), "Report must describe final delivery normalization");
+          }
+        }
+      }
+      const cancelling = buffer(2);
+      cancelling.getChannelData(0).fill(0.5);
+      cancelling.getChannelData(1).fill(-0.5);
+      const silentMono = await renderDeliveryAudio({ audioBuffer: cancelling, settingsOverride: file.settingsOverride }, {
+        ...getExportSettings(), channelMode: "mono", sampleRateMode: "original", bitDepth: "32f",
+      });
+      assert(silentMono.buffer.getChannelData(0).every((value) => value === 0), "Silent mono cancellation must not create invalid gain or samples");
+      assert(silentMono.report.normalizeGain === 1, "Silent output normalization must remain a no-op");
+      assert(source.every((value, index) => value === audio.getChannelData(0)[index]), "Delivery normalization must preserve source PCM");
+    });
+
+    await test("Removing structural edits removes their dependents and supports undo", async () => {
+      const audio = buffer(1, 288000);
+      audio.getChannelData(0).fill(0.25);
+      await loadFiles([new File([encodeWav(audio)], "history-chain.wav")]);
+      setWorkspaceView("editor");
+      const file = getSelectedFile();
+      const original = file.audioBuffer.getChannelData(0).slice();
+      for (const structuralType of ["trim", "delete"]) {
+        setSelectionRatios(structuralType === "trim" ? 4 / 6 : 0, structuralType === "trim" ? 1 : 4 / 6);
+        applySelectionEdit(structuralType);
+        setSelectionRatios(0.25, 0.5);
+        applySelectionEdit("silence");
+        assert(elements.editHistoryList.querySelector("button").textContent === "Remove + 1 later", "Structural removal must disclose dependent edits");
+        assert(getEditedBuffer(file).getChannelData(0)[36000] === 0, "Silence must affect the trimmed timeline");
+        removeEditOperation(file.editOperations[0].id);
+        assert(file.editOperations.length === 0 && getEditedBuffer(file) === file.audioBuffer, "Removing an earlier structural edit must not retarget later audio");
+        undoWorkspaceEdit();
+        assert(file.editOperations.length === 2 && getEditedBuffer(file).getChannelData(0)[36000] === 0, "Undo must restore the complete edit chain");
+        redoWorkspaceEdit();
+        assert(file.editOperations.length === 0, "Redo must remove the complete dependent chain");
+      }
+      setSelectionRatios(0, 1);
+      applySelectionEdit("gain");
+      setSelectionRatios(0.25, 0.5);
+      applySelectionEdit("silence");
+      removeEditOperation(file.editOperations[0].id);
+      assert(file.editOperations.length === 1 && file.editOperations[0].type === "silence", "Removing gain must preserve later edits");
+      assert(getEditedBuffer(file).getChannelData(0)[96000] === 0, "A later edit must keep its original position");
+      assert(original.every((value, index) => value === file.audioBuffer.getChannelData(0)[index]), "History removal must preserve source PCM");
+      clearQueue();
+      setWorkspaceView("clean");
+    });
+
+    await test("Imports serialize capacity checks and clearing cannot resurrect cancelled files", async () => {
+      clearQueue();
+      const audio = buffer(1, 48);
+      audio.getChannelData(0).fill(0.25);
+      const wav = encodeWav(audio);
+      const files = (prefix, count) => Array.from({ length: count }, (_, index) => new File([wav], `${prefix}-${index}.wav`));
+      await Promise.all([loadFiles(files("first", 120)), loadFiles(files("second", 120))]);
+      assert(state.files.length === 120, "Overlapping imports must enforce the 120-file queue cap");
+      assert(!isExportBusy() && state.importRun === null, "Import state must return to idle");
+      clearQueue();
+      await loadFiles(files("existing", 1));
+      const savedDecoder = decodeFile;
+      let releaseOld;
+      let releaseNew;
+      let oldEntered;
+      let newEntered;
+      const oldGate = new Promise((resolve) => { releaseOld = resolve; });
+      const newGate = new Promise((resolve) => { releaseNew = resolve; });
+      const oldStarted = new Promise((resolve) => { oldEntered = resolve; });
+      const newStarted = new Promise((resolve) => { newEntered = resolve; });
+      try {
+        decodeFile = async (file) => {
+          if (file.name.startsWith("old")) { oldEntered(); await oldGate; }
+          if (file.name.startsWith("new")) { newEntered(); await newGate; }
+          return savedDecoder(file);
+        };
+        const oldLoading = loadFiles(files("old", 1));
+        const queued = loadFiles(files("queued", 1));
+        await oldStarted;
+        assert(isExportBusy() && elements.exportButton.disabled && !elements.cancelImportButton.hidden, "Import must lock exports and expose cancellation");
+        assert(!elements.clearQueueButton.disabled, "Clear must remain available during import");
+        clearQueue();
+        assert(state.files.length === 0 && !isExportBusy(), "Clear must cancel active and queued imports immediately");
+        const newLoading = loadFiles(files("new", 1));
+        await newStarted;
+        releaseOld();
+        await Promise.all([oldLoading, queued]);
+        assert(state.files.length === 0 && isExportBusy(), "A stale decode must not publish files or unlock a newer import");
+        releaseNew();
+        await newLoading;
+        assert(state.files.length === 1 && state.files[0].name === "new-0.wav", "Only the new import may publish audio");
+        const cancelled = loadFiles(files("old-cancelled", 1));
+        elements.cancelImportButton.click();
+        await cancelled;
+        assert(state.files.length === 1 && !isExportBusy(), "Cancel import must retain existing files without adding cancelled audio");
+      } finally {
+        releaseOld();
+        releaseNew();
+        decodeFile = savedDecoder;
+        cancelImports(false);
+      }
+      await loadFiles([new File([wav], "valid.wav"), new File(["not audio"], "invalid.wav")]);
+      assert(elements.statusMessage.classList.contains("is-warning") && elements.statusMessage.textContent.includes("1 failed: invalid.wav"), "Mixed decode results must not hide failed files");
+      clearQueue();
+    });
+
     await test("Original, Edited, and Cleaned use distinct audio and workspace states", async () => {
       const audio = buffer(2, 9600);
       audio.getChannelData(0).fill(0.5);
@@ -312,6 +430,104 @@ try {
         assert(downloads.length === 3 && downloads[2].name.endsWith(".mp3") && downloads[2].blob.size > 0, "MP3 montage failed");
         assert(!isExportBusy(), "Export state must return to idle");
       } finally { downloadBlob = originalDownload; }
+    });
+    await test("ZIP failures are explicit, manifests are truthful, and retries isolate missing files", async () => {
+      clearQueue();
+      elements.namingTemplate.value = "{name}_clean";
+      elements.packName.value = "zip-failure-test";
+      const audio = buffer();
+      audio.getChannelData(0).fill(0.25);
+      await loadFiles([new File([encodeWav(audio)], "good.wav"), new File([encodeWav(audio)], "fails.wav")]);
+      const failedFile = state.files[1];
+      const savedRenderer = renderDeliveryAudio;
+      const savedDownload = downloadBlob;
+      const downloads = [];
+      const retryIds = [];
+      const readEntries = async (blob) => {
+        const bytes = await blob.arrayBuffer();
+        const view = new DataView(bytes);
+        const entries = new Map();
+        let offset = 0;
+        while (offset + 30 <= view.byteLength && view.getUint32(offset, true) === 0x04034b50) {
+          const size = view.getUint32(offset + 18, true);
+          const nameLength = view.getUint16(offset + 26, true);
+          const extraLength = view.getUint16(offset + 28, true);
+          const name = new TextDecoder().decode(new Uint8Array(bytes, offset + 30, nameLength));
+          const start = offset + 30 + nameLength + extraLength;
+          entries.set(name, new Uint8Array(bytes, start, size));
+          offset = start + size;
+        }
+        return entries;
+      };
+      try {
+        downloadBlob = (blob, name) => downloads.push({ blob, name });
+        renderDeliveryAudio = async (file, options) => {
+          if (file.id === failedFile.id) throw new Error("Controlled render failure");
+          return savedRenderer(file, options);
+        };
+        await exportAllAsZip();
+        assert(downloads.length === 1 && state.zipResult.exportedCount === 1 && state.zipResult.failures.length === 1, "Partial ZIP must count failures");
+        assert(elements.statusMessage.classList.contains("is-warning") && elements.zipResultSummary.textContent.includes("1 of 2"), "Partial ZIP must not report full success");
+        assert(elements.zipResult.getBoundingClientRect().width >= elements.zipResult.parentElement.clientWidth - 2, "ZIP results must span the export grid rather than a single narrow column");
+        assert(elements.zipFailedFiles.textContent.includes("fails.wav") && !elements.retryFailedZipButton.hidden, "Failed filenames and retry must be visible");
+        assert(state.batchProgress.detail.includes("1 failed"), "Batch progress must disclose failure");
+        const entries = await readEntries(downloads[0].blob);
+        assert(entries.has("good_clean.wav") && !entries.has("fails_clean.wav"), "Partial ZIP contents must match actual success");
+        const manifestName = [...entries.keys()].find((name) => name.endsWith("_manifest.txt"));
+        const manifest = new TextDecoder().decode(entries.get(manifestName));
+        assert(manifest.includes("1 of 2 WAVs exported; 1 failed") && manifest.includes("fails.wav: Controlled render failure"), "Manifest must identify omissions");
+        renderDeliveryAudio = async (file, options) => {
+          retryIds.push(file.id);
+          return savedRenderer(file, options);
+        };
+        await retryFailedZipExport();
+        assert(retryIds.length === 1 && retryIds[0] === failedFile.id, "Retry must render only missing files");
+        assert(downloads[1].name.endsWith("_retry.zip") && state.zipResult.failures.length === 0, "Retry must produce a separate successful archive");
+        assert(elements.retryFailedZipButton.hidden, "A successful retry must clear its failure controls");
+        renderDeliveryAudio = async () => { throw new Error("All renders failed"); };
+        await exportAllAsZip();
+        assert(downloads.length === 2 && state.zipResult.exportedCount === 0 && state.zipResult.failures.length === 2, "Complete failure must not download an archive");
+        assert(elements.zipResult.classList.contains("is-error") && elements.statusMessage.classList.contains("is-error"), "Complete failure must remain visible");
+      } finally {
+        renderDeliveryAudio = savedRenderer;
+        downloadBlob = savedDownload;
+        clearQueue();
+      }
+    });
+    await test("Removing playing files stops audio and cancels delayed playback starts", async () => {
+      clearQueue();
+      const audio = buffer(1, 144000);
+      audio.getChannelData(0).fill(0.15);
+      const wav = encodeWav(audio);
+      await loadFiles([new File([wav], "A.wav"), new File([wav], "B.wav")]);
+      await playFrom(0);
+      const playing = getSelectedFile();
+      const other = state.files[1];
+      const source = state.playbackSource;
+      removeFile(other.id);
+      assert(state.isPlaying && state.playbackSource === source, "Removing another file must not interrupt the current audio");
+      removeFile(playing.id);
+      assert(!state.isPlaying && state.playbackSource === null && elements.stopButton.disabled, "Removing the only playing file must stop its source");
+      await loadFiles([new File([wav], "A.wav"), new File([wav], "B.wav")]);
+      await playFrom(0);
+      removeFile(getSelectedFile().id);
+      assert(!state.isPlaying && state.playbackSource === null && elements.metaName.textContent === "B.wav", "Removing the active file must stop before selecting the next file");
+      const savedResume = state.audioContext.resume;
+      let release;
+      const gate = new Promise((resolve) => { release = resolve; });
+      try {
+        state.audioContext.resume = async function () { await gate; return savedResume.call(this); };
+        const pending = playFrom(0);
+        removeFile(getSelectedFile().id);
+        release();
+        await pending;
+        assert(state.files.length === 0 && !state.isPlaying && state.playbackSource === null, "A delayed playback request must not restart removed audio");
+      } finally {
+        release();
+        state.audioContext.resume = savedResume;
+        stopPlayback();
+        clearQueue();
+      }
     });
     return checks;
   });

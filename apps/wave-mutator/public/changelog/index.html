@@ -35,6 +35,23 @@
             <article class="wave-changelog-entry is-current">
               <span>Current beta release</span>
               <header>
+                <h2>v0.2.5</h2>
+                <time datetime="2026-10-24">October 24, 2026</time>
+              </header>
+              <p>Corrected edit-history dependencies, partial exports, delivered peak levels, import cancellation, and playback cleanup.</p>
+              <ul>
+                <li>Removing a Trim or Delete also removes dependent later edits, with explicit labels and full-chain Undo.</li>
+                <li>Partial ZIP results show exported and failed counts, list missing files in the manifest, and offer a separate retry ZIP.</li>
+                <li>Normalize the delivered channels and sample rate before WAV quantization.</li>
+                <li>Serialize imports, enforce queue limits across overlapping drops, and discard pending results on cancel or clear.</li>
+                <li>Stop playback when its file is removed and cancel delayed starts for removed audio.</li>
+              </ul>
+            </article>
+          </li>
+          <li>
+            <article class="wave-changelog-entry">
+              <span>Beta release</span>
+              <header>
                 <h2>v0.2.4</h2>
                 <time datetime="2026-10-13">October 13, 2026</time>
               </header>

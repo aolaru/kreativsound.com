@@ -23,10 +23,10 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="stylesheet" href="./styles.css?v=18" />
+    <link rel="stylesheet" href="./styles.css?v=19" />
     <script src="./vendor/lame.min.js" defer></script>
     <script src="./audio-source.js?v=1" defer></script>
-    <script src="./app.js?v=21" defer></script>
+    <script src="./app.js?v=22" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -60,10 +60,10 @@
             <span class="app-brand-mark" aria-hidden="true">WM</span>
             <strong>Wave Mutator Free</strong>
           </div>
-          <div class="app-version-group" aria-label="Wave Mutator Free beta version 0.2.4">
+          <div class="app-version-group" aria-label="Wave Mutator Free beta version 0.2.5">
             <a class="app-nav-link" href="./changelog/">Changelog</a>
             <span class="version-pill beta-sticker">FREE BETA</span>
-            <span class="version-build">v0.2.4</span>
+            <span class="version-build">v0.2.5</span>
           </div>
         </div>
         <div class="hero-copy">
@@ -141,6 +141,7 @@
               <h3>Loaded files</h3>
               <div class="queue-head-actions">
                 <span id="file-count">0 files</span>
+                <button id="cancel-import-button" class="quiet-button" type="button" hidden>Cancel import</button>
                 <button id="clear-queue-button" class="quiet-button" type="button" disabled>Clear</button>
               </div>
             </div>
@@ -575,6 +576,11 @@
               <button id="export-manifest-button" type="button" disabled>Download manifest</button>
               <button id="cancel-export-button" class="danger-button" type="button" disabled>Cancel batch</button>
             </div>
+            <div id="zip-result" class="zip-result" role="status" hidden>
+              <strong id="zip-result-summary"></strong>
+              <ul id="zip-failed-files"></ul>
+              <button id="retry-failed-zip-button" type="button" hidden>Retry failed WAVs</button>
+            </div>
             <details class="advanced-settings export-settings">
               <summary>
                 <span>Customize export</span>
@@ -663,6 +669,6 @@
       </section>
     </main>
 
-    <footer class="app-footer">A Kreativ Sound tool — Wave Mutator Free beta v0.2.4 <span aria-hidden="true">·</span> <a href="./changelog/">Changelog</a></footer>
+    <footer class="app-footer">A Kreativ Sound tool — Wave Mutator Free beta v0.2.5 <span aria-hidden="true">·</span> <a href="./changelog/">Changelog</a></footer>
   </body>
 </html>

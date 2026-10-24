@@ -8,6 +8,7 @@ const state = {
   previewMode: "original",
   workspaceView: "clean",
   playbackSource: null,
+  playbackRequestId: 0,
   playbackStartedAt: 0,
   playbackOffset: 0,
   playbackEnd: null,
@@ -20,6 +21,8 @@ const state = {
   suppressNextWaveformClick: false,
   exportMode: null,
   processingMode: null,
+  importQueue: [],
+  importRun: null,
   cleanupPreset: "standard",
   batchProgress: {
     label: "Export queue idle",
@@ -27,6 +30,7 @@ const state = {
     percent: 0,
   },
   montageOutput: null,
+  zipResult: null,
   cancelRequested: false,
   queueLimitNotice: "",
   waveformZoom: 1,
@@ -46,6 +50,7 @@ const elements = {
   fileList: document.querySelector("#file-list"),
   fileCount: document.querySelector("#file-count"),
   clearQueueButton: document.querySelector("#clear-queue-button"),
+  cancelImportButton: document.querySelector("#cancel-import-button"),
   statusMessage: document.querySelector("#status-message"),
   waveform: document.querySelector("#waveform"),
   waveformZoomOut: document.querySelector("#waveform-zoom-out"),
@@ -133,6 +138,10 @@ const elements = {
   exportMp3Button: document.querySelector("#export-mp3-button"),
   exportManifestButton: document.querySelector("#export-manifest-button"),
   cancelExportButton: document.querySelector("#cancel-export-button"),
+  zipResult: document.querySelector("#zip-result"),
+  zipResultSummary: document.querySelector("#zip-result-summary"),
+  zipFailedFiles: document.querySelector("#zip-failed-files"),
+  retryFailedZipButton: document.querySelector("#retry-failed-zip-button"),
   deliveryProfileButtons: document.querySelectorAll("[data-delivery-profile]"),
   deliveryProfileSummary: document.querySelector("#delivery-profile-summary"),
   namingTemplate: document.querySelector("#naming-template"),
@@ -158,7 +167,7 @@ const MAX_INPUT_BYTES = 1024 * 1024 * 1024;
 const MAX_DECODED_BYTES = 1536 * 1024 * 1024;
 const DEFAULT_TRIM_WINDOW_MS = 10;
 const HISTORY_LIMIT = 40;
-const APP_VERSION = "0.2.4";
+const APP_VERSION = "0.2.5";
 const SUPPORTED_AUDIO_FORMATS = {
   wav: { label: "WAV", extensions: [".wav"], types: ["audio/wav", "audio/wave", "audio/x-wav"] },
   aiff: { label: "AIFF", extensions: [".aif", ".aiff"], types: ["audio/aiff", "audio/x-aiff"] },
@@ -320,6 +329,7 @@ function setStatus(message, type = "neutral") {
   elements.statusMessage.textContent = message;
   elements.statusMessage.classList.toggle("is-error", type === "error");
   elements.statusMessage.classList.toggle("is-success", type === "success");
+  elements.statusMessage.classList.toggle("is-warning", type === "warning");
 }
 
 function setBatchProgress(label, percent = 0, detail = "") {
@@ -930,8 +940,51 @@ function canAddFile(file, queuedCount = state.files.length, queuedBytes = getQue
   return "";
 }
 
-async function loadFiles(fileList) {
-  if (isExportBusy()) return;
+function loadFiles(fileList) {
+  if (isExportBusy() && state.processingMode !== "import") return Promise.resolve();
+  const files = Array.from(fileList);
+  if (!files.length) return Promise.resolve();
+  return new Promise((resolve) => {
+    state.importQueue.push({ files, resolve });
+    if (!state.importRun) drainImportQueue();
+  });
+}
+
+async function drainImportQueue() {
+  const run = {};
+  state.importRun = run;
+  stopPlayback();
+  setProcessingMode("import");
+  try {
+    while (state.importRun === run && state.importQueue.length) {
+      const job = state.importQueue.shift();
+      try {
+        await importFiles(job.files, run);
+      } catch (error) {
+        console.error(error);
+        if (state.importRun === run) setStatus("Audio import failed. Try fewer or smaller files.", "error");
+      } finally {
+        job.resolve();
+      }
+    }
+  } finally {
+    if (state.importRun === run) {
+      state.importRun = null;
+      setProcessingMode(null);
+    }
+  }
+}
+
+function cancelImports(announce = true) {
+  if (!state.importRun) return;
+  // Native decode cannot be aborted; detached runs must never publish results.
+  state.importRun = null;
+  for (const job of state.importQueue.splice(0)) job.resolve();
+  if (state.processingMode === "import") setProcessingMode(null);
+  if (announce) setStatus("Import cancelled. Files already loaded remain in the queue.");
+}
+
+async function importFiles(fileList, run) {
   const files = Array.from(fileList);
   if (!files.length) {
     return;
@@ -970,9 +1023,18 @@ async function loadFiles(fileList) {
   state.queueLimitNotice = "";
 
   let loadedCount = 0;
+  const failedNames = [];
   for (const file of acceptedFiles) {
+    if (state.importRun !== run) return;
     try {
+      setStatus(`Decoding ${loadedCount + failedNames.length + 1} of ${acceptedFiles.length}: ${file.name}`);
       const { audioBuffer, sourceMetadata } = await decodeFile(file);
+      if (state.importRun !== run) return;
+      const decodedBytes = audioBuffer.length * audioBuffer.numberOfChannels * 4;
+      if (getQueueDecodedBytes() + decodedBytes > MAX_DECODED_BYTES) {
+        state.queueLimitNotice = `Queue stopped at ${formatBytes(MAX_DECODED_BYTES)} decoded audio to protect browser memory.`;
+        break;
+      }
       const sampleFile = {
         id: state.nextId,
         file,
@@ -1002,24 +1064,20 @@ async function loadFiles(fileList) {
       };
       state.nextId += 1;
       state.files.push(sampleFile);
-      if (getQueueDecodedBytes() > MAX_DECODED_BYTES) {
-        state.files.pop();
-        state.queueLimitNotice = `Queue stopped at ${formatBytes(MAX_DECODED_BYTES)} decoded audio to protect browser memory.`;
-        break;
-      }
       loadedCount += 1;
 
       if (!state.selectedId) {
-        selectFile(sampleFile.id);
+        state.selectedId = sampleFile.id;
+        state.previewMode = state.workspaceView === "editor" ? "edited" : "original";
+        state.playbackOffset = 0;
       }
+      updateUi();
     } catch (error) {
+      if (state.importRun !== run) return;
       console.error(error);
+      failedNames.push(file.name);
       setStatus(`Could not decode "${file.name}". Browser audio support varies by format; try WAV or AIFF for the most reliable import.`, "error");
     }
-  }
-
-  if (state.files.length && !state.selectedId) {
-    selectFile(state.files[0].id);
   }
 
   const rejectedMessage = rejectedCount ? ` ${rejectedCount} unsupported ${rejectedCount === 1 ? "file was" : "files were"} skipped.` : "";
@@ -1027,7 +1085,11 @@ async function loadFiles(fileList) {
     const limitSuffix = limitMessage || state.queueLimitNotice ? ` ${limitMessage || state.queueLimitNotice}` : "";
     const lossyCount = state.files.filter((sampleFile) => sampleFile.format === "MP3").length;
     const lossySuffix = lossyCount ? ` ${lossyCount} MP3 ${lossyCount === 1 ? "source is" : "sources are"} lossy and will export as WAV.` : "";
-    setStatus(`Loaded ${loadedCount} audio ${loadedCount === 1 ? "file" : "files"}.${rejectedMessage}${lossySuffix}${limitSuffix}`, "success");
+    const failureSuffix = failedNames.length ? ` ${failedNames.length} failed: ${failedNames.join(", ")}. Try WAV or AIFF for reliable import.` : "";
+    setStatus(`Loaded ${loadedCount} audio ${loadedCount === 1 ? "file" : "files"}.${rejectedMessage}${lossySuffix}${limitSuffix}${failureSuffix}`,
+      failedNames.length || limitSuffix ? "warning" : "success");
+  } else if (limitMessage || state.queueLimitNotice) {
+    setStatus(limitMessage || state.queueLimitNotice, "warning");
   }
 
   elements.fileInput.value = "";
@@ -1174,6 +1236,7 @@ function removeFile(id) {
   if (index < 0) {
     return;
   }
+  if (state.selectedId === id) stopPlayback();
   const [removed] = state.files.splice(index, 1);
   if (state.selectedId === id) {
     state.selectedId = state.files[0]?.id || null;
@@ -1186,14 +1249,16 @@ function removeFile(id) {
 }
 
 function clearQueue() {
-  if (isExportBusy() || !state.files.length) {
+  if ((isExportBusy() && state.processingMode !== "import") || (!state.files.length && !state.importRun)) {
     return;
   }
+  cancelImports(false);
   stopPlayback();
   state.files = [];
   state.selectedId = null;
   state.previewMode = "original";
   state.montageOutput = null;
+  state.zipResult = null;
   state.queueLimitNotice = "";
   setBatchProgress("Export queue cleared", 0, "Ready");
   setStatus("Queue cleared. No audio files were uploaded or changed.");
@@ -1786,14 +1851,22 @@ function removeEditOperation(operationId) {
   if (!file || isExportBusy()) return;
   const operation = file.editOperations.find((item) => item.id === operationId);
   if (!operation) return;
+  const index = file.editOperations.indexOf(operation);
+  const changesTimeline = operation.type === "trim" || operation.type === "delete";
+  const dependentCount = changesTimeline ? file.editOperations.length - index - 1 : 0;
   const historySnapshot = captureWorkspaceState();
-  file.editOperations = file.editOperations.filter((item) => item.id !== operationId);
+  // Later sample coordinates depend on every preceding Trim and Delete.
+  file.editOperations = changesTimeline
+    ? file.editOperations.slice(0, index)
+    : file.editOperations.filter((item) => item.id !== operationId);
   invalidateEditCache(file);
   file.selectionStartRatio = 0;
   file.selectionEndRatio = 1;
   stopPlayback();
-  pushWorkspaceHistory(historySnapshot, "remove edit");
-  setStatus("Edit removed. Later operations were replayed against the original audio.");
+  pushWorkspaceHistory(historySnapshot, dependentCount ? "remove edit and dependent edits" : "remove edit");
+  setStatus(dependentCount
+    ? `Edit and ${dependentCount} dependent ${dependentCount === 1 ? "edit" : "edits"} removed. Undo restores the full chain.`
+    : "Edit removed. Remaining edits keep their timeline positions.");
   updateUi();
 }
 
@@ -1937,6 +2010,19 @@ function applyGain(buffer, gain) {
   }
 }
 
+function normalizePeakLevel(buffer, targetPeakDb) {
+  let peak = 0;
+  for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
+    const data = buffer.getChannelData(channel);
+    for (let index = 0; index < data.length; index += 1) {
+      peak = Math.max(peak, Math.abs(data[index]));
+    }
+  }
+  const gain = peak > 0 ? dbToGain(targetPeakDb) / peak : 1;
+  if (peak > 0) applyGain(buffer, gain);
+  return gain;
+}
+
 function processAudioBuffer(inputBuffer, settings = getSettings(), trimRange = { startRatio: 0, endRatio: 1 }) {
   const startRatio = clamp(trimRange.startRatio ?? 0, 0, 0.999);
   const endRatio = clamp(trimRange.endRatio ?? 1, startRatio + 0.001, 1);
@@ -1973,12 +2059,7 @@ function processAudioBuffer(inputBuffer, settings = getSettings(), trimRange = {
 
   // Peak normalization uses the highest absolute sample value across every channel.
   if (settings.normalizeEnabled) {
-    const analysis = analyzeBuffer(workingBuffer);
-    const targetPeak = dbToGain(settings.targetPeakDb);
-    if (analysis.peak > 0) {
-      report.normalizeGain = targetPeak / analysis.peak;
-      applyGain(workingBuffer, report.normalizeGain);
-    }
+    report.normalizeGain = normalizePeakLevel(workingBuffer, settings.targetPeakDb);
   }
 
   const outputAnalysis = analyzeBuffer(workingBuffer);
@@ -2281,6 +2362,7 @@ function startAnimationLoop() {
 }
 
 function stopPlayback() {
+  state.playbackRequestId += 1;
   if (state.playbackSource) {
     const source = state.playbackSource;
     state.playbackSource = null;
@@ -2302,6 +2384,7 @@ function stopPlayback() {
 }
 
 function pausePlayback() {
+  state.playbackRequestId += 1;
   if (!state.isPlaying) {
     return;
   }
@@ -2328,12 +2411,14 @@ function pausePlayback() {
 
 async function playFrom(offset, endTime = null) {
   const buffer = getActiveBuffer();
-  if (!buffer) {
+  if (!buffer || isExportBusy()) {
     return;
   }
 
+  const requestId = ++state.playbackRequestId;
   const audioContext = getAudioContext();
   await audioContext.resume();
+  if (requestId !== state.playbackRequestId || getActiveBuffer() !== buffer || isExportBusy()) return;
 
   if (state.playbackSource) {
     const oldSource = state.playbackSource;
@@ -2518,9 +2603,13 @@ function renderEditHistory() {
     const remove = document.createElement("button");
     remove.type = "button";
     remove.className = "edit-history-remove";
-    remove.textContent = "Remove";
+    const dependentCount = operation.type === "trim" || operation.type === "delete"
+      ? operations.length - index - 1 : 0;
+    remove.textContent = dependentCount ? `Remove + ${dependentCount} later` : "Remove";
     remove.disabled = isExportBusy();
-    remove.setAttribute("aria-label", `Remove ${description.label}`);
+    const removalLabel = `Remove ${description.label}${dependentCount ? ` and ${dependentCount} dependent later ${dependentCount === 1 ? "edit" : "edits"}` : ""}`;
+    remove.setAttribute("aria-label", removalLabel);
+    remove.title = removalLabel;
     remove.addEventListener("click", () => removeEditOperation(operation.id));
     item.append(number, copy, remove);
     elements.editHistoryList.appendChild(item);
@@ -2700,6 +2789,7 @@ function updateUi() {
   updateControlLabels();
   renderDeliveryProfile();
   renderBatchProgress();
+  renderZipResult();
   syncCleanupPresetUi();
   updateTransportButtons();
   updateProgressUi();
@@ -2718,7 +2808,9 @@ function updateUi() {
   elements.exportMp3Button.disabled = !getSelectedExportFiles().length || busy || !window.lamejs?.Mp3Encoder;
   elements.exportManifestButton.disabled = !state.files.length || busy;
   elements.cancelExportButton.disabled = !busy || !state.exportMode;
-  elements.clearQueueButton.disabled = !state.files.length || busy;
+  elements.cancelImportButton.hidden = !state.importRun;
+  elements.clearQueueButton.disabled = (!state.files.length && !state.importRun)
+    || (busy && state.processingMode !== "import");
   elements.saveFileOverrideButton.disabled = !selected || busy;
   elements.resetFileOverrideButton.disabled = !selected?.settingsOverride || busy;
   elements.exportSettingsButton.disabled = busy;
@@ -2993,8 +3085,13 @@ async function prepareExportBuffer(buffer, exportSettings = getExportSettings())
 }
 
 async function renderDeliveryAudio(file, exportSettings = getExportSettings()) {
-  const result = processAudioBuffer(getEditedBuffer(file), getSettingsForFile(file), { startRatio: 0, endRatio: 1 });
+  const settings = getSettingsForFile(file);
+  const result = processAudioBuffer(getEditedBuffer(file), { ...settings, normalizeEnabled: false }, { startRatio: 0, endRatio: 1 });
   const buffer = await prepareExportBuffer(result.buffer, exportSettings);
+  // The peak target belongs to the delivered channels and sample rate.
+  if (settings.normalizeEnabled) {
+    result.report.normalizeGain = normalizePeakLevel(buffer, settings.targetPeakDb);
+  }
   // Preview the same quantized samples written by encodeWav, including PCM clipping.
   // Processing already created a private copy; the original PCM stays untouched.
   for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
@@ -3500,8 +3597,34 @@ async function exportSelectedFile() {
   }
 }
 
-async function exportAllAsZip() {
-  const queueFiles = getSelectedExportFiles();
+function renderZipResult() {
+  const result = state.zipResult;
+  elements.zipResult.hidden = !result;
+  elements.zipFailedFiles.replaceChildren();
+  if (!result) return;
+  const failedCount = result.failures.length;
+  elements.zipResult.classList.toggle("is-warning", failedCount > 0 && result.exportedCount > 0);
+  elements.zipResult.classList.toggle("is-error", result.exportedCount === 0);
+  elements.zipResultSummary.textContent = `${result.exportedCount} of ${result.requestedCount} WAVs exported. ${failedCount} failed.${result.fileName ? ` Saved as ${result.fileName}.` : ""}`;
+  for (const failure of result.failures) {
+    const item = document.createElement("li");
+    item.textContent = `${failure.name}: ${failure.reason}`;
+    elements.zipFailedFiles.appendChild(item);
+  }
+  elements.zipFailedFiles.hidden = !failedCount;
+  elements.retryFailedZipButton.hidden = !failedCount;
+  elements.retryFailedZipButton.disabled = isExportBusy()
+    || !result.failures.some((failure) => state.files.some((file) => file.id === failure.id));
+}
+
+async function retryFailedZipExport() {
+  const ids = new Set(state.zipResult?.failures.map((failure) => failure.id) || []);
+  const files = state.files.filter((file) => ids.has(file.id));
+  if (files.length) await exportAllAsZip(files, true);
+}
+
+async function exportAllAsZip(queueFiles = getSelectedExportFiles(), isRetry = false) {
+  if (isExportBusy()) return;
   if (!queueFiles.length) {
     setStatus("Select at least one file before exporting a ZIP.", "error");
     return;
@@ -3510,9 +3633,11 @@ async function exportAllAsZip() {
   const exportSettings = getExportSettings();
   const usedNames = new Set();
   const zipEntries = [];
+  const failures = [];
 
   try {
     stopPlayback();
+    state.zipResult = null;
     state.cancelRequested = false;
     setExportMode("zip");
     setBatchProgress("Starting ZIP export", 0, `0/${queueFiles.length}`);
@@ -3546,10 +3671,12 @@ async function exportAllAsZip() {
         }
         console.error(error);
         file.batchStatus = "failed";
+        failures.push({ id: file.id, name: file.name, reason: error.message || "Audio rendering failed." });
       }
     }
 
     if (!zipEntries.length) {
+      state.zipResult = { requestedCount: queueFiles.length, exportedCount: 0, failures, fileName: null };
       setExportMode(null);
       setBatchProgress("ZIP export failed", 0, "Failed");
       setStatus("Batch export failed. No files could be processed.", "error");
@@ -3557,14 +3684,26 @@ async function exportAllAsZip() {
       return;
     }
 
-    const manifestBlob = new Blob([createManifestText(queueFiles, exportSettings)], { type: "text/plain;charset=utf-8" });
+    const exportedCount = zipEntries.length;
+    const exportSummary = [
+      `ZIP result: ${exportedCount} of ${queueFiles.length} WAVs exported; ${failures.length} failed.`,
+      "Included WAVs:",
+      ...zipEntries.map((entry) => `  ${entry.name}`),
+      "Omitted WAVs:",
+      ...(failures.length ? failures.map((failure) => `  ${failure.name}: ${failure.reason}`) : ["  None"]),
+      "",
+    ].join("\n");
+    const manifestBlob = new Blob([exportSummary, createManifestText(queueFiles, exportSettings)], { type: "text/plain;charset=utf-8" });
     zipEntries.push({ name: `${exportSettings.packName}_manifest.txt`, blob: manifestBlob });
     setBatchProgress(`Building ZIP with ${zipEntries.length - 1} WAV files and manifest`, 94, "Zipping");
     const zipBlob = await createZip(zipEntries);
-    const zipName = `${exportSettings.packName}.zip`;
+    const zipName = `${exportSettings.packName}${isRetry ? "_retry" : ""}.zip`;
     downloadBlob(zipBlob, zipName);
-    setBatchProgress(`Exported ${zipName}`, 100, "Done");
-    setStatus(`Exported ${zipEntries.length - 1} cleaned WAV ${zipEntries.length - 1 === 1 ? "file" : "files"} and a manifest as ${zipName}.`, "success");
+    state.zipResult = { requestedCount: queueFiles.length, exportedCount, failures, fileName: zipName };
+    setBatchProgress(`Exported ${zipName}`, 100, failures.length ? `${exportedCount}/${queueFiles.length} exported; ${failures.length} failed` : "Done");
+    setStatus(failures.length
+      ? `Partial ZIP: ${exportedCount} of ${queueFiles.length} WAVs exported; ${failures.length} failed. Review missing files below and retry.`
+      : `Exported ${exportedCount} cleaned WAV ${exportedCount === 1 ? "file" : "files"} and a manifest as ${zipName}.`, failures.length ? "warning" : "success");
   } catch (error) {
     console.error(error);
     const cancelled = state.cancelRequested || error.message === "Batch cancelled.";
@@ -3941,11 +4080,13 @@ function bindEvents() {
   elements.editGainButton.addEventListener("click", () => applySelectionEdit("gain"));
   elements.clearEditsButton.addEventListener("click", clearAudioEdits);
   elements.exportButton.addEventListener("click", exportSelectedFile);
-  elements.exportZipButton.addEventListener("click", exportAllAsZip);
+  elements.exportZipButton.addEventListener("click", () => exportAllAsZip());
+  elements.retryFailedZipButton.addEventListener("click", retryFailedZipExport);
   elements.exportMp3Button.addEventListener("click", exportMp3Montage);
   elements.exportManifestButton.addEventListener("click", exportManifest);
   elements.cancelExportButton.addEventListener("click", cancelBatch);
   elements.clearQueueButton.addEventListener("click", clearQueue);
+  elements.cancelImportButton.addEventListener("click", () => cancelImports());
 
   [
     elements.trimSilence,
