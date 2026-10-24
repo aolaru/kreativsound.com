@@ -192,9 +192,14 @@ def main() -> int:
                 require(dom, "KS BurnShaper added to Plugins", route, errors)
                 require(dom, 'href="/posts/burnshaper-release-2026-10-10.html"', route, errors)
             if route == "/privacy/":
-                for text in ["Last updated October 17, 2026", "Pattern Mutator Free", "preset-mutator-pro-license", "Gumroad over HTTPS", "Bandcamp's privacy policy", "historical PayPal purchases"]:
+                for text in ["Last updated October 24, 2026", "Pattern Mutator Free", "preset-mutator-pro-license", "Gumroad over HTTPS", "Bandcamp's privacy policy", "historical PayPal purchases", "Embedded video demos", "YouTube connects only when you press play"]:
                     require(dom, text, route, errors)
                 forbid(dom, "Purchases are completed through Gumroad or PayPal", route, errors)
+            if route == "/plugins/ghostform":
+                for text in ["Hear Ghostform in action", "Mack Beats Studio", "Shared with permission", "data-ghostform-demo-play", "https://www.youtube.com/watch?v=w1Lz60S_qPA", "YouTube loads only when you press play"]:
+                    require(dom, text, route, errors)
+                forbid(dom, "<iframe", route + " must not load YouTube before interaction", errors)
+                forbid(dom, "https://i.ytimg.com/", route + " must use a local preview", errors)
             if route == "/sounds/kreativ-kollection-v1":
                 require(dom, "30-day money-back guarantee", route, errors)
             if route == "/refunds/":

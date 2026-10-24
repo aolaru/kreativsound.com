@@ -1,6 +1,7 @@
 ---
 import PresetMutatorDetails from "./PresetMutatorDetails.astro";
 import KollectionDetails from "./KollectionDetails.astro";
+import GhostformDemo from "./GhostformDemo.astro";
 import type { ProductPage } from "../lib/product-pages";
 import TimedOfferText from "./TimedOfferText.astro";
 import { timedOffers } from "../lib/plugin-offers.ts";
@@ -147,9 +148,11 @@ const breadcrumbSchema = {
     ) : null}
     {product.shortMeta ? <p class="product-landing-meta">{product.shortMeta}</p> : null}
 
-    <figure class="product-landing-media">
-      <img class="product-landing-image" src={product.image} width="1040" height="585" alt={product.imageAlt} />
-    </figure>
+    {product.slug === "ghostform" ? <GhostformDemo /> : (
+      <figure class="product-landing-media">
+        <img class="product-landing-image" src={product.image} width="1040" height="585" alt={product.imageAlt} />
+      </figure>
+    )}
 
     {hasDemo ? (
       <section class="product-landing-demo" aria-label="Audio demo">
