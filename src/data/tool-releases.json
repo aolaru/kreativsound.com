@@ -23,8 +23,8 @@
   },
   "patternMutator": {
     "name": "Pattern Mutator Free",
-    "version": "0.4.0",
-    "date": "2026-10-13",
+    "version": "0.5.0",
+    "date": "2026-10-24",
     "status": "Free",
     "changelog": "/tools/pattern-mutator/changelog/"
   }

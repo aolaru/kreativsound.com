@@ -12,6 +12,7 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-10-24", kind: "update", title: "Pattern Mutator Free v0.5.0", description: "Mutation develops existing notes, drafts recover automatically, bar refresh preserves harmony, and MIDI exports match playback.", href: "/tools/pattern-mutator/changelog/" },
   { date: "2026-10-17", kind: "new", title: "OBSIDIAN and Lite added to the catalog", description: "Explore 128 cinematic Serum 2 presets, including 32 free Lite sounds, with clear testing and installation notes.", href: "/sounds/obsidian-serum-2-presets", releaseNote: "/posts/obsidian-catalog-2026-10-17.html" },
   { date: "2026-10-17", kind: "new", title: "ANALOG DRIFT and Lite added to the catalog", description: "Choose 256 presets or a free 32-preset subset, with Mini V2, V3, and V4 editions and explicit compatibility caveats.", href: "/sounds/analog-drift-mini-v-presets", releaseNote: "/posts/analog-drift-catalog-2026-10-17.html" },
   { date: "2026-10-17", kind: "fix", title: "Preset Mutator Pro v0.5.2", description: "Saved keys survive temporary verification failures; activation has a timeout and no longer blocks the interface.", href: "/preset-mutator-pro/changelog/" },

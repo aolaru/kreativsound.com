@@ -73,6 +73,10 @@ button:disabled { cursor: not-allowed; opacity: .42; }
 .roll-navigation select { width: auto; min-height: 32px; font-size: .72rem; }
 .roll-navigation .quiet-button { min-height: 32px; padding: 0 .7rem; font-size: 1rem; }
 .roll-navigation .follow-control { margin-left: auto; }
+.recovery-note { margin: 0 0 9px; color: var(--muted); font-size: .68rem; line-height: 1.4; }
+.mutation-strength { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; margin-top: 14px; }
+.mutation-strength .range-control { flex: 1 1 220px; max-width: 340px; }
+.mutation-strength p { flex: 1 1 220px; margin: 0; color: var(--muted); font-size: .72rem; line-height: 1.4; }
 .follow-control input { accent-color: var(--green); }
 .piano-editor { display: grid; grid-template-columns: 38px minmax(0, 1fr); grid-template-rows: 24px auto; }
 .bar-ruler { grid-column: 2; position: relative; border: 1px solid var(--border); border-radius: 9px 9px 0 0; background: rgba(10,9,13,.3); color: var(--muted); font-size: .64rem; }

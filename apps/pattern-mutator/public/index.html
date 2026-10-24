@@ -9,8 +9,8 @@
     <meta name="theme-color" content="#15131b" />
     <link rel="canonical" href="https://kreativsound.com/tools/pattern-mutator/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="stylesheet" href="./styles.css?v=0.4.0" />
-    <script type="module" src="./app.js?v=0.4.0"></script>
+    <link rel="stylesheet" href="./styles.css?v=0.5.0" />
+    <script type="module" src="./app.js?v=0.5.0"></script>
   </head>
   <body>
     <main class="app-shell">
@@ -18,7 +18,7 @@
         <nav class="app-nav" aria-label="Pattern Mutator Free navigation">
           <a class="back-link" href="/tools/">All tools</a>
           <div class="brand"><span aria-hidden="true">PM</span><strong>Pattern Mutator Free</strong></div>
-          <span class="draft-pill"><a href="/tools/pattern-mutator/changelog/">Changelog · v0.4.0</a></span>
+          <span class="draft-pill"><a href="/tools/pattern-mutator/changelog/">Changelog · v0.5.0</a></span>
         </nav>
         <div class="hero-copy">
           <p class="kicker">Free local MIDI idea generator</p>
@@ -100,7 +100,7 @@
         </div>
         <div class="range-grid">
           <label class="range-control" for="complexity"><span>Complexity</span><output id="complexity-value">52%</output><input id="complexity" type="range" min="0" max="100" value="52" /></label>
-          <label class="range-control" for="variation"><span>Variation</span><output id="variation-value">38%</output><input id="variation" type="range" min="0" max="100" value="38" /></label>
+          <label class="range-control" for="variation" title="Variation within newly generated phrases"><span>Phrase variation</span><output id="variation-value">38%</output><input id="variation" type="range" min="0" max="100" value="38" /></label>
           <label class="range-control" for="tempo"><span>Tempo</span><output id="tempo-value">122 BPM</output><input id="tempo" type="range" min="70" max="160" value="122" /></label>
         </div>
         <div class="main-actions">
@@ -128,6 +128,7 @@
           <span id="view-summary">of 4 bars</span>
           <label class="follow-control" for="follow-playback"><input id="follow-playback" type="checkbox" checked disabled /> Follow playback</label>
         </div>
+        <p id="draft-status" class="recovery-note" role="status">Your current draft is saved automatically in this browser.</p>
         <div class="piano-editor">
           <div id="bar-ruler" class="bar-ruler" aria-label="Bar numbers"></div>
           <div id="pitch-labels" class="pitch-labels" aria-hidden="true"></div>
@@ -169,12 +170,16 @@
             <p class="section-kicker">Controlled chaos</p>
             <h2 id="mutation-title">Lock the parts you want to keep</h2>
           </div>
-          <p class="section-note">Locked dimensions carry into the next result. Unlocked ones get a fresh variation.</p>
+          <p class="section-note">Develop the current notes with bounded changes. Locks keep the dimensions you choose.</p>
         </div>
         <div class="lock-grid" role="group" aria-label="Mutation locks">
           <button class="lock-button" type="button" data-lock="rhythm" aria-pressed="false"><span class="lock-icon" aria-hidden="true">⌁</span><b>Rhythm</b><small>Timing &amp; density</small></button>
           <button class="lock-button" type="button" data-lock="notes" aria-pressed="false"><span class="lock-icon" aria-hidden="true">♬</span><b>Notes</b><small>Pitch &amp; contour</small></button>
           <button class="lock-button" type="button" data-lock="expression" aria-pressed="false"><span class="lock-icon" aria-hidden="true">⌁</span><b>Expression</b><small>Velocity &amp; length</small></button>
+        </div>
+        <div class="mutation-strength">
+          <label class="range-control" for="mutation-amount"><span>Mutation amount</span><output id="mutation-value">38%</output><input id="mutation-amount" type="range" min="0" max="100" value="38" /></label>
+          <p>0% keeps the current idea. Higher amounts change more of its unlocked notes.</p>
         </div>
         <div class="mutation-actions">
           <button id="mutate" class="primary-button" type="button" disabled>Mutate Unlocked Parts <span aria-hidden="true">⟲</span></button>
@@ -188,12 +193,12 @@
       </section>
 
       <section class="draft-note">
-        <p><strong>Free scope:</strong> melody, bass, chords, and arps; style starters, register and rhythm controls; an editable piano roll with undo/redo; local audition; and MIDI export. Multi-track generation, arrangement mode, and saved projects remain Pro territory.</p>
+        <p><strong>Free scope:</strong> melody, bass, chords, and arps; style starters, register and rhythm controls; an editable piano roll with undo/redo; automatic recovery of the current draft; local audition; and MIDI export. Multi-track generation, arrangement mode, and project libraries remain Pro territory.</p>
       </section>
 
       <footer class="app-footer">
         <p>Kreativ Sound browser tool for controlled MIDI pattern generation.</p>
-        <p class="app-version">Pattern Mutator Free v0.4.0 <span aria-hidden="true">·</span> <a href="/tools/pattern-mutator/changelog/">Changelog</a> <span aria-hidden="true">·</span> <a href="/tools/">All tools</a></p>
+        <p class="app-version">Pattern Mutator Free v0.5.0 <span aria-hidden="true">·</span> <a href="/tools/pattern-mutator/changelog/">Changelog</a> <span aria-hidden="true">·</span> <a href="/tools/">All tools</a></p>
       </footer>
     </main>
   </body>

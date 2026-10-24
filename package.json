@@ -18,6 +18,7 @@
     "check:products": "node scripts/check-product-data.mjs",
     "check:analytics": "node scripts/check-analytics-consent.mjs",
     "check:pattern-mutator": "node scripts/check-pattern-mutator.mjs",
+    "test:pattern-mutator": "node scripts/test-pattern-mutator.mjs",
     "check:preset-mutator": "node scripts/check-preset-mutator.mjs",
     "check:preset-mutator-pro": "node scripts/check-preset-mutator-pro.mjs",
     "check:wave-mutator": "node scripts/check-wave-mutator.mjs",

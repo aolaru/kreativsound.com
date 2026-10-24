@@ -65,19 +65,25 @@ function chordVoicing(degree, octave, settings, previous) {
   return options[0];
 }
 
-export function createPattern(settings) {
+export function createHarmony(settings) {
+  const progression = [[0, 5, 3, 6], [0, 3, 5, 4], [0, 6, 5, 3], [0, 2, 5, 4]][randomInt(0, 3)];
+  const roots = Array.from({ length: settings.bars }, (_, bar) => progression[bar % 4] % SCALES[settings.scale].length);
+  const octave = 3 + (settings.register === "low" ? -1 : settings.register === "high" ? 1 : 0);
+  const voicings = [];
+  for (const root of roots) voicings.push(chordVoicing(root, octave, settings, voicings.at(-1)));
+  return { roots, voicings };
+}
+
+export function createPattern(settings, harmony = createHarmony(settings)) {
   const { role, bars, register, variation, complexity } = settings;
   const totalTicks = bars * BAR_TICKS;
-  const scaleLength = SCALES[settings.scale].length;
-  const progression = [[0, 5, 3, 6], [0, 3, 5, 4], [0, 6, 5, 3], [0, 2, 5, 4]][randomInt(0, 3)];
   const baseRhythm = rhythmMotif(settings);
   const melodyMotif = [0];
   for (let i = 1; i < 8; i++) melodyMotif.push(clamp(melodyMotif[i - 1] + randomInt(-1, 1), -2, 4));
   const octave = ({ bass: 2, melody: 3, chords: 3, arp: 3 }[role]) + (register === "low" ? -1 : register === "high" ? 1 : 0);
   const notes = [];
-  let previousVoicing = null;
   for (let bar = 0; bar < bars; bar++) {
-    const degreeRoot = progression[bar % 4] % scaleLength;
+    const degreeRoot = harmony.roots[bar];
     const rhythm = [...baseRhythm];
     // Keep the motif recognizable; phrase endings introduce controlled changes.
     if (role !== "chords" && bar % 4 === 3 && chance(variation / 100)) {
@@ -85,8 +91,7 @@ export function createPattern(settings) {
       if (!rhythm.includes(fill)) rhythm.push(fill);
     }
     rhythm.sort((a, b) => a - b);
-    const voicing = role === "chords" ? chordVoicing(degreeRoot, octave, settings, previousVoicing) : null;
-    if (voicing) previousVoicing = voicing;
+    const voicing = role === "chords" ? harmony.voicings[bar] : null;
     rhythm.forEach((step, index) => {
       const start = bar * BAR_TICKS + step * SNAP_TICKS;
       const space = ((rhythm[index + 1] ?? STEPS_PER_BAR) - step) * SNAP_TICKS;
@@ -110,30 +115,109 @@ export function createPattern(settings) {
   return notes.sort((a, b) => a.start - b.start || a.pitch - b.pitch);
 }
 
-export function combineMutation(previous, candidate, locks, totalTicks) {
-  if (!Object.values(locks).some(Boolean)) return candidate;
-  if (!previous.length) return [];
-  if (Object.values(locks).every(Boolean)) return previous.map((note) => ({ ...note }));
-  // A locked dimension owns one value per original note; never cycle or drop it.
-  const sourceStarts = [...new Set(previous.map((note) => note.start))];
-  const candidateStarts = [...new Set(candidate.map((note) => note.start))];
-  return previous.map((source, index) => {
-    const note = candidate[Math.floor(index * candidate.length / previous.length)] || source;
-    const duration = locks.expression ? source.duration : note.duration;
-    // A locked chord's voices move together when its rhythm is unlocked.
-    const mappedStart = locks.notes && candidateStarts.length
-      ? candidateStarts[Math.floor(sourceStarts.indexOf(source.start) * candidateStarts.length / sourceStarts.length)]
-      : note.start;
-    const start = locks.rhythm ? source.start : Math.min(mappedStart, totalTicks - duration);
-    return {
-      ...source,
-      start,
-      duration: locks.expression ? duration : Math.min(duration, totalTicks - start),
-      pitch: locks.notes ? source.pitch : note.pitch,
-      velocity: locks.expression ? source.velocity : note.velocity,
-      chord: locks.notes ? source.chord : note.chord,
-    };
+// One canonical performance is used by the editor, browser audio, and MIDI.
+// Retrigger repeated pitches instead of silently merging their attacks.
+export function performanceNotes(pattern, { bars }) {
+  const totalTicks = bars * BAR_TICKS;
+  const pitches = new Map();
+  for (const source of pattern) {
+    const start = clamp(Math.round(source.start), 0, totalTicks - 1);
+    const note = { ...source, start, duration: clamp(Math.round(source.duration), 1, totalTicks - start) };
+    const group = pitches.get(note.pitch) || [];
+    group.push(note);
+    pitches.set(note.pitch, group);
+  }
+  const result = [];
+  for (const group of pitches.values()) {
+    group.sort((a, b) => a.start - b.start);
+    const unique = [];
+    for (const note of group) {
+      const previous = unique.at(-1);
+      if (previous?.start === note.start) {
+        previous.duration = Math.max(previous.duration, note.duration);
+        previous.velocity = Math.max(previous.velocity, note.velocity);
+      } else unique.push(note);
+    }
+    unique.forEach((note, index) => {
+      if (unique[index + 1]) note.duration = Math.min(note.duration, unique[index + 1].start - note.start);
+      result.push(note);
+    });
+  }
+  return result.sort((a, b) => a.start - b.start || a.pitch - b.pitch || (a.id || 0) - (b.id || 0));
+}
+
+function overlaps(a, b) {
+  return a.pitch === b.pitch && a.start < b.start + b.duration && b.start < a.start + a.duration;
+}
+
+export function mutatePattern(previous, settings, locks, amount, { obstacles = [], barIndex = null, harmony = null } = {}) {
+  const result = previous.map((note) => ({ ...note }));
+  const strength = clamp(amount, 0, 100) / 100;
+  if (!strength || Object.values(locks).every(Boolean)) return result;
+  const totalTicks = settings.bars * BAR_TICKS;
+  const allStarts = [...new Set(previous.map((note) => note.start))].sort((a, b) => a - b);
+  const fits = (note, ignored) => ![...result.filter((item) => !ignored.includes(item)), ...obstacles].some((other) => overlaps(note, other));
+
+  // Move onset groups together, retaining their order and avoiding timing collapse.
+  if (!locks.rhythm) allStarts.forEach((start, index) => {
+    if (!chance(strength)) return;
+    const group = result.filter((note) => note.start === start);
+    const bar = barIndex ?? Math.floor(start / BAR_TICKS);
+    const lower = Math.max(bar * BAR_TICKS, (allStarts[index - 1] ?? -1) + 1);
+    const upper = Math.min((bar + 1) * BAR_TICKS - 1, (allStarts[index + 1] ?? totalTicks) - 1, ...group.map((note) => totalTicks - note.duration));
+    const delta = randomInt(1, Math.max(1, Math.round(strength * 4))) * SNAP_TICKS * (chance(.5) ? -1 : 1);
+    const next = start + delta;
+    if (next < lower || next > upper) return;
+    const proposed = group.map((note) => ({ ...note, start: next }));
+    if (proposed.every((note) => fits(note, group))) group.forEach((note) => { note.start = next; });
   });
+
+  for (const note of result) {
+    if (!locks.notes && chance(strength)) {
+      const [min, max] = REGISTER_RANGES[settings.register];
+      let allowed = Array.from({ length: max - min + 1 }, (_, i) => min + i)
+        .filter((pitch) => SCALES[settings.scale].includes(((pitch - settings.root) % 12 + 12) % 12));
+      if (note.chord && harmony) {
+        const voicing = harmony.voicings[Math.floor(note.start / BAR_TICKS)];
+        allowed = allowed.filter((pitch) => voicing.some((tone) => tone % 12 === pitch % 12));
+      }
+      const closest = allowed.reduce((best, pitch, i) => Math.abs(pitch - note.pitch) < Math.abs(allowed[best] - note.pitch) ? i : best, 0);
+      const distance = randomInt(1, Math.max(1, Math.round(strength * 2)));
+      const pitch = allowed[clamp(closest + distance * (chance(.5) ? -1 : 1), 0, allowed.length - 1)];
+      const proposal = { ...note, pitch };
+      if (fits(proposal, [note])) note.pitch = pitch;
+    }
+    if (!locks.expression && chance(strength)) {
+      const velocityChange = randomInt(1, Math.max(1, Math.round(strength * 20))) * (chance(.5) ? -1 : 1);
+      note.velocity = clamp(note.velocity + velocityChange, 1, 127);
+      const duration = clamp(Math.round(note.duration * (1 + (chance(.5) ? -1 : 1) * strength * .3)), 1, totalTicks - note.start);
+      if (fits({ ...note, duration }, [note])) note.duration = duration;
+    }
+  }
+  return result;
+}
+
+export function regeneratePatternBar(pattern, settings, harmony, barIndex, locks) {
+  const start = barIndex * BAR_TICKS, end = start + BAR_TICKS;
+  const original = pattern.filter((note) => note.start >= start && note.start < end);
+  const outside = pattern.filter((note) => note.start < start || note.start >= end);
+  if (Object.values(locks).every(Boolean)) return pattern.map((note) => ({ ...note }));
+  const replacement = Object.values(locks).some(Boolean)
+    ? mutatePattern(original, settings, locks, 100, { obstacles: outside, barIndex, harmony })
+    : createPattern(settings, harmony).filter((note) => note.start >= start && note.start < end)
+      .filter((note) => !outside.some((other) => overlaps(note, other)));
+  return [...outside, ...replacement].sort((a, b) => a.start - b.start || a.pitch - b.pitch);
+}
+
+export function pitchViewport(pattern, settings, previous = null) {
+  const [low, high] = REGISTER_RANGES[settings.register];
+  if (!pattern.length && previous && previous.minPitch >= low && previous.minPitch + previous.pitchSpan - 1 <= high) {
+    return { minPitch: previous.minPitch, pitchSpan: previous.pitchSpan };
+  }
+  const min = pattern.length ? Math.max(low, Math.min(...pattern.map((note) => note.pitch)) - 2) : low;
+  const max = pattern.length ? Math.min(high, Math.max(...pattern.map((note) => note.pitch)) + 2) : low + 11;
+  const pitchSpan = Math.min(high - low + 1, Math.max(12, max - min + 1));
+  return { minPitch: Math.min(min, high - pitchSpan + 1), pitchSpan };
 }
 
 function variableLength(value) {
@@ -149,27 +233,9 @@ export function buildMidi(pattern, { bars, tempo }) {
     { time: 0, order: 0, data: [0xff, 0x51, 3, microseconds >>> 16, (microseconds >>> 8) & 0xff, microseconds & 0xff] },
     { time: 0, order: 0, data: [0xff, 0x58, 4, 4, 2, 24, 8] },
   ];
-  // Merge overlapping instances of the same pitch, avoiding premature note-offs.
-  const byPitch = new Map();
-  for (const note of pattern) {
-    const start = clamp(Math.round(note.start), 0, totalTicks - 1);
-    const end = clamp(Math.round(note.start + note.duration), start + 1, totalTicks);
-    const ranges = byPitch.get(note.pitch) || [];
-    ranges.push({ start, end, velocity: note.velocity });
-    byPitch.set(note.pitch, ranges);
-  }
-  for (const [pitch, ranges] of byPitch) {
-    ranges.sort((a, b) => a.start - b.start);
-    const merged = [];
-    for (const range of ranges) {
-      const last = merged.at(-1);
-      if (last && range.start < last.end) last.end = Math.max(last.end, range.end);
-      else merged.push({ ...range });
-    }
-    for (const { start, end, velocity } of merged) {
-      events.push({ time: start, order: 2, data: [0x90, pitch, velocity] });
-      events.push({ time: end, order: 1, data: [0x80, pitch, 0] });
-    }
+  for (const note of performanceNotes(pattern, { bars })) {
+    events.push({ time: note.start, order: 2, data: [0x90, note.pitch, note.velocity] });
+    events.push({ time: note.start + note.duration, order: 1, data: [0x80, note.pitch, 0] });
   }
   events.sort((a, b) => a.time - b.time || a.order - b.order);
   const track = [];

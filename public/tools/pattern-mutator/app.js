@@ -1,7 +1,9 @@
 import {
   PPQ, BAR_TICKS, SNAP_TICKS, ROOTS,
-  clamp, randomInt, pitchLabel, nearestScalePitch, createPattern, combineMutation, buildMidi,
-} from "./engine.js";
+  clamp, randomInt, pitchLabel, nearestScalePitch, createHarmony, createPattern, mutatePattern,
+  regeneratePatternBar, performanceNotes, pitchViewport, buildMidi,
+} from "./engine.js?v=0.5.0";
+import { DRAFT_KEY, parseDraft } from "./draft.js?v=0.5.0";
 
 const ROLE_LABELS = { melody: "Melody", bass: "Bassline", chords: "Chords", arp: "Arpeggio" };
 const GROOVE_LABELS = { straight: "Straight", syncopated: "Syncopated", "half-time": "Half-time", driving: "Driving", sparse: "Sparse" };
@@ -25,16 +27,18 @@ const elements = Object.fromEntries(Object.entries({
   regenerateBar: "regenerate-bar", regenerateBarButton: "regenerate-bar-button",
   viewPage: "view-page", visibleBars: "visible-bars", previousPage: "previous-page", nextPage: "next-page",
   viewSummary: "view-summary", followPlayback: "follow-playback", selectedNote: "selected-note",
+  mutationAmount: "mutation-amount", mutationValue: "mutation-value", draftStatus: "draft-status",
 }).map(([name, id]) => [name, document.getElementById(id)]));
 elements.lockButtons = document.querySelectorAll("[data-lock]");
 elements.styleButtons = document.querySelectorAll("[data-style]");
 
 const state = {
-  pattern: [], settings: null, audio: null, activeNodes: [], nextNoteId: 1, selectedId: null,
+  pattern: [], settings: null, harmony: null, audio: null, activeNodes: [], nextNoteId: 1, selectedId: null,
   edit: null, history: [], future: [], playheadTimer: null, auditionTimer: null, playback: null,
   velocityHistoryPushed: false, viewPage: 0,
   view: { minPitch: 48, pitchSpan: 12, start: 0, visibleTicks: BAR_TICKS * 4 },
   locks: { rhythm: false, notes: false, expression: false },
+  draftTimer: null, draftUnavailable: false,
 };
 
 ROOTS.forEach((root, index) => {
@@ -60,22 +64,26 @@ function sortPattern() { state.pattern.sort((a, b) => a.start - b.start || a.pit
 function setStatus(message, success = false) {
   elements.status.textContent = message;
   elements.status.classList.toggle("success", success);
+  scheduleDraft();
 }
 function updateRangeLabels() {
   elements.complexityValue.value = elements.complexity.value + "%";
   elements.variationValue.value = elements.variation.value + "%";
   elements.tempoValue.value = elements.tempo.value + " BPM";
+  elements.mutationValue.value = elements.mutationAmount.value + "%";
 }
 
 function snapshotPattern() {
   return {
     pattern: state.pattern.map((note) => ({ ...note })), settings: state.settings && { ...state.settings },
+    harmony: state.harmony && structuredClone(state.harmony),
     nextNoteId: state.nextNoteId, selectedId: state.selectedId, viewPage: state.viewPage,
   };
 }
 function restoreSnapshot(snapshot) {
   state.pattern = snapshot.pattern.map((note) => ({ ...note }));
   state.settings = snapshot.settings && { ...snapshot.settings };
+  state.harmony = snapshot.harmony && structuredClone(snapshot.harmony);
   state.nextNoteId = snapshot.nextNoteId;
   state.selectedId = snapshot.selectedId;
   state.viewPage = snapshot.viewPage;
@@ -86,6 +94,7 @@ function restoreSnapshot(snapshot) {
 }
 function rememberPattern() {
   stopAudition();
+  if (state.edit) cancelEdit();
   state.history.push(snapshotPattern());
   if (state.history.length > 50) state.history.shift();
   state.future = [];
@@ -103,10 +112,11 @@ function updateEditorControls() {
 function updatePatternControls() {
   const hasPattern = state.pattern.length > 0;
   const allLocked = Object.values(state.locks).every(Boolean);
-  [elements.audition, elements.download, elements.regenerateBar, elements.followPlayback].forEach((control) => { control.disabled = !hasPattern; });
+  [elements.audition, elements.download, elements.followPlayback].forEach((control) => { control.disabled = !hasPattern; });
+  elements.regenerateBar.disabled = !state.settings;
   elements.resetPattern.disabled = !state.settings;
   elements.mutate.disabled = !hasPattern || allLocked;
-  elements.regenerateBarButton.disabled = !hasPattern || allLocked;
+  elements.regenerateBarButton.disabled = !state.settings || allLocked;
   elements.undo.disabled = state.history.length === 0;
   elements.redo.disabled = state.future.length === 0;
 }
@@ -129,6 +139,10 @@ function describePattern(action = "") {
     + " · " + state.pattern.length + " notes · " + s.tempo + " BPM" + (action ? " · " + action : "");
 }
 function refreshAfterEdit(message) {
+  const normalized = performanceNotes(state.pattern, patternSettings());
+  const adjusted = normalized.some((note) => state.pattern.find((item) => item.id === note.id)?.duration !== note.duration);
+  state.pattern = normalized;
+  if (adjusted) message += " Overlapping repeated notes now retrigger cleanly.";
   sortPattern();
   renderPattern();
   describePattern("Edited");
@@ -176,10 +190,7 @@ function renderPattern() {
   const { start, visibleTicks } = state.view;
   // One stable pitch axis for the entire clip, including during note movement.
   if (!state.edit) {
-    const pitches = state.pattern.map((note) => note.pitch);
-    state.view.minPitch = pitches.length ? Math.max(0, Math.min(...pitches) - 2) : 48;
-    const maxPitch = pitches.length ? Math.max(...pitches) + 2 : 59;
-    state.view.pitchSpan = Math.max(12, maxPitch - state.view.minPitch + 1);
+    Object.assign(state.view, pitchViewport(state.pattern, patternSettings(), state.view));
   }
   elements.pianoRoll.style.setProperty("--pitch-rows", state.view.pitchSpan);
   elements.pianoRoll.style.setProperty("--steps", visibleTicks / SNAP_TICKS);
@@ -227,6 +238,7 @@ function renderPattern() {
   updatePatternControls();
   updateBarOptions();
   updatePlayhead();
+  scheduleDraft();
 }
 
 function changePage(page) {
@@ -237,6 +249,7 @@ function undo() {
   const previous = state.history.pop();
   if (!previous) return;
   stopAudition();
+  if (state.edit) cancelEdit();
   state.future.push(snapshotPattern());
   restoreSnapshot(previous);
   renderPattern(); describePattern("Undo");
@@ -246,6 +259,7 @@ function redo() {
   const next = state.future.pop();
   if (!next) return;
   stopAudition();
+  if (state.edit) cancelEdit();
   state.history.push(snapshotPattern());
   restoreSnapshot(next);
   renderPattern(); describePattern("Redo");
@@ -254,7 +268,7 @@ function redo() {
 function resetPattern() {
   if (!state.settings) return;
   rememberPattern();
-  state.pattern = []; state.settings = null; state.selectedId = null; state.viewPage = 0;
+  state.pattern = []; state.settings = null; state.harmony = null; state.selectedId = null; state.viewPage = 0;
   renderPattern(); describePattern();
   setStatus("Pattern reset. Undo restores it.", true);
 }
@@ -262,41 +276,40 @@ function resetPattern() {
 function generate(action = "Generated") {
   rememberPattern();
   state.settings = currentSettings();
-  state.pattern = tagNotes(createPattern(state.settings));
+  state.harmony = createHarmony(state.settings);
+  state.pattern = tagNotes(createPattern(state.settings, state.harmony));
   state.selectedId = null; state.viewPage = 0;
   renderPattern(); describePattern(action);
   setStatus(action + ". Lock a dimension, then mutate what remains.", true);
 }
 function mutate() {
   if (!state.pattern.length || Object.values(state.locks).every(Boolean)) return;
-  const locks = Object.entries(state.locks).filter(([, locked]) => locked).map(([name]) => name);
+  const amount = Number(elements.mutationAmount.value);
+  if (!amount) { setStatus("Mutation amount is 0%. Your current pattern is unchanged."); return; }
+  const candidate = mutatePattern(state.pattern, patternSettings(), state.locks, amount, { harmony: state.harmony });
+  if (JSON.stringify(candidate) === JSON.stringify(state.pattern)) {
+    setStatus("No notes changed on this pass. Try again or increase Mutation amount.");
+    return;
+  }
   rememberPattern();
-  const nextSettings = currentSettings();
-  if (locks.length) nextSettings.bars = patternSettings().bars;
-  const candidate = createPattern(nextSettings);
-  state.pattern = tagNotes(combineMutation(state.pattern, candidate, state.locks, nextSettings.bars * BAR_TICKS));
-  // Locked pitches still belong to the original key, scale, role and register.
-  state.settings = state.locks.notes
-    ? { ...nextSettings, ...Object.fromEntries(["root", "scale", "role", "register"].map((key) => [key, state.settings[key]])) }
-    : nextSettings;
+  state.pattern = candidate;
   state.selectedId = null;
-  sortPattern();
-  renderPattern(); describePattern("Mutated");
-  setStatus(locks.length ? "Mutated unlocked parts; " + locks.join(" and ") + " preserved." : "Fresh mutation created.", true);
+  refreshAfterEdit("Developed the current idea at " + amount + "%; locked dimensions are preserved.");
 }
 function regenerateBar() {
   if (!state.settings || Object.values(state.locks).every(Boolean)) return;
-  const settings = patternSettings(), bar = Number(elements.regenerateBar.value) - 1;
-  const start = bar * BAR_TICKS, end = start + BAR_TICKS;
-  const original = state.pattern.filter((note) => note.start >= start && note.start < end);
-  const candidate = createPattern(settings).filter((note) => note.start >= start && note.start < end);
+  const bar = Number(elements.regenerateBar.value) - 1;
+  const candidate = regeneratePatternBar(state.pattern, patternSettings(), state.harmony, bar, state.locks);
+  if (JSON.stringify(candidate) === JSON.stringify(state.pattern)) {
+    setStatus("This bar could not change with the current locks and neighboring notes.");
+    return;
+  }
   rememberPattern();
-  const replacement = combineMutation(original, candidate, state.locks, totalTicks());
-  state.pattern = [...state.pattern.filter((note) => note.start < start || note.start >= end), ...tagNotes(replacement)];
+  state.pattern = tagNotes(candidate);
   state.selectedId = null;
-  const pageBars = Math.min(Number(elements.visibleBars.value), settings.bars);
+  const pageBars = Math.min(Number(elements.visibleBars.value), state.settings.bars);
   state.viewPage = Math.floor(bar / pageBars);
-  refreshAfterEdit("Refreshed bar " + (bar + 1) + "; locks and every other bar are preserved.");
+  refreshAfterEdit("Refreshed bar " + (bar + 1) + " within its original harmony; every other bar is unchanged.");
 }
 function downloadMidi() {
   const s = patternSettings();
@@ -347,7 +360,7 @@ function auditionPass(startAt = state.audio.currentTime + .05) {
     pad: { type: "triangle", attack: .12, level: .05, release: .28 },
   }[elements.auditionSound.value];
   state.playback = { startAt, secondsPerTick, totalTicks: totalTicks() };
-  state.pattern.forEach((note) => {
+  performanceNotes(state.pattern, s).forEach((note) => {
     const oscillator = context.createOscillator(), gain = context.createGain();
     oscillator.type = note.chord && elements.auditionSound.value === "soft" ? "triangle" : voice.type;
     oscillator.frequency.value = 440 * Math.pow(2, (note.pitch - 69) / 12);
@@ -426,6 +439,7 @@ function selectNote(id) {
   state.velocityHistoryPushed = false;
   elements.pianoRoll.querySelectorAll(".note").forEach((item) => item.classList.toggle("is-selected", Number(item.dataset.noteId) === id));
   updateEditorControls();
+  scheduleDraft();
 }
 function deleteSelectedNote() {
   const note = noteById();
@@ -436,7 +450,7 @@ function deleteSelectedNote() {
   refreshAfterEdit("Selected note deleted.");
 }
 function cancelEdit() {
-  if (state.edit?.original) {
+  if (state.edit?.original && noteById(state.edit.id)) {
     Object.assign(noteById(state.edit.id), state.edit.original);
   }
   state.edit = null;
@@ -488,14 +502,23 @@ function handlePianoPointerUp(event) {
   state.edit = null;
   if (edit.type === "add") {
     if (edit.moved) return;
-    rememberPattern();
     const position = pointerPosition(event);
+    if (state.pattern.some((note) => note.start === position.tick && note.pitch === position.pitch)) {
+      setStatus("A note already starts here at this pitch. Select it to edit it."); return;
+    }
+    rememberPattern();
     const note = { id: state.nextNoteId++, start: position.tick, duration: Math.min(SNAP_TICKS * 2, totalTicks() - position.tick), pitch: position.pitch, velocity: 92, chord: false };
     state.pattern.push(note); state.selectedId = note.id;
     refreshAfterEdit("Added a scale-safe note.");
     return;
   }
   const note = noteById(edit.id);
+  if (state.pattern.some((other) => other.id !== note.id && other.start === note.start && other.pitch === note.pitch)) {
+    Object.assign(note, edit.original);
+    renderPattern();
+    setStatus("That pitch already has a note at this time. The move was cancelled.");
+    return;
+  }
   if (note.start === edit.original.start && note.pitch === edit.original.pitch && note.duration === edit.original.duration) return;
   state.history.push(edit.snapshot);
   if (state.history.length > 50) state.history.shift();
@@ -503,7 +526,7 @@ function handlePianoPointerUp(event) {
   refreshAfterEdit(edit.type === "resize" ? "Resized selected note." : "Moved selected note.");
 }
 
-[elements.complexity, elements.variation, elements.tempo].forEach((input) => input.addEventListener("input", updateRangeLabels));
+[elements.complexity, elements.variation, elements.tempo, elements.mutationAmount].forEach((input) => input.addEventListener("input", () => { updateRangeLabels(); scheduleDraft(); }));
 elements.tempo.addEventListener("change", () => {
   if (!state.settings || state.settings.tempo === Number(elements.tempo.value)) return;
   rememberPattern();
@@ -512,7 +535,9 @@ elements.tempo.addEventListener("change", () => {
   updatePatternControls();
 });
 [elements.root, elements.scale, elements.role, elements.bars, elements.groove, elements.register].forEach((input) => input.addEventListener("change", () => {
-  if (state.settings) setStatus("Direction updated for the next generation or mutation. Your current clip is unchanged.");
+  if (state.settings) setStatus("Direction updated for Generate Pattern. Mutation and bar refresh keep your current clip’s musical settings.");
+  else renderPattern();
+  scheduleDraft();
 }));
 elements.generate.addEventListener("click", () => generate());
 elements.surprise.addEventListener("click", surprise);
@@ -565,6 +590,63 @@ elements.lockButtons.forEach((button) => button.addEventListener("click", () => 
     ? "All dimensions locked. Unlock one to make a variation."
     : key[0].toUpperCase() + key.slice(1) + (state.locks[key] ? " locked." : " unlocked."));
 }));
-window.addEventListener("pagehide", stopAudition);
+[elements.auditionSound, elements.loopAudition, elements.followPlayback].forEach((input) => input.addEventListener("change", scheduleDraft));
+
+function scheduleDraft() {
+  window.clearTimeout(state.draftTimer);
+  state.draftTimer = window.setTimeout(saveDraft, 150);
+}
+function saveDraft() {
+  window.clearTimeout(state.draftTimer);
+  if (state.draftUnavailable || state.edit) return;
+  if (!state.settings && !state.history.length && !state.future.length) return;
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({
+      version: 1, current: snapshotPattern(), history: state.history, future: state.future,
+      controls: currentSettings(), locks: state.locks, mutationAmount: Number(elements.mutationAmount.value),
+      view: { visibleBars: Number(elements.visibleBars.value), follow: elements.followPlayback.checked, minPitch: state.view.minPitch, pitchSpan: state.view.pitchSpan },
+      audio: { sound: elements.auditionSound.value, loop: elements.loopAudition.checked },
+    }));
+    elements.draftStatus.textContent = "Current draft saved in this browser.";
+  } catch {
+    state.draftUnavailable = true;
+    elements.draftStatus.textContent = "Draft recovery is unavailable here. Download MIDI to keep your work.";
+  }
+}
+function restoreDraft() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return;
+    const draft = parseDraft(raw);
+    if (!draft) {
+      elements.draftStatus.textContent = "The saved draft could not be restored. Generate a new pattern to start again.";
+      return;
+    }
+    restoreSnapshot(draft.current);
+    state.history = draft.history;
+    state.future = draft.future;
+    state.locks = draft.locks;
+    Object.entries(draft.controls).forEach(([name, value]) => { elements[name].value = String(value); });
+    elements.mutationAmount.value = String(draft.mutationAmount);
+    elements.visibleBars.value = String(draft.view.visibleBars);
+    elements.followPlayback.checked = draft.view.follow;
+    Object.assign(state.view, { minPitch: draft.view.minPitch, pitchSpan: draft.view.pitchSpan });
+    elements.auditionSound.value = draft.audio.sound;
+    elements.loopAudition.checked = draft.audio.loop;
+    elements.lockButtons.forEach((button) => button.setAttribute("aria-pressed", String(state.locks[button.dataset.lock])));
+    elements.draftStatus.textContent = "Recovered your last draft and undo history.";
+    describePattern("Recovered draft");
+  } catch {
+    state.draftUnavailable = true;
+    elements.draftStatus.textContent = "Draft recovery is unavailable here. Download MIDI to keep your work.";
+  }
+}
+window.addEventListener("pagehide", () => {
+  if (state.edit) cancelEdit();
+  saveDraft();
+  stopAudition();
+});
+document.addEventListener("visibilitychange", () => { if (document.hidden) saveDraft(); });
+restoreDraft();
 updateRangeLabels();
 renderPattern();
