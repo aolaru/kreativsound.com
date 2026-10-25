@@ -36,6 +36,6 @@ decoding="async"
 <p>The main idea is simple: one layer for tone, one layer for motion.</p>
 <div class="article-cta">
 <a class="button primary" href="/sounds/bioforms-synplant-2-presets">Explore BIOFORMS 2</a>
-<a class="button secondary" href="/sounds/bioforms-2-lite-synplant-2-presets">Try Lite free</a>
+<a class="button secondary" href="/sounds/bioforms-lite-synplant-2-presets">Try Lite free</a>
 <a class="button secondary" href="/updates/#guides">Back to Guides</a>
 </div>

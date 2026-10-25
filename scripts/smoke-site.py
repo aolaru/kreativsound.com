@@ -145,7 +145,7 @@ def main() -> int:
             "/sounds/black-arcology-pigments-presets": ["Buy on Gumroad", "Try Lite free", "BLACK ARCOLOGY", "Product Specifications", "Requirements"],
             "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "64 presets", "2.09 MB", "Product Specifications", "Requirements"],
             "/sounds/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS 2", "128", "93 cinematic", "22 FX", "29 MULTI", ".synplant", "Synplant 1", "minimum tested point version is not recorded", "Installation", "bioforms-2-cover.webp"],
-            "/sounds/bioforms-2-lite-synplant-2-presets": ["Download Free", "BIOFORMS 2 Lite", "32 presets", "Enter 0", "6 FX", "5 MULTI", ".synplant", "Get BIOFORMS 2 Full", "128 unique sounds, not 160", "Installation", "bioforms-2-lite-cover.webp"],
+            "/sounds/bioforms-lite-synplant-2-presets": ["Download Free", "BIOFORMS Lite", "32 presets", "Enter 0", "6 FX", "5 MULTI", ".synplant", "Get BIOFORMS 2 Full", "128 unique sounds, not 160", "Installation", "bioforms-2-lite-cover.webp"],
             "/sounds/sfxs-2-sound-effects": ["SFXS 2", "Listen to demo", "34 original sound effects", "24-bit WAV", "116 MB", "/assets/audio/sfxs-2-demo-01.mp3"],
             "/sounds/noize-2-noise-textures": ["NOIZE 2", "32 sounds", "44.1 kHz", "Listen to demo", "/assets/audio/noize-2-demo-01.mp3"],
             "/sounds/enigma-2-cinematic-atmospheres": ["ENIGMA 2", "12 sounds", "44.1 kHz", "Listen to demo", "/assets/audio/enigma-2-demo-01.mp3"],
@@ -169,8 +169,18 @@ def main() -> int:
                 if dom.count(installation_heading) != 1:
                     errors.append(f"{label}: expected exactly one Installation heading.")
 
+        retired_lite_route = "/sounds/bioforms-2-lite-synplant-2-presets"
+        if retired_lite_route in sitemap:
+            errors.append("Retired BIOFORMS Lite URL must not appear in the sitemap")
+        for suffix in ("", "/", ".html"):
+            route = retired_lite_route + suffix
+            dom = fetch_html(base_url + route)
+            for text in ("BIOFORMS Lite has moved", 'content="noindex,follow"', 'href="https://kreativsound.com/sounds/bioforms-lite-synplant-2-presets"', 'content="0; url=/sounds/bioforms-lite-synplant-2-presets"'):
+                require(dom, text, route, errors)
+
         for route, needles in pages.items():
             dom = fetch_html(base_url + route)
+            forbid(dom, "BIOFORMS 2 Lite", route, errors)
             for needle in needles:
                 require(dom, needle, route, errors)
 
@@ -229,7 +239,7 @@ def main() -> int:
 
             if route == "/contact/":
                 require(dom, '<option value="BIOFORMS 2"', route, errors)
-                require(dom, '<option value="BIOFORMS 2 Lite"', route, errors)
+                require(dom, '<option value="BIOFORMS Lite"', route, errors)
                 for name in ["OBSIDIAN", "OBSIDIAN Lite", "ANALOG DRIFT", "ANALOG DRIFT Lite"]:
                     require(dom, f'<option value="{name}"', route, errors)
                 require(dom, '<option value="KS BurnShaper"', route, errors)

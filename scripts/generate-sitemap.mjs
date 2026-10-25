@@ -134,6 +134,10 @@ function sourcePathsForRoute(route) {
 }
 
 function shouldIndexRoute(route) {
+  // Retained only to redirect links shared before the Lite URL was shortened.
+  if (route === "/sounds/bioforms-2-lite-synplant-2-presets") {
+    return false;
+  }
   if (route === "/learn/") {
     return false;
   }

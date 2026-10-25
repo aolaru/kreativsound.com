@@ -302,14 +302,14 @@ export const products: Product[] = [
     format: "Synplant 2 presets",
     count: "128 presets",
     useCase: "Organic motion, cinematic atmospheres, and wild experimental textures",
-    extraAction: { label: "Try Lite", url: "/sounds/bioforms-2-lite-synplant-2-presets" }
+    extraAction: { label: "Try Lite", url: "/sounds/bioforms-lite-synplant-2-presets" }
   },
   {
-    title: "BIOFORMS 2 Lite - 32 Free Synplant 2 Presets",
+    title: "BIOFORMS Lite - 32 Free Synplant 2 Presets",
     category: "Free",
     status: "free",
     url: "https://kreativ.gumroad.com/l/bioforms-2-lite-synplant-2-presets",
-    detailsUrl: "/sounds/bioforms-2-lite-synplant-2-presets",
+    detailsUrl: "/sounds/bioforms-lite-synplant-2-presets",
     badge: "New",
     thumbnail: "/assets/thumbs/bioforms-2-lite-thumb.webp",
     coverImage: "/assets/thumbs/bioforms-2-lite-cover.webp",

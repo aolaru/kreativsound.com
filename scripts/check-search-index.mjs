@@ -39,6 +39,12 @@ if (!Array.isArray(entries)) {
 }
 
 const entryUrls = new Set(entries.map((entry) => entry.url));
+if (entryUrls.has("/sounds/bioforms-2-lite-synplant-2-presets")) {
+  fail("The retired BIOFORMS Lite URL must not appear in search results.");
+}
+if (entries.some((entry) => entry.title?.includes("BIOFORMS 2 Lite"))) {
+  fail("The free edition must be named BIOFORMS Lite in search results.");
+}
 const duplicateUrls = entries
   .map((entry) => entry.url)
   .filter((url, index, urls) => urls.indexOf(url) !== index);
@@ -55,7 +61,7 @@ for (const route of sitemapPaths) {
 
 for (const requiredRoute of [
   "/sounds/bioforms-synplant-2-presets",
-  "/sounds/bioforms-2-lite-synplant-2-presets",
+  "/sounds/bioforms-lite-synplant-2-presets",
   "/sounds/obsidian-serum-2-presets",
   "/sounds/obsidian-lite-serum-2-presets",
   "/sounds/analog-drift-mini-v-presets",

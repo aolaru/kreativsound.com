@@ -46,7 +46,7 @@ const miniV: ProductInstallation = {
 };
 const synplant2: ProductInstallation = {
   steps: [
-    "Unzip BIOFORMS 2 or BIOFORMS 2 Lite and read the included installation readme.",
+    "Unzip BIOFORMS 2 or BIOFORMS Lite and read the included installation readme.",
     "Load a .synplant preset in Synplant 2, or copy the presets into its user preset folder. Synplant 1 is not supported.",
     "Keep the originals when saving variations. The download contains presets, not the Synplant 2 instrument."
   ]
@@ -89,7 +89,7 @@ export const productInstallations: Record<string, ProductInstallation> = {
   "velvet-ruins-vital-presets": vital,
   "velvet-ruins-lite-vital-presets": vital,
   "bioforms-synplant-2-presets": synplant2,
-  "bioforms-2-lite-synplant-2-presets": synplant2,
+  "bioforms-lite-synplant-2-presets": synplant2,
   "neolith-softube-models-presets": {
     steps: [
       "Unzip NEOLITH and open the included Presets Banks folder.",

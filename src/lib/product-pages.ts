@@ -93,8 +93,8 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
     description: "128 evolving Synplant 2 presets across seven categories for organic motion, cinematic atmospheres, and experimental textures. Includes all 32 Lite sounds.",
     kicker: "Synplant 2 preset bank"
   },
-  "bioforms-2-lite-synplant-2-presets": {
-    headline: "BIOFORMS 2 Lite",
+  "bioforms-lite-synplant-2-presets": {
+    headline: "BIOFORMS Lite",
     description: "32 free Synplant 2 presets selected from BIOFORMS 2 Full: basses, drones, FX, keys, multis, pads, and vocals. Preset list, installation readme, and license included.",
     kicker: "Free Synplant 2 preset bank"
   },
@@ -207,8 +207,8 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
 };
 
 const liteComparisons: Record<string, ProductLiteComparison> = {
-  "bioforms-2-lite-synplant-2-presets": {
-    title: "BIOFORMS 2 Lite vs Full",
+  "bioforms-lite-synplant-2-presets": {
+    title: "BIOFORMS Lite vs BIOFORMS 2",
     intro: "Try all seven categories free. Full includes these 32 sounds plus 96 more.",
     liteLabel: "Lite",
     fullLabel: "BIOFORMS 2 Full",

@@ -1,0 +1,24 @@
+---
+const target = "/sounds/bioforms-lite-synplant-2-presets";
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BIOFORMS Lite moved | Kreativ Sound</title>
+    <meta name="description" content="The BIOFORMS Lite product page has moved to its shorter Kreativ Sound URL." />
+    <meta name="robots" content="noindex,follow" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={`https://kreativsound.com${target}`} />
+    <script is:inline define:vars={{ target }}>
+      window.location.replace(target + window.location.search + window.location.hash);
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1>BIOFORMS Lite has moved</h1>
+      <p><a href={target}>Open the current product page</a>.</p>
+    </main>
+  </body>
+</html>

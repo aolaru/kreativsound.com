@@ -329,12 +329,12 @@ export const landingCopyOverrides = {
       "Use a Synplant 2-compatible macOS or Windows setup. A minimum tested point version is not recorded."
     ]
   },
-  "bioforms-2-lite-synplant-2-presets": {
+  "bioforms-lite-synplant-2-presets": {
     subtitle: "32 free Synplant 2 presets selected from BIOFORMS 2 Full.",
     shortMeta: "32 presets • Synplant 2 • Seven categories • Free subset of BIOFORMS 2",
     ctaLine: "Enter 0 on Gumroad to download free. Contributions are optional.",
     longDescription: [
-      "BIOFORMS 2 Lite introduces the bank's organic movement, cinematic atmospheres, and abstract experimental textures with a selection from the core, cinematic, abstract, and wild material.",
+      "BIOFORMS Lite introduces the bank's organic movement, cinematic atmospheres, and abstract experimental textures with a selection from the core, cinematic, abstract, and wild material.",
       "All 32 Lite presets are also in the full 128-preset bank. Lite is a subset, not an extra expansion for existing Full owners. The ZIP includes a preset list, installation readme, and license."
     ],
     specifications: [
