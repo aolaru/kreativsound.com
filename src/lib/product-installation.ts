@@ -44,6 +44,13 @@ const miniV: ProductInstallation = {
     "Native menu import of the release archives is unverified. Check the compatibility notes below the specifications; contact support if installation fails. Back up your existing presets first."
   ]
 };
+const synplant2: ProductInstallation = {
+  steps: [
+    "Unzip BIOFORMS 2 or BIOFORMS 2 Lite and read the included installation readme.",
+    "Load a .synplant preset in Synplant 2, or copy the presets into its user preset folder. Synplant 1 is not supported.",
+    "Keep the originals when saving variations. The download contains presets, not the Synplant 2 instrument."
+  ]
+};
 
 export const productInstallations: Record<string, ProductInstallation> = {
   "obsidian-serum-2-presets": serum2,
@@ -81,13 +88,8 @@ export const productInstallations: Record<string, ProductInstallation> = {
   "operators-lite-fm8-presets": fm8,
   "velvet-ruins-vital-presets": vital,
   "velvet-ruins-lite-vital-presets": vital,
-  "bioforms-synplant-2-presets": {
-    steps: [
-      "Unzip BIOFORMS and locate the .synplant files in the Presets folder.",
-      "Open Synplant 2 and load a .synplant file through its patch browser. Synplant 1 is not supported.",
-      "Keep the files together in your user patch folder for easy browsing; save variations separately."
-    ]
-  },
+  "bioforms-synplant-2-presets": synplant2,
+  "bioforms-2-lite-synplant-2-presets": synplant2,
   "neolith-softube-models-presets": {
     steps: [
       "Unzip NEOLITH and open the included Presets Banks folder.",

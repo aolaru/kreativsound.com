@@ -88,6 +88,16 @@ type ProductPageOverride = Partial<Pick<
 >>;
 
 const productPageOverrides: Record<string, ProductPageOverride> = {
+  "bioforms-synplant-2-presets": {
+    headline: "BIOFORMS 2",
+    description: "128 evolving Synplant 2 presets across seven categories for organic motion, cinematic atmospheres, and experimental textures. Includes all 32 Lite sounds.",
+    kicker: "Synplant 2 preset bank"
+  },
+  "bioforms-2-lite-synplant-2-presets": {
+    headline: "BIOFORMS 2 Lite",
+    description: "32 free Synplant 2 presets selected from BIOFORMS 2 Full: basses, drones, FX, keys, multis, pads, and vocals. Preset list, installation readme, and license included.",
+    kicker: "Free Synplant 2 preset bank"
+  },
   "obsidian-serum-2-presets": {
     headline: "OBSIDIAN",
     description: "128 dark cinematic Serum 2 presets, including all 32 Lite sounds plus 96 more. Tested with Serum 2.1.5; named macros, preset list, and installation guide included.",
@@ -197,6 +207,22 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
 };
 
 const liteComparisons: Record<string, ProductLiteComparison> = {
+  "bioforms-2-lite-synplant-2-presets": {
+    title: "BIOFORMS 2 Lite vs Full",
+    intro: "Try all seven categories free. Full includes these 32 sounds plus 96 more.",
+    liteLabel: "Lite",
+    fullLabel: "BIOFORMS 2 Full",
+    rows: [
+      { label: "Included", lite: "32 selected presets", full: "128 unique presets, including all Lite sounds" },
+      { label: "Categories", lite: "4 basses, 4 drones, 6 FX, 4 keys, 5 multis, 5 pads, 4 vocals", full: "15 basses, 15 drones, 22 FX, 14 keys, 29 multis, 22 pads, 11 vocals" },
+      { label: "Price", lite: "Free; optional contributions", full: "€9" }
+    ],
+    upgradeUrl: "https://kreativ.gumroad.com/l/bioforms-synplant-2-presets",
+    upgradeLabel: "Get BIOFORMS 2 Full",
+    secondaryUrl: "/sounds/bioforms-synplant-2-presets",
+    secondaryLabel: "View full details",
+    note: "Lite is a subset. Owning both gives you 128 unique sounds, not 160. Both editions require Synplant 2; Synplant 1 is not supported."
+  },
   "obsidian-lite-serum-2-presets": {
     title: "OBSIDIAN Lite vs Full",
     intro: "Try 32 sounds free. Full includes those same sounds plus 96 more.",

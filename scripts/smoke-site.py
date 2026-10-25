@@ -144,7 +144,8 @@ def main() -> int:
             "/sounds/velvet-ruins-lite-vital-presets": ["Download Free", "VELVET RUINS Lite", "32 presets", "8 cinematic experiments", "ATMOS, MOTION, DUST, and SPACE", "Vital or Vital Free", "Lite vs Full", "Upgrade to VELVET RUINS 2"],
             "/sounds/black-arcology-pigments-presets": ["Buy on Gumroad", "Try Lite free", "BLACK ARCOLOGY", "Product Specifications", "Requirements"],
             "/sounds/neolith-softube-models-presets": ["Buy on Gumroad", "NEOLITH", "64 presets", "2.09 MB", "Product Specifications", "Requirements"],
-            "/sounds/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS", "Description", "Product Specifications", "Requirements"],
+            "/sounds/bioforms-synplant-2-presets": ["Buy on Gumroad", "BIOFORMS 2", "128", "93 cinematic", "22 FX", "29 MULTI", ".synplant", "Synplant 1", "minimum tested point version is not recorded", "Installation", "bioforms-2-cover.webp"],
+            "/sounds/bioforms-2-lite-synplant-2-presets": ["Download Free", "BIOFORMS 2 Lite", "32 presets", "Enter 0", "6 FX", "5 MULTI", ".synplant", "Get BIOFORMS 2 Full", "128 unique sounds, not 160", "Installation", "bioforms-2-lite-cover.webp"],
             "/sounds/sfxs-2-sound-effects": ["SFXS 2", "Listen to demo", "34 original sound effects", "24-bit WAV", "116 MB", "/assets/audio/sfxs-2-demo-01.mp3"],
             "/sounds/noize-2-noise-textures": ["NOIZE 2", "32 sounds", "44.1 kHz", "Listen to demo", "/assets/audio/noize-2-demo-01.mp3"],
             "/sounds/enigma-2-cinematic-atmospheres": ["ENIGMA 2", "12 sounds", "44.1 kHz", "Listen to demo", "/assets/audio/enigma-2-demo-01.mp3"],
@@ -187,6 +188,8 @@ def main() -> int:
                 if dom.find('id="burnshaper-title"') > dom.find('id="ghostform-title"'):
                     errors.append(f"{route}: the new BurnShaper release must precede Ghostform.")
             if route == "/updates/":
+                require(dom, "BIOFORMS 2 and free Lite added to the website", route, errors)
+                require(dom, 'href="/posts/bioforms-2-catalog-2026-10-25.html"', route, errors)
                 for title in ["OBSIDIAN and Lite added to the catalog", "ANALOG DRIFT and Lite added to the catalog", "ABYSS v3.3 catalog updated", "VELVET RUINS 2 and Lite details refreshed"]:
                     require(dom, title, route, errors)
                 require(dom, "KS BurnShaper added to Plugins", route, errors)
@@ -225,6 +228,8 @@ def main() -> int:
                     errors.append(f"{route}: keep the About page at 130 words or fewer.")
 
             if route == "/contact/":
+                require(dom, '<option value="BIOFORMS 2"', route, errors)
+                require(dom, '<option value="BIOFORMS 2 Lite"', route, errors)
                 for name in ["OBSIDIAN", "OBSIDIAN Lite", "ANALOG DRIFT", "ANALOG DRIFT Lite"]:
                     require(dom, f'<option value="{name}"', route, errors)
                 require(dom, '<option value="KS BurnShaper"', route, errors)

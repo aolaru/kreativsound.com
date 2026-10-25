@@ -290,17 +290,33 @@ export const products: Product[] = [
     useCase: "Analog tension and cinematic weight"
   },
   {
-    title: "BIOFORMS - Evolving Presets for Synplant 2",
+    title: "BIOFORMS 2 - 128 Evolving Synplant 2 Presets",
     category: "Presets",
     status: "available",
     ...standardSoundPackPrice,
-    url: "https://kreativ.gumroad.com/l/bioforms-synplant-2-presets?layout=profile",
+    url: "https://kreativ.gumroad.com/l/bioforms-synplant-2-presets",
     detailsUrl: "/sounds/bioforms-synplant-2-presets",
-    thumbnail: "/assets/thumbs/bioforms.jpg",
-    coverImage: "/assets/thumbs/bioforms-cover.webp",
+    badge: "Updated",
+    thumbnail: "/assets/thumbs/bioforms-2-thumb.webp",
+    coverImage: "/assets/thumbs/bioforms-2-cover.webp",
     format: "Synplant 2 presets",
-    count: "32+ patches",
-    useCase: "Organic motion and ambient beds"
+    count: "128 presets",
+    useCase: "Organic motion, cinematic atmospheres, and wild experimental textures",
+    extraAction: { label: "Try Lite", url: "/sounds/bioforms-2-lite-synplant-2-presets" }
+  },
+  {
+    title: "BIOFORMS 2 Lite - 32 Free Synplant 2 Presets",
+    category: "Free",
+    status: "free",
+    url: "https://kreativ.gumroad.com/l/bioforms-2-lite-synplant-2-presets",
+    detailsUrl: "/sounds/bioforms-2-lite-synplant-2-presets",
+    badge: "New",
+    thumbnail: "/assets/thumbs/bioforms-2-lite-thumb.webp",
+    coverImage: "/assets/thumbs/bioforms-2-lite-cover.webp",
+    format: "Synplant 2 presets",
+    count: "32 presets",
+    useCase: "A free seven-category selection from the full BIOFORMS 2 bank",
+    extraAction: { label: "Full Bank", url: "/sounds/bioforms-synplant-2-presets" }
   },
   {
     title: "MONOLUSH - Presets for FabFilter One",

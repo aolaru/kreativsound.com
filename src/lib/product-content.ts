@@ -307,29 +307,48 @@ export const landingCopyOverrides = {
     ]
   },
   "bioforms-synplant-2-presets": {
-    subtitle: "Evolving Synplant 2 Presets for Organic Motion",
-    shortMeta: "32+ patches • Synplant 2 presets • Organic ambient motion",
-    ctaLine: "Download the Synplant 2 preset pack.",
+    subtitle: "128 evolving presets for organic motion, cinematic atmospheres, and wild textures.",
+    shortMeta: "128 presets • Synplant 2 • Seven categories • Includes all 32 Lite sounds",
+    ctaLine: "Get the full 128-preset BIOFORMS 2 bank on Gumroad.",
     longDescription: [
-      "BIOFORMS is a Synplant 2 preset pack built around organic movement, slow harmonic change, and atmospheric tone that feels alive without becoming crowded.",
-      "The collection focuses on evolving patches, ambient beds, living textures, and restrained melodic material. It works best when a cue needs motion under the surface rather than a static pad.",
-      "BIOFORMS leans into the generative and biological character of Synplant 2: unstable growth, soft mutation, and musical movement that can support ambient, cinematic, and experimental production."
+      "BIOFORMS 2 explores Synplant 2's organic side with evolving pads and drones, basses, keys, vocal textures, hybrid multis, and abstract sound-design material for ambient, cinematic, and experimental music.",
+      "Version 2 adds 93 cinematic, abstract, and wild variations alongside the core sounds, with consistent category naming and refined note response across the new material. Explore, mutate, and re-seed the sounds inside Synplant 2.",
+      "The full collection includes all 32 Lite presets plus 96 additional sounds: 128 unique presets, not 160. A preset list, installation readme, and license are included."
     ],
     specifications: [
       { label: "Product type", value: "Preset bank" },
       { label: "Synth", value: "Sonic Charge Synplant 2" },
-      { label: "Format", value: "Synplant 2 presets" },
-      { label: "Preset count", value: "32+ patches" },
-      { label: "Focus", value: "Organic movement, evolving tone, ambient beds" },
-      { label: "Download size", value: "1.91 MB" },
-      { label: "Delivery", value: "Digital download" },
-      { label: "License", value: "Personal and commercial music production use" },
-      { label: "Checkout", value: "Gumroad" }
+      { label: "Format", value: "128 .synplant preset files in a ZIP" },
+      { label: "Categories", value: "15 BASS, 15 DRONE, 22 FX, 14 KEYS, 29 MULTI, 22 PAD, and 11 VOX" },
+      { label: "Lite selection", value: "All 32 Lite presets are included in Full" },
+      { label: "Extras", value: "Preset list, installation readme, and license" },
+      { label: "License", value: "Personal and commercial music, film, game, and client projects; no preset redistribution or resale" }
     ],
     requirements: [
-      "Sonic Charge Synplant 2 is required to use these presets.",
-      "You need a DAW or host that can load Synplant 2, such as Ableton Live, Logic Pro, Cubase, FL Studio, Bitwig Studio, Reaper, or similar.",
-      "Use these presets for evolving harmonic parts in ambient, cinematic, electronic, and experimental tracks."
+      "Sonic Charge Synplant 2 is required and is not included. These presets do not work with Synplant 1.",
+      "Use a Synplant 2-compatible macOS or Windows setup. A minimum tested point version is not recorded."
+    ]
+  },
+  "bioforms-2-lite-synplant-2-presets": {
+    subtitle: "32 free Synplant 2 presets selected from BIOFORMS 2 Full.",
+    shortMeta: "32 presets • Synplant 2 • Seven categories • Free subset of BIOFORMS 2",
+    ctaLine: "Enter 0 on Gumroad to download free. Contributions are optional.",
+    longDescription: [
+      "BIOFORMS 2 Lite introduces the bank's organic movement, cinematic atmospheres, and abstract experimental textures with a selection from the core, cinematic, abstract, and wild material.",
+      "All 32 Lite presets are also in the full 128-preset bank. Lite is a subset, not an extra expansion for existing Full owners. The ZIP includes a preset list, installation readme, and license."
+    ],
+    specifications: [
+      { label: "Product type", value: "Free preset bank" },
+      { label: "Synth", value: "Sonic Charge Synplant 2" },
+      { label: "Format", value: "32 .synplant preset files in a ZIP" },
+      { label: "Categories", value: "4 BASS, 4 DRONE, 6 FX, 4 KEYS, 5 MULTI, 5 PAD, and 4 VOX" },
+      { label: "Extras", value: "Preset list, ReadMe.txt, and License.txt" },
+      { label: "Access", value: "Free on Gumroad; optional contributions" },
+      { label: "License", value: "Royalty-free commercial and non-commercial music; no preset redistribution, resale, or inclusion in other preset packs" }
+    ],
+    requirements: [
+      "Sonic Charge Synplant 2 is required and is not included. These presets do not work with Synplant 1.",
+      "Use a Synplant 2-compatible macOS or Windows setup. This download is a preset pack, not the instrument itself."
     ]
   },
   "neolith-softube-models-presets": {

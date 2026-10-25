@@ -12,6 +12,7 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-10-25", kind: "update", title: "BIOFORMS 2 and free Lite added to the website", description: "The Synplant 2 bank now lists 128 presets, with updated artwork and a free 32-preset Lite selection.", href: "/sounds/bioforms-synplant-2-presets", releaseNote: "/posts/bioforms-2-catalog-2026-10-25.html" },
   { date: "2026-10-24", kind: "fix", title: "Wave Mutator Free beta v0.2.5", description: "Safer edit-history removal, explicit partial ZIP results and retries, final-format peak normalization, cancellable imports, and correct playback cleanup.", href: "/tools/wave-mutator/changelog/" },
   { date: "2026-10-24", kind: "update", title: "Pattern Mutator Free v0.5.0", description: "Mutation develops existing notes, drafts recover automatically, bar refresh preserves harmony, and MIDI exports match playback.", href: "/tools/pattern-mutator/changelog/" },
   { date: "2026-10-17", kind: "new", title: "OBSIDIAN and Lite added to the catalog", description: "Explore 128 cinematic Serum 2 presets, including 32 free Lite sounds, with clear testing and installation notes.", href: "/sounds/obsidian-serum-2-presets", releaseNote: "/posts/obsidian-catalog-2026-10-17.html" },

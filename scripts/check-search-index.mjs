@@ -54,6 +54,8 @@ for (const route of sitemapPaths) {
 }
 
 for (const requiredRoute of [
+  "/sounds/bioforms-synplant-2-presets",
+  "/sounds/bioforms-2-lite-synplant-2-presets",
   "/sounds/obsidian-serum-2-presets",
   "/sounds/obsidian-lite-serum-2-presets",
   "/sounds/analog-drift-mini-v-presets",
