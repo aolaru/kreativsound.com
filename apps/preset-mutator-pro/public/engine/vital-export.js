@@ -1,4 +1,5 @@
-import { clamp, cloneJson, sanitizeFileName } from "./common.js";
+import { registerSemitones, clamp, cloneJson, sanitizeFileName } from "./common.js";
+import { restoreLockedVitalComponents } from "./variation-controls.js";
 
 export const SEED_BY_FAMILY = {
   pad: "KS Frozen Hollow.vital",
@@ -29,6 +30,15 @@ export function applyParameterMapToPreset(seedData, preset) {
   }
   if (Number.isFinite(settings.osc_2_unison_voices)) {
     settings.osc_2_unison_voices = Math.round(clamp(settings.osc_2_unison_voices, 1, 8));
+  }
+  const transpose = registerSemitones(preset);
+  for (let oscillator = 1; oscillator <= 3; oscillator += 1) {
+    const key = `osc_${oscillator}_transpose`;
+    settings[key] = clamp(Number(settings[key] || 0) + transpose, -48, 48);
+  }
+  if (preset.variationReference && preset.componentLocks) {
+    const reference = applyParameterMapToPreset(seedData, preset.variationReference);
+    restoreLockedVitalComponents(settings, reference.settings, preset.componentLocks);
   }
   settings.preset_name = preset.name;
 

@@ -51,6 +51,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="/preset-mutator-pro/styles.css" />
     <link rel="stylesheet" href="/preset-mutator-pro/scratch/styles.css" />
+    <script src="/preset-mutator-url.js?v=20261101"></script>
     <script defer src="/kreativ-analytics.js?v=20261011"></script>
   </head>
   <body>
@@ -59,7 +60,7 @@
         <div class="nav-group nav-group-main">
           <a class="nav-link" href="/tools/">All tools</a>
         </div>
-        <a class="nav-brand nav-brand-wordmark" href="/preset-mutator-pro/index.html" aria-label="Preset Mutator From Scratch">
+        <a class="nav-brand nav-brand-wordmark" href="/preset-mutator-pro/" aria-label="Preset Mutator From Scratch">
           <img class="nav-brand-mark-image" src="/preset-mutator-pro/preset-mutator-mark.svg" width="96" height="96" alt="" aria-hidden="true" />
           <span class="nav-brand-copy">
             <strong>Preset Mutator Pro</strong>
@@ -87,14 +88,14 @@
               <small>Start from intent</small>
             </span>
           </button>
-          <a class="mode-tab" href="/preset-mutator-pro/mutate/index.html">
+          <a class="mode-tab" href="/preset-mutator-pro/mutate/">
             <i class="fa-solid fa-sliders" aria-hidden="true"></i>
             <span class="mode-copy">
               <strong>Preset</strong>
               <small>Mutate one preset file</small>
             </span>
           </a>
-          <a class="mode-tab" href="/preset-mutator-pro/audio/index.html">
+          <a class="mode-tab" href="/preset-mutator-pro/audio/">
             <i class="fa-solid fa-wave-square" aria-hidden="true"></i>
             <span class="mode-copy">
               <strong>Audio</strong>
@@ -141,7 +142,7 @@
           <label class="sr-only" for="paid-feature-key">Enter Gumroad license key or signed token for Preset Mutator Pro</label>
           <input id="paid-feature-key" type="text" placeholder="Enter your Gumroad key or signed token" autocomplete="off" />
           <button class="button primary paid-feature-unlock-button" id="paid-feature-unlock-button" type="button">Activate Pro</button>
-          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Your key or token is stored only in this browser.</p>
+          <p class="paid-feature-unlock-note" id="paid-feature-unlock-note">Your key or token is stored only in this browser. After an online check, verified keys can work offline for up to 30 days.</p>
         </div>
         <div class="paid-feature-preview" id="paid-feature-preview" hidden>
           <p class="paid-feature-preview-badge">Preset Mutator Pro active</p>
@@ -268,6 +269,8 @@
           <span class="refinement-badge">Optional refinements</span>
         </div>
 
+        <div class="pro-variation-controls" data-pro-variation-controls></div>
+
         <details class="advanced-controls" open>
           <summary>Fine tune the direction <span>Five focused controls</span></summary>
           <div class="control-grid">
@@ -329,7 +332,7 @@
 
       <footer class="app-footer">
         <p>Kreativ Sound browser tool for Vital, Serum 2, and Arturia Pigments preset generation.</p>
-        <p class="app-version">Preset Mutator Pro v0.5.2 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator-pro/changelog/">Changelog</a></p>
+        <p class="app-version">Preset Mutator Pro v0.6.0 <span aria-hidden="true">&middot;</span> <a href="/preset-mutator-pro/changelog/">Changelog</a></p>
       </footer>
     </main>
 

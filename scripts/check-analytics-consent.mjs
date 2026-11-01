@@ -5,6 +5,7 @@ import vm from "node:vm";
 const root = new URL("../", import.meta.url);
 const read = (file) => fs.readFileSync(new URL(file, root), "utf8");
 const analytics = read("public/kreativ-analytics.js");
+const normalizePresetUrl = read("public/preset-mutator-url.js");
 const siteConsent = read("public/site.js").split('const consentPanel = document.querySelector("[data-privacy-consent]");')[1]
   .split('document.querySelectorAll("[data-track]")')[0];
 
@@ -138,10 +139,44 @@ for (const event of ["focus", "pageshow"]) {
 }
 
 for (const app of ["preset-mutator", "preset-mutator-pro"]) {
+  for (const mode of ["", "audio", "mutate", "changelog", "scratch"]) {
+    const canonical = `/${app}/${mode && mode !== "scratch" ? `${mode}/` : ""}`;
+    const base = `/${app}${mode ? `/${mode}` : ""}`;
+    for (const suffix of ["", "/", "/index.html"]) {
+      const url = new URL(`https://kreativsound.com${base}${suffix}?utm_source=test#results`);
+      const history = {
+        state: { restored: true },
+        replaceState(state, title, target) {
+          assert.equal(state, this.state, "Preserve browser history state");
+          url.href = new URL(target, url).href;
+        }
+      };
+      vm.runInNewContext(normalizePresetUrl, { URL, window: { location: url, history } });
+      assert.equal(url.pathname, canonical, `${app}/${mode}${suffix}: canonical path`);
+      assert.equal(url.search, "?utm_source=test", "Preserve campaign attribution");
+      assert.equal(url.hash, "#results", "Preserve anchors");
+    }
+  }
+  for (const mode of ["", "audio/", "mutate/", "changelog/"]) {
+    const html = read(`apps/${app}/public/${mode}index.html`);
+    assert(html.includes('<script src="/preset-mutator-url.js?v=20261101"></script>'));
+    assert(html.indexOf("/preset-mutator-url.js") < html.indexOf("/kreativ-analytics.js"), "Normalize URLs before analytics starts");
+    assert(!/href="[^"]*index\.html"/.test(html), `${app}/${mode}: internal navigation must use canonical URLs`);
+  }
+  assert(read(`apps/${app}/public/service-worker.js`).includes('"/preset-mutator-url.js?v=20261101"'), "URL normalization is available offline");
   for (const mode of ["", "audio/", "mutate/"]) {
     const source = read(`apps/${app}/public/${mode}app.js`);
     assert(!source.includes('window.gtag("event"'), `${app}/${mode}: events must use the consent-aware helper`);
     assert(source.includes("window.__trackKreativEvent?."));
   }
 }
-console.log("Analytics consent checks passed: both panels, idle/timer races, cookie fallback, withdrawal, cross-tab changes, and tool events.");
+for (const pathname of ["/", "/tools/preset-mutator/", "/other/index.html", "/preset-mutator/assets/index.html", "/preset-mutator-pro/engine/common.js"]) {
+  vm.runInNewContext(normalizePresetUrl, {
+    URL,
+    window: {
+      location: { href: `https://kreativsound.com${pathname}` },
+      history: { replaceState() { assert.fail(`Do not rewrite unrelated URL ${pathname}`); } }
+    }
+  });
+}
+console.log("Analytics checks passed: consent handling, tool events, and canonical Preset Mutator URLs with campaign/anchor preservation.");

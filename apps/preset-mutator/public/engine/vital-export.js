@@ -1,4 +1,4 @@
-import { clamp, cloneJson, sanitizeFileName } from "./common.js";
+import { registerSemitones, clamp, cloneJson, sanitizeFileName } from "./common.js";
 
 export const SEED_BY_FAMILY = {
   pad: "KS Frozen Hollow.vital",
@@ -62,6 +62,11 @@ export function applyParameterMapToPreset(seedData, preset) {
   settings.phaser_on = settings.phaser_dry_wet > 0.01 ? 1 : 0;
   settings.osc_1_unison_voices = Math.round(clamp(settings.osc_1_unison_voices, 1, 8));
   settings.osc_2_unison_voices = Math.round(clamp(settings.osc_2_unison_voices, 1, 8));
+  const transpose = registerSemitones(preset);
+  for (let oscillator = 1; oscillator <= 3; oscillator += 1) {
+    const key = `osc_${oscillator}_transpose`;
+    settings[key] = clamp(Number(settings[key] || 0) + transpose, -48, 48);
+  }
   settings.preset_name = preset.name;
 
   rendered.settings = settings;

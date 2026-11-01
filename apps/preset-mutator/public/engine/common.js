@@ -9,6 +9,22 @@ export function clamp(value, min = 0, max = 1) {
   return Math.min(max, Math.max(min, Number(value)));
 }
 
+
+export function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"\']/g, (character) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[character]);
+}
+
+export function registerSemitones(preset) {
+  if (["low", "mid", "high"].includes(preset.register)) {
+    return { low: -12, mid: 0, high: 12 }[preset.register];
+  }
+  const center = { bass: 82, pad: 220, pluck: 440, texture: 146 }[preset.familyKey] || 220;
+  const pitch = Number(preset.pitchHz || preset.parameterMap?._pitchHz || center);
+  return clamp(Math.round(12 * Math.log2(Math.max(20, pitch) / center)), -24, 24);
+}
+
 export function applySynthTheme(synth) {
   document.documentElement.dataset.synth = ["serum2", "pigments"].includes(synth) ? synth : "vital";
 }

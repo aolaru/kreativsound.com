@@ -1,5 +1,6 @@
 import { buildDiversePack, clamp, cloneJson, createRng, hashString, slugifyFilename } from "./common.js";
 import { velvetPriorityScore } from "./velvet-template-library.js";
+import { directionScale, mutationParameterAllowed, normalizeVariationOptions, reimagineBias } from "./variation-controls.js";
 
 function createPackRole(group, index, config = {}) {
   return {
@@ -68,33 +69,33 @@ export const PRESET_MUTATE_PRO_PACK_COUNT = PRO_PACK_ROLES.length;
 export const SAFE_PARAMETER_BOUNDS = {
   level: { low: 0, high: 1, integral: false, zone: "tone" },
   pan: { low: -1, high: 1, integral: false, zone: "space" },
-  transpose: { low: -24, high: 24, integral: true, zone: "tone" },
+  transpose: { low: -48, high: 48, integral: true, zone: "tone" },
   tune: { low: -1, high: 1, integral: false, zone: "tone" },
-  frame_spread: { low: 0, high: 1, integral: false, zone: "motion" },
+  frame_spread: { low: -128.5, high: 128.5, integral: false, zone: "motion" },
   stereo_spread: { low: 0, high: 1, integral: false, zone: "space" },
   unison_blend: { low: 0, high: 1, integral: false, zone: "space" },
-  unison_detune: { low: 0, high: 1, integral: false, zone: "space" },
-  wave_frame: { low: 0, high: 1, integral: false, zone: "motion" },
+  unison_detune: { low: 0, high: 10, integral: false, zone: "space" },
+  wave_frame: { low: 0, high: 256, integral: false, zone: "motion" },
   spectral_morph_amount: { low: 0, high: 1, integral: false, zone: "motion" },
   distortion_amount: { low: 0, high: 1, integral: false, zone: "dirt" },
-  cutoff: { low: 0, high: 100, integral: false, zone: "tone" },
+  cutoff: { low: 8, high: 136, integral: false, zone: "tone" },
   resonance: { low: 0, high: 1, integral: false, zone: "tone" },
-  drive: { low: 0, high: 4, integral: false, zone: "dirt" },
-  keytrack: { low: 0, high: 1, integral: false, zone: "tone" },
+  drive: { low: 0, high: 20, integral: false, zone: "dirt" },
+  keytrack: { low: -1, high: 1, integral: false, zone: "tone" },
   mix: { low: 0, high: 1, integral: false, zone: "space" },
-  attack: { low: 0, high: 1, integral: false, zone: "attack" },
-  decay: { low: 0, high: 1, integral: false, zone: "motion" },
+  attack: { low: 0, high: 2.37842, integral: false, zone: "attack" },
+  decay: { low: 0, high: 2.37842, integral: false, zone: "motion" },
   sustain: { low: 0, high: 1, integral: false, zone: "tone" },
-  release: { low: 0, high: 1, integral: false, zone: "motion" },
+  release: { low: 0, high: 2.37842, integral: false, zone: "motion" },
   dry_wet: { low: 0, high: 1, integral: false, zone: "space" },
-  feedback: { low: 0, high: 0.95, integral: false, zone: "motion" },
+  feedback: { low: -0.95, high: 0.95, integral: false, zone: "motion" },
   mod_depth: { low: 0, high: 1, integral: false, zone: "motion" },
   spread: { low: 0, high: 1, integral: false, zone: "space" },
-  decay_time: { low: 0, high: 1, integral: false, zone: "space" },
+  decay_time: { low: -6, high: 6, integral: false, zone: "space" },
   size: { low: 0, high: 1, integral: false, zone: "space" },
-  pre_high_cutoff: { low: 0, high: 100, integral: false, zone: "tone" },
-  pre_low_cutoff: { low: 0, high: 100, integral: false, zone: "tone" },
-  filter_cutoff: { low: 0, high: 100, integral: false, zone: "tone" },
+  pre_high_cutoff: { low: 0, high: 128, integral: false, zone: "tone" },
+  pre_low_cutoff: { low: 0, high: 128, integral: false, zone: "tone" },
+  filter_cutoff: { low: 8, high: 136, integral: false, zone: "tone" },
 };
 
 const SAFE_PARAMETER_PREFIXES = [
@@ -140,8 +141,24 @@ export function safeScalarParameterKeys(settings) {
 }
 
 export function parameterConfigForKey(key) {
-  for (const [suffix, config] of Object.entries(SAFE_PARAMETER_BOUNDS)) {
-    if (key.endsWith(suffix)) {
+  // Native Vital units: see mtytel/vital src/common/synth_parameters.cpp.
+  const exact = {
+    phaser_mod_depth: { low: 0, high: 48, zone: "motion" },
+    reverb_low_shelf_cutoff: { low: 0, high: 128, zone: "tone" },
+    reverb_high_shelf_cutoff: { low: 0, high: 128, zone: "tone" },
+    distortion_drive: { low: -30, high: 30, zone: "dirt" },
+    flanger_dry_wet: { low: 0, high: 0.5, zone: "space" },
+    flanger_feedback: { low: -1, high: 1, zone: "motion" },
+    delay_feedback: { low: -1, high: 1, zone: "motion" },
+    compressor_attack: { low: 0, high: 1, zone: "attack" },
+    compressor_release: { low: 0, high: 1, zone: "motion" },
+  }[key];
+  if (exact) return { integral: false, ...exact };
+  if (/^osc_[123]_(distortion|spectral_morph)_spread$/.test(key)) {
+    return { low: -0.5, high: 0.5, integral: false, zone: "motion" };
+  }
+  for (const [suffix, config] of Object.entries(SAFE_PARAMETER_BOUNDS).sort(([a], [b]) => b.length - a.length)) {
+    if (key.endsWith("_" + suffix)) {
       return config;
     }
   }
@@ -180,8 +197,10 @@ export function buildPresetMutateStrategy(input = {}) {
 }
 
 function mutateValue(key, value, config, rng, strategy, intensity, role) {
+  const amount = clamp(strategy.amount ?? 0.5);
+  if (amount === 0 || value < config.low || value > config.high) return Number(value);
   const span = config.high - config.low;
-  const baseScale = span * strategy.amount * 0.17 * intensity;
+  const baseScale = span * amount * 0.17 * intensity;
   const randomOffset = (rng() * 2 - 1) * baseScale;
 
   let directedOffset = 0;
@@ -210,7 +229,7 @@ function mutateValue(key, value, config, rng, strategy, intensity, role) {
     }
   }
 
-  const mutated = clamp(Number(value) + randomOffset + directedOffset + roleOffset, config.low, config.high);
+  const mutated = clamp(Number(value) + randomOffset + (directedOffset + roleOffset) * amount, config.low, config.high);
   return config.integral ? Math.round(mutated) : mutated;
 }
 
@@ -311,14 +330,18 @@ function controlValue(controls, key, fallback) {
   return String(controls?.[key] ?? Math.round(fallback * 100));
 }
 
-export function generatePresetVariants({ sourcePreset, strategy, controls = {}, generationSeed = 0 }) {
+export function generatePresetVariants({ sourcePreset, strategy, controls = {}, generationSeed = 0, variationOptions = {} }) {
+  const options = normalizeVariationOptions(variationOptions);
+  strategy = { ...strategy, amount: clamp(strategy.amount ?? 0.5) * directionScale(options) };
   const source = sourcePreset;
   if (!source?.data?.settings) {
     return [];
   }
 
   const summary = source.summary || presetSummary(source.data);
-  const scalarKeys = summary.scalarKeys || safeScalarParameterKeys(source.data.settings);
+  const scalarKeys = (summary.scalarKeys || safeScalarParameterKeys(source.data.settings))
+    .filter((key) => mutationParameterAllowed(key, parameterConfigForKey(key)?.zone, options));
+  if (!scalarKeys.length) throw new Error("No supported unlocked parameters remain. Unlock another component.");
   const roles = PRO_PACK_ROLES;
   const amountValue = controlValue(controls, "amount", strategy.amount);
   const toneValue = controlValue(controls, "tone", strategy.tone);
@@ -334,8 +357,8 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {}, 
     const rng = createRng(hashString(`pro:${source.fileName}:${role.key}:${amountValue}:${toneValue}:${motionValue}:${attackValue}:${spaceValue}:${dirtValue}:${variantSeed}`));
     const data = cloneJson(source.data);
     const settings = data.settings;
-    const baseChanges = 10;
-    const changeCount = clamp(Math.round(baseChanges + strategy.amount * 18 + (index % 4) * 2), 6, 24);
+    const baseChanges = options.direction === "stay-close" ? 3 : options.direction === "reimagine" ? 20 : 10;
+    const changeCount = clamp(Math.round(baseChanges + strategy.amount * 18 + (index % 4) * 2), 3, options.direction === "reimagine" ? 40 : 24);
     const candidateKeys = chooseParameterPool(scalarKeys, strategy, source.data.settings, lane).slice(0, Math.max(changeCount * 2, 12));
     const chosen = [];
 
@@ -353,7 +376,13 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {}, 
       if (!config) {
         continue;
       }
-      const nextValue = mutateValue(key, settings[key], config, rng, strategy, role.multiplier, role);
+      const directedRole = { ...role,
+        toneBias: (role.toneBias || 0) + reimagineBias(index, "tone", options),
+        motionBias: (role.motionBias || 0) + reimagineBias(index, "motion", options),
+        dirtBias: (role.dirtBias || 0) + reimagineBias(index, "dirt", options),
+        spaceBias: (role.spaceBias || 0) + reimagineBias(index, "space", options),
+      };
+      const nextValue = mutateValue(key, settings[key], config, rng, strategy, role.multiplier, directedRole);
       if (Number(nextValue) !== Number(settings[key])) {
         settings[key] = nextValue;
         changedParameters.push(key);
@@ -373,8 +402,10 @@ export function generatePresetVariants({ sourcePreset, strategy, controls = {}, 
       name: data.preset_name,
       description: data.comments,
       changedParameters,
+      variationDirection: options.direction,
+      componentLocks: options.locks,
       data,
       downloadName: `${slugifyFilename(data.preset_name)}.vital`,
     };
-  });
+  }, options.direction === "stay-close" ? 0.003 : 0.01);
 }

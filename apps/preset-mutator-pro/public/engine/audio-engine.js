@@ -1,5 +1,6 @@
 import { buildDiversePack, clamp, familyLabel, formatHz, lerp, noteName, vary } from "./common.js";
 import { chooseVelvetTemplate } from "./velvet-template-library.js";
+import { directionScale, finishGeneratedVariant, normalizeVariationOptions, shapeForDirection } from "./variation-controls.js";
 
 export const AUDIO_PRO_PACK_COUNT = 32;
 
@@ -196,6 +197,7 @@ export function mapAudioProfileToVital(profile, index, options = {}) {
     roleLabel,
     family: familyLabel(family),
     familyKey: family,
+    pitchHz: profile.pitchHz,
     templateFile: chooseVelvetTemplate(family, generationSeed, index, { brightness, body, movement, noise, width }),
     generationSeed,
     topology,
@@ -277,7 +279,9 @@ export function shapeAudioProfile(baseProfile, recipe, index) {
   };
 }
 
-export function buildAudioProPack(profile, generationSeed = 0) {
+export function buildAudioProPack(profile, generationSeed = 0, rawOptions = {}) {
+  const options = normalizeVariationOptions(rawOptions);
+  const reference = mapAudioProfileToVital({ ...profile, generationSeed: 0, topology: "foundation" }, 0, { amountScale: 0, roleLabel: "Baseline" });
   const recipes = [
     { role: "Closest", brightness: -0.02, movement: -0.02, spread: 0.04, amountScale: 0.85 },
     { role: "Closest", brightness: 0.03, width: 0.04, spread: 0.04, amountScale: 0.85 },
@@ -301,10 +305,11 @@ export function buildAudioProPack(profile, generationSeed = 0) {
     const seededProfile = { ...profile, generationSeed: generationSeed + retry * 7919 };
     const recipe = recipes[index % recipes.length];
     const topology = PRO_TOPOLOGIES[Math.floor(index / (recipes.length / PRO_TOPOLOGIES.length)) % PRO_TOPOLOGIES.length];
-    const shaped = { ...shapeAudioProfile(seededProfile, recipe, index), topology };
-    return mapAudioProfileToVital(shaped, index, {
-      amountScale: recipe.amountScale ?? 1,
+    const shaped = shapeForDirection(profile, { ...shapeAudioProfile(seededProfile, recipe, index), topology }, index, options);
+    const candidate = mapAudioProfileToVital(shaped, index, {
+      amountScale: (recipe.amountScale ?? 1) * directionScale(options),
       roleLabel: recipe.role,
     });
-  });
+    return finishGeneratedVariant(candidate, reference, options, index);
+  }, options.direction === "stay-close" ? 0.003 : 0.01);
 }

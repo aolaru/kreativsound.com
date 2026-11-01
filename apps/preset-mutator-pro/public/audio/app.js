@@ -1,5 +1,7 @@
+import { analyzeAudio, downmix } from "../engine/audio-analysis.js";
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { applySynthTheme, clamp, createGenerationSeed, ensureJsZip, familyLabel, formatHz, sanitizeFileName, synthTargetDetails } from "../engine/common.js";
+import { mountProVariationControls } from "../pro-variation-controls.js";
+import { applySynthTheme, clamp, createGenerationSeed, ensureJsZip, familyLabel, formatHz, sanitizeFileName, synthTargetDetails, escapeHtml } from "../engine/common.js";
 import { AUDIO_PRO_PACK_COUNT, buildAudioProfile as createAudioProfile, buildAudioProPack } from "../engine/audio-engine.js";
 import { createVitalPresetBlob, SEED_BY_FAMILY } from "../engine/vital-export.js";
 import { createSerum2PresetBlob } from "../engine/serum2-export.js";
@@ -13,7 +15,9 @@ import {
   licenseVerificationMessage,
   saveLicenseToken,
   verifyLicenseToken,
-} from "../engine/license.js";
+} from "../engine/offline-license.js";
+
+const variationControls = mountProVariationControls();
 
 const state = {
   audioContext: null,
@@ -355,17 +359,6 @@ async function playBuffer(buffer, offset = 0) {
   tickPlayback();
 }
 
-function downmix(buffer) {
-  const mono = new Float32Array(buffer.length);
-  for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
-    const data = buffer.getChannelData(channel);
-    for (let i = 0; i < buffer.length; i += 1) {
-      mono[i] += data[i] / buffer.numberOfChannels;
-    }
-  }
-  return mono;
-}
-
 function drawWaveform(buffer, playheadRatio = null) {
   const canvas = elements.waveform;
   const context = canvas.getContext("2d");
@@ -422,177 +415,6 @@ function drawWaveform(buffer, playheadRatio = null) {
   updatePlaybackUI();
 }
 
-function analyzeAudio(buffer) {
-  const mono = downmix(buffer);
-  const length = mono.length;
-  const sampleRate = buffer.sampleRate;
-  const absData = new Float32Array(length);
-
-  let sumSquares = 0;
-  let zeroCrossings = 0;
-  let peak = 0;
-  for (let i = 0; i < length; i += 1) {
-    const sample = mono[i];
-    const abs = Math.abs(sample);
-    absData[i] = abs;
-    sumSquares += sample * sample;
-    if (abs > peak) {
-      peak = abs;
-    }
-    if (i > 0 && ((mono[i - 1] >= 0 && sample < 0) || (mono[i - 1] < 0 && sample >= 0))) {
-      zeroCrossings += 1;
-    }
-  }
-
-  const rms = Math.sqrt(sumSquares / length);
-  const zeroCrossRate = zeroCrossings / length;
-
-  const frameCount = 64;
-  const frameSize = Math.max(128, Math.floor(length / frameCount));
-  const envelope = [];
-  const centroidFrames = [];
-  const flatnessFrames = [];
-
-  let attackFrame = 0;
-  let maxEnvelope = 0;
-
-  for (let frameIndex = 0; frameIndex < frameCount; frameIndex += 1) {
-    const start = frameIndex * frameSize;
-    if (start >= length) {
-      break;
-    }
-    const end = Math.min(length, start + frameSize);
-
-    let frameEnergy = 0;
-    for (let i = start; i < end; i += 1) {
-      frameEnergy += absData[i];
-    }
-    const avg = frameEnergy / (end - start);
-    envelope.push(avg);
-    if (avg > maxEnvelope) {
-      maxEnvelope = avg;
-      attackFrame = envelope.length - 1;
-    }
-
-    const spectral = frameSpectrum(mono, start, end, sampleRate);
-    centroidFrames.push(spectral.centroidHz);
-    flatnessFrames.push(spectral.flatness);
-  }
-
-  const onsetRatio = envelope.length > 1 ? attackFrame / Math.max(1, envelope.length - 1) : 0;
-  const tail = envelope.slice(Math.floor(envelope.length * 0.65));
-  const sustainEnergy = tail.length ? tail.reduce((sum, value) => sum + value, 0) / tail.length : 0;
-  const sustainRatio = maxEnvelope > 0 ? sustainEnergy / maxEnvelope : 0;
-
-  const envelopeMean = envelope.reduce((sum, value) => sum + value, 0) / Math.max(1, envelope.length);
-  const envelopeDeviation = envelope.reduce((sum, value) => sum + Math.abs(value - envelopeMean), 0) / Math.max(1, envelope.length);
-  const movement = envelopeMean > 0 ? envelopeDeviation / envelopeMean : 0;
-
-  const avgCentroid = centroidFrames.reduce((sum, value) => sum + value, 0) / Math.max(1, centroidFrames.length);
-  const avgFlatness = flatnessFrames.reduce((sum, value) => sum + value, 0) / Math.max(1, flatnessFrames.length);
-
-  const pitchHz = estimatePitch(mono, sampleRate);
-  const stereoWidth = estimateStereoWidth(buffer);
-
-  return {
-    rms,
-    peak,
-    zeroCrossRate,
-    onsetRatio,
-    sustainRatio,
-    movement,
-    centroidHz: avgCentroid,
-    flatness: avgFlatness,
-    stereoWidth,
-    pitchHz,
-    duration: buffer.duration,
-  };
-}
-
-function frameSpectrum(data, start, end, sampleRate) {
-  const size = Math.min(1024, end - start);
-  if (size < 32) {
-    return { centroidHz: 0, flatness: 0 };
-  }
-
-  let magnitudeSum = 0;
-  let weightedSum = 0;
-  let geometricLogSum = 0;
-  let bins = 0;
-
-  for (let bin = 1; bin < size / 2; bin += 1) {
-    let real = 0;
-    let imag = 0;
-    for (let n = 0; n < size; n += 1) {
-      const sample = data[start + n] * (0.5 - 0.5 * Math.cos((2 * Math.PI * n) / (size - 1)));
-      const phase = (2 * Math.PI * bin * n) / size;
-      real += sample * Math.cos(phase);
-      imag -= sample * Math.sin(phase);
-    }
-    const magnitude = Math.sqrt(real * real + imag * imag) + 1e-12;
-    const frequency = (bin * sampleRate) / size;
-    magnitudeSum += magnitude;
-    weightedSum += magnitude * frequency;
-    geometricLogSum += Math.log(magnitude);
-    bins += 1;
-  }
-
-  if (magnitudeSum === 0 || bins === 0) {
-    return { centroidHz: 0, flatness: 0 };
-  }
-
-  const centroidHz = weightedSum / magnitudeSum;
-  const arithmeticMean = magnitudeSum / bins;
-  const geometricMean = Math.exp(geometricLogSum / bins);
-  const flatness = arithmeticMean > 0 ? geometricMean / arithmeticMean : 0;
-  return { centroidHz, flatness };
-}
-
-function estimatePitch(data, sampleRate) {
-  const size = Math.min(4096, data.length);
-  if (size < 256) {
-    return 0;
-  }
-
-  let bestOffset = -1;
-  let bestCorrelation = 0;
-  const minOffset = Math.floor(sampleRate / 1200);
-  const maxOffset = Math.floor(sampleRate / 40);
-
-  for (let offset = minOffset; offset <= maxOffset; offset += 1) {
-    let correlation = 0;
-    for (let i = 0; i < size - offset; i += 1) {
-      correlation += data[i] * data[i + offset];
-    }
-    if (correlation > bestCorrelation) {
-      bestCorrelation = correlation;
-      bestOffset = offset;
-    }
-  }
-
-  if (bestOffset <= 0) {
-    return 0;
-  }
-  return sampleRate / bestOffset;
-}
-
-function estimateStereoWidth(buffer) {
-  if (buffer.numberOfChannels < 2) {
-    return 0;
-  }
-  const left = buffer.getChannelData(0);
-  const right = buffer.getChannelData(1);
-  const size = Math.min(left.length, 120000);
-
-  let sumDiff = 0;
-  let sumTotal = 0;
-  for (let i = 0; i < size; i += 1) {
-    sumDiff += Math.abs(left[i] - right[i]);
-    sumTotal += Math.abs(left[i]) + Math.abs(right[i]);
-  }
-  return sumTotal > 0 ? clamp(sumDiff / sumTotal) : 0;
-}
-
 function buildProfile(analysis) {
   return createAudioProfile(analysis, {
     inputMode: elements.inputMode.value,
@@ -605,8 +427,8 @@ function buildProfile(analysis) {
   });
 }
 
-function buildProPack(profile) {
-  return buildAudioProPack(profile, createGenerationSeed());
+function buildProPack(profile, variationOptions) {
+  return buildAudioProPack(profile, createGenerationSeed(), variationOptions);
 }
 
 function variantRole(index, preset) {
@@ -727,8 +549,8 @@ function renderMetricGrid(target, items) {
     const node = document.createElement("div");
     node.className = "metric";
     node.innerHTML = `
-      <span class="metric-label">${label}</span>
-      <strong class="metric-value">${value}</strong>
+      <span class="metric-label">${escapeHtml(label)}</span>
+      <strong class="metric-value">${escapeHtml(value)}</strong>
     `;
     target.appendChild(node);
   }
@@ -810,17 +632,17 @@ function buildPresetCard(preset, role, totalCount) {
     const visibleParameters = preset.parameters;
     const paramRows = visibleParameters
       .slice(0, maxRows)
-      .map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`)
+      .map(([label, value]) => `<div class="param-row"><span>${escapeHtml(label)}</span><span>${escapeHtml(value)}</span></div>`)
       .join("");
     card.innerHTML = `
       <div class="preset-head">
         <div>
           <p class="preset-role">${role}</p>
-          <p class="preset-family">${preset.family}</p>
-          <h3 class="preset-name">${preset.name}</h3>
+          <p class="preset-family">${escapeHtml(preset.family)}</p>
+          <h3 class="preset-name">${escapeHtml(preset.name)}</h3>
         </div>
       </div>
-      <p class="preset-summary">${preset.summary}</p>
+      <p class="preset-summary">${escapeHtml(preset.summary)}</p>
       ${tags.length ? `<div class="preset-tags">${tags.map((tag) => `<span class="preset-tag">${tag}</span>`).join("")}</div>` : ""}
       <div class="preset-quality-score">
         <span><strong>Direction</strong> ${role}</span>
@@ -1110,7 +932,7 @@ function loadSyntheticSource() {
   updateStatus("Self-test source ready. Enter your Gumroad license key to unlock generation.");
 }
 
-function generatePresetPack() {
+function generatePresetPack(variationOptions) {
   if (!state.originalBuffer || !state.proPreviewUnlocked) {
     return;
   }
@@ -1119,7 +941,7 @@ function generatePresetPack() {
   state.analysis = analyzeAudio(state.originalBuffer);
   state.profile = buildProfile(state.analysis);
   state.lastGenerationMode = "pro";
-  state.presets = buildProPack(state.profile);
+  state.presets = buildProPack(state.profile, variationOptions);
 
   renderMetricGrid(elements.analysisMetrics, [
     ["Pitch Center", state.analysis.pitchHz ? `${Math.round(state.analysis.pitchHz)} Hz` : "Unclear"],
@@ -1159,6 +981,11 @@ async function handleGeneratePresetPack() {
   if (!state.originalBuffer || state.isGenerating || !state.proPreviewUnlocked) {
     return;
   }
+  const variationOptions = variationControls.read();
+  if (Object.values(variationOptions.locks).every(Boolean)) {
+    updateStatus("Unlock at least one component before generating.");
+    return;
+  }
 
   setGenerateLoadingState(true);
   updateStatus("Generating 32 Pro variants...");
@@ -1168,7 +995,14 @@ async function handleGeneratePresetPack() {
   });
 
   try {
-    generatePresetPack();
+    generatePresetPack(variationOptions);
+  } catch (error) {
+    state.analysis = null;
+    state.profile = null;
+    state.presets = [];
+    renderPresets([]);
+    showUploadMessage(error.message || "Could not analyze this sound.");
+    updateStatus(error.message || "Could not analyze this sound.");
   } finally {
     setGenerateLoadingState(false);
   }

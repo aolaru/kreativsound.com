@@ -1,5 +1,5 @@
 import { PresetMutatorKnob } from "./preset-mutator-knob.js";
-import { applySynthTheme, familyLabel, noteName, synthTargetDetails } from "./engine/common.js";
+import { applySynthTheme, familyLabel, noteName, synthTargetDetails, escapeHtml } from "./engine/common.js";
 import {
   buildScratchFreePack,
   buildScratchProfile,
@@ -170,8 +170,8 @@ function renderProfile(profile) {
   ];
   elements.profileMetrics.innerHTML = rows.map(([label, value]) => `
     <div class="metric">
-      <span class="metric-label">${label}</span>
-      <strong class="metric-value">${value}</strong>
+      <span class="metric-label">${escapeHtml(label)}</span>
+      <strong class="metric-value">${escapeHtml(value)}</strong>
     </div>
   `).join("");
 }
@@ -193,18 +193,18 @@ function renderPresets(presets) {
     card.innerHTML = `
       <div class="preset-head">
         <div>
-          <p class="preset-role">${preset.roleLabel}</p>
-          <p class="preset-family">${preset.family}</p>
-          <h3 class="preset-name">${preset.name}</h3>
+          <p class="preset-role">${escapeHtml(preset.roleLabel)}</p>
+          <p class="preset-family">${escapeHtml(preset.family)}</p>
+          <h3 class="preset-name">${escapeHtml(preset.name)}</h3>
         </div>
       </div>
-      <p class="preset-summary">${preset.summary}</p>
+      <p class="preset-summary">${escapeHtml(preset.summary)}</p>
       <div class="preset-quality-score">
-        <span><strong>Direction</strong> ${preset.roleLabel}</span>
+        <span><strong>Direction</strong> ${escapeHtml(preset.roleLabel)}</span>
         <span><strong>Best use</strong> ${bestUseForPreset(preset)}</span>
       </div>
       <p class="preset-quality">Built from the selected intent profile, then biased toward ${preset.roleLabel.toLowerCase()} behavior.</p>
-      <div class="param-list">${preset.parameters.map(([label, value]) => `<div class="param-row"><span>${label}</span><span>${value}</span></div>`).join("")}</div>
+      <div class="param-list">${preset.parameters.map(([label, value]) => `<div class="param-row"><span>${escapeHtml(label)}</span><span>${escapeHtml(value)}</span></div>`).join("")}</div>
       <div class="preset-actions">
         <button class="download-button" type="button">
           <span class="download-badge" aria-hidden="true">${synth.badge}</span>

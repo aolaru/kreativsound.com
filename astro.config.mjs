@@ -11,12 +11,14 @@ function presetMutatorDevRoutes() {
     ["/tools/wave-mutator/", "index.html"],
     ["/tools/wave-mutator/changelog/", "changelog/index.html"],
   ]);
-  const appHtmlRoutes = new Map([
-    ["/preset-mutator/", "index.html"],
-    ["/preset-mutator/scratch/", "index.html"],
-    ["/preset-mutator/mutate/", "mutate/index.html"],
-    ["/preset-mutator/audio/", "audio/index.html"]
-  ]);
+  const appHtmlRoutes = new Map(
+    ["preset-mutator", "preset-mutator-pro"].flatMap((app) =>
+      ["", "scratch", "mutate", "audio", "changelog"].map((mode) => [
+        `/${app}/${mode ? `${mode}/` : ""}`,
+        `apps/${app}/public/${mode && mode !== "scratch" ? `${mode}/` : ""}index.html`
+      ])
+    )
+  );
   const legacyRedirects = new Map([
     ["/apps/preset-mutator/ui", "/preset-mutator/"],
     ["/apps/preset-mutator/ui/", "/preset-mutator/"],
@@ -94,7 +96,7 @@ function presetMutatorDevRoutes() {
           return;
         }
 
-        fs.readFile(path.join(rootDir, "apps/preset-mutator/public", appHtmlPath), "utf8", (error, html) => {
+        fs.readFile(path.join(rootDir, appHtmlPath), "utf8", (error, html) => {
           if (error) {
             next(error);
             return;

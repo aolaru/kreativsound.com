@@ -1,5 +1,6 @@
-import { clamp, createRng, hashString, slugifyFilename } from "./common.js";
+import { registerSemitones, clamp, createRng, hashString, slugifyFilename } from "./common.js";
 import { PRO_PACK_ROLES } from "./preset-mutate-engine.js";
+import { directionScale, isComponentLocked, mutationParameterAllowed, normalizeVariationOptions, pigmentsComponent, reimagineBias } from "./variation-controls.js";
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -245,7 +246,7 @@ export function setPigmentsParameter(text, key, value) {
     return text;
   }
   const expression = new RegExp(`((?:^| )${key.length} ${key} )(-?\\d+(?:\\.\\d+)?(?:e[-+]?\\d+)?)(?= )`, "i");
-  return text.replace(expression, (_, prefix) => `${prefix}${Number(value).toFixed(8).replace(/0+$/, "").replace(/\\.$/, "")}`);
+  return text.replace(expression, (_, prefix) => `${prefix}${Number(value).toFixed(8).replace(/0+$/, "").replace(/\.$/, "")}`);
 }
 
 export function renamePigmentsPreset(text, name, pack = "Preset Mutator Pro") {
@@ -302,7 +303,10 @@ export function buildPigmentsBank(presetText, name) {
 export function applyGeneratedPresetToPigments(seed, preset) {
   const seedText = typeof seed === "string" ? seed : bytesToBinaryString(seed);
   const source = preset.parameterMap || {};
+  const tuning = clamp(0.5 + registerSemitones(preset) / 120);
   const mappings = {
+    Engine1_Coarse: tuning,
+    Engine2_Coarse: tuning,
     Engine1_HarmonicOsc_Volume: clamp(source.osc_1_level ?? 0.72),
     Engine2_HarmonicOsc_Volume: clamp(source.osc_2_level ?? 0.42),
     Engine1_HarmonicOsc_Tilt: clamp((source.filter_1_cutoff ?? 64) / 127),
@@ -343,8 +347,12 @@ export function applyGeneratedPresetToPigments(seed, preset) {
     output = replaceNamedString(output, "Subtype", category.subtype);
     output = replaceNamedString(output, "Characteristics", category.characteristics);
   }
+  const reference = preset.variationReference && preset.componentLocks
+    ? applyGeneratedPresetToPigments(seedText, preset.variationReference) : null;
   for (const [key, value] of Object.entries(mappings)) {
-    output = setPigmentsParameter(output, key, value);
+    const lockedValue = reference && (isComponentLocked(key, { locks: preset.componentLocks }, pigmentsComponent) || /^LFO\d+_/.test(key))
+      ? readPigmentsParameter(reference, key) : value;
+    output = setPigmentsParameter(output, key, lockedValue);
   }
   return output;
 }
@@ -358,16 +366,20 @@ function strategyValue(strategy, zone) {
   return 0;
 }
 
-export function generatePigmentsPresetVariants({ sourcePreset, strategy, variationSeed = 0 }) {
+export function generatePigmentsPresetVariants({ sourcePreset, strategy, variationSeed = 0, variationOptions = {} }) {
+  const options = normalizeVariationOptions(variationOptions);
+  const parameters = Object.entries(SAFE_MUTATION_PARAMETERS).filter(([key, config]) =>
+    readPigmentsParameter(sourcePreset.presetText, key) !== null && mutationParameterAllowed(key, config.zone, options, pigmentsComponent));
+  if (!parameters.length) throw new Error("No supported unlocked Pigments parameters remain. Unlock another component.");
   const sourceName = sourcePreset.summary?.name || "Pigments Preset";
   return PRO_PACK_ROLES.map((role, index) => {
     const rng = createRng(hashString(`pigments:${sourcePreset.fileName}:${role.key}:${JSON.stringify(strategy)}:${variationSeed}`));
-    const amount = clamp(strategy.amount ?? 0.45) * role.multiplier;
+    const amount = clamp(strategy.amount ?? 0.45) * role.multiplier * directionScale(options);
     let presetText = sourcePreset.presetText;
     const changedParameters = [];
-    for (const [key, config] of Object.entries(SAFE_MUTATION_PARAMETERS)) {
+    for (const [key, config] of parameters) {
       const current = readPigmentsParameter(presetText, key);
-      if (current === null) continue;
+      if (current === null || amount === 0) continue;
       const span = config.high - config.low;
       const roleBias = config.zone === "tone"
         ? role.toneBias ?? 0
@@ -380,9 +392,9 @@ export function generatePigmentsPresetVariants({ sourcePreset, strategy, variati
             : 0;
       const randomOffset = (rng() * 2 - 1) * span * amount * 0.12;
       const directedOffset = span * strategyValue(strategy, config.zone) * amount * 0.1;
-      const biasedOffset = span * roleBias * amount * 0.08;
+      const biasedOffset = span * (roleBias + reimagineBias(index, config.zone, options)) * amount * 0.08;
       presetText = setPigmentsParameter(presetText, key, clamp(current + randomOffset + directedOffset + biasedOffset, config.low, config.high));
-      changedParameters.push(key);
+      if (readPigmentsParameter(presetText, key) !== current) changedParameters.push(key);
     }
     const name = `${sourceName} ${role.nameSuffix}`.slice(0, 64);
     presetText = renamePigmentsPreset(presetText, name);
@@ -397,6 +409,8 @@ export function generatePigmentsPresetVariants({ sourcePreset, strategy, variati
       description: `${role.label} Pigments variation with ${changedParameters.length} bounded parameter changes.`,
       presetText,
       changedParameters,
+      variationDirection: options.direction,
+      componentLocks: options.locks,
       changedCount: changedParameters.length,
     };
   });

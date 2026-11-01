@@ -1,5 +1,6 @@
 import { buildDiversePack, clamp, familyLabel, lerp, noteName, titleCase, vary } from "./common.js";
 import { chooseVelvetTemplate } from "./velvet-template-library.js";
+import { directionScale, finishGeneratedVariant, normalizeVariationOptions, shapeForDirection } from "./variation-controls.js";
 
 export const SCRATCH_PRO_PACK_COUNT = 32;
 
@@ -168,6 +169,8 @@ export function mapScratchProfileToVital(profile, index, roleLabel, spread = 1) 
     roleLabel,
     family: familyLabel(family),
     familyKey: family,
+    register: profile.register,
+    pitchHz: profile.pitchHz,
     templateFile: chooseVelvetTemplate(family, generationSeed, index, { brightness, body, movement, noise, width }),
     generationSeed,
     topology,
@@ -235,11 +238,15 @@ export function shapeScratchProfile(base, recipe, index) {
   };
 }
 
-export function buildScratchProPack(profile, generationSeed = 0) {
+export function buildScratchProPack(profile, generationSeed = 0, rawOptions = {}) {
+  const options = normalizeVariationOptions(rawOptions);
+  const reference = mapScratchProfileToVital({ ...profile, generationSeed: 0, topology: "foundation" }, 0, "Baseline", 0);
   return buildDiversePack(SCRATCH_PRO_PACK_COUNT, (index, retry) => {
     const seededProfile = { ...profile, generationSeed: generationSeed + retry * 7919 };
     const recipe = PRO_RECIPES[index % PRO_RECIPES.length];
     const topology = PRO_TOPOLOGIES[Math.floor(index / PRO_RECIPES.length) % PRO_TOPOLOGIES.length];
-    return mapScratchProfileToVital({ ...shapeScratchProfile(seededProfile, recipe, index), topology }, index, recipe.role, 1.15);
-  });
+    const shaped = shapeForDirection(profile, { ...shapeScratchProfile(seededProfile, recipe, index), topology }, index, options);
+    const candidate = mapScratchProfileToVital(shaped, index, recipe.role, 1.15 * directionScale(options));
+    return finishGeneratedVariant(candidate, reference, options, index);
+  }, options.direction === "stay-close" ? 0.003 : 0.01);
 }

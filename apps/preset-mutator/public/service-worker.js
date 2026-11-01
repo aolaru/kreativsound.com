@@ -1,5 +1,8 @@
-const CACHE_NAME = "preset-mutator-shell-v18";
+const CACHE_NAME = "preset-mutator-shell-v20";
+const CACHE_PREFIX = "preset-mutator-shell-";
 const SHELL_ASSETS = [
+  "/preset-mutator-url.js?v=20261101",
+  "./engine/audio-analysis.js",
   "./index.html",
   "./styles.css",
   "./app.js",
@@ -35,6 +38,11 @@ const SHELL_ASSETS = [
   "./preset-mutator-mark.svg",
 ];
 
+async function matchCached(request) {
+  const cache = await caches.open(CACHE_NAME);
+  return cache.match(request);
+}
+
 async function cacheShellAssets(cache) {
   await Promise.allSettled(
     SHELL_ASSETS.map(async (asset) => {
@@ -58,7 +66,7 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key !== CACHE_NAME)
+          .filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
           .map((key) => caches.delete(key)),
       ),
     ),
@@ -86,7 +94,7 @@ self.addEventListener("fetch", (event) => {
       fetch(request)
         .then((response) => {
           if (!response.ok && request.mode === "navigate") {
-            return caches.match("./index.html").then((cached) => cached || response);
+            return matchCached("./index.html").then((cached) => cached || response);
           }
 
           if (!response.ok || response.type === "opaque") {
@@ -98,12 +106,12 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() =>
-          caches.match(request).then((cached) => {
+          matchCached(request).then((cached) => {
             if (cached) {
               return cached;
             }
             if (request.mode === "navigate") {
-              return caches.match("./index.html").then((fallback) => fallback || Response.error());
+              return matchCached("./index.html").then((fallback) => fallback || Response.error());
             }
             return Response.error();
           }),
@@ -113,7 +121,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(request).then((cached) => {
+    matchCached(request).then((cached) => {
       if (cached) {
         return cached;
       }

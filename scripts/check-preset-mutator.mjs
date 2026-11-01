@@ -1,3 +1,4 @@
+import { checkPresetRegressions } from "./check-preset-mutator-regressions.mjs";
 import { access, readdir, readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
@@ -505,3 +506,5 @@ if (failures.length) {
 }
 
 console.log("Preset Mutator Free QA passed.");
+
+await checkPresetRegressions("preset-mutator");

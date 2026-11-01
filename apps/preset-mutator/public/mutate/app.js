@@ -1,5 +1,5 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { applySynthTheme, synthTargetDetails } from "../engine/common.js";
+import { applySynthTheme, synthTargetDetails, escapeHtml } from "../engine/common.js";
 import {
   buildPresetMutateStrategy,
   generatePresetVariants as createPresetVariants,
@@ -196,8 +196,8 @@ function renderSourceMetrics() {
     .map(
       ([label, value]) => `
         <div class="metric">
-          <span class="metric-label">${label}</span>
-          <strong>${value}</strong>
+          <span class="metric-label">${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
         </div>
       `,
     )
@@ -223,8 +223,8 @@ function renderStrategyMetrics() {
     .map(
       ([label, value]) => `
         <div class="metric">
-          <span class="metric-label">${label}</span>
-          <strong>${value}</strong>
+          <span class="metric-label">${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
         </div>
       `,
     )
@@ -416,8 +416,8 @@ function renderVariants() {
         <div class="preset-card-header">
           <div>
             <span class="preset-role">${variant.role.label}</span>
-            <h3>${variant.name}</h3>
-            <p class="preset-subline">${variant.description}</p>
+            <h3>${escapeHtml(variant.name)}</h3>
+            <p class="preset-subline">${escapeHtml(variant.description)}</p>
           </div>
         </div>
         <p class="preset-quality">${summarizeVariantFocus(variant)} Mutation Amount controls how far this variant moves from the source preset.</p>
@@ -442,7 +442,7 @@ function renderVariants() {
         <div>
           <span class="metric-label">Key changed parameters</span>
           <div class="chip-list">
-            ${variant.changedParameters.slice(0, 8).map((item) => `<span class="chip">${item.replace(/_/g, " ")}</span>`).join("")}
+            ${variant.changedParameters.slice(0, 8).map((item) => `<span class="chip">${escapeHtml(item.replace(/_/g, " "))}</span>`).join("")}
           </div>
         </div>
         <div class="preset-actions">

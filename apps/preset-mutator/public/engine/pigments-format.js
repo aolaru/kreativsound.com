@@ -1,4 +1,4 @@
-import { clamp, createRng, hashString, slugifyFilename } from "./common.js";
+import { registerSemitones, clamp, createRng, hashString, slugifyFilename } from "./common.js";
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -250,7 +250,7 @@ export function setPigmentsParameter(text, key, value) {
     return text;
   }
   const expression = new RegExp(`((?:^| )${key.length} ${key} )(-?\\d+(?:\\.\\d+)?(?:e[-+]?\\d+)?)(?= )`, "i");
-  return text.replace(expression, (_, prefix) => `${prefix}${Number(value).toFixed(8).replace(/0+$/, "").replace(/\\.$/, "")}`);
+  return text.replace(expression, (_, prefix) => `${prefix}${Number(value).toFixed(8).replace(/0+$/, "").replace(/\.$/, "")}`);
 }
 
 export function renamePigmentsPreset(text, name, pack = "Preset Mutator Free") {
@@ -307,7 +307,10 @@ export function buildPigmentsBank(presetText, name) {
 export function applyGeneratedPresetToPigments(seed, preset) {
   const seedText = typeof seed === "string" ? seed : bytesToBinaryString(seed);
   const source = preset.parameterMap || {};
+  const tuning = clamp(0.5 + registerSemitones(preset) / 120);
   const mappings = {
+    Engine1_Coarse: tuning,
+    Engine2_Coarse: tuning,
     Engine1_HarmonicOsc_Volume: clamp(source.osc_1_level ?? 0.72),
     Engine2_HarmonicOsc_Volume: clamp(source.osc_2_level ?? 0.42),
     Engine1_HarmonicOsc_Tilt: clamp((source.filter_1_cutoff ?? 64) / 127),
@@ -372,7 +375,7 @@ export function generatePigmentsPresetVariants({ sourcePreset, strategy, variati
     const changedParameters = [];
     for (const [key, config] of Object.entries(SAFE_MUTATION_PARAMETERS)) {
       const current = readPigmentsParameter(presetText, key);
-      if (current === null) continue;
+      if (current === null || amount === 0) continue;
       const span = config.high - config.low;
       const roleBias = config.zone === "tone"
         ? role.toneBias ?? 0
@@ -385,7 +388,7 @@ export function generatePigmentsPresetVariants({ sourcePreset, strategy, variati
       const directedOffset = span * strategyValue(strategy, config.zone) * amount * 0.1;
       const biasedOffset = span * roleBias * amount * 0.08;
       presetText = setPigmentsParameter(presetText, key, clamp(current + randomOffset + directedOffset + biasedOffset, config.low, config.high));
-      changedParameters.push(key);
+      if (readPigmentsParameter(presetText, key) !== current) changedParameters.push(key);
     }
     const name = `${sourceName} ${role.suffix}`.slice(0, 64);
     presetText = renamePigmentsPreset(presetText, name);

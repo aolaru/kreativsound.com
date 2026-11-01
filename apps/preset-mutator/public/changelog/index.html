@@ -29,6 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="/preset-mutator/styles.css" />
+    <script src="/preset-mutator-url.js?v=20261101"></script>
     <script defer src="/kreativ-analytics.js?v=20261011"></script>
   </head>
   <body>
@@ -65,6 +66,22 @@
           <li>
             <article class="changelog-entry is-current">
               <span class="changelog-current-label">Current release</span>
+              <header class="changelog-entry-head">
+                <h2>v0.6.0</h2>
+                <time datetime="2026-10-24">October 24, 2026</time>
+              </header>
+              <p>Safer preset imports and more reliable generation across all three synth targets.</p>
+              <ul>
+                <li>Rendered imported metadata and generated names as text to prevent HTML injection.</li>
+                <li>Corrected native Vital mutation ranges and made zero-percent mutation preserve source settings.</li>
+                <li>Connected Low, Mid, and High register selections to Vital, Serum 2, and Pigments exports.</li>
+                <li>Rejected silent audio, improved pitch detection after leading silence, and preserved opposite-phase stereo content.</li>
+                <li>Isolated offline caches so Free and Pro no longer delete each other's cached assets.</li>
+              </ul>
+            </article>
+          </li>
+          <li>
+            <article class="changelog-entry">
               <header class="changelog-entry-head">
                 <h2>v0.5.1</h2>
                 <time datetime="2026-10-11">October 11, 2026</time>

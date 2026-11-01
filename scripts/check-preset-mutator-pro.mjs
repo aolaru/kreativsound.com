@@ -1,3 +1,4 @@
+import { checkPresetRegressions } from "./check-preset-mutator-regressions.mjs";
 import { execFile as execFileCallback } from "node:child_process";
 import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
@@ -266,3 +267,6 @@ if (failures.length) {
 }
 
 console.log("Preset Mutator Pro QA passed.");
+
+await checkPresetRegressions("preset-mutator-pro");
+await import("./check-preset-mutator-pro-variation.mjs");

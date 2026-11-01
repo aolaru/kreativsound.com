@@ -1,5 +1,6 @@
-import { clamp, createRng, hashString, sanitizeFileName } from "./common.js";
+import { registerSemitones, clamp, createRng, hashString, sanitizeFileName } from "./common.js";
 import { PRO_PACK_ROLES } from "./preset-mutate-engine.js";
+import { directionScale, mutationParameterAllowed, normalizeVariationOptions, reimagineBias, restoreLockedSerumComponents, serumComponent } from "./variation-controls.js";
 
 const MAGIC = "XferJson";
 const HEADER_SIZE = 17;
@@ -21,8 +22,21 @@ const SERUM_PARAMETERS = [
   { path: ["Oscillator1", "plainParams", "kParamDetune"], label: "oscillator B detune", low: 0, high: 0.5, zone: "space" },
   { path: ["Oscillator1", "plainParams", "kParamDetuneWid"], label: "oscillator B width", low: 0, high: 100, zone: "space" },
   { path: ["Oscillator3", "plainParams", "kParamVolume"], label: "noise level", low: 0, high: 0.35, zone: "dirt" },
-  { path: ["Global0", "plainParams", "kParamMasterVolume"], label: "master level", low: 0.2, high: 0.82, zone: "tone" },
 ];
+
+function serumMutationParameters(data) {
+  const parameters = [...SERUM_PARAMETERS];
+  for (let rack = 0; rack < 3; rack += 1) {
+    const effects = data[`FXRack${rack}`]?.FX || [];
+    effects.forEach((effect, index) => {
+      for (const module of ["FXReverb", "FXDelay", "FXChorus"]) {
+        if (!(effect[module]?.plainParams?.kParamWet > 0 && effect[module].plainParams.kParamWet <= 0.65)) continue;
+        parameters.push({ path: [`FXRack${rack}`, "FX", index, module, "plainParams", "kParamWet"], label: `rack ${rack + 1} ${module} ${index + 1} mix`, low: 0, high: 0.65, zone: "space" });
+      }
+    });
+  }
+  return parameters;
+}
 
 function readUint32(bytes, offset) {
   return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(offset, true);
@@ -132,9 +146,7 @@ function resetGeneratedSerumPreset(data) {
 }
 
 function registerOctave(preset) {
-  const familyBase = { bass: 82, pad: 220, pluck: 440, texture: 146 }[preset.familyKey] || 220;
-  const pitch = Number(preset.pitchHz || preset.parameterMap?._pitchHz || familyBase);
-  return Math.round(Math.log2(Math.max(20, pitch) / familyBase));
+  return Math.round(registerSemitones(preset) / 12);
 }
 
 export function applyGeneratedPresetToSerum2(seedData, preset) {
@@ -213,6 +225,20 @@ export function applyGeneratedPresetToSerum2(seedData, preset) {
     };
   }
 
+  // Reuse valid native effect modules from the supplied Serum seed.
+  const seedEffects = seedData.FXRack0?.FX || [];
+  for (const [module, mix] of [["FXDelay", map.delay_dry_wet], ["FXReverb", map.reverb_dry_wet]]) {
+    const seedEffect = seedEffects.find((effect) => effect[module]);
+    if (!seedEffect || !Number.isFinite(mix)) continue;
+    const effect = cloneData(seedEffect);
+    plainParams(effect[module]).kParamWet = clamp(mix, 0, 0.65);
+    data.FXRack0.FX.push(effect);
+  }
+
+  if (preset.variationReference && preset.componentLocks) {
+    const reference = applyGeneratedPresetToSerum2(seedData, preset.variationReference);
+    restoreLockedSerumComponents(data, reference, preset.componentLocks);
+  }
   return data;
 }
 
@@ -325,21 +351,30 @@ function zoneBias(strategy, role, zone) {
   return strategyBias + roleBias;
 }
 
-export function generateSerum2PresetVariants({ sourcePreset, strategy, controls = {}, variationSeed = 0 }) {
+export function generateSerum2PresetVariants({ sourcePreset, strategy, controls = {}, variationSeed = 0, variationOptions = {} }) {
+  const options = normalizeVariationOptions(variationOptions);
+  const parameters = serumMutationParameters(sourcePreset.data).filter((parameter) =>
+    mutationParameterAllowed(parameter.path.join("."), parameter.zone, options, serumComponent));
+  if (!parameters.length) throw new Error("No supported unlocked Serum 2 parameters remain. Unlock another component.");
   const summary = sourcePreset.summary || summarizeSerum2Preset(sourcePreset);
   return PRO_PACK_ROLES.map((role, index) => {
     const data = cloneData(sourcePreset.data);
     const rng = createRng(hashString(`serum2:${sourcePreset.fileName}:${role.key}:${JSON.stringify(controls)}:${variationSeed}`));
     const changedParameters = [];
-    const intensity = (0.08 + strategy.amount * 0.16) * role.multiplier;
+    const amount = clamp(strategy.amount ?? 0.5);
+    const intensity = amount * 0.24 * role.multiplier * directionScale(options);
 
-    for (const parameter of SERUM_PARAMETERS) {
-      const current = Number(getPath(data, parameter.path));
+    for (const parameter of parameters) {
+      if (options.direction === "stay-close" && parameter.path[0].startsWith("Oscillator") && !/Volume|DetuneWid/.test(parameter.path.at(-1))) continue;
+      if (options.direction === "stay-close" && parameter.path[0].startsWith("Env") && !/Sustain/.test(parameter.path.at(-1))) continue;
+      const raw = getPath(data, parameter.path);
+      if (raw === undefined || raw === null || amount === 0) continue;
+      const current = Number(raw);
       if (!Number.isFinite(current)) {
         continue;
       }
       const span = parameter.high - parameter.low;
-      const directed = zoneBias(strategy, role, parameter.zone) * span * 0.1 * role.multiplier;
+      const directed = (zoneBias(strategy, role, parameter.zone) + reimagineBias(index, parameter.zone, options)) * span * 0.1 * role.multiplier * amount * directionScale(options);
       const random = (rng() * 2 - 1) * span * intensity;
       const next = clamp(current + directed + random, parameter.low, parameter.high);
       if (Math.abs(next - current) > span * 0.002) {
@@ -359,6 +394,8 @@ export function generateSerum2PresetVariants({ sourcePreset, strategy, controls 
       name,
       description,
       changedParameters,
+      variationDirection: options.direction,
+      componentLocks: options.locks,
       data,
       metadata: { ...sourcePreset.metadata, presetName: name, presetAuthor: "Preset Mutator Pro", presetDescription: description },
       downloadName: `${sanitizeFileName(name)}.SerumPreset`,

@@ -1,4 +1,4 @@
-import { clamp, createRng, hashString, sanitizeFileName } from "./common.js";
+import { registerSemitones, clamp, createRng, hashString, sanitizeFileName } from "./common.js";
 import { FREE_VARIANT_ROLES } from "./preset-mutate-engine.js";
 
 const MAGIC = "XferJson";
@@ -132,9 +132,7 @@ function resetGeneratedSerumPreset(data) {
 }
 
 function registerOctave(preset) {
-  const familyBase = { bass: 82, pad: 220, pluck: 440, texture: 146 }[preset.familyKey] || 220;
-  const pitch = Number(preset.pitchHz || preset.parameterMap?._pitchHz || familyBase);
-  return Math.round(Math.log2(Math.max(20, pitch) / familyBase));
+  return Math.round(registerSemitones(preset) / 12);
 }
 
 export function applyGeneratedPresetToSerum2(seedData, preset) {
@@ -331,15 +329,18 @@ export function generateSerum2PresetVariants({ sourcePreset, strategy, controls 
     const data = cloneData(sourcePreset.data);
     const rng = createRng(hashString(`serum2:${sourcePreset.fileName}:${role.key}:${JSON.stringify(controls)}:${variationSeed}`));
     const changedParameters = [];
-    const intensity = (0.08 + strategy.amount * 0.16) * role.multiplier;
+    const amount = clamp(strategy.amount ?? 0.5);
+    const intensity = amount * 0.24 * role.multiplier;
 
     for (const parameter of SERUM_PARAMETERS) {
-      const current = Number(getPath(data, parameter.path));
+      const raw = getPath(data, parameter.path);
+      if (raw === undefined || raw === null || amount === 0) continue;
+      const current = Number(raw);
       if (!Number.isFinite(current)) {
         continue;
       }
       const span = parameter.high - parameter.low;
-      const directed = zoneBias(strategy, role, parameter.zone) * span * 0.1 * role.multiplier;
+      const directed = zoneBias(strategy, role, parameter.zone) * span * 0.1 * role.multiplier * amount;
       const random = (rng() * 2 - 1) * span * intensity;
       const next = clamp(current + directed + random, parameter.low, parameter.high);
       if (Math.abs(next - current) > span * 0.002) {

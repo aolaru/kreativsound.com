@@ -1,5 +1,6 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
-import { applySynthTheme, createGenerationSeed, ensureJsZip, slugifyFilename, synthTargetDetails } from "../engine/common.js";
+import { mountProVariationControls } from "../pro-variation-controls.js";
+import { applySynthTheme, createGenerationSeed, ensureJsZip, slugifyFilename, synthTargetDetails, escapeHtml } from "../engine/common.js";
 import {
   buildPresetMutateStrategy,
   generatePresetVariants as createPresetVariants,
@@ -19,7 +20,9 @@ import {
   licenseVerificationMessage,
   saveLicenseToken,
   verifyLicenseToken,
-} from "../engine/license.js";
+} from "../engine/offline-license.js";
+
+const variationControls = mountProVariationControls();
 
 const state = {
   sourcePreset: null,
@@ -199,8 +202,8 @@ function renderSourceMetrics() {
     .map(
       ([label, value]) => `
         <div class="metric">
-          <span class="metric-label">${label}</span>
-          <strong>${value}</strong>
+          <span class="metric-label">${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
         </div>
       `,
     )
@@ -226,8 +229,8 @@ function renderStrategyMetrics() {
     .map(
       ([label, value]) => `
         <div class="metric">
-          <span class="metric-label">${label}</span>
-          <strong>${value}</strong>
+          <span class="metric-label">${escapeHtml(label)}</span>
+          <strong>${escapeHtml(value)}</strong>
         </div>
       `,
     )
@@ -311,7 +314,7 @@ function buildStrategyWeights() {
   });
 }
 
-function generateVariants() {
+function generateVariants(variationOptions) {
   const controls = {
     amount: elements.amountRange.value,
     tone: elements.brightnessRange.value,
@@ -323,6 +326,7 @@ function generateVariants() {
   const generationSeed = createGenerationSeed();
   if (state.sourceFormat === "pigments") {
     return generatePigmentsPresetVariants({
+      variationOptions,
       sourcePreset: state.sourcePreset,
       strategy: buildStrategyWeights(),
       variationSeed: generationSeed,
@@ -330,6 +334,7 @@ function generateVariants() {
   }
   if (state.sourceFormat === "serum2") {
     return generateSerum2PresetVariants({
+      variationOptions,
       sourcePreset: state.sourcePreset,
       strategy: buildStrategyWeights(),
       controls,
@@ -337,6 +342,7 @@ function generateVariants() {
     });
   }
   return createPresetVariants({
+    variationOptions,
     sourcePreset: state.sourcePreset,
     strategy: buildStrategyWeights(),
     mode: "pro",
@@ -464,8 +470,8 @@ function renderVariants() {
         <div class="preset-card-header">
           <div>
             <span class="preset-role">${variant.role.label}</span>
-            <h3>${variant.name}</h3>
-            <p class="preset-subline">${variant.description}</p>
+            <h3>${escapeHtml(variant.name)}</h3>
+            <p class="preset-subline">${escapeHtml(variant.description)}</p>
           </div>
         </div>
         <p class="preset-quality">${summarizeVariantFocus(variant)} Mutation Amount controls how far this variant moves from the source preset.</p>
@@ -490,7 +496,7 @@ function renderVariants() {
         <div>
           <span class="metric-label">Key changed parameters</span>
           <div class="chip-list">
-            ${variant.changedParameters.slice(0, 8).map((item) => `<span class="chip">${item.replace(/_/g, " ")}</span>`).join("")}
+            ${variant.changedParameters.slice(0, 8).map((item) => `<span class="chip">${escapeHtml(item.replace(/_/g, " "))}</span>`).join("")}
           </div>
         </div>
         <div class="preset-actions">
@@ -622,13 +628,18 @@ async function handleGenerate() {
   if (!state.sourcePreset || state.isGenerating || !state.suiteUnlocked) {
     return;
   }
+  const variationOptions = variationControls.read();
+  if (Object.values(variationOptions.locks).every(Boolean)) {
+    elements.status.textContent = "Unlock at least one component before generating.";
+    return;
+  }
 
   setGenerationLoadingState(true);
   elements.status.textContent = "Building 32 Pro variants from the loaded source preset...";
 
   try {
     await new Promise((resolve) => window.setTimeout(resolve, 520));
-    state.generatedVariants = generateVariants();
+    state.generatedVariants = generateVariants(variationOptions);
     state.lastGenerationMode = "pro";
     renderVariants();
     elements.status.textContent = "32 Pro variants ready. Expand each group and download individual presets or the full ZIP.";
@@ -636,6 +647,10 @@ async function handleGenerate() {
       preset_count: state.generatedVariants.length,
       ...currentAnalyticsSelection(),
     });
+  } catch (error) {
+    state.generatedVariants = [];
+    renderVariants();
+    elements.status.textContent = error.message || "Could not generate this pack.";
   } finally {
     setGenerationLoadingState(false);
   }

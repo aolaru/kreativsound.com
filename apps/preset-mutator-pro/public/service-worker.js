@@ -1,5 +1,28 @@
-const CACHE_NAME = "preset-mutator-pro-shell-v12";
+const CACHE_NAME = "preset-mutator-pro-shell-v15";
+const CACHE_PREFIX = "preset-mutator-pro-shell-";
 const SHELL_ASSETS = [
+  "./pro-variation-controls.js",
+  "./engine/variation-controls.js",
+  "/preset-mutator-url.js?v=20261101",
+  "./mutate/styles.css",
+  "./vendor/jszip.min.js",
+  "./assets/seeds/vital/velvet-ruins/KS%20Ash%20Bell%20Ritual.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Black%20Tonnage.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Burial%20Bloom.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Crypt%20Foundation.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Fracture%20Bloom.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Haze%20Reliquary.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Hollow%20Bellframe.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Monolith%20Haze.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Mourning%20Engine.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Ritual%20Ivory.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Ruin%20Sleep.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Sable%20Dulcimer.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Sepulcher%20Glass.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Shard%20Procession.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Shard%20Relay.vital",
+  "./assets/seeds/vital/velvet-ruins/KS%20Worn%20Subharmonic.vital",
+  "./engine/audio-analysis.js",
   "./index.html",
   "./changelog/index.html",
   "./styles.css",
@@ -14,6 +37,7 @@ const SHELL_ASSETS = [
   "./audio/app.js",
   "./engine/common.js",
   "./engine/license.js",
+  "./engine/offline-license.js",
   "./engine/scratch-engine.js",
   "./engine/audio-engine.js",
   "./engine/preset-mutate-engine.js",
@@ -35,6 +59,11 @@ const SHELL_ASSETS = [
   "./manifest.webmanifest",
   "./preset-mutator-mark.svg",
 ];
+
+async function matchCached(request) {
+  const cache = await caches.open(CACHE_NAME);
+  return cache.match(request);
+}
 
 async function cacheShellAssets(cache) {
   await Promise.allSettled(
@@ -59,7 +88,7 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key !== CACHE_NAME)
+          .filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME)
           .map((key) => caches.delete(key)),
       ),
     ),
@@ -87,7 +116,7 @@ self.addEventListener("fetch", (event) => {
       fetch(request)
         .then((response) => {
           if (!response.ok && request.mode === "navigate") {
-            return caches.match("./index.html").then((cached) => cached || response);
+            return matchCached("./index.html").then((cached) => cached || response);
           }
 
           if (!response.ok || response.type === "opaque") {
@@ -99,12 +128,12 @@ self.addEventListener("fetch", (event) => {
           return response;
         })
         .catch(() =>
-          caches.match(request).then((cached) => {
+          matchCached(request).then((cached) => {
             if (cached) {
               return cached;
             }
             if (request.mode === "navigate") {
-              return caches.match("./index.html").then((fallback) => fallback || Response.error());
+              return matchCached("./index.html").then((fallback) => fallback || Response.error());
             }
             return Response.error();
           }),
@@ -114,7 +143,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(request).then((cached) => {
+    matchCached(request).then((cached) => {
       if (cached) {
         return cached;
       }
