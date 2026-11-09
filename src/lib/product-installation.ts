@@ -32,9 +32,9 @@ const vital: ProductInstallation = {
 
 const serum2: ProductInstallation = {
   steps: [
-    "Unzip the download and follow the included installation guide. Open Xfer Serum 2 in your DAW.",
-    "Copy the preset bank folder into Serum 2's Presets/User folder and refresh the preset browser.",
-    "Load a .SerumPreset file from the imported bank. Serum 1 is not supported; keep originals when saving variations."
+    "Unzip the download and read the edition-specific two-page manual and Version 1.1 Notes. Back up important projects before switching presets.",
+    "Copy the versioned 1.1 bank folder into Serum 2's Presets/User folder and refresh its browser. Install alongside 1.0 rather than replacing it; the original 1.0 downloads remain available.",
+    "Load a .SerumPreset file from the imported bank. Serum 1 is not supported. Some macros depend on note range, velocity, wheel position, or other controls; keep originals when saving variations."
   ]
 };
 const miniV: ProductInstallation = {
@@ -70,10 +70,11 @@ export const productInstallations: Record<string, ProductInstallation> = {
   },
   "ghostform": {
     steps: [
-      "Download the macOS or Windows archive and the Ghostform User Manual v1.0 from Gumroad. Unzip the archive.",
+      "Download the macOS or Windows archive and the Ghostform User Manual v1.0.1 from Gumroad. Unzip the archive. If updating, back up important projects and quit your DAW before replacing the installed plug-in.",
       "macOS: copy KS Ghostform.component to ~/Library/Audio/Plug-Ins/Components for AU, or KS Ghostform.vst3 to ~/Library/Audio/Plug-Ins/VST3 for VST3.",
       "Windows: copy the entire KS Ghostform.vst3 folder to C:\\Program Files\\Common Files\\VST3\\.",
-      "Restart or rescan plug-ins in your DAW, then load KS Ghostform on an instrument track. It is not a standalone application."
+      "Restart or rescan plug-ins in your DAW, then load KS Ghostform on an instrument track. It is not a standalone application.",
+      "Existing 1.0.0 projects and user presets retain their saved values. Select a factory preset again to hear its revised settings."
     ],
     sourceUrl: "https://kreativ.gumroad.com/l/ks-ghostform",
     sourceLabel: "Download and user manual"

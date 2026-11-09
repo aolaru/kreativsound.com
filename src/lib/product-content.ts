@@ -17,7 +17,7 @@ export const landingCopyOverrides = {
   ...newPresetCopy,
   "burnshaper": {
     subtitle: "Creative three-band distortion for drums, bass, synths, loops, and experimental sound design.",
-    shortMeta: "144 factory presets • Six character modes • macOS AU/VST3 • Windows x64 VST3",
+    shortMeta: "v1.0.1 • 144 factory presets • Six character modes • macOS AU/VST3 • Windows x64 VST3",
     ctaLine: burnshaperOffer.note,
     finalCtaTitle: "Shape your sound with KS BurnShaper.",
     finalCtaText: `${burnshaperOffer.note} 30-day refunds for purchases from October 13, 2026, 00:00 Europe/Bucharest. Earlier buyers keep lifetime refunds.`,
@@ -29,12 +29,14 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Creative multiband distortion effect" },
+      { label: "Version", value: "1.0.1" },
       { label: "Formats", value: "macOS AU and VST3; Windows x64 VST3" },
       { label: "Preset count", value: "144 factory presets: Utility, Warm, Aggressive, and Digital" },
       { label: "Distortion", value: "Three bands; editable ten-point A/B curves; Direct, Tube, Tape, Hard, Fold, and Digital modes" },
       { label: "Oversampling", value: "Fixed 4x" },
       { label: "Afterburn", value: "Switchable diffused tail, 50 ms to 2.5 seconds" },
       { label: "Custom presets", value: ".burnshape files" },
+      { label: "Interface scaling", value: "100%, 125%, 150%, or 175%; remembered independently of presets and projects" },
       { label: "Activation", value: "Gumroad licence key; one-time online activation, then offline use" },
       { label: "Licence", value: "One individual user, multiple owned or controlled computers; commercial rendered audio permitted without extra royalties" },
       { label: "Refunds", value: "30-day full refunds from October 13, 2026, 00:00 Europe/Bucharest (October 12, 21:00 UTC). Earlier purchases retain lifetime refunds." },
@@ -49,7 +51,7 @@ export const landingCopyOverrides = {
   },
   "ghostform": {
     subtitle: "Free evolving drone and string synthesizer for slow harmonic movement, cinematic beds, deep drones, and textured ambient sound design.",
-    shortMeta: "Free plugin • 144 factory presets • macOS AU/VST3 • Windows VST3",
+    shortMeta: "v1.0.1 • Free plugin • 144 factory presets • macOS AU/VST3 • Windows VST3",
     ctaLine: "Download KS Ghostform free from Gumroad.",
     finalCtaTitle: "Download KS Ghostform free.",
     finalCtaText: "Get the full instrument and 144 factory presets, with no activation or license key.",
@@ -60,26 +62,27 @@ export const landingCopyOverrides = {
     ],
     specifications: [
       { label: "Product type", value: "Free software synthesizer" },
-      { label: "Version", value: "1.0.0" },
+      { label: "Version", value: "1.0.1" },
       { label: "Formats", value: "macOS AU and VST3; Windows 64-bit VST3" },
       { label: "Preset count", value: "144 factory presets" },
       { label: "Sound palette", value: "Drones, pads, basses, leads, plucks, and experimental textures" },
       { label: "Core engine", value: "Two oscillators, sub oscillator, filter movement, echo, reverb, and Variation engine" },
       { label: "Automation", value: "Host automation and MIDI mapping through your DAW" },
-      { label: "Manual", value: "Ghostform User Manual v1.0 (PDF)" },
+      { label: "Interface scaling", value: "100%–200%, Fit mode, and Cmd/Ctrl+0 size reset" },
+      { label: "Manual", value: "Ghostform User Manual v1.0.1 (PDF)" },
       { label: "Activation", value: "No activation or license key" },
       { label: "Delivery", value: "Free Gumroad download" }
     ],
     requirements: [
       "macOS 11 or later: signed and notarized universal AU and VST3 for Apple Silicon and Intel Macs.",
-      "Windows: a 64-bit DAW that supports VST3 plug-ins. A minimum Windows version has not been specified.",
+      "Windows: an unsigned 64-bit VST3 ZIP for a compatible DAW; manual installation, no installer. A minimum Windows version has not been specified.",
       "KS Ghostform is a plug-in, not a standalone application.",
       "After installation, restart or rescan plug-ins in your DAW."
     ]
   },
   "kreativ-kollection-v1": {
-    subtitle: "932+ synth presets and 147 WAV samples for dark, cinematic, and experimental production.",
-    shortMeta: "16 products • 9 preset banks • 932+ presets • 7 WAV packs • 147 samples • €144 value",
+    subtitle: "1,028 synth presets and 147 WAV samples for dark, cinematic, and experimental production.",
+    shortMeta: "16 products • 9 preset banks • 1,028 presets • 7 WAV packs • 147 samples • €144 value",
     ctaLine: kollectionOffer.note,
     finalCtaTitle: "Build a broader sound palette for less.",
     finalCtaText: `Get the €144 collection. ${kollectionOffer.note}`,
@@ -102,7 +105,7 @@ export const landingCopyOverrides = {
       "tectonic-2-dark-subs-textures"
     ],
     longDescription: [
-      "Kreativ Kollection V1 brings together 16 complete Kreativ Sound releases: 9 synth preset banks with 932+ presets and 7 sound packs with 147 WAV samples spanning dark ambient, cinematic, industrial, experimental, and electronic production.",
+      "Kreativ Kollection V1 brings together 16 complete Kreativ Sound releases: 9 synth preset banks with 1,028 presets and 7 sound packs with 147 WAV samples spanning dark ambient, cinematic, industrial, experimental, and electronic production.",
       "The preset side covers Arturia JUN-6 V and Pigments, Native Instruments FM8, Vital, Synplant 2, Softube Synth Models, FabFilter One, Moog Model D, and Animoog Z. The WAV side adds percussion, transitions, atmospheres, noise, subs, horror textures, and experimental sound material that works in any modern DAW.",
       "Each included product is delivered separately through your Gumroad library, so you can download only what a project needs and receive eligible product updates in the same place. Dark Drones 2 will be added free to every Kreativ Kollection V1 owner's Gumroad library when it is released."
     ],
@@ -110,7 +113,7 @@ export const landingCopyOverrides = {
       { label: "Product type", value: "Preset and sample bundle" },
       { label: "Format", value: "Synth preset banks and WAV audio packs" },
       { label: "Includes", value: "16 products: 9 preset banks and 7 WAV sound packs" },
-      { label: "Preset count", value: "932+ presets, including 256 in Velvet Ruins 2" },
+      { label: "Preset count", value: "1,028 presets, including 256 in Velvet Ruins 2 and 128 in BIOFORMS 2" },
       { label: "Sample count", value: "147 WAV samples across 7 sound packs" },
       { label: "Best for", value: "Ambient, cinematic, electronic, industrial, experimental, and darker production" },
       { label: "Individual value", value: "€144" },

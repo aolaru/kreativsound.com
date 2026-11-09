@@ -2,6 +2,7 @@
 import PresetMutatorDetails from "./PresetMutatorDetails.astro";
 import KollectionDetails from "./KollectionDetails.astro";
 import GhostformDemo from "./GhostformDemo.astro";
+import ObsidianReleaseNotes from "./ObsidianReleaseNotes.astro";
 import type { ProductPage } from "../lib/product-pages";
 import TimedOfferText from "./TimedOfferText.astro";
 import { timedOffers } from "../lib/plugin-offers.ts";
@@ -290,23 +291,32 @@ const breadcrumbSchema = {
     </section>
   ) : null}
 
+  {["obsidian-serum-2-presets", "obsidian-lite-serum-2-presets"].includes(product.slug) ? (
+    <ObsidianReleaseNotes lite={product.slug === "obsidian-lite-serum-2-presets"} />
+  ) : null}
+
   {product.slug === "burnshaper" ? (
     <section class="product-landing-section product-help-section" aria-labelledby="burnshaper-release-title">
       <h2 id="burnshaper-release-title">Release notes</h2>
-      <p><a href="/posts/burnshaper-release-2026-10-10.html">Read the BurnShaper announcement</a> for the feature overview and launch offer. Current downloads and included release information are available on <a href="https://kreativ.gumroad.com/l/ks-burnshaper" target="_blank" rel="noopener noreferrer">Gumroad</a>.</p>
+      <p><strong>Version 1.0.1</strong> adds interface scaling at 100%, 125%, 150%, and 175%. Choose a size using the percentage control beside the About button; the selection is remembered independently of presets and projects.</p>
+      <p>All sizes are available. Larger sizes may extend beyond your screen, so choose a smaller size if needed. This readability update does not change the sound, presets, or existing projects.</p>
+      <p>See the <a href="/posts/burnshaper-release-2026-10-10.html">original launch announcement</a> for historical launch details. Current downloads and included release information are available on <a href="https://kreativ.gumroad.com/l/ks-burnshaper" target="_blank" rel="noopener noreferrer">Gumroad</a>.</p>
     </section>
   ) : null}
 
   {product.slug === "ghostform" ? (
     <section class="product-landing-section product-help-section" aria-labelledby="ghostform-release-title">
       <h2 id="ghostform-release-title">Release notes</h2>
-      <p><strong>Version 1.0.0</strong> — initial release, September 25, 2026.</p>
+      <p><strong>Version 1.0.1</strong> — November 9, 2026. Includes the updated Ghostform User Manual v1.0.1 (PDF).</p>
       <ul>
-        <li>144 factory presets; two oscillator workflows, sub oscillator, effects, and Variation engine.</li>
-        <li>Universal macOS AU/VST3 and Windows 64-bit VST3 downloads.</li>
-        <li>Host automation and MIDI mapping through your DAW; no activation required.</li>
+        <li>Improved quiet factory-preset outliers and quicker entrances in the original mood bank; Pad and Pluck envelope timings are preserved.</li>
+        <li>Smoother voice stealing when all eight voices are in use.</li>
+        <li>Interface zoom from 100% to 200%, Fit mode, and Cmd/Ctrl+0 size reset.</li>
+        <li>Fixes for Variation Undo, preset-name persistence, keyboard loading, typed parameter units, and invalid preset data.</li>
+        <li>More robust handling of unexpectedly large audio blocks.</li>
       </ul>
-      <p>The Gumroad download also includes the Ghostform User Manual v1.0 (PDF).</p>
+      <p><strong>Updating:</strong> back up important projects, quit your DAW, replace the installed plug-in, then restart or rescan. Existing 1.0.0 projects and user presets keep their saved values; select a factory preset again to hear its revised settings.</p>
+      <p>Version 1.0.0 was the initial release on September 25, 2026. The synth still includes 144 factory presets and requires no activation.</p>
     </section>
   ) : null}
 
@@ -339,7 +349,7 @@ const breadcrumbSchema = {
     <section class="product-final-cta" aria-labelledby="product-final-cta-title">
       <h2 id="product-final-cta-title">{product.finalCtaTitle || `Ready to download ${productName}?`}</h2>
       <p>{product.slug === "burnshaper" ? (
-        <TimedOfferText productUrl={product.route} kind="note" suffix=" Includes a lifetime, no-questions-asked refund promise." />
+        <TimedOfferText productUrl={product.route} kind="note" suffix=" 30-day refunds for purchases from October 13, 2026, 00:00 Europe/Bucharest. Earlier buyers keep lifetime refunds." />
       ) : product.slug === "kreativ-kollection-v1" ? (
         <TimedOfferText productUrl={product.route} kind="note" prefix="Get the €144 collection. " suffix=" Applicable taxes are added and calculated at checkout." />
       ) : (product.finalCtaText || product.ctaLine || product.description)}</p>

@@ -100,12 +100,12 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   },
   "obsidian-serum-2-presets": {
     headline: "OBSIDIAN",
-    description: "128 dark cinematic Serum 2 presets, including all 32 Lite sounds plus 96 more. Tested with Serum 2.1.5; named macros, preset list, and installation guide included.",
+    description: "OBSIDIAN 1.1: 128 dark cinematic Serum 2 presets, including all 32 Lite sounds, refined macros and routing, a new manual, and side-by-side update guidance.",
     kicker: "Serum 2 preset bank"
   },
   "obsidian-lite-serum-2-presets": {
     headline: "OBSIDIAN Lite",
-    description: "32 free dark cinematic Serum 2 presets from the full OBSIDIAN bank, with named macros and an installation guide. Tested with Serum 2.1.5.",
+    description: "OBSIDIAN Lite 1.1: 32 free dark cinematic Serum 2 presets matching Full 1.1, with refined macros, a new manual, and side-by-side update guidance.",
     kicker: "Free Serum 2 preset bank"
   },
   "analog-drift-mini-v-presets": {
@@ -121,7 +121,7 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   "burnshaper": {
     title: "KS BurnShaper | Creative Multiband Distortion",
     headline: "KS BurnShaper",
-    description: "KS BurnShaper is a three-band distortion effect with editable A/B waveshaping curves, six character modes, Afterburn, and 144 factory presets.",
+    description: "KS BurnShaper 1.0.1 combines three-band distortion, editable A/B curves, six character modes, Afterburn, 144 presets, and scalable interface controls.",
     kicker: "Multiband distortion plugin",
     variant: "flagship",
     primaryUrl: "https://kreativ.gumroad.com/l/ks-burnshaper",
@@ -130,7 +130,7 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   "ghostform": {
     title: "KS Ghostform | Free Drone & String Synth",
     headline: "KS Ghostform",
-    description: "KS Ghostform is a free evolving drone and string synthesizer with 144 factory presets for cinematic beds, deep drones, and textured ambient sound design.",
+    description: "KS Ghostform 1.0.1 is a free drone and string synth with 144 presets, improved voice handling, interface zoom, and macOS AU/VST3 and Windows VST3 downloads.",
     kicker: "Free synthesizer plugin",
     variant: "flagship",
     primaryUrl: "https://kreativ.gumroad.com/l/ks-ghostform",
@@ -139,7 +139,7 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   "kreativ-kollection-v1": {
     title: "Kreativ Kollection V1 | Preset & Sample Bundle",
     headline: "Kreativ Kollection V1",
-    description: "Kreativ Kollection V1: 932+ presets across 9 synth banks and 147 WAV samples in 7 packs for ambient, cinematic, industrial, and experimental production.",
+    description: "Kreativ Kollection V1: 1,028 presets across 9 synth banks and 147 WAV samples in 7 packs for ambient, cinematic, industrial, and experimental production.",
     kicker: "16-product flagship bundle",
     primaryUrl: "https://kreativ.gumroad.com/l/kreativ-kollection-v1",
     primaryLabel: "Get the bundle on Gumroad",

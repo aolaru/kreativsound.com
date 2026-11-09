@@ -50,16 +50,16 @@ for (const format of presetMutatorFormats) {
     errors.push(`${format.synth}: Free and Pro support must match current app capabilities (${expected}).`);
   }
 }
-const introOffer = getBurnshaperOffer(new Date("2026-10-10T12:00:00Z"));
-const regularOffer = getBurnshaperOffer(new Date("2026-11-10T12:00:00Z"));
-if (introOffer.priceAmount !== 9 || introOffer.priceValidUntil !== "2026-11-08") {
+const introOffer = getBurnshaperOffer(new Date("2026-11-09T12:00:00Z"));
+const regularOffer = getBurnshaperOffer(new Date("2026-11-17T12:00:00Z"));
+if (introOffer.priceAmount !== 9 || introOffer.priceValidUntil !== "2026-11-15") {
   errors.push("BurnShaper: introductory offer must be €9 with a dated expiry.");
 }
 if (regularOffer.priceAmount !== 19 || regularOffer.priceValidUntil !== undefined) {
   errors.push("BurnShaper: builds after the introductory offer must use €19.");
 }
 for (const [getOffer, expiry, before, after] of [
-  [getBurnshaperOffer, "2026-11-09T05:55:00Z", 9, 19],
+  [getBurnshaperOffer, "2026-11-16T00:00:00Z", 9, 19],
   [getKollectionOffer, "2027-02-20T00:00:00Z", 49, 69]
 ]) {
   const boundary = Date.parse(expiry);
@@ -76,6 +76,16 @@ const productSlugSet = new Set(productSlugs);
 const landingCopySlugSet = new Set(Object.keys(landingCopyOverrides));
 const paidSoundCategories = new Set(["Presets", "Samples"]);
 const allowedStatuses = new Set(["available", "comingSoon", "free", "archive"]);
+
+const bundleCopy = landingCopyOverrides["kreativ-kollection-v1"];
+const bundlePresets = products.filter((product) => product.category === "Presets"
+  && bundleCopy.includedProducts.includes(slugFromDetailsUrl(product.detailsUrl)));
+const bundleCount = bundlePresets.reduce((sum, product) => sum + Number.parseInt(product.count, 10), 0);
+const advertisedCount = bundleCopy.specifications.find((spec) => spec.label === "Preset count")?.value;
+if (bundlePresets.length !== 9 || bundleCount !== 1028
+  || Number.parseInt(advertisedCount?.replaceAll(",", ""), 10) !== bundleCount) {
+  errors.push("Kollection must list all nine current preset banks and their matching total of 1,028 presets.");
+}
 
 assertUnique(products.map((product) => product.detailsUrl).filter(Boolean), "product detailsUrl", errors);
 assertUnique(productSlugs, "product slug", errors);

@@ -60,7 +60,7 @@ def main() -> int:
     releases = json.loads(TOOL_RELEASES.read_text(encoding="utf-8"))
     offers = json.loads(subprocess.check_output([
         "node", "--input-type=module", "-e",
-        'import { kollectionOffer } from "./src/lib/plugin-offers.ts"; console.log(JSON.stringify({ kollection: kollectionOffer.price }));'
+        'import { kollectionOffer, burnshaperOffer } from "./src/lib/plugin-offers.ts"; console.log(JSON.stringify({ kollection: kollectionOffer.price, burnshaper: burnshaperOffer }));'
     ], cwd=ROOT, text=True))
     preset_mutator_free = releases["presetMutatorFree"]
     preset_mutator_pro = releases["presetMutatorPro"]
@@ -108,7 +108,7 @@ def main() -> int:
             "/posts/callisto-drift-release-2026-10-07.html": ["128 presets", "32 presets", ".jup4x", "4.6.4.6366", "Published October 7, 2026", "https://kreativ.gumroad.com/l/callisto-drift-lite-jup-8-v4-presets", "https://kreativ.gumroad.com/l/callisto-drift-jup-8-v4-presets"],
             "/posts/catalog-discovery-update-2026-08-19.html": ["Historical announcement.", "Published August 19, 2026", "See current releases and updates."],
             "/posts/black-arcology-release-2026-04-30.html": ["128 presets", "32 free presets", "Last updated October 7, 2026", "Requirements"],
-            "/plugins/ghostform": ["KS Ghostform", "Download Free", "144 factory presets", "macOS AU and VST3", "Windows 64-bit VST3", "Product Specifications", "Requirements", "Version 1.0.0", "Release notes", "Ghostform User Manual v1.0", "Installation", "not a standalone application"],
+            "/plugins/ghostform": ["KS Ghostform", "Download Free", "144 factory presets", "macOS AU and VST3", "Windows 64-bit VST3", "Product Specifications", "Requirements", "Version 1.0.1", "Release notes", "Ghostform User Manual v1.0.1", "Installation", "not a standalone application", "unsigned 64-bit VST3 ZIP", "100% to 200%", "Fit mode", "Cmd/Ctrl+0", "Smoother voice stealing", "select a factory preset again"],
             "/plugins/burnshaper": ["KS BurnShaper", "Buy on Gumroad", "144 factory presets", "macOS 12", "14.44", "unsigned", "Reason 13 on Windows", "a minimum supported Windows version has not been established", "do not disable protections", "Direct, Tube, Tape, Hard, Fold, or Digital", "fixed 4x oversampling", "Gumroad licence key", "Unactivated copies pass dry audio", "Requirements", "Installation", "Release notes", "30-day full refunds", "Earlier purchases retain lifetime refunds", "October 12, 21:00 UTC", "https://kreativ.gumroad.com/l/ks-burnshaper", "/assets/thumbs/burnshaper-interface.webp"],
             "/posts/burnshaper-release-2026-10-10.html": ["KS BurnShaper", "144 factory presets", "macOS 12", "Windows", "unsigned", "November 9", "€19", "https://kreativ.gumroad.com/l/ks-burnshaper"],
             "/tools/": ["Preset Mutator Free", "3 free / 32 Pro", "Free + Pro", "Open Preset Mutator Pro", "Get Pro for €19", "Wave Mutator Free", "Pattern Mutator Free"],
@@ -133,7 +133,7 @@ def main() -> int:
             "/sounds/obsidian-lite-serum-2-presets": ["OBSIDIAN Lite", "32 presets", "128 unique sounds, not 160", "Enter 0", "Serum 2.1.5", "Installation", "Get OBSIDIAN Full"],
             "/sounds/analog-drift-mini-v-presets": ["ANALOG DRIFT", "256 presets per edition", ".minibank", ".minix", ".min4x", "licensed V2 installation remains unverified", "Native menu import", "Installation"],
             "/sounds/analog-drift-lite-mini-v-presets": ["ANALOG DRIFT Lite", "32 presets per edition", "8 basses, 8 sequences, 8 pads, and 8 effects", "Free", "Get ANALOG DRIFT Full", "Installation"],
-            "/sounds/kreativ-kollection-v1": ["Get the bundle on Gumroad", offers["kollection"], "16 products", "Kreativ Kollection V1", "JUNO NOCTURNES", "932+", "147 WAV samples", "applicable taxes, calculated at checkout", "Synth instruments are not included", "Vital or Vital Free", "Model 72 (20)", "Model 80 (24)", "Model 84 (20)", "V1 Contents and Updates", "It is not part of the current download", "new standalone products are not automatically included", "Refunds and Support", "terms displayed at checkout", "Description", "What's Included", "Product Specifications", "Requirements"],
+            "/sounds/kreativ-kollection-v1": ["Get the bundle on Gumroad", offers["kollection"], "16 products", "Kreativ Kollection V1", "JUNO NOCTURNES", "1,028", "147 WAV samples", "applicable taxes, calculated at checkout", "Synth instruments are not included", "Vital or Vital Free", "Model 72 (20)", "Model 80 (24)", "Model 84 (20)", "V1 Contents and Updates", "It is not part of the current download", "new standalone products are not automatically included", "Refunds and Support", "terms displayed at checkout", "Description", "What's Included", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements", "Related sounds", "View full catalog"],
             "/sounds/callisto-drift-jup-8-v4-presets": ["Buy on Gumroad", "Try Lite free", "128 presets", "9 EUR", ".jup4x", "4.6.4.6366", "PDF preset catalogue", "https://kreativ.gumroad.com/l/callisto-drift-jup-8-v4-presets"],
             "/sounds/callisto-drift-lite-jup-8-v4-presets": ["Download Free", "32 presets", "Lite vs Full", "Get full Callisto Drift", ".jup4x", "4.6.4.6366", "https://kreativ.gumroad.com/l/callisto-drift-lite-jup-8-v4-presets"],
@@ -185,10 +185,26 @@ def main() -> int:
                 require(dom, needle, route, errors)
 
             if route == "/plugins/burnshaper":
+                for text in ("Version 1.0.1", "100%, 125%, 150%, and 175%", "remembered independently of presets and projects", "does not change the sound, presets, or existing projects", "Earlier buyers keep lifetime refunds."):
+                    require(dom, text, route, errors)
+                forbid(dom, "Includes a lifetime, no-questions-asked refund promise.", route, errors)
+                schema = next((json.loads(value) for value in re.findall(r'<script\b[^>]*type="application/ld\+json"[^>]*>(.*?)</script>', dom, re.S)
+                               if json.loads(value).get("@type") == "Product"), None)
+                if not schema or not schema.get("offers") or any(float(offer.get("price", -1)) != offers["burnshaper"]["priceAmount"]
+                                     or offer.get("priceValidUntil") != offers["burnshaper"].get("priceValidUntil")
+                                     for offer in schema.get("offers", [])):
+                    errors.append(f"{route}: structured price and expiry must match the current BurnShaper offer")
                 forbid(dom, "Windows DAW and minimum-OS qualification remain unverified", route, errors)
                 if dom.find('id="product-installation-title"') > dom.find('id="burnshaper-release-title"'):
                     errors.append(f"{route}: release notes must follow Installation.")
                 forbid(dom, "Download Free", route, errors)
+            if route in ("/", "/plugins/", "/plugins/burnshaper"):
+                require(dom, offers["burnshaper"]["price"], route, errors)
+            if route in ("/sounds/obsidian-serum-2-presets", "/sounds/obsidian-lite-serum-2-presets"):
+                for text in ("Version 1.1", "two-page", "separate PDF", "alongside 1.0", "Some macros depend on note range", "listening demos predate 1.1"):
+                    require(dom, text, route, errors)
+                if dom.find('id="product-installation-title"') > dom.find('id="obsidian-release-title"'):
+                    errors.append(f"{route}: release notes must follow Installation")
             if route in ("/tools/preset-mutator/", "/sounds/preset-mutator"):
                 forbid(dom, "Not included", route, errors)
                 pigments = re.search(r'<tr\b[^>]*>\s*<th\b[^>]*>Arturia Pigments[\s\S]*?</tr>', dom)
@@ -215,6 +231,12 @@ def main() -> int:
                 forbid(dom, "https://i.ytimg.com/", route + " must use a local preview", errors)
             if route == "/sounds/kreativ-kollection-v1":
                 require(dom, "30-day money-back guarantee", route, errors)
+                forbid(dom, "932+", route, errors)
+                counts = re.findall(r'<th\b[^>]*scope="row"[^>]*>[^<]+</th>\s*<td\b[^>]*>(\d+)</td>', dom)
+                if len(counts) != 9 or sum(map(int, counts)) != 1028:
+                    errors.append(f"{route}: nine compatibility rows must total 1,028 presets")
+                if not re.search(r'<th\b[^>]*scope="row"[^>]*>BIOFORMS 2</th>\s*<td\b[^>]*>128</td>', dom):
+                    errors.append(f"{route}: BIOFORMS 2 must list 128 presets")
             if route == "/refunds/":
                 require(dom, "KS BurnShaper", route, errors)
                 require(dom, "30-day full-refund guarantee", route, errors)

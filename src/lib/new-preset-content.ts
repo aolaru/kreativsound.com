@@ -14,17 +14,18 @@ const miniRequirements = [
 export const newPresetCopy = {
   "obsidian-serum-2-presets": {
     subtitle: "128 dark cinematic presets for Xfer Serum 2.",
-    shortMeta: "128 presets • Serum 2 • Includes all 32 Lite sounds",
+    shortMeta: "v1.1 • 128 presets • Serum 2 • Includes all 32 Lite sounds",
     longDescription: [
       "OBSIDIAN brings evolving drones, spacious pads, fractured leads, basses, plucks, and rhythmic sequences to Serum 2. Category-prefixed filenames, musical descriptions, and named macros keep the bank practical to browse and shape.",
-      "The full bank includes every OBSIDIAN Lite sound plus 96 more: 128 unique presets in total, not 160. The download includes an installation guide, complete preset list, and commercial-use license."
+      "The full bank includes every OBSIDIAN Lite sound plus 96 more: 128 unique presets in total, not 160. Version 1.1 refines selected macro destinations, modulation paths, filter and oscillator routing, levels, releases, and sound design without adding presets. The download includes a new two-page Full manual, complete preset list, and commercial-use license."
     ],
     specifications: [
       { label: "Synth", value: "Xfer Serum 2; tested with 2.1.5" },
+      { label: "Bank version", value: "1.1; original 1.0 downloads remain available" },
       { label: "Format", value: "128 native .SerumPreset files in a ZIP" },
       { label: "Contents", value: "32 Lite presets plus 96 additional presets; 128 unique sounds" },
       { label: "Performance", value: "Named macros and musical descriptions" },
-      { label: "Extras", value: "Installation guide, complete preset list, and commercial-use license" },
+      { label: "Extras", value: "Two-page Full manual in the ZIP and as a separate PDF, Version 1.1 Notes, preset list, and commercial-use license" },
       { label: "License", value: "Royalty-free use in music, client projects, and sync work; no preset redistribution or resale" },
       { label: "Purchase", value: "One-time purchase; no subscription" }
     ],
@@ -32,17 +33,18 @@ export const newPresetCopy = {
   },
   "obsidian-lite-serum-2-presets": {
     subtitle: "32 free dark cinematic presets for Xfer Serum 2.",
-    shortMeta: "32 presets • Serum 2 • Free subset of OBSIDIAN",
+    shortMeta: "v1.1 • 32 presets • Serum 2 • Free subset of OBSIDIAN",
     ctaLine: "Enter 0 on Gumroad to download free. Contributions are optional.",
     longDescription: [
       "Try the OBSIDIAN palette with 32 native Serum 2 presets, including pads, drones, basses, leads, plucks, arps, sequences, and FX. Category-prefixed filenames, musical descriptions, and named macros are included.",
-      "Every Lite sound is also in the full 128-preset collection. Lite is a subset, not an additional exclusive bank. The download includes an installation guide, preset list, and commercial-use license."
+      "Every Lite sound is also in the full 128-preset collection. Lite is a subset, not an additional exclusive bank. Version 1.1 matches the corresponding Full 1.1 presets, including applicable macro, routing, level, and sound-design refinements. The download includes a new two-page Lite manual, preset list, and commercial-use license."
     ],
     specifications: [
       { label: "Synth", value: "Xfer Serum 2; tested with 2.1.5" },
+      { label: "Bank version", value: "1.1; original 1.0 ZIP remains available" },
       { label: "Format", value: "32 native .SerumPreset files in a ZIP" },
       { label: "Edition", value: "All 32 Lite presets are included in OBSIDIAN Full" },
-      { label: "Extras", value: "Named macros, descriptions, installation guide, preset list, and license" },
+      { label: "Extras", value: "Named macros, descriptions, two-page Lite manual in the ZIP and as a separate PDF, Version 1.1 Notes, preset list, and license" },
       { label: "License", value: "Royalty-free music, client-project, and sync use; no preset redistribution or resale" },
       { label: "Access", value: "Free; optional contributions on Gumroad" }
     ],

@@ -1,11 +1,11 @@
 export const timedOffers = {
   burnshaper: {
-    expiresAt: "2026-11-09T05:55:00Z",
-    priceValidUntil: "2026-11-08",
+    expiresAt: "2026-11-16T00:00:00Z",
+    priceValidUntil: "2026-11-15",
     introductoryAmount: 9,
     regularAmount: 19,
     introductoryPrice: "9 EUR introductory",
-    introductoryNote: "€9 introductory price through November 8, 2026; €19 from November 9. The discount is applied automatically on Gumroad.",
+    introductoryNote: "€9 introductory price through November 15, 2026; €19 from November 16 at 00:00 GMT. The discount is applied automatically on Gumroad.",
     regularNote: "€19 on Gumroad. The introductory offer has ended."
   },
   "kreativ-kollection-v1": {
