@@ -1,0 +1,25 @@
+---
+const { slug } = Astro.props as { slug: string };
+type Demo = { url: string; label: string; note?: string };
+const demos: Record<string, Demo> = {
+  "ghostform": { url: "https://www.youtube.com/watch?v=rVsOdRHXjjc", label: "Watch the official Ghostform 1.0.1 demo" },
+  "bioforms-synplant-2-presets": { url: "https://www.youtube.com/watch?v=sQ3L7qA7sGE", label: "Watch the BIOFORMS 2 showcase" },
+  "bioforms-lite-synplant-2-presets": { url: "https://www.youtube.com/watch?v=sQ3L7qA7sGE", label: "Watch the BIOFORMS 2 showcase" },
+  "operators-fm8-presets": { url: "https://www.youtube.com/watch?v=G0Ucj0YXGg4", label: "Watch the OPERATORS showcase" },
+  "operators-lite-fm8-presets": { url: "https://www.youtube.com/watch?v=G0Ucj0YXGg4", label: "Watch the OPERATORS showcase" },
+  "velvet-ruins-vital-presets": { url: "https://www.youtube.com/watch?v=jw0D4zm1ZL8", label: "Watch the VELVET RUINS showcase" },
+  "velvet-ruins-lite-vital-presets": { url: "https://www.youtube.com/watch?v=jw0D4zm1ZL8", label: "Watch the VELVET RUINS showcase" },
+  "analog-drift-mini-v-presets": { url: "https://kreativ.gumroad.com/l/analog-drift-mini-v-presets", label: "Listen to ANALOG DRIFT on Gumroad", note: "The sampler was recorded with Mini V3; V4 recreations may sound different." },
+  "analog-drift-lite-mini-v-presets": { url: "https://kreativ.gumroad.com/l/analog-drift-lite-mini-v-presets", label: "Listen to ANALOG DRIFT Lite on Gumroad", note: "The sampler was recorded with Mini V3; V4 recreations may sound different." },
+  "obsidian-serum-2-presets": { url: "https://kreativ.gumroad.com/l/obsidian-serum-2-presets", label: "Listen to OBSIDIAN on Gumroad", note: "The demos were recorded before version 1.1; affected sounds may differ." },
+  "obsidian-lite-serum-2-presets": { url: "https://kreativ.gumroad.com/l/obsidian-lite-serum-2-presets", label: "Listen to OBSIDIAN Lite on Gumroad", note: "The demos were recorded before version 1.1; affected sounds may differ." }
+};
+const demo = demos[slug];
+---
+{demo && (
+  <section class="product-landing-demo" aria-label="Product demo">
+    <h2>Hear the sounds</h2>
+    <p><a href={demo.url} target="_blank" rel="noopener noreferrer">{demo.label}</a></p>
+    {demo.note && <p>{demo.note}</p>}
+  </section>
+)}

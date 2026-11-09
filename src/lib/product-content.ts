@@ -269,7 +269,7 @@ export const landingCopyOverrides = {
     specifications: [
       { label: "Product type", value: "Preset bank" },
       { label: "Synth", value: "Native Instruments FM8" },
-      { label: "Format", value: "FM8 presets" },
+      { label: "Format", value: "FM8 .nfm8 presets" },
       { label: "Preset count", value: "64 presets" },
       { label: "Download size", value: "4 MB" },
       { label: "Categories", value: "Pads, drones, basses, bells, leads, plucks, sweeps, strings, FX" },
@@ -279,6 +279,7 @@ export const landingCopyOverrides = {
     ],
     requirements: [
       "Native Instruments FM8 is required to use these presets.",
+      "The minimum tested FM8 version is not recorded.",
       "You need a DAW or host that can load FM8, such as Ableton Live, Logic Pro, Cubase, FL Studio, Bitwig Studio, Reaper, or similar.",
       "Use these presets for ambient, cinematic, electronic, industrial, and experimental FM parts."
     ]
@@ -421,7 +422,7 @@ export const landingCopyOverrides = {
     specifications: [
       { label: "Product type", value: "Preset bank" },
       { label: "Synth", value: "Arturia Pigments" },
-      { label: "Format", value: "Pigments preset bank" },
+      { label: "Format", value: "Pigments .pgtx preset bank" },
       { label: "Preset count", value: "128 presets" },
       { label: "Categories", value: "Drones, industrial textures, melodic keys, FX and noise" },
       { label: "Download size", value: "415 MB" },
@@ -432,7 +433,7 @@ export const landingCopyOverrides = {
     requirements: [
       "Arturia Pigments is required to use these presets.",
       "Use a DAW or host that can load Pigments, such as Ableton Live, Logic Pro, Cubase, FL Studio, Bitwig Studio, Reaper, or similar.",
-      "Import the included Pigments preset file through the Pigments preset browser. The latest Pigments version is recommended."
+      "Import the included Pigments preset file through the Pigments preset browser. The minimum tested Pigments version is not recorded."
     ]
   },
   "monolush-fabfilter-one-presets": {
@@ -456,7 +457,7 @@ export const landingCopyOverrides = {
       { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [
-      "FabFilter One is required to use these presets.",
+      "FabFilter One is required; these presets are not for FabFilter Twin.",
       "You need a DAW or host that can load FabFilter One.",
       "Use these presets for basses, leads, and simple melodic layers."
     ]
@@ -473,7 +474,7 @@ export const landingCopyOverrides = {
     specifications: [
       { label: "Product type", value: "Preset bank" },
       { label: "Synth", value: "Moog Model D" },
-      { label: "Format", value: "Moog Model D presets" },
+      { label: "Format", value: "Moog Model D .mdb bank" },
       { label: "Preset count", value: "64 patches" },
       { label: "Focus", value: "Driven basses, analog grit, darker mono tone" },
       { label: "Audio demo", value: "Included" },
@@ -483,8 +484,8 @@ export const landingCopyOverrides = {
       { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [
-      "Moog Model D is required to use these presets.",
-      "You need a DAW or host that can load Moog Model D.",
+      "The Moog Minimoog Model D software app for iOS or macOS is required and is not included.",
+      "This bank is not for Windows, hardware, or other Model D emulations. The minimum tested app version is not recorded.",
       "Use these presets for basses, leads, low-end pressure, and darker synth lines."
     ]
   },
@@ -500,7 +501,7 @@ export const landingCopyOverrides = {
     specifications: [
       { label: "Product type", value: "Preset bank" },
       { label: "Synth", value: "Moog Animoog Z" },
-      { label: "Format", value: "Animoog Z presets" },
+      { label: "Format", value: "Animoog Z .anp presets" },
       { label: "Preset count", value: "96 patches" },
       { label: "Focus", value: "Airy melodic movement, soft motion, layered atmosphere" },
       { label: "Audio demo", value: "Included" },
@@ -510,8 +511,8 @@ export const landingCopyOverrides = {
       { label: "Checkout", value: "Gumroad" }
     ],
     requirements: [
-      "Moog Animoog Z is required to use these presets.",
-      "Use a DAW or host that can load Animoog Z.",
+      "The Moog Animoog Z app for iOS or macOS is required and is not included.",
+      "These presets are not for Windows. The minimum tested app version is not recorded.",
       "Use these presets for melodic motion in ambient, electronic, cinematic, and atmospheric tracks."
     ]
   },

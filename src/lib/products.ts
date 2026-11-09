@@ -308,7 +308,7 @@ export const products: Product[] = [
     title: "BIOFORMS Lite - 32 Free Synplant 2 Presets",
     category: "Free",
     status: "free",
-    url: "https://kreativ.gumroad.com/l/bioforms-2-lite-synplant-2-presets",
+    url: "https://kreativ.gumroad.com/l/bioforms-lite-synplant-2-presets",
     detailsUrl: "/sounds/bioforms-lite-synplant-2-presets",
     badge: "New",
     thumbnail: "/assets/thumbs/bioforms-2-lite-thumb.webp",

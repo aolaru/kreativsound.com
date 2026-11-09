@@ -12,6 +12,14 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-11-09", kind: "update", title: "KS Ghostform 1.0.1", description: "Improved factory sounds, interface scaling, voice handling, and reliability, with an updated manual.", href: "/plugins/ghostform" },
+  { date: "2026-11-09", kind: "update", title: "BurnShaper 1.0.1 details added", description: "The website now covers four interface sizes and independently saved scaling settings.", href: "/plugins/burnshaper" },
+  { date: "2026-11-09", kind: "update", title: "OBSIDIAN 1.1 details added", description: "The website now covers refined sounds, macro routing, updated manuals, and installation alongside version 1.0.", href: "/sounds/obsidian-serum-2-presets#obsidian-release-title" },
+  { date: "2026-11-09", kind: "update", title: "Callisto Drift 1.1 details added", description: "The full bank page now lists its Jup-8 V4 format, tested version, and included preset catalogue.", href: "/sounds/callisto-drift-jup-8-v4-presets" },
+  { date: "2026-11-09", kind: "update", title: "More product demos linked", description: "Find existing Ghostform, BIOFORMS, OPERATORS, VELVET RUINS, ANALOG DRIFT, and OBSIDIAN demos on their product pages.", href: "/sounds/" },
+  { date: "2026-11-09", kind: "update", title: "ANALOG DRIFT compatibility clarified", description: "Product pages explain the Mini V2, V3, and V4 banks and their testing status.", href: "/sounds/analog-drift-mini-v-presets" },
+  { date: "2026-11-09", kind: "update", title: "Moog preset requirements clarified", description: "DIRTY MODEL and ZEPHYR pages now identify the required Moog apps and their supported platforms.", href: "/sounds/dirty-model-moog-model-d-presets" },
+  { date: "2026-11-09", kind: "update", title: "BIOFORMS Lite listing aligned", description: "The free Synplant 2 pack now uses the same name and checkout link across the website and Gumroad.", href: "/sounds/bioforms-lite-synplant-2-presets" },
   { date: "2026-10-25", kind: "update", title: "BIOFORMS 2 and free Lite added to the website", description: "The Synplant 2 bank now lists 128 presets, with updated artwork and a free 32-preset Lite selection.", href: "/sounds/bioforms-synplant-2-presets", releaseNote: "/posts/bioforms-2-catalog-2026-10-25.html" },
   { date: "2026-10-24", kind: "update", title: "Preset Mutator Free v0.6.0", description: "Safer preset imports, corrected native Vital mutation ranges, working register exports, more reliable audio analysis, and isolated offline caches.", href: "/preset-mutator/changelog/" },
   { date: "2026-10-24", kind: "update", title: "Preset Mutator Pro v0.6.0", description: "Safer imports, improved generation, local ZIP export, and up to 30 days offline after license verification.", href: "/preset-mutator-pro/changelog/" },

@@ -2,6 +2,7 @@
 import PresetMutatorDetails from "./PresetMutatorDetails.astro";
 import KollectionDetails from "./KollectionDetails.astro";
 import GhostformDemo from "./GhostformDemo.astro";
+import ProductDemoLink from "./ProductDemoLink.astro";
 import ObsidianReleaseNotes from "./ObsidianReleaseNotes.astro";
 import type { ProductPage } from "../lib/product-pages";
 import TimedOfferText from "./TimedOfferText.astro";
@@ -164,6 +165,8 @@ const breadcrumbSchema = {
         </audio>
       </section>
     ) : null}
+
+    <ProductDemoLink slug={product.slug} />
 
   </header>
 
