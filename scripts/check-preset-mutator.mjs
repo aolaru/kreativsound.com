@@ -508,3 +508,4 @@ if (failures.length) {
 console.log("Preset Mutator Free QA passed.");
 
 await checkPresetRegressions("preset-mutator");
+await import("./check-preset-mutator-diagnostics.mjs");

@@ -1,4 +1,5 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
+import { createPresetDiagnostics } from "/preset-mutator-diagnostics.js";
 import { applySynthTheme, synthTargetDetails, escapeHtml } from "../engine/common.js";
 import {
   buildPresetMutateStrategy,
@@ -72,6 +73,7 @@ const elements = {
 };
 
 const ANALYTICS_MODE = "preset";
+const diagnostics = createPresetDiagnostics({ edition: "lite", mode: "mutate", getContext: () => ({ synth: state.sourceFormat }) });
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -298,6 +300,7 @@ function buildStrategyWeights() {
 }
 
 function generateVariants() {
+  diagnostics.beginGeneration({ synth: state.sourceFormat, seed: state.variationSeed, controls: buildStrategyWeights() }, { sourceFile: state.sourceFile });
   if (state.sourceFormat === "pigments") {
     return generatePigmentsPresetVariants({
       sourcePreset: state.sourcePreset,
@@ -335,20 +338,16 @@ function generateVariants() {
   });
 }
 
+async function buildVariantBlob(variant, format = state.sourceFormat) {
+  if (format === "serum2") return createSerum2VariantBlob(variant);
+  if (format === "pigments") return createPigmentsVariantBlob(variant);
+  return { fileName: variant.downloadName, blob: new Blob([JSON.stringify(variant.data)], { type: "application/json" }) };
+}
+
 async function downloadVariant(variant) {
   try {
     elements.status.textContent = `Preparing ${variant.name} for download...`;
-    let payload;
-    if (state.sourceFormat === "serum2") {
-      payload = await createSerum2VariantBlob(variant);
-    } else if (state.sourceFormat === "pigments") {
-      payload = createPigmentsVariantBlob(variant);
-    } else {
-      payload = {
-        fileName: variant.downloadName,
-        blob: new Blob([JSON.stringify(variant.data)], { type: "application/json" }),
-      };
-    }
+    const payload = await buildVariantBlob(variant);
     const url = URL.createObjectURL(payload.blob);
     const anchor = document.createElement("a");
     anchor.href = url;
@@ -366,6 +365,7 @@ async function downloadVariant(variant) {
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
+    diagnostics.recordError("export");
     elements.status.textContent = error.message || "Could not download the preset variant.";
   }
 }
@@ -453,6 +453,7 @@ function renderVariants() {
         </div>
       `;
       card.querySelector(".download-button").addEventListener("click", () => downloadVariant(variant));
+      diagnostics.bindResult(card, variant);
       list.appendChild(card);
     }
 
@@ -535,6 +536,7 @@ async function loadPreset(file) {
   if (!file) {
     return;
   }
+  diagnostics.clear();
 
   const lowerName = file.name.toLowerCase();
   const isVital = lowerName.endsWith(".vital");
@@ -593,6 +595,7 @@ async function loadPreset(file) {
     });
     elements.status.textContent = `Loaded ${summary.name}. Generate 3 variants when ready.`;
   } catch (error) {
+    diagnostics.recordError("source-import");
     state.sourcePreset = null;
     state.sourceFile = null;
     state.sourceFormat = null;
@@ -623,6 +626,7 @@ async function handleGenerate() {
     await new Promise((resolve) => window.setTimeout(resolve, 520));
     state.variationSeed += 1;
     const variants = generateVariants();
+    diagnostics.capture(variants, { synth: state.sourceFormat, seed: state.variationSeed, controls: buildStrategyWeights() }, { sourceFile: state.sourceFile, buildPreset: buildVariantBlob });
     storeResultSet(variants);
     state.lastGenerationMode = "standard";
     renderVariants();
@@ -632,6 +636,9 @@ async function handleGenerate() {
       variation_set: state.variationSeed,
       ...currentAnalyticsSelection(),
     });
+  } catch (error) {
+    diagnostics.recordError("generation");
+    elements.status.textContent = error.message || "Could not generate variants.";
   } finally {
     setGenerationLoadingState(false);
   }

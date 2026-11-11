@@ -270,3 +270,4 @@ console.log("Preset Mutator Pro QA passed.");
 
 await checkPresetRegressions("preset-mutator-pro");
 await import("./check-preset-mutator-pro-variation.mjs");
+await import("./check-preset-mutator-diagnostics.mjs");

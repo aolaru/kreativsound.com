@@ -1,4 +1,5 @@
 import { PresetMutatorKnob } from "./preset-mutator-knob.js";
+import { createPresetDiagnostics } from "/preset-mutator-diagnostics.js";
 import { applySynthTheme, familyLabel, noteName, synthTargetDetails, escapeHtml } from "./engine/common.js";
 import {
   buildScratchFreePack,
@@ -55,6 +56,7 @@ const elements = {
 
 const FREE_VARIANT_LIMIT = SCRATCH_FREE_VARIANT_LIMIT;
 const ANALYTICS_MODE = "scratch";
+const diagnostics = createPresetDiagnostics({ edition: "lite", mode: "scratch", getContext: () => ({ synth: elements.synthSelect.value }) });
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -213,6 +215,7 @@ function renderPresets(presets) {
       </div>
     `;
     card.querySelector(".download-button").addEventListener("click", () => downloadPreset(preset));
+    diagnostics.bindResult(card, preset, { synth: elements.synthSelect.value });
     elements.presetList.appendChild(card);
   }
 }
@@ -329,11 +332,11 @@ async function loadPigmentsSeedPreset() {
   return bytes.slice();
 }
 
-async function buildPresetBlob(preset) {
-  if (elements.synthSelect.value === "serum2") {
+async function buildPresetBlob(preset, synth = elements.synthSelect.value) {
+  if (synth === "serum2") {
     return createSerum2PresetBlob(await loadSerumSeedPreset(), preset);
   }
-  if (elements.synthSelect.value === "pigments") {
+  if (synth === "pigments") {
     return createPigmentsPresetBlob(await loadPigmentsSeedPreset(), preset);
   }
   return buildVitalPresetBlob(preset);
@@ -357,6 +360,7 @@ async function downloadPreset(preset) {
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
+    diagnostics.recordError("export");
     updateStatus(error.message || "Could not download preset.");
   }
 }
@@ -372,18 +376,26 @@ function generate() {
   state.lastGenerationMode = "standard";
   updateStatus("Building 3 variants...");
   window.setTimeout(() => {
-    const profile = currentProfile();
-    state.variationSeed += 1;
-    const presets = buildScratchFreePack(profile, state.variationSeed);
-    storeResultSet(presets);
-    renderPresets(presets);
-    updateStatus("3 variants ready.");
-    analyticsEvent("generate", {
-      preset_count: presets.length,
-      variation_set: state.variationSeed,
-      ...currentAnalyticsSelection(),
-    });
-    setLoading(false);
+    try {
+      const profile = currentProfile();
+      state.variationSeed += 1;
+      diagnostics.beginGeneration({ synth: elements.synthSelect.value, seed: state.variationSeed, profile });
+      const presets = buildScratchFreePack(profile, state.variationSeed);
+      diagnostics.capture(presets, { synth: elements.synthSelect.value, seed: state.variationSeed, profile }, { buildPreset: buildPresetBlob });
+      storeResultSet(presets);
+      renderPresets(presets);
+      updateStatus("3 variants ready.");
+      analyticsEvent("generate", {
+        preset_count: presets.length,
+        variation_set: state.variationSeed,
+        ...currentAnalyticsSelection(),
+      });
+    } catch (error) {
+      diagnostics.recordError("generation");
+      updateStatus(error.message || "Could not generate variants.");
+    } finally {
+      setLoading(false);
+    }
   }, 300);
 }
 

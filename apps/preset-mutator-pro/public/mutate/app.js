@@ -1,4 +1,5 @@
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
+import { createPresetDiagnostics } from "/preset-mutator-diagnostics.js";
 import { mountProVariationControls } from "../pro-variation-controls.js";
 import { applySynthTheme, createGenerationSeed, ensureJsZip, slugifyFilename, synthTargetDetails, escapeHtml } from "../engine/common.js";
 import {
@@ -78,6 +79,7 @@ const elements = {
 
 const PRO_PACK_COUNT = PRESET_MUTATE_PRO_PACK_COUNT;
 const ANALYTICS_MODE = "preset";
+const diagnostics = createPresetDiagnostics({ edition: "pro", mode: "mutate", getContext: () => ({ synth: state.sourceFormat }) });
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -324,6 +326,8 @@ function generateVariants(variationOptions) {
     dirt: elements.dirtRange.value,
   };
   const generationSeed = createGenerationSeed();
+  state.diagnosticGenerationSeed = generationSeed;
+  diagnostics.beginGeneration({ synth: state.sourceFormat, seed: generationSeed, controls: buildStrategyWeights(), variationOptions }, { sourceFile: state.sourceFile });
   if (state.sourceFormat === "pigments") {
     return generatePigmentsPresetVariants({
       variationOptions,
@@ -351,16 +355,15 @@ function generateVariants(variationOptions) {
   });
 }
 
+async function buildVariantBlob(variant, format = state.sourceFormat) {
+  if (format === "serum2") return createSerum2VariantBlob(variant);
+  if (format === "pigments") return createPigmentsVariantBlob(variant);
+  return { fileName: variant.downloadName, blob: new Blob([JSON.stringify(variant.data)], { type: "application/json" }) };
+}
+
 async function downloadVariant(variant) {
   try {
-  let payload;
-  if (state.sourceFormat === "serum2") {
-    payload = await createSerum2VariantBlob(variant);
-  } else if (state.sourceFormat === "pigments") {
-    payload = createPigmentsVariantBlob(variant);
-  } else {
-    payload = { fileName: variant.downloadName, blob: new Blob([JSON.stringify(variant.data)], { type: "application/json" }) };
-  }
+  const payload = await buildVariantBlob(variant);
   const blob = payload.blob;
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
@@ -378,6 +381,7 @@ async function downloadVariant(variant) {
     ...currentAnalyticsSelection(),
   });
   } catch (error) {
+    diagnostics.recordError("export");
     elements.status.textContent = error.message || "Could not download the preset variant.";
   }
 }
@@ -420,6 +424,7 @@ async function downloadVariantPack() {
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
+    diagnostics.recordError("export");
     elements.status.textContent = error.message || "Could not build the 32-pack ZIP.";
   }
 }
@@ -507,6 +512,7 @@ function renderVariants() {
         </div>
       `;
       card.querySelector(".download-button").addEventListener("click", () => downloadVariant(variant));
+      diagnostics.bindResult(card, variant);
       list.appendChild(card);
     }
 
@@ -546,6 +552,7 @@ async function loadPreset(file) {
   if (!file) {
     return;
   }
+  diagnostics.clear();
 
   const lowerName = file.name.toLowerCase();
   const isVital = lowerName.endsWith(".vital");
@@ -603,6 +610,7 @@ async function loadPreset(file) {
       ? `Loaded ${summary.name}. Generate your 32-variant Pro pack.`
       : `Loaded ${summary.name}. Enter your Gumroad license key to unlock generation.`;
   } catch (error) {
+    diagnostics.recordError("source-import");
     state.sourcePreset = null;
     state.sourceFile = null;
     state.sourceFormat = null;
@@ -640,6 +648,7 @@ async function handleGenerate() {
   try {
     await new Promise((resolve) => window.setTimeout(resolve, 520));
     state.generatedVariants = generateVariants(variationOptions);
+    diagnostics.capture(state.generatedVariants, { synth: state.sourceFormat, seed: state.diagnosticGenerationSeed, controls: buildStrategyWeights(), variationOptions }, { sourceFile: state.sourceFile, buildPreset: buildVariantBlob });
     state.lastGenerationMode = "pro";
     renderVariants();
     elements.status.textContent = "32 Pro variants ready. Expand each group and download individual presets or the full ZIP.";
@@ -648,6 +657,7 @@ async function handleGenerate() {
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
+    diagnostics.recordError("generation");
     state.generatedVariants = [];
     renderVariants();
     elements.status.textContent = error.message || "Could not generate this pack.";

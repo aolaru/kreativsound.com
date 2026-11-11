@@ -221,7 +221,7 @@ def main() -> int:
                 require(dom, "KS BurnShaper added to Plugins", route, errors)
                 require(dom, 'href="/posts/burnshaper-release-2026-10-10.html"', route, errors)
             if route == "/privacy/":
-                for text in ["Last updated October 24, 2026", "Pattern Mutator Free", "preset-mutator-pro-license", "Gumroad over HTTPS", "Bandcamp's privacy policy", "historical PayPal purchases", "Embedded video demos", "YouTube connects only when you press play"]:
+                for text in ["Last updated November 2, 2026", "Preset Mutator diagnostic reports are optional ZIP downloads created locally", "Pattern Mutator Free", "preset-mutator-pro-license", "Gumroad over HTTPS", "Bandcamp's privacy policy", "historical PayPal purchases", "Embedded video demos", "YouTube connects only when you press play"]:
                     require(dom, text, route, errors)
                 forbid(dom, "Purchases are completed through Gumroad or PayPal", route, errors)
             if route == "/plugins/ghostform":

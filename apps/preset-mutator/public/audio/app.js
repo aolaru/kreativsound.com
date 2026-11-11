@@ -1,4 +1,5 @@
 import { analyzeAudio, downmix } from "../engine/audio-analysis.js";
+import { createPresetDiagnostics } from "/preset-mutator-diagnostics.js";
 import { PresetMutatorKnob } from "../preset-mutator-knob.js";
 import { applySynthTheme, clamp, familyLabel, formatHz, synthTargetDetails, escapeHtml } from "../engine/common.js";
 import { buildAudioFreePack, buildAudioProfile as createAudioProfile } from "../engine/audio-engine.js";
@@ -9,6 +10,7 @@ import { createPigmentsPresetBlob } from "../engine/pigments-export.js";
 const state = {
   audioContext: null,
   originalBuffer: null,
+  diagnosticSourceFile: null,
   currentSource: null,
   isPlaying: false,
   playbackStartedAt: 0,
@@ -80,6 +82,7 @@ const SELF_TEST_ENABLED = new URLSearchParams(window.location.search).get("self_
 const GENERATE_DELAY_MS = 500;
 const SUPPORTED_AUDIO_EXTENSIONS = [".wav", ".mp3", ".aiff", ".aif", ".m4a", ".aac", ".ogg", ".flac"];
 const ANALYTICS_MODE = "audio";
+const diagnostics = createPresetDiagnostics({ edition: "lite", mode: "audio", getContext: () => ({ synth: elements.synthSelect.value }) });
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -198,6 +201,8 @@ function resetLoadedState() {
   stopPlayback(true);
   setReady(false);
   state.originalBuffer = null;
+  state.diagnosticSourceFile = null;
+  diagnostics.clear();
   state.analysis = null;
   state.profile = null;
   state.presets = [];
@@ -518,11 +523,11 @@ async function loadPigmentsSeedPreset() {
   return bytes.slice();
 }
 
-async function buildPresetBlob(preset) {
-  if (elements.synthSelect.value === "serum2") {
+async function buildPresetBlob(preset, synth = elements.synthSelect.value) {
+  if (synth === "serum2") {
     return createSerum2PresetBlob(await loadSerumSeedPreset(), preset);
   }
-  if (elements.synthSelect.value === "pigments") {
+  if (synth === "pigments") {
     return createPigmentsPresetBlob(await loadPigmentsSeedPreset(), preset);
   }
   return buildVitalPresetBlob(preset);
@@ -641,6 +646,7 @@ function buildPresetCard(preset, role, totalCount) {
       </div>
     `;
     card.querySelector(".download-button").addEventListener("click", () => downloadPreset(preset));
+    diagnostics.bindResult(card, preset, { synth: elements.synthSelect.value });
     return card;
   }
 
@@ -754,6 +760,7 @@ async function downloadPreset(preset) {
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
+    diagnostics.recordError("export");
     updateStatus(error.message || "Could not download preset.");
   }
 }
@@ -804,6 +811,8 @@ async function loadAudioFile(file, resetInput = false) {
     const context = createAudioContext();
     const arrayBuffer = await file.arrayBuffer();
     state.originalBuffer = await context.decodeAudioData(arrayBuffer.slice(0));
+    state.diagnosticSourceFile = file;
+    diagnostics.clear();
     state.analysis = null;
     state.profile = null;
     state.presets = [];
@@ -834,6 +843,7 @@ async function loadAudioFile(file, resetInput = false) {
     });
   } catch (error) {
     resetLoadedState();
+    diagnostics.recordError("source-import");
     const message = "Unsupported or unreadable audio file. Please use a supported audio file under 10 MB.";
     showUploadMessage(message);
     updateStatus(message);
@@ -908,6 +918,8 @@ async function handleDropZoneDrop(event) {
 
 function loadSyntheticSource() {
   state.originalBuffer = createSyntheticBuffer();
+  state.diagnosticSourceFile = null;
+  diagnostics.clear();
   state.analysis = null;
   state.profile = null;
   state.presets = [];
@@ -944,7 +956,9 @@ function generatePresets() {
   state.profile = buildProfile(state.analysis);
   state.lastGenerationMode = "standard";
   state.variationSeed += 1;
+  diagnostics.beginGeneration({ synth: elements.synthSelect.value, seed: state.variationSeed, profile: state.profile, analysis: state.analysis }, { sourceFile: state.diagnosticSourceFile });
   const presets = buildFreePack(state.profile, state.variationSeed);
+  diagnostics.capture(presets, { synth: elements.synthSelect.value, seed: state.variationSeed, profile: state.profile, analysis: state.analysis }, { sourceFile: state.diagnosticSourceFile, buildPreset: buildPresetBlob });
   storeResultSet(presets);
 
   renderMetricGrid(elements.analysisMetrics, [
@@ -997,6 +1011,7 @@ async function handleGeneratePresets() {
   try {
     generatePresets();
   } catch (error) {
+    diagnostics.recordError("generation");
     state.analysis = null;
     state.profile = null;
     state.presets = [];

@@ -1,4 +1,5 @@
 import { PresetMutatorKnob } from "./preset-mutator-knob.js";
+import { createPresetDiagnostics } from "/preset-mutator-diagnostics.js";
 import { mountProVariationControls } from "./pro-variation-controls.js";
 import { applySynthTheme, createGenerationSeed, ensureJsZip, familyLabel, noteName, sanitizeFileName, synthTargetDetails, escapeHtml } from "./engine/common.js";
 import {
@@ -70,6 +71,7 @@ const elements = {
 const PRO_PACK_COUNT = SCRATCH_PRO_PACK_COUNT;
 const variationControls = mountProVariationControls();
 const ANALYTICS_MODE = "scratch";
+const diagnostics = createPresetDiagnostics({ edition: "pro", mode: "scratch", getContext: () => ({ synth: elements.synthSelect.value }) });
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -231,6 +233,7 @@ function renderPresets(presets) {
       </div>
     `;
     card.querySelector(".download-button").addEventListener("click", () => downloadPreset(preset));
+    diagnostics.bindResult(card, preset, { synth: elements.synthSelect.value });
     elements.presetList.appendChild(card);
   }
 }
@@ -303,11 +306,11 @@ async function loadPigmentsSeedPreset() {
   return bytes.slice();
 }
 
-async function buildPresetBlob(preset) {
-  if (elements.synthSelect.value === "serum2") {
+async function buildPresetBlob(preset, synth = elements.synthSelect.value) {
+  if (synth === "serum2") {
     return createSerum2PresetBlob(await loadSerumSeedPreset(), preset);
   }
-  if (elements.synthSelect.value === "pigments") {
+  if (synth === "pigments") {
     return createPigmentsPresetBlob(await loadPigmentsSeedPreset(), preset);
   }
   return buildVitalPresetBlob(preset);
@@ -331,6 +334,7 @@ async function downloadPreset(preset) {
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
+    diagnostics.recordError("export");
     updateStatus(error.message || "Could not download preset.");
   }
 }
@@ -364,6 +368,7 @@ async function downloadPack() {
       ...currentAnalyticsSelection(),
     });
   } catch (error) {
+    diagnostics.recordError("export");
     updateStatus(error.message || "Could not build the 32-pack ZIP.");
   }
 }
@@ -389,16 +394,25 @@ function generate() {
   state.lastGenerationMode = "pro";
   updateStatus("Building 32 Pro variants...");
   window.setTimeout(() => {
-    const profile = currentProfile();
-    state.presets = buildScratchProPack(profile, createGenerationSeed(), variationOptions);
-    renderPresets(state.presets);
-    elements.downloadPack.disabled = false;
-    updateStatus("32 Pro variants ready.");
-    analyticsEvent("generate_pro", {
-      preset_count: state.presets.length,
-      ...currentAnalyticsSelection(),
-    });
-    setLoading(false);
+    try {
+      const profile = currentProfile();
+      const seed = createGenerationSeed();
+      diagnostics.beginGeneration({ synth: elements.synthSelect.value, seed, profile, variationOptions });
+      state.presets = buildScratchProPack(profile, seed, variationOptions);
+      diagnostics.capture(state.presets, { synth: elements.synthSelect.value, seed, profile, variationOptions }, { buildPreset: buildPresetBlob });
+      renderPresets(state.presets);
+      elements.downloadPack.disabled = false;
+      updateStatus("32 Pro variants ready.");
+      analyticsEvent("generate_pro", {
+        preset_count: state.presets.length,
+        ...currentAnalyticsSelection(),
+      });
+    } catch (error) {
+      diagnostics.recordError("generation");
+      updateStatus(error.message || "Could not generate variants.");
+    } finally {
+      setLoading(false);
+    }
   }, 300);
 }
 

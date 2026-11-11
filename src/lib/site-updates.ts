@@ -12,6 +12,8 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-11-11", kind: "update", title: "Preset Mutator Free v0.6.1", description: "Create optional local diagnostic reports to help troubleshoot generation and exports.", href: "/preset-mutator/changelog/" },
+  { date: "2026-11-11", kind: "update", title: "Preset Mutator Pro v0.6.1", description: "Create optional local diagnostic reports to help troubleshoot generation and exports.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-11-09", kind: "update", title: "KS Ghostform 1.0.1", description: "Improved factory sounds, interface scaling, voice handling, and reliability, with an updated manual.", href: "/plugins/ghostform" },
   { date: "2026-11-09", kind: "update", title: "BurnShaper 1.0.1 details added", description: "The website now covers four interface sizes and independently saved scaling settings.", href: "/plugins/burnshaper" },
   { date: "2026-11-09", kind: "update", title: "OBSIDIAN 1.1 details added", description: "The website now covers refined sounds, macro routing, updated manuals, and installation alongside version 1.0.", href: "/sounds/obsidian-serum-2-presets#obsidian-release-title" },

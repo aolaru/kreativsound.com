@@ -1,6 +1,10 @@
-const CACHE_NAME = "preset-mutator-pro-shell-v15";
+const CACHE_NAME = "preset-mutator-pro-shell-v16";
 const CACHE_PREFIX = "preset-mutator-pro-shell-";
 const SHELL_ASSETS = [
+  "/preset-mutator-diagnostics.js",
+  "/preset-mutator-diagnostic-core.js",
+  "/preset-mutator-diagnostics.css",
+  "/vendor/jszip.min.js",
   "./pro-variation-controls.js",
   "./engine/variation-controls.js",
   "/preset-mutator-url.js?v=20261101",

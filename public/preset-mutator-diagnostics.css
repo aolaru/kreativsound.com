@@ -1,0 +1,29 @@
+.preset-diagnostic-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 8px 10px; min-height: 40px; border: 1px solid var(--panel-border, #b9aaaa); border-radius: 6px; background: transparent; color: var(--text, #26191c); font: inherit; font-size: 12px; cursor: pointer; }
+.app-footer > .preset-diagnostic-button { margin-top: 12px; }
+.preset-diagnostic-dialog { box-sizing: border-box; width: min(640px, calc(100vw - 24px)); max-height: calc(100dvh - 32px); margin: auto; padding: 24px; overflow-y: auto; border: 1px solid var(--panel-border, #b9aaaa); border-radius: 8px; background: #fff8f8; color: var(--text, #26191c); font: inherit; box-shadow: 0 12px 64px #0005; }
+[data-theme="dark"] .preset-diagnostic-dialog { background: #251e22; }
+.preset-diagnostic-dialog::backdrop { background: #0009; }
+.preset-diagnostic-dialog header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.preset-diagnostic-dialog h2 { margin: 0; font-size: 22px; }
+.preset-diagnostic-dialog p { font-size: 13px; line-height: 1.5; margin: 10px 0; }
+.preset-diagnostic-dialog .diagnostic-context { color: var(--muted, #665559); }
+.preset-diagnostic-dialog .diagnostic-notice { font-weight: 700; }
+.preset-diagnostic-dialog > label { display: block; margin-top: 16px; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
+.preset-diagnostic-dialog select, .preset-diagnostic-dialog textarea { box-sizing: border-box; width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--panel-border, #b9aaaa); border-radius: 6px; color: inherit; background: var(--panel, #fff); font: inherit; font-size: 14px; }
+.preset-diagnostic-dialog textarea { resize: vertical; }
+.preset-diagnostic-dialog fieldset { min-width: 0; padding: 16px 0 0; margin: 16px 0; border: 0; border-top: 1px solid var(--panel-border, #b9aaaa); }
+.preset-diagnostic-dialog legend { font-weight: 700; font-size: 14px; padding: 0 8px 0 0; }
+.preset-diagnostic-dialog .diagnostic-check { display: flex; align-items: flex-start; gap: 8px; margin: 10px 0; font-size: 14px; }
+.preset-diagnostic-dialog .diagnostic-check input { flex: 0 0 auto; width: 16px; height: 16px; margin: 2px 0 0; accent-color: var(--accent, #a91410); }
+.preset-diagnostic-dialog .diagnostic-check:has(input:disabled) { opacity: 0.55; }
+.preset-diagnostic-dialog summary { cursor: pointer; font-weight: 700; font-size: 14px; }
+.preset-diagnostic-dialog .diagnostic-files { padding-left: 20px; font-size: 13px; overflow-wrap: anywhere; }
+.preset-diagnostic-dialog .diagnostic-preview { max-height: 200px; overflow: auto; padding: 12px; border: 1px solid var(--panel-border, #b9aaaa); white-space: pre-wrap; overflow-wrap: anywhere; font-size: 11px; line-height: 1.5; }
+.preset-diagnostic-dialog .diagnostic-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.preset-diagnostic-dialog .diagnostic-download, .preset-diagnostic-dialog .diagnostic-icon { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 10px 14px; border: 1px solid var(--panel-border, #b9aaaa); border-radius: 6px; color: inherit; background: var(--panel-strong, #f1dddd); font: inherit; font-size: 14px; cursor: pointer; }
+.preset-diagnostic-dialog .diagnostic-icon { flex: 0 0 40px; min-height: 40px; padding: 8px; }
+.preset-diagnostic-dialog .diagnostic-email, .preset-diagnostic-dialog .diagnostic-email-note a { color: inherit; text-decoration: underline; }
+.preset-diagnostic-dialog .diagnostic-status { min-height: 20px; font-weight: 700; }
+.preset-diagnostic-dialog :focus-visible, .preset-diagnostic-button:focus-visible { outline: 2px solid var(--accent, #a91410); outline-offset: 3px; }
+.preset-diagnostic-dialog button:disabled { opacity: 0.55; cursor: wait; }
+@media (max-width: 480px) { .preset-diagnostic-dialog { padding: 18px; } .preset-diagnostic-dialog .diagnostic-download { width: 100%; } }
