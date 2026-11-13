@@ -137,7 +137,7 @@ def main() -> int:
             "/sounds/juno-nocturnes-jun-6-v-presets": ["Buy on Gumroad", "Try Lite free", "JUNO NOCTURNES", "96 presets", "Arturia JUN-6 V", "Product Specifications", "Requirements", "Related sounds", "View full catalog"],
             "/sounds/callisto-drift-jup-8-v4-presets": ["Buy on Gumroad", "Try Lite free", "128 presets", "9 EUR", ".jup4x", "4.6.4.6366", "PDF preset catalogue", "https://kreativ.gumroad.com/l/callisto-drift-jup-8-v4-presets"],
             "/sounds/callisto-drift-lite-jup-8-v4-presets": ["Download Free", "32 presets", "Lite vs Full", "Get full Callisto Drift", ".jup4x", "4.6.4.6366", "https://kreativ.gumroad.com/l/callisto-drift-lite-jup-8-v4-presets"],
-            "/sounds/daft-plasticz-presets": ["Download Free", "102 presets", "reFX PlastiCZ", "368 KB", "discontinued legacy instrument"],
+            "/sounds/daft-plasticz-presets": ["Download Free", "128 presets", "reFX PlastiCZ", "1.2 MB", "discontinued legacy instrument"],
             "/sounds/operators-fm8-presets": ["Buy on Gumroad", "Try Lite free", "OPERATORS", "64 presets", "Product Specifications", "Requirements"],
             "/sounds/juno-nocturnes-lite-jun-6-v-presets": ["Download Free", "Juno Nocturnes Lite", "16 presets", "Lite vs Full", "Upgrade to full Juno Nocturnes"],
             "/sounds/velvet-ruins-vital-presets": ["Buy on Gumroad", "Try Lite free", "VELVET RUINS 2", "256 presets", "ATMOS, MOTION, DUST, and SPACE", "backward compatibility", "Installation guide", "30-day money-back guarantee", "Vital or Vital Free", "Product Specifications", "Requirements"],

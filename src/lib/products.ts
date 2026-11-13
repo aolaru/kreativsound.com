@@ -592,7 +592,7 @@ export const products: Product[] = [
     useCase: "Archive built around classic Prophet V material"
   },
   {
-    title: "DAFT - 102 Free reFX PlastiCZ Presets",
+    title: "DAFT v1.1 - 128 Free reFX PlastiCZ Presets",
     category: "Legacy",
     status: "free",
     url: "https://kreativ.gumroad.com/l/daft-free-plasticz-presets?layout=profile",
@@ -600,7 +600,7 @@ export const products: Product[] = [
     thumbnail: "/assets/thumbs/daft-plasticz.jpg",
     coverImage: "/assets/thumbs/daft-plasticz-cover.webp",
     format: "reFX PlastiCZ presets",
-    count: "102 presets",
+    count: "128 presets",
     useCase: "Free legacy lo-fi tones, digital artifacts, and ambient textures"
   }
 ];

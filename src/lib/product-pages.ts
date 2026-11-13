@@ -171,7 +171,7 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
   },
   "daft-plasticz-presets": {
     headline: "DAFT",
-    description: "102 free legacy presets for reFX PlastiCZ, with lo-fi tones, digital artifacts, and ambient textures. Requires a compatible PlastiCZ setup.",
+    description: "128 free legacy presets for reFX PlastiCZ, including 26 new variations. Requires a compatible PlastiCZ setup.",
     primaryLabel: "Download Free"
   },
   "juno-nocturnes-lite-jun-6-v-presets": {

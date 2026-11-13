@@ -813,20 +813,20 @@ export const landingCopyOverrides = {
     ]
   },
   "daft-plasticz-presets": {
-    subtitle: "102 free legacy presets for reFX PlastiCZ: lo-fi tones, digital artifacts, and ambient textures.",
-    shortMeta: "102 presets • reFX PlastiCZ • 368 KB download • Free legacy archive",
+    subtitle: "128 free reFX PlastiCZ presets: lo-fi tones, digital textures, and ambient character.",
+    shortMeta: "128 presets • reFX PlastiCZ • 1.2 MB v1.1 download • Free legacy archive",
     ctaLine: "Download the free reFX PlastiCZ preset archive.",
     longDescription: [
-      "DAFT is a free 102-preset archive for reFX PlastiCZ, focused on lo-fi tones, digital artifacts, and ambient textures.",
-      "The release shows a brighter, more synthetic side of the older catalog.",
-      "DAFT Plasticz is archive material for older plastic and synthetic tones."
+      "DAFT v1.1 expands the free reFX PlastiCZ collection to 128 presets, including 26 new variations.",
+      "The original sounds have received level and naming adjustments; the original 102-sound bank is included as a backup.",
+      "Explore lo-fi keys, synth basses, leads, pads and digital textures."
     ],
     specifications: [
       { label: "Product type", value: "Legacy preset archive" },
       { label: "Synth", value: "reFX PlastiCZ" },
       { label: "Format", value: "reFX PlastiCZ presets" },
-      { label: "Preset count", value: "102 presets" },
-      { label: "Download size", value: "368 KB" },
+      { label: "Preset count", value: "128 presets" },
+      { label: "Download size", value: "1.2 MB (v1.1 ZIP)" },
       { label: "Price", value: "Free" },
       { label: "Focus", value: "Plastic synthetic textures and older sound-design experiments" },
       { label: "Delivery", value: "Digital download" },
