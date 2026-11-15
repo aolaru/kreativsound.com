@@ -32,6 +32,8 @@ draft: false
 
 <p>Wave Mutator Free keeps this preparation in the browser, so source audio stays on the machine while the pack takes shape.</p>
 
+<p>For a quick single-file task outside a sample-pack workflow, Kreativ Tools can <a href="https://kreativtools.com/audio/trim/">trim audio to WAV</a> or <a href="https://kreativtools.com/audio/to-mp3/">convert audio to MP3</a> in your browser.</p>
+
 <div class="article-cta">
   <a class="button primary" href="/tools/wave-mutator/">Open Wave Mutator Free</a>
   <a class="button secondary" href="/tools/wave-mutator/changelog/">Read the beta changelog</a>
