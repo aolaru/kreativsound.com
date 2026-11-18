@@ -1,7 +1,8 @@
 ---
 const { slug } = Astro.props as { slug: string };
-type Demo = { url: string; label: string; note?: string; videoUrl?: string; videoLabel?: string };
+type Demo = { url: string; label: string; note?: string; videoUrl?: string; videoLabel?: string; embed?: { id: string; poster: string; title: string } };
 const demos: Record<string, Demo> = {
+  "abyss-pro-53-presets": { url: "https://www.youtube.com/watch?v=X4RubeTjA4I", label: "Watch the full ABYSS demo on YouTube", note: "The original archive demo presents a selection of sounds; the current ABYSS pack contains 256 presets.", embed: { id: "X4RubeTjA4I", poster: "/assets/thumbs/abyss-cover-experimental-v1.webp", title: "ABYSS — Original PRO-53 Audio Demo" } },
   "ghostform": { url: "https://www.youtube.com/watch?v=rVsOdRHXjjc", label: "Watch the official Ghostform 1.0.1 demo" },
   "bioforms-synplant-2-presets": { url: "https://www.youtube.com/watch?v=sQ3L7qA7sGE", label: "Watch the BIOFORMS 2 showcase" },
   "bioforms-lite-synplant-2-presets": { url: "https://www.youtube.com/watch?v=sQ3L7qA7sGE", label: "Watch the BIOFORMS 2 showcase" },
@@ -19,8 +20,46 @@ const demo = demos[slug];
 {demo && (
   <section class="product-landing-demo" aria-label="Product demo">
     <h2>Hear the sounds</h2>
+    {demo.embed && (
+      <div class="product-video-player" data-product-video-player>
+        <a class="product-video-preview" href={demo.url} target="_blank" rel="noopener noreferrer" aria-label={`Play ${demo.embed.title} (loads YouTube)`} data-product-video-id={demo.embed.id} data-product-video-title={demo.embed.title}>
+          <img src={demo.embed.poster} width="1536" height="1024" loading="lazy" alt="ABYSS experimental cover with abstract PRO-53 controls" />
+          <span class="product-video-play"><span aria-hidden="true">▶</span> Play full demo</span>
+        </a>
+      </div>
+    )}
     {demo.videoUrl && <p><a href={demo.videoUrl} target="_blank" rel="noopener noreferrer">{demo.videoLabel}</a></p>}
     <p><a href={demo.url} target="_blank" rel="noopener noreferrer">{demo.label}</a></p>
     {demo.note && <p>{demo.note}</p>}
+    {demo.embed && <p>YouTube loads only when you press play.</p>}
   </section>
 )}
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>("[data-product-video-id]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const player = link.closest<HTMLDivElement>("[data-product-video-player]");
+      if (!player) return;
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube-nocookie.com/embed/${link.dataset.productVideoId}?autoplay=1&rel=0`;
+      iframe.title = link.dataset.productVideoTitle || "Product video demo";
+      iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = "strict-origin-when-cross-origin";
+      event.preventDefault();
+      player.replaceChildren(iframe);
+      iframe.focus();
+    });
+  });
+</script>
+
+<style>
+  .product-video-player { width: min(100%, 720px); aspect-ratio: 16 / 9; overflow: hidden; border-radius: 18px; background: #111116; }
+  .product-video-preview { position: relative; display: grid; place-items: center; width: 100%; height: 100%; }
+  .product-video-preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  .product-video-play { position: relative; display: inline-flex; align-items: center; gap: .65rem; padding: .9rem 1.4rem; border-radius: 999px; background: #ad0000; color: #fff; font-weight: 700; box-shadow: 0 4px 24px rgba(0, 0, 0, .4); }
+  .product-video-preview:hover .product-video-play { background: #c00000; }
+  .product-video-preview:focus-visible { outline: 3px solid #fff; outline-offset: -5px; }
+  .product-video-player :global(iframe) { display: block; width: 100%; height: 100%; border: 0; }
+</style>

@@ -6,6 +6,8 @@ All notable changes to this website are documented in this file.
 
 ### Changed
 
+- Added the full ABYSS YouTube demo with a click-to-play video player alongside the original audio demo.
+
 - Updated DAFT for reFX PlastiCZ to v1.1 with 128 presets, refreshed artwork, and an original-bank backup.
 
 - Added the original ABYSS audio demo and a short UPDATED note summarizing v3.3 and the refreshed artwork.
