@@ -34,10 +34,10 @@ function productImageSrcSet(product: Product) {
 }
 
 function productKicker(product: Product) {
-  if (product.detailsUrl?.startsWith("/plugins/")) return product.badge?.toLowerCase() === "new" ? "Latest release" : "Plugin";
+  if (product.detailsUrl?.startsWith("/plugins/")) return product.badge?.toLowerCase() === "new" ? "Featured release" : "Plugin";
   if (product.category === "Bundle") return "Flagship bundle";
   if (product.category === "Tools") return "Creative tool";
-  if (product.badge?.toLowerCase() === "new") return "Latest release";
+  if (product.badge?.toLowerCase() === "new") return "Featured release";
   return product.category === "Presets" ? "Flagship preset bank" : product.category;
 }
 

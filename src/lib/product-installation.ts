@@ -53,6 +53,11 @@ const synplant2: ProductInstallation = {
 };
 
 export const productInstallations: Record<string, ProductInstallation> = {
+  "brutus-imposcar-presets": { steps: ["Unzip the download and read the included installation guide.", "Install the individual XML or FXP files for the matching impOSCar version as described in the guide. No combined FXB or .imp3Col bank is included.", "Back up existing presets first. Windows installation and impOSCar 2 compatibility require further review; contact support if needed."] },
+  "brutus-lite-imposcar-presets": { steps: ["Unzip the download and read the included installation guide.", "Install the individual XML or FXP files for the matching impOSCar version as described in the guide. No combined FXB or .imp3Col bank is included.", "Back up existing presets first. Windows installation and sound compatibility require further review; contact support if needed."] },
+  "strange-signals-sylenth1-presets": { steps: ["Unzip the download and back up your current Sylenth1 bank or project.", "In Sylenth1 choose MENU → Bank → Load, select the FXB, and browse slots 001–122 in sub-bank 1."] },
+  "strange-signals-lite-sylenth1-presets": { steps: ["Unzip the download and back up your current Sylenth1 bank or project.", "In Sylenth1 choose MENU → Bank → Load and select the sampler FXB. Follow the included installation instructions."] },
+  "surgical-cz-surge-xt-presets": { steps: ["Unzip the download. In Surge XT choose Menu → Data Folders → Open user data folder.", "Copy the included SURGICAL CZ folder into Patches. If a folder with that name exists, rename the included folder first to keep both sets.", "Choose Menu → Data Folders → Rescan all data folders, or restart Surge XT. Find the sounds under User Patches."] },
   "obsidian-serum-2-presets": serum2,
   "obsidian-lite-serum-2-presets": serum2,
   "analog-drift-mini-v-presets": miniV,

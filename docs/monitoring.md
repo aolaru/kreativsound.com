@@ -2,6 +2,8 @@
 
 ## Uptime
 
+The steps below are recommendations, not confirmation that monitoring is currently configured. Verify the active provider and alert recipients in its dashboard.
+
 Set up one uptime monitor for:
 
 - `https://kreativsound.com/`
@@ -19,7 +21,7 @@ Suggested check config:
 
 ## 404 Tracking
 
-Use Cloudflare Web Analytics for page-level traffic monitoring.
+Use the configured analytics dashboards for traffic trends. Analytics is optional, so reports exclude visitors who decline consent; use hosting or CDN request logs where available for a more complete view.
 
 For 404 review, monitor:
 
@@ -28,7 +30,7 @@ For 404 review, monitor:
 
 ## Conversion Monitoring
 
-Cloudflare Web Analytics does not provide the same custom event model as Plausible.
+Review consented Google Analytics events alongside Cloudflare page-level traffic.
 
 Review weekly and prioritize:
 

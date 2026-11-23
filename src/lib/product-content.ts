@@ -1,5 +1,6 @@
 import { burnshaperOffer, kollectionOffer } from "./plugin-offers.ts";
 import { newPresetCopy } from "./new-preset-content.ts";
+import { recentPresetCopy } from "./recent-preset-content.ts";
 
 export type ProductLandingCopy = {
   subtitle: string;
@@ -15,6 +16,7 @@ export type ProductLandingCopy = {
 
 export const landingCopyOverrides = {
   ...newPresetCopy,
+  ...recentPresetCopy,
   "burnshaper": {
     subtitle: "Creative three-band distortion for drums, bass, synths, loops, and experimental sound design.",
     shortMeta: "v1.0.1 • 144 factory presets • Six character modes • macOS AU/VST3 • Windows x64 VST3",
@@ -386,7 +388,7 @@ export const landingCopyOverrides = {
     shortMeta: "256 presets • Vital and Vital Free • 7 sound categories",
     ctaLine: "Download the complete 256-preset VELVET RUINS 2 bank.",
     longDescription: [
-      "VELVET RUINS 2 is a curated 256-preset collection for Vital, moving between veiled drones, unstable sequences, cinematic impacts, degraded textures, ritual instruments, experimental drums, and weighty low end.",
+      "VELVET RUINS 2 is the current 256-preset version of the Vital collection listed as VELVET RUINS on Gumroad. It moves between veiled drones, unstable sequences, cinematic impacts, degraded textures, ritual instruments, experimental drums, and weighty low end.",
       "Every preset includes four functional macros — ATMOS, MOTION, DUST, and SPACE — for immediate variation and performance.",
       "Version 2.0 expands the original 80-preset release with 176 new presets while improving effect efficiency, low-end mono compatibility, velocity response, modulation routing, macro behavior, and output consistency. All 80 original presets remain available for backward compatibility."
     ],
@@ -530,6 +532,8 @@ export const landingCopyOverrides = {
       { label: "Format", value: "24-bit WAV samples" },
       { label: "Sound count", value: "34 original sound effects" },
       { label: "Sample rate / channels", value: "44.1 kHz stereo" },
+      { label: "Duration", value: "Approximately 4.42–31.50 seconds per file" },
+      { label: "Use", value: "Standalone textures and FX; not advertised as seamless loops or a BPM/key-labelled loop set" },
       { label: "Focus", value: "Sound effects, transitions, accents, design details" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "116 MB" },
@@ -557,6 +561,8 @@ export const landingCopyOverrides = {
       { label: "Format", value: "24-bit WAV samples" },
       { label: "Sound count", value: "32 sounds" },
       { label: "Sample rate / channels", value: "44.1 kHz stereo" },
+      { label: "Duration", value: "Approximately 3.62–28.23 seconds per file" },
+      { label: "Use", value: "Standalone textures and FX; not advertised as seamless loops or a BPM/key-labelled loop set" },
       { label: "Focus", value: "Noise textures, glitch layers, abstract FX" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "103 MB" },
@@ -584,6 +590,8 @@ export const landingCopyOverrides = {
       { label: "Format", value: "24-bit WAV samples" },
       { label: "Sound count", value: "12 sounds" },
       { label: "Sample rate / channels", value: "44.1 kHz stereo" },
+      { label: "Duration", value: "Approximately 12.97–36.65 seconds per file" },
+      { label: "Use", value: "Standalone textures and FX; not advertised as seamless loops or a BPM/key-labelled loop set" },
       { label: "Focus", value: "Mystery, suspense beds, dark cinematic ambience" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "76.2 MB" },
@@ -612,6 +620,8 @@ export const landingCopyOverrides = {
       { label: "Sound count", value: "44 sounds" },
       { label: "Sample rate", value: "44.1 kHz" },
       { label: "Bit depth", value: "43 files at 24-bit PCM; 1 at 16-bit PCM" },
+      { label: "Duration", value: "Approximately 0.04–1.01 seconds per file" },
+      { label: "Use", value: "Short percussion one-shots; not a tempo-labelled drum-loop pack" },
       { label: "Focus", value: "Experimental percussion, one-shots, rhythmic FX" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "5.15 MB" },
@@ -639,6 +649,8 @@ export const landingCopyOverrides = {
       { label: "Format", value: "24-bit WAV samples" },
       { label: "Sound count", value: "10 sounds" },
       { label: "Sample rate / channels", value: "44.1 kHz stereo" },
+      { label: "Duration", value: "Approximately 11.11–79.16 seconds per file" },
+      { label: "Use", value: "Standalone textures and FX; not advertised as seamless loops or a BPM/key-labelled loop set" },
       { label: "Focus", value: "Sci-fi ambience, distant environments, suspended textures" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "89.8 MB" },
@@ -667,6 +679,8 @@ export const landingCopyOverrides = {
       { label: "Sound count", value: "7 sounds" },
       { label: "Sample rate", value: "44.1 kHz" },
       { label: "Bit depth", value: "6 files at 24-bit PCM; 1 at 16-bit PCM" },
+      { label: "Duration", value: "Approximately 27.97–105.49 seconds per file" },
+      { label: "Use", value: "Standalone textures and FX; not advertised as seamless loops or a BPM/key-labelled loop set" },
       { label: "Focus", value: "Dark subs, low-end pressure, subterranean textures" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "94.9 MB" },
@@ -695,6 +709,8 @@ export const landingCopyOverrides = {
       { label: "Sound count", value: "8 sounds" },
       { label: "Sample rate", value: "7 files at 44.1 kHz; 1 at 48 kHz" },
       { label: "Bit depth", value: "7 files at 24-bit PCM; 1 at 32-bit float" },
+      { label: "Duration", value: "Approximately 10.78–80.35 seconds per file" },
+      { label: "Use", value: "Standalone textures and FX; not advertised as seamless loops or a BPM/key-labelled loop set" },
       { label: "Focus", value: "Uneasy drones, stingers, threat cues, dark atmosphere" },
       { label: "Audio demo", value: "Included" },
       { label: "Download size", value: "86.2 MB" },

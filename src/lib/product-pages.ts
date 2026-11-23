@@ -88,6 +88,11 @@ type ProductPageOverride = Partial<Pick<
 >>;
 
 const productPageOverrides: Record<string, ProductPageOverride> = {
+  "brutus-imposcar-presets": { headline: "BRUTUS", description: "Atmospheric presets for GForce impOSCar 2 and 3, including individual files, installation guidance, and compatibility notes.", kicker: "impOSCar preset collection" },
+  "brutus-lite-imposcar-presets": { headline: "BRUTUS Lite", description: "16 free atmospheric sounds for GForce impOSCar 2 and 3, with installation and compatibility notes.", kicker: "Free impOSCar preset collection" },
+  "strange-signals-sylenth1-presets": { headline: "STRANGE SIGNALS", description: "122 atmospheric and experimental Sylenth1 presets in one FXB bank for drones, textures, sequences, and effects.", kicker: "Sylenth1 preset bank" },
+  "strange-signals-lite-sylenth1-presets": { headline: "STRANGE SIGNALS Lite", description: "16 free atmospheric and experimental Sylenth1 presets selected from STRANGE SIGNALS.", kicker: "Free Sylenth1 preset bank" },
+  "surgical-cz-surge-xt-presets": { headline: "SURGICAL CZ", description: "132 free CZ-inspired Surge XT presets, including eight alternate versions, with embedded wavetable data.", kicker: "Free Surge XT preset bank" },
   "bioforms-synplant-2-presets": {
     headline: "BIOFORMS 2",
     description: "128 evolving Synplant 2 presets across seven categories for organic motion, cinematic atmospheres, and experimental textures. Includes all 32 Lite sounds.",
@@ -207,6 +212,28 @@ const productPageOverrides: Record<string, ProductPageOverride> = {
 };
 
 const liteComparisons: Record<string, ProductLiteComparison> = {
+  "brutus-lite-imposcar-presets": {
+    title: "BRUTUS Lite vs Full", intro: "Try 16 sounds in either supported instrument.", liteLabel: "Lite", fullLabel: "Full",
+    rows: [
+      { label: "impOSCar 3", lite: "16 XML patches", full: "134 XML patches" },
+      { label: "impOSCar 2", lite: "16 related FXP presets", full: "132 FXP files, including four approximate backports" },
+      { label: "Price", lite: "Free; optional contribution", full: "€9" }
+    ],
+    upgradeUrl: "https://kreativ.gumroad.com/l/brutus-imposcar-presets", upgradeLabel: "Get BRUTUS Full",
+    secondaryUrl: "/sounds/brutus-imposcar-presets", secondaryLabel: "View full details",
+    note: "Counts are per instrument, not separate unique sounds. Matching presets may sound different. impOSCar 2 audio, backports, installation compatibility, and Windows installation need further review."
+  },
+  "strange-signals-lite-sylenth1-presets": {
+    title: "STRANGE SIGNALS Lite vs Full", intro: "Try 16 sounds from the 122-preset collection.", liteLabel: "Lite", fullLabel: "Full",
+    rows: [
+      { label: "Presets", lite: "16 selected presets", full: "122 presets, including the Lite selection" },
+      { label: "Format", lite: "Sylenth1 FXB bank", full: "Sylenth1 FXB bank" },
+      { label: "Price", lite: "Free; optional contribution", full: "€9" }
+    ],
+    upgradeUrl: "https://kreativ.gumroad.com/l/strange-signals-sylenth1-presets", upgradeLabel: "Get STRANGE SIGNALS Full",
+    secondaryUrl: "/sounds/strange-signals-sylenth1-presets", secondaryLabel: "View full details",
+    note: "LennarDigital Sylenth1 is required and is not included. Back up your current bank before loading another FXB."
+  },
   "bioforms-lite-synplant-2-presets": {
     title: "BIOFORMS Lite vs BIOFORMS 2",
     intro: "Try all seven categories free. Full includes these 32 sounds plus 96 more.",

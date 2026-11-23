@@ -125,6 +125,57 @@ export const products: Product[] = [
     useCase: "Local-first preset starts for Vital, Serum 2 beta, and Pigments beta"
   },
   {
+    title: "BRUTUS - Atmospheric Presets for impOSCar 2 & 3",
+    category: "Presets", status: "available",
+    url: "https://kreativ.gumroad.com/l/brutus-imposcar-presets",
+    detailsUrl: "/sounds/brutus-imposcar-presets",
+    thumbnail: "/assets/thumbs/brutus.jpg", coverImage: "/assets/thumbs/brutus.jpg",
+    format: "GForce impOSCar 2 and 3 presets", count: "134 impOSCar 3 / 132 impOSCar 2 files",
+    useCase: "Atmospheric basses, leads, pads, drones, arpeggios, and effects",
+    ...standardSoundPackPrice,
+    extraAction: { label: "Try Lite", url: "/sounds/brutus-lite-imposcar-presets" }
+  },
+  {
+    title: "STRANGE SIGNALS - 122 Sylenth1 Presets",
+    category: "Presets", status: "available",
+    url: "https://kreativ.gumroad.com/l/strange-signals-sylenth1-presets",
+    detailsUrl: "/sounds/strange-signals-sylenth1-presets",
+    thumbnail: "/assets/thumbs/strange-signals.jpg", coverImage: "/assets/thumbs/strange-signals.jpg",
+    format: "LennarDigital Sylenth1 FXB bank", count: "122 presets",
+    useCase: "Evolving textures, drones, sequences, and unusual effects",
+    ...standardSoundPackPrice,
+    extraAction: { label: "Try Lite", url: "/sounds/strange-signals-lite-sylenth1-presets" }
+  },
+  {
+    title: "BRUTUS Lite - 16 Free impOSCar 2 & 3 Sounds",
+    category: "Free", status: "free",
+    url: "https://kreativ.gumroad.com/l/brutus-lite-imposcar-presets",
+    detailsUrl: "/sounds/brutus-lite-imposcar-presets",
+    thumbnail: "/assets/thumbs/brutus-lite.jpg", coverImage: "/assets/thumbs/brutus-lite.jpg",
+    format: "GForce impOSCar 2 and 3 presets", count: "16 sounds per instrument",
+    useCase: "Free atmospheric basses, arpeggios, pads, and drones",
+    extraAction: { label: "Full Bank", url: "/sounds/brutus-imposcar-presets" }
+  },
+  {
+    title: "STRANGE SIGNALS Lite - 16 Free Sylenth1 Presets",
+    category: "Free", status: "free",
+    url: "https://kreativ.gumroad.com/l/strange-signals-free-sylenth1-presets",
+    detailsUrl: "/sounds/strange-signals-lite-sylenth1-presets",
+    thumbnail: "/assets/thumbs/strange-signals-lite.jpg", coverImage: "/assets/thumbs/strange-signals-lite.jpg",
+    format: "LennarDigital Sylenth1 FXB bank", count: "16 presets",
+    useCase: "A free selection of atmospheric and experimental Sylenth1 sounds",
+    extraAction: { label: "Full Bank", url: "/sounds/strange-signals-sylenth1-presets" }
+  },
+  {
+    title: "SURGICAL CZ - 132 Free Surge XT Presets",
+    category: "Free", status: "free",
+    url: "https://kreativ.gumroad.com/l/surgical-cz-surge-xt-presets",
+    detailsUrl: "/sounds/surgical-cz-surge-xt-presets",
+    thumbnail: "/assets/thumbs/surgical-cz.jpg", coverImage: "/assets/thumbs/surgical-cz.jpg",
+    format: "Surge XT presets", count: "132 presets",
+    useCase: "CZ-inspired digital basses, leads, keys, pads, and textures"
+  },
+  {
     title: "OBSIDIAN - 128 Dark Cinematic Presets for Serum 2",
     category: "Presets",
     status: "available",

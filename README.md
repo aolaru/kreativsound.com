@@ -12,7 +12,7 @@ Official static website for [kreativsound.com](https://kreativsound.com).
 
 ## Local Preview
 
-Use Astro for local development:
+Use Node.js 22.23.4 or later and Astro for local development:
 
 ```bash
 npm install
@@ -152,9 +152,7 @@ npm run sitemap
 
 ## Analytics
 
-The site uses Cloudflare Web Analytics via the Cloudflare beacon script.
-
-This provides traffic analytics at the page/site level through the Cloudflare dashboard.
+The site uses Google Analytics and Cloudflare Web Analytics only after a visitor accepts optional analytics. The consent choice can be changed using the footer privacy settings. See the privacy page for details.
 
 ## Monitoring
 

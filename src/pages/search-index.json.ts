@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { musicArtists } from "../lib/music";
 import { productPages } from "../lib/product-pages";
+import { products } from "../lib/products";
 
 type SearchEntry = {
   title: string;
@@ -9,6 +10,7 @@ type SearchEntry = {
   type: string;
   thumbnail: string;
   description: string;
+  keywords?: string;
 };
 
 function localImage(url?: string) {
@@ -205,7 +207,8 @@ export const GET: APIRoute = async () => {
     url: product.route,
     type: product.hubLabel === "Plugins" ? "Plugin" : product.variant === "bundle" ? "Bundle" : product.variant === "archive" ? "Archive" : "Product",
     thumbnail: product.image,
-    description: product.description
+    description: product.description,
+    keywords: products.find((entry) => entry.detailsUrl === product.route)?.format
   }));
   const musicEntries: SearchEntry[] = musicArtists.flatMap((artist) =>
     artist.releases.map((release) => ({

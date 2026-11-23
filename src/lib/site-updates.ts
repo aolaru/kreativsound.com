@@ -12,6 +12,9 @@ export type SiteUpdate = {
 };
 
 export const siteUpdates: SiteUpdate[] = [
+  { date: "2026-11-23", kind: "new", title: "BRUTUS and BRUTUS Lite added to the catalog", description: "Explore impOSCar 2 and 3 sounds, with separate file counts and compatibility notes.", href: "/sounds/brutus-imposcar-presets", releaseNote: "/posts/new-preset-catalog-november-2026.html" },
+  { date: "2026-11-23", kind: "new", title: "STRANGE SIGNALS and Lite added to the catalog", description: "Discover 122 Sylenth1 presets or try the free 16-preset selection.", href: "/sounds/strange-signals-sylenth1-presets", releaseNote: "/posts/new-preset-catalog-november-2026.html" },
+  { date: "2026-11-23", kind: "new", title: "SURGICAL CZ added to the catalog", description: "Download 132 free CZ-inspired Surge XT presets.", href: "/sounds/surgical-cz-surge-xt-presets", releaseNote: "/posts/new-preset-catalog-november-2026.html" },
   { date: "2026-11-11", kind: "update", title: "Preset Mutator Free v0.6.1", description: "Create optional local diagnostic reports to help troubleshoot generation and exports.", href: "/preset-mutator/changelog/" },
   { date: "2026-11-11", kind: "update", title: "Preset Mutator Pro v0.6.1", description: "Create optional local diagnostic reports to help troubleshoot generation and exports.", href: "/preset-mutator-pro/changelog/" },
   { date: "2026-11-09", kind: "update", title: "KS Ghostform 1.0.1", description: "Improved factory sounds, interface scaling, voice handling, and reliability, with an updated manual.", href: "/plugins/ghostform" },

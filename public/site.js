@@ -57,7 +57,7 @@ if (themeToggle) {
   themeToggle.addEventListener("click", () => {
     const nextTheme = getCurrentTheme() === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", nextTheme);
-    localStorage.setItem("theme", nextTheme);
+    try { localStorage.setItem("theme", nextTheme); } catch {}
     syncThemeUi(nextTheme);
   });
 }
@@ -70,8 +70,18 @@ let searchIndexPromise;
 function getSearchIndex() {
   if (!searchIndexPromise) {
     searchIndexPromise = fetch("/search-index.json")
-      .then((response) => (response.ok ? response.json() : []))
-      .catch(() => []);
+      .then((response) => {
+        if (!response.ok) throw new Error("Search index unavailable");
+        return response.json();
+      })
+      .then((entries) => {
+        if (!Array.isArray(entries)) throw new Error("Invalid search index");
+        return entries;
+      })
+      .catch((error) => {
+        searchIndexPromise = undefined;
+        throw error;
+      });
   }
   return searchIndexPromise;
 }
@@ -84,15 +94,17 @@ function scoreSearchEntry(entry, query) {
   const title = normalizeQuery(entry.title);
   const description = normalizeQuery(entry.description);
   const type = normalizeQuery(entry.type);
+  const keywords = normalizeQuery(entry.keywords);
   const words = query.split(/\s+/).filter(Boolean);
   if (!title && !description && !type) return -1;
   if (title === query) return 100;
-  if (title.startsWith(query)) return 80;
+  if (title.startsWith(query)) return 90;
+  if (keywords.includes(query)) return 80;
   if (title.includes(query)) return 60;
   if (type === query) return 45;
   if (type.includes(query)) return 40;
   if (description.includes(query)) return 30;
-  if (words.length > 1 && words.every((word) => title.includes(word) || description.includes(word) || type.includes(word))) return 20;
+  if (words.length > 1 && words.every((word) => title.includes(word) || description.includes(word) || type.includes(word) || keywords.includes(word))) return 20;
   return -1;
 }
 
@@ -173,6 +185,7 @@ async function getRankedResults(query) {
 
 if (siteSearchForm && siteSearchInput) {
   let activeIndex = -1;
+  let searchRequest = 0;
 
   siteSearchInput.setAttribute("autocomplete", "off");
   siteSearchInput.setAttribute("aria-autocomplete", "list");
@@ -180,13 +193,27 @@ if (siteSearchForm && siteSearchInput) {
 
   siteSearchInput.addEventListener("input", async () => {
     activeIndex = -1;
+    const request = ++searchRequest;
     const query = normalizeQuery(siteSearchInput.value);
-    if (query.length < 2) {
-      hideSearchDropdown();
-      siteSearchInput.setAttribute("aria-expanded", "false");
-      return;
+    hideSearchDropdown();
+    siteSearchInput.setAttribute("aria-expanded", "false");
+    if (query.length < 2) return;
+    try {
+      const results = await getRankedResults(query);
+      if (request === searchRequest && normalizeQuery(siteSearchInput.value) === query) renderSearchResults(results, query);
+    } catch {
+      if (request !== searchRequest || normalizeQuery(siteSearchInput.value) !== query) return;
+      const dropdown = buildSearchDropdown();
+      if (!dropdown) return;
+      dropdown.replaceChildren();
+      const message = document.createElement("p");
+      message.className = "site-search-empty";
+      message.setAttribute("role", "status");
+      message.textContent = "Search is temporarily unavailable. Edit your search to try again.";
+      dropdown.appendChild(message);
+      dropdown.hidden = false;
+      siteSearchInput.setAttribute("aria-expanded", "true");
     }
-    renderSearchResults(await getRankedResults(query), query);
   });
 
   siteSearchInput.addEventListener("keydown", async (event) => {
@@ -194,6 +221,7 @@ if (siteSearchForm && siteSearchInput) {
     const items = dropdown ? Array.from(dropdown.querySelectorAll(".site-search-result")) : [];
 
     if (event.key === "Escape") {
+      searchRequest++;
       hideSearchDropdown();
       siteSearchInput.setAttribute("aria-expanded", "false");
       activeIndex = -1;
@@ -235,6 +263,7 @@ if (siteSearchForm && siteSearchInput) {
 
   document.addEventListener("click", (event) => {
     if (!siteSearchForm.contains(event.target)) {
+      searchRequest++;
       hideSearchDropdown();
       siteSearchInput.setAttribute("aria-expanded", "false");
     }
@@ -243,6 +272,7 @@ if (siteSearchForm && siteSearchInput) {
   siteSearchForm.addEventListener("focusout", () => {
     setTimeout(() => {
       if (!siteSearchForm.contains(document.activeElement)) {
+        searchRequest++;
         hideSearchDropdown();
         siteSearchInput.setAttribute("aria-expanded", "false");
       }
@@ -308,68 +338,82 @@ if (searchPage) {
 
   if (input) input.value = new URLSearchParams(window.location.search).get("q") || "";
 
-  getSearchIndex().then((entries) => {
-    const ranked = entries
-      .map((entry) => ({ ...entry, score: scoreSearchEntry(entry, query) }))
-      .filter((entry) => entry.score >= 0)
-      .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
+  function loadSearchResults() {
+    if (status && query) status.textContent = "Searching…";
+    if (resultsRoot) resultsRoot.replaceChildren();
+    getSearchIndex().then((entries) => {
+      const ranked = entries
+        .map((entry) => ({ ...entry, score: scoreSearchEntry(entry, query) }))
+        .filter((entry) => entry.score >= 0)
+        .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
 
-    if (!query) {
-      if (status) status.textContent = "Enter a product, album, artist, synth, format, guide, or tool.";
-      return;
-    }
+      if (!query) {
+        if (status) status.textContent = "Enter a product, album, artist, synth, format, guide, or tool.";
+        return;
+      }
 
-    if (status) {
-      status.textContent = ranked.length
-        ? `${ranked.length} ${ranked.length === 1 ? "result" : "results"} for "${query}"`
-        : `No results for "${query}"`;
-    }
+      if (status) {
+        status.textContent = ranked.length
+          ? `${ranked.length} ${ranked.length === 1 ? "result" : "results"} for "${query}"`
+          : `No results for "${query}"`;
+      }
 
-    if (!resultsRoot) return;
-    resultsRoot.innerHTML = "";
+      if (!resultsRoot) return;
+      resultsRoot.innerHTML = "";
 
-    if (!ranked.length) {
-      const empty = document.createElement("div");
-      empty.className = "search-page-empty";
-      const title = document.createElement("h2");
-      title.textContent = "Nothing matched that search";
-      const copy = document.createElement("p");
-      copy.textContent = "Try a synth name such as Vital, FM8, Pigments, or JUN-6 V, or browse the complete sound catalog.";
-      const link = document.createElement("a");
-      link.className = "button primary";
-      link.href = "/sounds/";
-      link.textContent = "Browse all sounds";
-      empty.append(title, copy, link);
-      resultsRoot.appendChild(empty);
-      return;
-    }
+      if (!ranked.length) {
+        const empty = document.createElement("div");
+        empty.className = "search-page-empty";
+        const title = document.createElement("h2");
+        title.textContent = "Nothing matched that search";
+        const copy = document.createElement("p");
+        copy.textContent = "Try a synth name such as Vital, FM8, Pigments, or JUN-6 V, or browse the complete sound catalog.";
+        const link = document.createElement("a");
+        link.className = "button primary";
+        link.href = "/sounds/";
+        link.textContent = "Browse all sounds";
+        empty.append(title, copy, link);
+        resultsRoot.appendChild(empty);
+        return;
+      }
 
-    ranked.forEach((result) => {
-      const item = document.createElement("a");
-      item.className = "search-page-result";
-      item.href = result.url;
+      ranked.forEach((result) => {
+        const item = document.createElement("a");
+        item.className = "search-page-result";
+        item.href = result.url;
 
-      const image = document.createElement("img");
-      image.src = result.thumbnail || "/logo-128.svg";
-      image.alt = "";
-      image.width = 72;
-      image.height = 72;
-      image.loading = "lazy";
+        const image = document.createElement("img");
+        image.src = result.thumbnail || "/logo-128.svg";
+        image.alt = "";
+        image.width = 72;
+        image.height = 72;
+        image.loading = "lazy";
 
-      const copy = document.createElement("span");
-      copy.className = "search-page-result-copy";
-      const meta = document.createElement("span");
-      meta.className = "site-search-result-meta";
-      meta.textContent = result.type;
-      const title = document.createElement("strong");
-      title.textContent = result.title;
-      const description = document.createElement("span");
-      description.textContent = result.description;
-      copy.append(meta, title, description);
-      item.append(image, copy);
-      resultsRoot.appendChild(item);
+        const copy = document.createElement("span");
+        copy.className = "search-page-result-copy";
+        const meta = document.createElement("span");
+        meta.className = "site-search-result-meta";
+        meta.textContent = result.type;
+        const title = document.createElement("strong");
+        title.textContent = result.title;
+        const description = document.createElement("span");
+        description.textContent = result.description;
+        copy.append(meta, title, description);
+        item.append(image, copy);
+        resultsRoot.appendChild(item);
+      });
+    }).catch(() => {
+      if (status) status.textContent = "Search is temporarily unavailable. Please try again.";
+      if (!resultsRoot) return;
+      const retry = document.createElement("button");
+      retry.type = "button";
+      retry.className = "button secondary";
+      retry.textContent = "Try again";
+      retry.addEventListener("click", loadSearchResults);
+      resultsRoot.replaceChildren(retry);
     });
-  });
+  }
+  if (query) loadSearchResults();
 }
 
 const consentPanel = document.querySelector("[data-privacy-consent]");

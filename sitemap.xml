@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://kreativsound.com/</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
   </url>
   <url>
     <loc>https://kreativsound.com/tools/</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -32,19 +32,19 @@
   </url>
   <url>
     <loc>https://kreativsound.com/preset-mutator/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/preset-mutator/audio/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/preset-mutator/mutate/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -62,7 +62,7 @@
   </url>
   <url>
     <loc>https://kreativsound.com/contact/</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -74,15 +74,21 @@
   </url>
   <url>
     <loc>https://kreativsound.com/plugins/burnshaper</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/plugins/ghostform</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/posts/analog-drift-catalog-2026-10-17.html</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/posts/analytics-rollout-2026-03-05.html</loc>
@@ -93,6 +99,12 @@
   <url>
     <loc>https://kreativsound.com/posts/audio-alchemy-free-launch-2026-04-02.html</loc>
     <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/posts/bioforms-2-catalog-2026-10-25.html</loc>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -139,6 +151,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://kreativsound.com/posts/daft-plasticz-v1-1-2026-11-13.html</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://kreativsound.com/posts/footer-network-update-2026-03-06.html</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
@@ -158,13 +176,13 @@
   </url>
   <url>
     <loc>https://kreativsound.com/posts/how-to-finish-a-sample-pack-with-wave-mutator-2026-09-03.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/posts/how-to-layer-bioforms-for-organic-motion-2026-03-14.html</loc>
-    <lastmod>2026-10-08</lastmod>
+    <lastmod>2026-10-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -235,8 +253,20 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://kreativsound.com/posts/new-preset-catalog-november-2026.html</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://kreativsound.com/posts/news-launch-2026-03-06.html</loc>
     <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/posts/obsidian-catalog-2026-10-17.html</loc>
+    <lastmod>2026-10-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -278,211 +308,271 @@
   </url>
   <url>
     <loc>https://kreativsound.com/preset-mutator-pro/changelog/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/preset-mutator/changelog/</loc>
-    <lastmod>2026-11-01</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/privacy/</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-11-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/refunds/</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/abyss-pro-53-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/sounds/analog-drift-lite-mini-v-presets</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/sounds/analog-drift-mini-v-presets</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/sounds/bioforms-lite-synplant-2-presets</loc>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/bioforms-synplant-2-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/black-arcology-lite-pigments-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/black-arcology-pigments-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/bleeps-2-percussion-sounds</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/sounds/brutus-imposcar-presets</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/sounds/brutus-lite-imposcar-presets</loc>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/callisto-drift-jup-8-v4-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/callisto-drift-lite-jup-8-v4-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/daft-plasticz-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/dirty-model-moog-model-d-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/enigma-2-cinematic-atmospheres</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/horror-2-cinematic-textures</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/juno-nocturnes-jun-6-v-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/juno-nocturnes-lite-jun-6-v-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/kreativ-kollection-v1</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/monolush-fabfilter-one-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/neolith-softube-models-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/noize-2-noise-textures</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/sounds/obsidian-lite-serum-2-presets</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/sounds/obsidian-serum-2-presets</loc>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/operators-fm8-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/operators-lite-fm8-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/preset-mutator</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/sfxs-2-sound-effects</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/space-2-atmospheres-textures</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/sounds/strange-signals-lite-sylenth1-presets</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/sounds/strange-signals-sylenth1-presets</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kreativsound.com/sounds/surgical-cz-surge-xt-presets</loc>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/tectonic-2-dark-subs-textures</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/the-black-angel-refill</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/velvet-ruins-lite-vital-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/velvet-ruins-vital-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/sounds/zephyr-animoog-z-presets</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/terms/</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-10-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/tools/pattern-mutator/</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/tools/pattern-mutator/changelog/</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://kreativsound.com/tools/preset-mutator/</loc>
-    <lastmod>2026-10-07</lastmod>
+    <lastmod>2026-11-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
