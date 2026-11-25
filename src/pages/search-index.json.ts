@@ -38,6 +38,20 @@ function musicReleaseUrl(artistSlug: string, title: string) {
 
 const staticEntries: SearchEntry[] = [
   {
+    title: "Kreativ Sound Companion",
+    url: "/tools/kreativ-sound-companion/",
+    type: "Tool",
+    thumbnail: "/kreativ-sound-logo-128.svg",
+    description: "A local-first browser extension for delay timing, creative prompts, and Kreativ Sound tools."
+  },
+  {
+    title: "Kreativ Sound Companion Privacy",
+    url: "/tools/kreativ-sound-companion/privacy/",
+    type: "Page",
+    thumbnail: "/kreativ-sound-logo-128.svg",
+    description: "Privacy information for the Kreativ Sound Companion browser extension."
+  },
+  {
     title: "Kreativ Sound",
     url: "/",
     type: "Page",
