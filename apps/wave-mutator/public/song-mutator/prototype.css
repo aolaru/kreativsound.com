@@ -1,0 +1,15 @@
+.song-shell { max-width: 1000px; padding-bottom: 4rem; }
+.song-panel { margin-top: 1rem; }
+.song-panel input[type="file"] { display: block; margin: 1rem 0; max-width: 100%; }
+.song-styles { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7rem; }
+.song-styles button { text-align: left; padding: 1rem; min-height: 95px; }
+.song-styles button strong, .song-styles button span { display: block; }
+.song-styles button span { font-size: .82rem; margin-top: .4rem; opacity: .8; }
+.song-styles button[aria-pressed="true"], .song-actions button[aria-pressed="true"] { border-color: #9cb8ff; background: #354666; }
+.song-intensity { display: grid; gap: .6rem; margin: 1.5rem 0; }
+.song-intensity input, .song-transport input { width: 100%; }
+.song-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+.song-transport { display: flex; align-items: center; gap: .7rem; margin: 1.25rem 0; }
+.song-transport input { flex: 1; min-width: 3rem; }
+#song-time { white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media (max-width: 650px) { .song-styles { grid-template-columns: repeat(2, 1fr); } .song-transport { flex-wrap: wrap; } }

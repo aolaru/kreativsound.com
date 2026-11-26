@@ -60,7 +60,7 @@ function routeFromFile(filePath) {
   }
   if (relative.endsWith("/index.html")) {
     const route = `/${relative.replace(/\/index\.html$/, "/")}`;
-    if (route === "/preset-mutator/scratch/") {
+    if (route === "/preset-mutator/scratch/" || route === "/tools/wave-mutator/song-mutator/") {
       return null;
     }
     if (route === "/tools/kreativ-sample-prep/") {

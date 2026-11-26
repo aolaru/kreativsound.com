@@ -16,6 +16,8 @@ All notable changes to this website are documented in this file.
 
 ### Added
 
+- Song Mutator beta in Wave Mutator Free: transform a stereo WAV locally with four effect styles and compare or export the result.
+
 - Pattern Mutator Lite, a free local browser tool for generating scale-aware MIDI patterns, locking useful dimensions, mutating variations, and exporting Standard MIDI files.
 
 ## [2026-02-26]
